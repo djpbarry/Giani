@@ -81,10 +81,12 @@
     </Container>
     <Component class="javax.swing.JLabel" name="fileNameComboLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Select File for Preview"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="INPUT_FILE_LABEL" type="code"/>
+        </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="fileNameComboLabel.setEnabled(false);"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="fileNameComboLabel.setEnabled(false);&#xa;fileNameComboLabel.setLabelFor(fileNameComboBox);"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -118,10 +120,12 @@
     </Component>
     <Component class="javax.swing.JLabel" name="seriesSelectLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Select Series for Preview"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="SERIES_SELECT_LABEL" type="code"/>
+        </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="seriesSelectLabel.setEnabled(false);"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="seriesSelectLabel.setEnabled(false);&#xa;seriesSelectLabel.setLabelFor(seriesComboBox);"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -131,10 +135,12 @@
     </Component>
     <Component class="javax.swing.JLabel" name="channelSelectLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Select Nuclear Channel for Preview"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="CHANNEL_SELECT_LABEL" type="code"/>
+        </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="channelSelectLabel.setEnabled(false);"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="channelSelectLabel.setEnabled(false);&#xa;channelSelectLabel.setLabelFor(channelComboBox);"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

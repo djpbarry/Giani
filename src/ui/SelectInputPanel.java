@@ -18,11 +18,12 @@ package ui;
 
 import IO.BioFormats.BioFormatsFileLister;
 import IO.BioFormats.BioFormatsFileReader;
-import ImgLib2.ImageOpener;
+import IO.BioFormats.BioFormatsImg;
 import UIClasses.GUIMethods;
 import UIClasses.PropertyExtractor;
 import UtilClasses.GenUtils;
 import UtilClasses.Utilities;
+import ViewMaker.CreateInterval;
 import java.awt.Container;
 import java.io.File;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import javax.swing.DefaultComboBoxModel;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 
 /**
@@ -42,8 +43,11 @@ public class SelectInputPanel extends javax.swing.JPanel implements GUIMethods {
 
     private static File inputDirectory;
     private Properties props;
-    private static final String INPUT_DIR_LABEL = "Input Directory:";
-    private Img img;
+    public static final String INPUT_DIR_LABEL = "Input Directory:";
+    public static final String INPUT_FILE_LABEL = "File for Preview";
+    public static final String SERIES_SELECT_LABEL = "Series for Preview";
+    public static final String CHANNEL_SELECT_LABEL = "Channel for Preview";
+    private BioFormatsImg img;
 
     /**
      * Creates new form SelectInputPanel
@@ -128,8 +132,9 @@ public class SelectInputPanel extends javax.swing.JPanel implements GUIMethods {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(jScrollPane1, gridBagConstraints);
 
-        fileNameComboLabel.setText("Select File for Preview");
+        fileNameComboLabel.setText(INPUT_FILE_LABEL);
         fileNameComboLabel.setEnabled(false);
+        fileNameComboLabel.setLabelFor(fileNameComboBox);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -153,8 +158,9 @@ public class SelectInputPanel extends javax.swing.JPanel implements GUIMethods {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(fileNameComboBox, gridBagConstraints);
 
-        seriesSelectLabel.setText("Select Series for Preview");
+        seriesSelectLabel.setText(SERIES_SELECT_LABEL);
         seriesSelectLabel.setEnabled(false);
+        seriesSelectLabel.setLabelFor(seriesComboBox);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -163,8 +169,9 @@ public class SelectInputPanel extends javax.swing.JPanel implements GUIMethods {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(seriesSelectLabel, gridBagConstraints);
 
-        channelSelectLabel.setText("Select Nuclear Channel for Preview");
+        channelSelectLabel.setText(CHANNEL_SELECT_LABEL);
         channelSelectLabel.setEnabled(false);
+        channelSelectLabel.setLabelFor(channelComboBox);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
@@ -237,24 +244,15 @@ public class SelectInputPanel extends javax.swing.JPanel implements GUIMethods {
     }//GEN-LAST:event_chooseInputDirButtonActionPerformed
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
-
+        setVariables();
         String fileName = (String) fileNameComboBox.getSelectedItem();
         int series = seriesComboBox.getSelectedIndex();
         int channel = channelComboBox.getSelectedIndex();
         try {
 //        img = ImageOpener.<UnsignedByteType>openImage(String.format("%s%s%s", inputDirectory, File.separator, fileName), series);
-            img = BioFormatsFileReader.openImage(String.format("%s%s%s", inputDirectory, File.separator, fileName), series);
-            int nD = img.numDimensions();
-            long[] dims = new long[nD];
-            RandomAccessibleInterval view;
-            if (nD > 3) {
-                view = Views.interval(img, new long[]{0, 0, channel, 0}, new long[]{img.max(0), img.max(1), channel, img.max(3)});
-            } else if (nD > 2) {
-                view = Views.interval(img, new long[]{0, 0, channel}, new long[]{img.max(0), img.max(1), channel});
-            } else {
-                view = Views.interval(img, new long[]{0, 0}, new long[]{img.max(0), img.max(1)});
-            }
-            ImageJFunctions.show(view);
+            Img< FloatType> image = (Img< FloatType>)BioFormatsFileReader.openImage(String.format("%s%s%s", inputDirectory, File.separator, fileName), series).getImg();
+            RandomAccessibleInterval< FloatType> view = Views.interval(image,CreateInterval.createInterval(image.numDimensions(), image, channel));
+            ImageJFunctions.show(CreateInterval.createInterval(image.numDimensions(), image, channel));
         } catch (Exception e) {
             GenUtils.error(String.format("Problem reading %s", fileName));
         }

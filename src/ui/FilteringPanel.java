@@ -5,11 +5,29 @@
  */
 package ui;
 
+import IO.BioFormats.BioFormatsImg;
+import ImgLib2.Filters.Gaussian;
+import UIClasses.GUIMethods;
+import UIClasses.PropertyExtractor;
+import ij.IJ;
+import java.awt.Container;
+import java.util.Properties;
+import net.imglib2.img.Img;
+import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.view.Views;
+
 /**
  *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
-public class FilteringPanel extends javax.swing.JPanel {
+public class FilteringPanel extends javax.swing.JPanel implements GUIMethods {
+
+    private Thread previewThread;
+    private Properties props;
+    private BioFormatsImg bioImg;
+    public static final String FILT_RAD_XY_LABEL = String.format("XY Filter Radius (%cm):", IJ.micronSymbol);
+    public static final String FILT_RAD_Z_LABEL = String.format("Z Filter Radius (%cm):", IJ.micronSymbol);
 
     /**
      * Creates new form FilteringPanel
@@ -26,20 +44,112 @@ public class FilteringPanel extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        previewButton = new javax.swing.JButton();
+        filterRadiusXYLabel = new javax.swing.JLabel();
+        filterRadiusXYTextField = new javax.swing.JTextField();
+        filterRadiusZLabel = new javax.swing.JLabel();
+        filterRadiusZTextField = new javax.swing.JTextField();
+
+        setLayout(new java.awt.GridBagLayout());
+
+        previewButton.setText("Preview");
+        previewButton.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                previewButtonFocusLost(evt);
+            }
+        });
+        previewButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                previewButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        add(previewButton, gridBagConstraints);
+
+        filterRadiusXYLabel.setText(FILT_RAD_XY_LABEL);
+        filterRadiusXYLabel.setLabelFor(filterRadiusXYTextField);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(filterRadiusXYLabel, gridBagConstraints);
+
+        filterRadiusXYTextField.setText("0.0");
+        filterRadiusXYTextField.setText("0.0");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(filterRadiusXYTextField, gridBagConstraints);
+
+        filterRadiusZLabel.setText(FILT_RAD_Z_LABEL);
+        filterRadiusZLabel.setLabelFor(filterRadiusZTextField);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(filterRadiusZLabel, gridBagConstraints);
+
+        filterRadiusZTextField.setText("0.0");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(filterRadiusZTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
+        setVariables();
+        previewThread = new Thread() {
+            public void run() {
+                Img< FloatType> img = bioImg.getImg();
+                double[] sigma = new double[]{Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / bioImg.getXySpatRes(),
+                    Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / bioImg.getXySpatRes(),
+                    Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_Z_LABEL)) / bioImg.getzSpatRes()};
+                Gaussian.blurGaussian3D(sigma, img, bioImg.getInterval());
+                ImageJFunctions.show(bioImg.getInterval());
+            }
+        };
+        previewThread.start();
+    }//GEN-LAST:event_previewButtonActionPerformed
+
+    private void previewButtonFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_previewButtonFocusLost
+        if (previewThread != null) {
+            previewThread.interrupt();
+        }
+    }//GEN-LAST:event_previewButtonFocusLost
+
+    public void setProperties(Properties p, Container container) {
+        props = PropertyExtractor.setProperties(new Properties(), container);
+    }
+
+    public boolean setVariables() {
+        setProperties(props, this);
+        return true;
+    }
+
+    public void setBioImg(BioFormatsImg bioImg) {
+        this.bioImg = bioImg;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel filterRadiusXYLabel;
+    private javax.swing.JTextField filterRadiusXYTextField;
+    private javax.swing.JLabel filterRadiusZLabel;
+    private javax.swing.JTextField filterRadiusZTextField;
+    private javax.swing.JButton previewButton;
     // End of variables declaration//GEN-END:variables
 }

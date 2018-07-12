@@ -1,9 +1,17 @@
 package ui;
 
+import IO.BioFormats.BioFormatsFileReader;
+import IO.BioFormats.BioFormatsImg;
 import UIClasses.GUIMethods;
-import ij.ImagePlus;
+import UIClasses.UIMethods;
+import ViewMaker.CreateInterval;
+import java.awt.Component;
 import java.awt.Container;
+import java.io.File;
+import java.util.LinkedList;
 import java.util.Properties;
+import net.imglib2.img.Img;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -16,14 +24,17 @@ import java.util.Properties;
  */
 public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
 
-    private ImagePlus imp;
+    private BioFormatsImg img;
     private Properties props;
+    private final LinkedList<Component> componentList = new LinkedList();
+    private int layerIndex = 0;
 
     /**
      * Creates new form LocalMapperUI
      */
     public LocalMapperUI() {
         initComponents();
+        UIMethods.centreContainer(this);
 //       jLayeredPane1.setLayer(jPanel2, 1);
     }
 
@@ -37,20 +48,26 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel3 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        buttonPanel = new javax.swing.JPanel();
+        previousButton = new javax.swing.JButton();
+        nextButton = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jLayeredPane1 = new javax.swing.JLayeredPane();
-        selectInputPanel1 = new ui.SelectInputPanel();
+        selectInputPanel = new ui.SelectInputPanel();
+        filteringPanel = new ui.FilteringPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanel3.setLayout(new java.awt.GridBagLayout());
+        buttonPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        buttonPanel.setLayout(new java.awt.GridBagLayout());
 
-        jButton1.setText("Previous");
+        previousButton.setText("Previous");
+        previousButton.setEnabled(false);
+        previousButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                previousButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -58,14 +75,19 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        jPanel3.add(jButton1, gridBagConstraints);
+        buttonPanel.add(previousButton, gridBagConstraints);
 
-        jButton2.setText("Next");
+        nextButton.setText("Next");
+        nextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        jPanel3.add(jButton2, gridBagConstraints);
+        buttonPanel.add(nextButton, gridBagConstraints);
 
         jButton3.setText("Exit");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -73,37 +95,89 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        jPanel3.add(jButton3, gridBagConstraints);
+        buttonPanel.add(jButton3, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.2;
-        getContentPane().add(jPanel3, gridBagConstraints);
+        getContentPane().add(buttonPanel, gridBagConstraints);
 
-        jLayeredPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jLayeredPane1.setLayout(new java.awt.GridBagLayout());
+        componentList.add(selectInputPanel);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 85;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        jLayeredPane1.add(selectInputPanel1, gridBagConstraints);
+        gridBagConstraints.weighty = 0.8;
+        getContentPane().add(selectInputPanel, gridBagConstraints);
 
+        componentList.add(filteringPanel);
+        filteringPanel.setVisible(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.8;
-        getContentPane().add(jLayeredPane1, gridBagConstraints);
+        getContentPane().add(filteringPanel, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
+        layerIndex++;
+        updateLayer();
+        checkLayerIndex();
+    }//GEN-LAST:event_nextButtonActionPerformed
+
+    private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
+        layerIndex--;
+        updateLayer();
+        checkLayerIndex();
+    }//GEN-LAST:event_previousButtonActionPerformed
+
+    void updateLayer() {
+        for (int i = 0; i < componentList.size(); i++) {
+            if (i == layerIndex) {
+                componentList.get(i).setVisible(true);
+            } else {
+                componentList.get(i).setVisible(false);
+            }
+        }
+//        layeredPane.moveToFront(componentList.get(layerIndex));
+    }
+
+    void checkLayerIndex() {
+        if (layerIndex == 0) {
+            previousButton.setEnabled(false);
+        } else {
+            previousButton.setEnabled(true);
+        }
+        if (layerIndex == componentList.size() - 1) {
+            nextButton.setEnabled(false);
+        } else {
+            nextButton.setEnabled(true);
+        }
+        if (layerIndex > 0) {
+            try {
+                Properties inputProps = selectInputPanel.getProps();
+                int channel = Integer.parseInt(inputProps.getProperty(SelectInputPanel.CHANNEL_SELECT_LABEL));
+                img = BioFormatsFileReader.openImage(String.format("%s%s%s",
+                        inputProps.getProperty(SelectInputPanel.INPUT_DIR_LABEL),
+                        File.separator,
+                        inputProps.getProperty(SelectInputPanel.INPUT_FILE_LABEL)),
+                        Integer.parseInt(inputProps.getProperty(SelectInputPanel.SERIES_SELECT_LABEL)));
+                filteringPanel.setBioImg(new BioFormatsImg(img.getImg(), CreateInterval.createInterval(img.getImg().numDimensions(), img.getImg(), channel), 1.0, 1.0));
+            } catch (Exception e) {
+
+            }
+        }
+    }
 
     public boolean setVariables() {
         setProperties(props, this);
@@ -150,17 +224,15 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     }
 
     void cleanUp() {
-        if (imp != null) {
-            imp.close();
-        }
         this.dispose();
     }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JPanel buttonPanel;
+    private ui.FilteringPanel filteringPanel;
     private javax.swing.JButton jButton3;
-    private javax.swing.JLayeredPane jLayeredPane1;
-    private javax.swing.JPanel jPanel3;
-    private ui.SelectInputPanel selectInputPanel1;
+    private javax.swing.JButton nextButton;
+    private javax.swing.JButton previousButton;
+    private ui.SelectInputPanel selectInputPanel;
     // End of variables declaration//GEN-END:variables
 }
