@@ -33,13 +33,13 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.view.Views;
+import UIClasses.LayerPanel;
 
 /**
  *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
-public class SelectInputPanel extends javax.swing.JPanel implements GUIMethods {
+public class SelectInputPanel extends LayerPanel {
 
     private static File inputDirectory;
     private Properties props;
@@ -47,12 +47,13 @@ public class SelectInputPanel extends javax.swing.JPanel implements GUIMethods {
     public static final String INPUT_FILE_LABEL = "File for Preview";
     public static final String SERIES_SELECT_LABEL = "Series for Preview";
     public static final String CHANNEL_SELECT_LABEL = "Channel for Preview";
-    private BioFormatsImg img;
+//    private BioFormatsImg img;
 
     /**
      * Creates new form SelectInputPanel
      */
     public SelectInputPanel() {
+        super();
         initComponents();
     }
 
@@ -245,17 +246,7 @@ public class SelectInputPanel extends javax.swing.JPanel implements GUIMethods {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
-        String fileName = (String) fileNameComboBox.getSelectedItem();
-        int series = seriesComboBox.getSelectedIndex();
-        int channel = channelComboBox.getSelectedIndex();
-        try {
-//        img = ImageOpener.<UnsignedByteType>openImage(String.format("%s%s%s", inputDirectory, File.separator, fileName), series);
-            Img< FloatType> image = (Img< FloatType>)BioFormatsFileReader.openImage(String.format("%s%s%s", inputDirectory, File.separator, fileName), series).getImg();
-            RandomAccessibleInterval< FloatType> view = Views.interval(image,CreateInterval.createInterval(image.numDimensions(), image, channel));
-            ImageJFunctions.show(CreateInterval.createInterval(image.numDimensions(), image, channel));
-        } catch (Exception e) {
-            GenUtils.error(String.format("Problem reading %s", fileName));
-        }
+        ImageJFunctions.show(img.getInterval());
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void fileNameComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileNameComboBoxActionPerformed
@@ -295,12 +286,19 @@ public class SelectInputPanel extends javax.swing.JPanel implements GUIMethods {
         previewButton.setEnabled(true);
     }//GEN-LAST:event_channelComboBoxActionPerformed
 
-    public void setProperties(Properties p, Container container) {
-        props = PropertyExtractor.setProperties(new Properties(), container);
-    }
-
     public boolean setVariables() {
-        setProperties(props, this);
+        try {
+            setProperties(props, this);
+            String fileName = (String) fileNameComboBox.getSelectedItem();
+            int series = seriesComboBox.getSelectedIndex();
+            int channel = channelComboBox.getSelectedIndex();
+            String fullFileName = String.format("%s%s%s", inputDirectory, File.separator, fileName);
+            Img< FloatType> image = (Img< FloatType>) BioFormatsFileReader.openImage(fullFileName, series);
+            RandomAccessibleInterval< FloatType> view = CreateInterval.createInterval(image.numDimensions(), image, channel);
+            img = new BioFormatsImg(image, view, BioFormatsFileReader.getXYSpatialRes(fullFileName, series), BioFormatsFileReader.getXYSpatialRes(fullFileName, series), null, channel);
+        } catch (Exception e) {
+            return false;
+        }
         return true;
     }
 

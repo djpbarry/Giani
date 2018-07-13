@@ -1,17 +1,12 @@
 package ui;
 
-import IO.BioFormats.BioFormatsFileReader;
 import IO.BioFormats.BioFormatsImg;
 import UIClasses.GUIMethods;
 import UIClasses.UIMethods;
-import ViewMaker.CreateInterval;
-import java.awt.Component;
 import java.awt.Container;
-import java.io.File;
 import java.util.LinkedList;
 import java.util.Properties;
-import net.imglib2.img.Img;
-import net.imglib2.img.display.imagej.ImageJFunctions;
+import UIClasses.LayerPanel;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -26,7 +21,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
 
     private BioFormatsImg img;
     private Properties props;
-    private final LinkedList<Component> componentList = new LinkedList();
+    private final LinkedList<LayerPanel> componentList = new LinkedList();
     private int layerIndex = 0;
 
     /**
@@ -54,6 +49,8 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         jButton3 = new javax.swing.JButton();
         selectInputPanel = new ui.SelectInputPanel();
         filteringPanel = new ui.FilteringPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        statusTextArea = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -112,12 +109,12 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.8;
         getContentPane().add(selectInputPanel, gridBagConstraints);
 
-        componentList.add(filteringPanel);
         filteringPanel.setVisible(false);
+        componentList.add(filteringPanel);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -126,19 +123,37 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.weighty = 0.8;
         getContentPane().add(filteringPanel, gridBagConstraints);
 
+        statusTextArea.setColumns(20);
+        statusTextArea.setRows(5);
+        jScrollPane1.setViewportView(statusTextArea);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.8;
+        getContentPane().add(jScrollPane1, gridBagConstraints);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
+        componentList.get(layerIndex).setVariables();
+        img = componentList.get(layerIndex).getImg();
         layerIndex++;
         updateLayer();
         checkLayerIndex();
+        componentList.get(layerIndex).setImg(img);
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
+        componentList.get(layerIndex).setVariables();
         layerIndex--;
+        if (layerIndex > 0) {
+            img = componentList.get(layerIndex - 1).getImg();
+        }
         updateLayer();
         checkLayerIndex();
+        componentList.get(layerIndex).setImg(img);
     }//GEN-LAST:event_previousButtonActionPerformed
 
     void updateLayer() {
@@ -149,7 +164,10 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
                 componentList.get(i).setVisible(false);
             }
         }
-//        layeredPane.moveToFront(componentList.get(layerIndex));
+        componentList.get(layerIndex).setImg(img);
+        if (img != null) {
+            statusTextArea.append(img.toString());
+        }
     }
 
     void checkLayerIndex() {
@@ -162,20 +180,6 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
             nextButton.setEnabled(false);
         } else {
             nextButton.setEnabled(true);
-        }
-        if (layerIndex > 0) {
-            try {
-                Properties inputProps = selectInputPanel.getProps();
-                int channel = Integer.parseInt(inputProps.getProperty(SelectInputPanel.CHANNEL_SELECT_LABEL));
-                img = BioFormatsFileReader.openImage(String.format("%s%s%s",
-                        inputProps.getProperty(SelectInputPanel.INPUT_DIR_LABEL),
-                        File.separator,
-                        inputProps.getProperty(SelectInputPanel.INPUT_FILE_LABEL)),
-                        Integer.parseInt(inputProps.getProperty(SelectInputPanel.SERIES_SELECT_LABEL)));
-                filteringPanel.setBioImg(new BioFormatsImg(img.getImg(), CreateInterval.createInterval(img.getImg().numDimensions(), img.getImg(), channel), 1.0, 1.0));
-            } catch (Exception e) {
-
-            }
         }
     }
 
@@ -231,8 +235,10 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private javax.swing.JPanel buttonPanel;
     private ui.FilteringPanel filteringPanel;
     private javax.swing.JButton jButton3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton nextButton;
     private javax.swing.JButton previousButton;
     private ui.SelectInputPanel selectInputPanel;
+    private javax.swing.JTextArea statusTextArea;
     // End of variables declaration//GEN-END:variables
 }

@@ -7,25 +7,19 @@ package ui;
 
 import IO.BioFormats.BioFormatsImg;
 import ImgLib2.Filters.Gaussian;
-import UIClasses.GUIMethods;
-import UIClasses.PropertyExtractor;
 import ij.IJ;
-import java.awt.Container;
-import java.util.Properties;
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.view.Views;
+import UIClasses.LayerPanel;
 
 /**
  *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
-public class FilteringPanel extends javax.swing.JPanel implements GUIMethods {
+public class FilteringPanel extends LayerPanel {
 
     private Thread previewThread;
-    private Properties props;
-    private BioFormatsImg bioImg;
     public static final String FILT_RAD_XY_LABEL = String.format("XY Filter Radius (%cm):", IJ.micronSymbol);
     public static final String FILT_RAD_Z_LABEL = String.format("Z Filter Radius (%cm):", IJ.micronSymbol);
 
@@ -33,6 +27,7 @@ public class FilteringPanel extends javax.swing.JPanel implements GUIMethods {
      * Creates new form FilteringPanel
      */
     public FilteringPanel() {
+        super();
         initComponents();
     }
 
@@ -52,6 +47,11 @@ public class FilteringPanel extends javax.swing.JPanel implements GUIMethods {
         filterRadiusZLabel = new javax.swing.JLabel();
         filterRadiusZTextField = new javax.swing.JTextField();
 
+        addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                formFocusGained(evt);
+            }
+        });
         setLayout(new java.awt.GridBagLayout());
 
         previewButton.setText("Preview");
@@ -67,7 +67,7 @@ public class FilteringPanel extends javax.swing.JPanel implements GUIMethods {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
         add(previewButton, gridBagConstraints);
 
@@ -75,7 +75,7 @@ public class FilteringPanel extends javax.swing.JPanel implements GUIMethods {
         filterRadiusXYLabel.setLabelFor(filterRadiusXYTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -85,7 +85,7 @@ public class FilteringPanel extends javax.swing.JPanel implements GUIMethods {
         filterRadiusXYTextField.setText("0.0");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -95,7 +95,7 @@ public class FilteringPanel extends javax.swing.JPanel implements GUIMethods {
         filterRadiusZLabel.setLabelFor(filterRadiusZTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -104,7 +104,7 @@ public class FilteringPanel extends javax.swing.JPanel implements GUIMethods {
         filterRadiusZTextField.setText("0.0");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -114,13 +114,15 @@ public class FilteringPanel extends javax.swing.JPanel implements GUIMethods {
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
         previewThread = new Thread() {
+            private final BioFormatsImg bioImage = img.copy();
+
             public void run() {
-                Img< FloatType> img = bioImg.getImg();
-                double[] sigma = new double[]{Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / bioImg.getXySpatRes(),
-                    Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / bioImg.getXySpatRes(),
-                    Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_Z_LABEL)) / bioImg.getzSpatRes()};
-                Gaussian.blurGaussian3D(sigma, img, bioImg.getInterval());
-                ImageJFunctions.show(bioImg.getInterval());
+                Img< FloatType> image = bioImage.getImg();
+                double[] sigma = new double[]{Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes(),
+                    Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes(),
+                    Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_Z_LABEL)) / bioImage.getzSpatRes()};
+                Gaussian.blurGaussian3D(sigma, image, bioImage.getInterval());
+                ImageJFunctions.show(bioImage.getInterval());
             }
         };
         previewThread.start();
@@ -132,18 +134,9 @@ public class FilteringPanel extends javax.swing.JPanel implements GUIMethods {
         }
     }//GEN-LAST:event_previewButtonFocusLost
 
-    public void setProperties(Properties p, Container container) {
-        props = PropertyExtractor.setProperties(new Properties(), container);
-    }
+    private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusGained
 
-    public boolean setVariables() {
-        setProperties(props, this);
-        return true;
-    }
-
-    public void setBioImg(BioFormatsImg bioImg) {
-        this.bioImg = bioImg;
-    }
+    }//GEN-LAST:event_formFocusGained
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel filterRadiusXYLabel;
