@@ -82,6 +82,7 @@ public class SelectInputPanel extends LayerPanel {
         channelComboBox = new javax.swing.JComboBox<>();
         previewButton = new javax.swing.JButton();
 
+        setBorder(javax.swing.BorderFactory.createEtchedBorder());
         setLayout(new java.awt.GridBagLayout());
 
         inputDirTextField.setText("Select input file...");

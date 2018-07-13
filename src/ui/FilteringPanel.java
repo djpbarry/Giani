@@ -47,6 +47,7 @@ public class FilteringPanel extends LayerPanel {
         filterRadiusZLabel = new javax.swing.JLabel();
         filterRadiusZTextField = new javax.swing.JTextField();
 
+        setBorder(javax.swing.BorderFactory.createEtchedBorder());
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 formFocusGained(evt);

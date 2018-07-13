@@ -16,13 +16,25 @@
  */
 package ui;
 
+import IO.BioFormats.BioFormatsImg;
+import ImgLib2.Filters.MaximumFinder;
 import UIClasses.LayerPanel;
+import ij.IJ;
+import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.type.logic.BitType;
+import net.imglib2.type.numeric.real.FloatType;
 
 /**
  *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
 public class MaximaFinderPanel extends LayerPanel {
+
+    private Thread previewThread;
+    public static final String FILT_RAD_XY_LABEL = String.format("XY Filter Radius (%cm):", IJ.micronSymbol);
+    public static final String FILT_RAD_Z_LABEL = String.format("Z Filter Radius (%cm):", IJ.micronSymbol);
 
     /**
      * Creates new form MaximaFinderPanel
@@ -40,20 +52,94 @@ public class MaximaFinderPanel extends LayerPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        xyFiltRadLabel = new javax.swing.JLabel();
+        xyFiltRadTextField = new javax.swing.JTextField();
+        zFiltRadLabel = new javax.swing.JLabel();
+        zFiltRadTextField = new javax.swing.JTextField();
+        previewButton = new javax.swing.JButton();
+
+        setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        setLayout(new java.awt.GridBagLayout());
+
+        xyFiltRadLabel.setText(FILT_RAD_XY_LABEL);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(xyFiltRadLabel, gridBagConstraints);
+
+        xyFiltRadTextField.setText("jTextField1");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(xyFiltRadTextField, gridBagConstraints);
+
+        zFiltRadLabel.setText(FILT_RAD_Z_LABEL);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(zFiltRadLabel, gridBagConstraints);
+
+        zFiltRadTextField.setText("jTextField2");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(zFiltRadTextField, gridBagConstraints);
+
+        previewButton.setText("Preview");
+        previewButton.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                previewButtonFocusLost(evt);
+            }
+        });
+        previewButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                previewButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        add(previewButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
+        setVariables();
+        previewThread = new Thread() {
+            private final BioFormatsImg bioImage = img.copy();
+
+            public void run() {
+                long[] dims = new long[bioImage.getInterval().numDimensions()];
+                bioImage.getInterval().dimensions(dims);
+                Img< BitType> display = MaximumFinder.findAndDisplayLocalMinima(bioImage.getInterval(), dims, new FloatType(100), 5);
+                ImageJFunctions.show(display);
+            }
+        };
+        previewThread.start();
+    }//GEN-LAST:event_previewButtonActionPerformed
+
+    private void previewButtonFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_previewButtonFocusLost
+        if (previewThread != null) {
+            previewThread.interrupt();
+        }
+    }//GEN-LAST:event_previewButtonFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton previewButton;
+    private javax.swing.JLabel xyFiltRadLabel;
+    private javax.swing.JTextField xyFiltRadTextField;
+    private javax.swing.JLabel zFiltRadLabel;
+    private javax.swing.JTextField zFiltRadTextField;
     // End of variables declaration//GEN-END:variables
 }

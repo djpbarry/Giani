@@ -51,6 +51,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         jButton3 = new javax.swing.JButton();
         selectInputPanel = new ui.SelectInputPanel(statusTextArea);
         filteringPanel = new ui.FilteringPanel();
+        maximaFinderPanel = new ui.MaximaFinderPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -134,6 +135,16 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.8;
         getContentPane().add(filteringPanel, gridBagConstraints);
+
+        maximaFinderPanel.setVisible(false);
+        componentList.add(maximaFinderPanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.8;
+        getContentPane().add(maximaFinderPanel, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -238,6 +249,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private ui.FilteringPanel filteringPanel;
     private javax.swing.JButton jButton3;
     private javax.swing.JScrollPane jScrollPane1;
+    private ui.MaximaFinderPanel maximaFinderPanel;
     private javax.swing.JButton nextButton;
     private javax.swing.JButton previousButton;
     private ui.SelectInputPanel selectInputPanel;
