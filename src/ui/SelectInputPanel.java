@@ -19,12 +19,9 @@ package ui;
 import IO.BioFormats.BioFormatsFileLister;
 import IO.BioFormats.BioFormatsFileReader;
 import IO.BioFormats.BioFormatsImg;
-import UIClasses.GUIMethods;
-import UIClasses.PropertyExtractor;
 import UtilClasses.GenUtils;
 import UtilClasses.Utilities;
 import ViewMaker.CreateInterval;
-import java.awt.Container;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -34,6 +31,7 @@ import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.real.FloatType;
 import UIClasses.LayerPanel;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -47,13 +45,19 @@ public class SelectInputPanel extends LayerPanel {
     public static final String INPUT_FILE_LABEL = "File for Preview";
     public static final String SERIES_SELECT_LABEL = "Series for Preview";
     public static final String CHANNEL_SELECT_LABEL = "Channel for Preview";
+    private final JTextArea textArea;
 //    private BioFormatsImg img;
 
     /**
      * Creates new form SelectInputPanel
      */
     public SelectInputPanel() {
+        this(null);
+    }
+
+    public SelectInputPanel(JTextArea textArea) {
         super();
+        this.textArea = textArea;
         initComponents();
     }
 
@@ -70,8 +74,6 @@ public class SelectInputPanel extends LayerPanel {
         inputDirTextField = new javax.swing.JTextField();
         chooseInputDirButton = new javax.swing.JButton();
         inputDirLabel = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        inputDirDetailsTextArea = new javax.swing.JTextArea();
         fileNameComboLabel = new javax.swing.JLabel();
         fileNameComboBox = new javax.swing.JComboBox<>();
         seriesSelectLabel = new javax.swing.JLabel();
@@ -118,20 +120,6 @@ public class SelectInputPanel extends LayerPanel {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(inputDirLabel, gridBagConstraints);
-
-        inputDirDetailsTextArea.setColumns(20);
-        inputDirDetailsTextArea.setRows(5);
-        jScrollPane1.setViewportView(inputDirDetailsTextArea);
-        inputDirDetailsTextArea.setEditable(false);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(jScrollPane1, gridBagConstraints);
 
         fileNameComboLabel.setText(INPUT_FILE_LABEL);
         fileNameComboLabel.setEnabled(false);
@@ -241,7 +229,7 @@ public class SelectInputPanel extends LayerPanel {
         } catch (Exception e) {
             GenUtils.error("There was a problem with directory selection.");
         }
-        enableFileDropDown(listFiles());
+        enableFileDropDown(listFiles(textArea));
     }//GEN-LAST:event_chooseInputDirButtonActionPerformed
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -306,17 +294,19 @@ public class SelectInputPanel extends LayerPanel {
         return props;
     }
 
-    ArrayList<String> listFiles() {
-        inputDirDetailsTextArea.setText("");
-        inputDirDetailsTextArea.append(String.format("%s\n", inputDirectory.getAbsolutePath()));
+    ArrayList<String> listFiles(JTextArea textArea) {
         ArrayList<String> fileNames = BioFormatsFileLister.obtainValidFileList(inputDirectory);
-        if (fileNames.size() > 0) {
-            inputDirDetailsTextArea.append(String.format("%d valid files found.\n", fileNames.size()));
-            for (String file : fileNames) {
-                inputDirDetailsTextArea.append(String.format("%s\n", file));
+        if (textArea != null) {
+            textArea.setText("");
+            textArea.append(String.format("%s\n", inputDirectory.getAbsolutePath()));
+            if (fileNames.size() > 0) {
+                textArea.append(String.format("%d valid files found.\n", fileNames.size()));
+                for (String file : fileNames) {
+                    textArea.append(String.format("%s\n", file));
+                }
+            } else {
+                textArea.append("No valid files found.\n");
             }
-        } else {
-            inputDirDetailsTextArea.append("No valid files found.\n");
         }
         return fileNames;
     }
@@ -336,10 +326,8 @@ public class SelectInputPanel extends LayerPanel {
     private javax.swing.JButton chooseInputDirButton;
     private javax.swing.JComboBox<String> fileNameComboBox;
     private javax.swing.JLabel fileNameComboLabel;
-    private javax.swing.JTextArea inputDirDetailsTextArea;
     private javax.swing.JLabel inputDirLabel;
     private javax.swing.JTextField inputDirTextField;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton previewButton;
     private javax.swing.JComboBox<String> seriesComboBox;
     private javax.swing.JLabel seriesSelectLabel;

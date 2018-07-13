@@ -43,17 +43,29 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        statusTextArea = new javax.swing.JTextArea();
         buttonPanel = new javax.swing.JPanel();
         previousButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        selectInputPanel = new ui.SelectInputPanel();
+        selectInputPanel = new ui.SelectInputPanel(statusTextArea);
         filteringPanel = new ui.FilteringPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        statusTextArea = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
+
+        statusTextArea.setColumns(20);
+        statusTextArea.setRows(5);
+        jScrollPane1.setViewportView(statusTextArea);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.8;
+        getContentPane().add(jScrollPane1, gridBagConstraints);
 
         buttonPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         buttonPanel.setLayout(new java.awt.GridBagLayout());
@@ -122,16 +134,6 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.8;
         getContentPane().add(filteringPanel, gridBagConstraints);
-
-        statusTextArea.setColumns(20);
-        statusTextArea.setRows(5);
-        jScrollPane1.setViewportView(statusTextArea);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.8;
-        getContentPane().add(jScrollPane1, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
