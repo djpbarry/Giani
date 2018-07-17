@@ -20,10 +20,12 @@ import IO.BioFormats.BioFormatsImg;
 import ImgLib2.Filters.MaximumFinder;
 import UIClasses.LayerPanel;
 import ij.IJ;
+import net.imglib2.algorithm.morphology.distance.DistanceTransform;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.logic.BitType;
+import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 
 /**
@@ -35,6 +37,7 @@ public class MaximaFinderPanel extends LayerPanel {
     private Thread previewThread;
     public static final String FILT_RAD_XY_LABEL = String.format("XY Filter Radius (%cm):", IJ.micronSymbol);
     public static final String FILT_RAD_Z_LABEL = String.format("Z Filter Radius (%cm):", IJ.micronSymbol);
+    public static final String NOISE_TOL_LABEL = "Noise Tolerance:";
 
     /**
      * Creates new form MaximaFinderPanel
@@ -59,18 +62,21 @@ public class MaximaFinderPanel extends LayerPanel {
         zFiltRadLabel = new javax.swing.JLabel();
         zFiltRadTextField = new javax.swing.JTextField();
         previewButton = new javax.swing.JButton();
+        noiseTolLabel = new javax.swing.JLabel();
+        noiseTolTextField = new javax.swing.JTextField();
 
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
         setLayout(new java.awt.GridBagLayout());
 
         xyFiltRadLabel.setText(FILT_RAD_XY_LABEL);
+        xyFiltRadLabel.setLabelFor(xyFiltRadTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         add(xyFiltRadLabel, gridBagConstraints);
 
-        xyFiltRadTextField.setText("jTextField1");
+        xyFiltRadTextField.setText("0.0");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -78,6 +84,7 @@ public class MaximaFinderPanel extends LayerPanel {
         add(xyFiltRadTextField, gridBagConstraints);
 
         zFiltRadLabel.setText(FILT_RAD_Z_LABEL);
+        zFiltRadLabel.setLabelFor(zFiltRadTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -86,7 +93,7 @@ public class MaximaFinderPanel extends LayerPanel {
         gridBagConstraints.weighty = 1.0;
         add(zFiltRadLabel, gridBagConstraints);
 
-        zFiltRadTextField.setText("jTextField2");
+        zFiltRadTextField.setText("0.0");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -108,9 +115,28 @@ public class MaximaFinderPanel extends LayerPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
         add(previewButton, gridBagConstraints);
+
+        noiseTolLabel.setText(NOISE_TOL_LABEL);
+        noiseTolLabel.setLabelFor(noiseTolTextField);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(noiseTolLabel, gridBagConstraints);
+
+        noiseTolTextField.setText("0.0");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(noiseTolTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -121,8 +147,25 @@ public class MaximaFinderPanel extends LayerPanel {
             public void run() {
                 long[] dims = new long[bioImage.getInterval().numDimensions()];
                 bioImage.getInterval().dimensions(dims);
-                Img< BitType> display = MaximumFinder.findAndDisplayLocalMinima(bioImage.getInterval(), dims, new FloatType(100), 5);
-                ImageJFunctions.show(display);
+                Img< BitType> maxima = MaximumFinder.findAndDisplayLocalMaxima(bioImage.getInterval(), dims,
+                        new FloatType(Float.parseFloat(props.getProperty(NOISE_TOL_LABEL))),
+                        new int[]{(int) Math.round(Double.parseDouble(props.getProperty(FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes()),
+                            (int) Math.round(Double.parseDouble(props.getProperty(FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes()),
+                            (int) Math.round(Double.parseDouble(props.getProperty(FILT_RAD_Z_LABEL)) / bioImage.getXySpatRes())}, true);
+                
+               Img<FloatType> distanceMap = bioImage.getImg().factory().create(bioImage.getInterval());
+                DistanceTransform.transform(maxima, distanceMap, DistanceTransform.DISTANCE_TYPE.EUCLIDIAN);
+
+                IJ.saveAs(ImageJFunctions.show(distanceMap, "Distance Transform"), "TIF", "C:/Users/barryd/Desktop/test.tif");
+                ImageJFunctions.show(maxima, "Detected Maxima");
+
+//                Img<BitType> invertedBinaryImage = ImageInverter.invertBinaryImage(maxima);
+//                DistanceTransform.transform(invertedBinaryImage, DistanceTransform.DISTANCE_TYPE.EUCLIDIAN);
+//                ImageJFunctions.show(invertedBinaryImage, "Inverted Image");
+//                IJ.saveAs(ImageJFunctions.show(invertedBinaryImage, "Distance Transform"), "TIF", "C:/Users/barryd/Desktop/test.tif");
+//                Img< BitType> distanceMaxima = MaximumFinder.findAndDisplayLocalMaxima(maxima, dims,
+//                        new FloatType(0.0f), new int[]{1, 1, 1}, false);
+//                ImageJFunctions.show(distanceMaxima, "Distance Maxima");
             }
         };
         previewThread.start();
@@ -136,6 +179,8 @@ public class MaximaFinderPanel extends LayerPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel noiseTolLabel;
+    private javax.swing.JTextField noiseTolTextField;
     private javax.swing.JButton previewButton;
     private javax.swing.JLabel xyFiltRadLabel;
     private javax.swing.JTextField xyFiltRadTextField;
