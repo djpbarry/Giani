@@ -16,17 +16,8 @@
  */
 package ui;
 
-import IO.BioFormats.BioFormatsImg;
-import ImgLib2.Filters.MaximumFinder;
 import UIClasses.LayerPanel;
 import ij.IJ;
-import net.imglib2.algorithm.morphology.distance.DistanceTransform;
-import net.imglib2.img.Img;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.type.logic.BitType;
-import net.imglib2.type.numeric.real.DoubleType;
-import net.imglib2.type.numeric.real.FloatType;
 
 /**
  *
@@ -142,22 +133,22 @@ public class MaximaFinderPanel extends LayerPanel {
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
         previewThread = new Thread() {
-            private final BioFormatsImg bioImage = img.copy();
+//            private final BioFormatsImg bioImage = img.copy();
 
             public void run() {
-                long[] dims = new long[bioImage.getInterval().numDimensions()];
-                bioImage.getInterval().dimensions(dims);
-                Img< BitType> maxima = MaximumFinder.findAndDisplayLocalMaxima(bioImage.getInterval(), dims,
-                        new FloatType(Float.parseFloat(props.getProperty(NOISE_TOL_LABEL))),
-                        new int[]{(int) Math.round(Double.parseDouble(props.getProperty(FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes()),
-                            (int) Math.round(Double.parseDouble(props.getProperty(FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes()),
-                            (int) Math.round(Double.parseDouble(props.getProperty(FILT_RAD_Z_LABEL)) / bioImage.getXySpatRes())}, true);
-                
-               Img<FloatType> distanceMap = bioImage.getImg().factory().create(bioImage.getInterval());
-                DistanceTransform.transform(maxima, distanceMap, DistanceTransform.DISTANCE_TYPE.EUCLIDIAN);
-
-                IJ.saveAs(ImageJFunctions.show(distanceMap, "Distance Transform"), "TIF", "C:/Users/barryd/Desktop/test.tif");
-                ImageJFunctions.show(maxima, "Detected Maxima");
+//                long[] dims = new long[bioImage.getInterval().numDimensions()];
+//                bioImage.getInterval().dimensions(dims);
+//                Img< BitType> maxima = MaximumFinder.findAndDisplayLocalMaxima(bioImage.getInterval(), dims,
+//                        new FloatType(Float.parseFloat(props.getProperty(NOISE_TOL_LABEL))),
+//                        new int[]{(int) Math.round(Double.parseDouble(props.getProperty(FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes()),
+//                            (int) Math.round(Double.parseDouble(props.getProperty(FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes()),
+//                            (int) Math.round(Double.parseDouble(props.getProperty(FILT_RAD_Z_LABEL)) / bioImage.getXySpatRes())}, true);
+//                
+//               Img<FloatType> distanceMap = bioImage.getImg().factory().create(bioImage.getInterval());
+//                DistanceTransform.transform(maxima, distanceMap, DistanceTransform.DISTANCE_TYPE.EUCLIDIAN);
+//
+//                IJ.saveAs(ImageJFunctions.show(distanceMap, "Distance Transform"), "TIF", "C:/Users/barryd/Desktop/test.tif");
+//                ImageJFunctions.show(maxima, "Detected Maxima");
 
 //                Img<BitType> invertedBinaryImage = ImageInverter.invertBinaryImage(maxima);
 //                DistanceTransform.transform(invertedBinaryImage, DistanceTransform.DISTANCE_TYPE.EUCLIDIAN);

@@ -21,15 +21,10 @@ import IO.BioFormats.BioFormatsFileReader;
 import IO.BioFormats.BioFormatsImg;
 import UtilClasses.GenUtils;
 import UtilClasses.Utilities;
-import ViewMaker.CreateInterval;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.Img;
-import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.type.numeric.real.FloatType;
 import UIClasses.LayerPanel;
 import javax.swing.JTextArea;
 
@@ -235,13 +230,22 @@ public class SelectInputPanel extends LayerPanel {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
-        ImageJFunctions.show(img.getInterval());
+        int series = seriesComboBox.getSelectedIndex();
+        int channel = channelComboBox.getSelectedIndex();
+        try {
+            img.getImg(series, channel).show();
+        } catch (Exception e) {
+            GenUtils.error("An error occured while trying to display the image.");
+            GenUtils.logError(e);
+        }
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void fileNameComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileNameComboBoxActionPerformed
         String fileName = (String) fileNameComboBox.getSelectedItem();
         try {
-            int series = BioFormatsFileReader.getSeriesCount(String.format("%s%s%s", inputDirectory, File.separator, fileName));
+            String fullFileName = String.format("%s%s%s", inputDirectory, File.separator, fileName);
+            img = new BioFormatsImg(fullFileName);
+            int series = img.getSeriesCount();
             ArrayList<String> seriesLabels = new ArrayList();
             for (int s = 0; s < series; s++) {
                 seriesLabels.add(String.valueOf(s));
@@ -258,7 +262,7 @@ public class SelectInputPanel extends LayerPanel {
         String fileName = (String) fileNameComboBox.getSelectedItem();
         int series = seriesComboBox.getSelectedIndex();
         try {
-            int channels = BioFormatsFileReader.getChannelCount(String.format("%s%s%s", inputDirectory, File.separator, fileName), series);
+            int channels = img.getChannelCount();
             ArrayList<String> channelLabels = new ArrayList();
             for (int c = 0; c < channels; c++) {
                 channelLabels.add(String.valueOf(c));
@@ -279,12 +283,8 @@ public class SelectInputPanel extends LayerPanel {
         try {
             setProperties(props, this);
             String fileName = (String) fileNameComboBox.getSelectedItem();
-            int series = seriesComboBox.getSelectedIndex();
-            int channel = channelComboBox.getSelectedIndex();
             String fullFileName = String.format("%s%s%s", inputDirectory, File.separator, fileName);
-            Img< FloatType> image = (Img< FloatType>) BioFormatsFileReader.openImage(fullFileName, series);
-            RandomAccessibleInterval< FloatType> view = CreateInterval.createInterval(image.numDimensions(), image, channel);
-            img = new BioFormatsImg(image, view, BioFormatsFileReader.getXYSpatialRes(fullFileName, series), BioFormatsFileReader.getXYSpatialRes(fullFileName, series), null, channel);
+            img = new BioFormatsImg(fullFileName);
         } catch (Exception e) {
             return false;
         }

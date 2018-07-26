@@ -5,12 +5,7 @@
  */
 package ui;
 
-import IO.BioFormats.BioFormatsImg;
-import ImgLib2.Filters.Gaussian;
 import ij.IJ;
-import net.imglib2.img.Img;
-import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.type.numeric.real.FloatType;
 import UIClasses.LayerPanel;
 
 /**
@@ -115,16 +110,16 @@ public class FilteringPanel extends LayerPanel {
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
         previewThread = new Thread() {
-            private final BioFormatsImg bioImage = img.copy();
-
-            public void run() {
-                Img< FloatType> image = bioImage.getImg();
-                double[] sigma = new double[]{Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes(),
-                    Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes(),
-                    Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_Z_LABEL)) / bioImage.getzSpatRes()};
-                Gaussian.blurGaussian3D(sigma, image, bioImage.getInterval());
-                ImageJFunctions.show(bioImage.getInterval());
-            }
+//            private final BioFormatsImg bioImage = img.copy();
+//
+//            public void run() {
+//                Img< FloatType> image = bioImage.getImg();
+//                double[] sigma = new double[]{Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes(),
+//                    Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes(),
+//                    Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_Z_LABEL)) / bioImage.getzSpatRes()};
+//                Gaussian.blurGaussian3D(sigma, image, bioImage.getInterval());
+//                ImageJFunctions.show(bioImage.getInterval());
+//            }
         };
         previewThread.start();
     }//GEN-LAST:event_previewButtonActionPerformed
