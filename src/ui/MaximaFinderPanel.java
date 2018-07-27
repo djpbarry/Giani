@@ -20,6 +20,9 @@ import Extrema.MaximaFinder;
 import UIClasses.LayerPanel;
 import ij.IJ;
 import ij.ImagePlus;
+import mcib3d.image3d.ImageFloat;
+import mcib3d.image3d.ImageHandler;
+import mcib3d.image3d.distanceMap3d.EDT;
 
 /**
  *
@@ -147,20 +150,18 @@ public class MaximaFinderPanel extends LayerPanel {
 
                 ImagePlus maxima = MaximaFinder.makeLocalMaximaImage(sigma[0], img.getImg(), Double.parseDouble(panelProps.getProperty(MaximaFinderPanel.NOISE_TOL_LABEL)), true, true, sigma[2], (byte) 0);
                 maxima.show();
-//                
-//               Img<FloatType> distanceMap = bioImage.getImg().factory().create(bioImage.getInterval());
-//                DistanceTransform.transform(maxima, distanceMap, DistanceTransform.DISTANCE_TYPE.EUCLIDIAN);
-//
-//                IJ.saveAs(ImageJFunctions.show(distanceMap, "Distance Transform"), "TIF", "C:/Users/barryd/Desktop/test.tif");
-//                ImageJFunctions.show(maxima, "Detected Maxima");
-//
-//                Img<BitType> invertedBinaryImage = ImageInverter.invertBinaryImage(maxima);
-//                DistanceTransform.transform(invertedBinaryImage, DistanceTransform.DISTANCE_TYPE.EUCLIDIAN);
-//                ImageJFunctions.show(invertedBinaryImage, "Inverted Image");
-//                IJ.saveAs(ImageJFunctions.show(invertedBinaryImage, "Distance Transform"), "TIF", "C:/Users/barryd/Desktop/test.tif");
-//                Img< BitType> distanceMaxima = MaximumFinder.findAndDisplayLocalMaxima(maxima, dims,
-//                        new FloatType(0.0f), new int[]{1, 1, 1}, false);
-//                ImageJFunctions.show(distanceMaxima, "Distance Maxima");
+                IJ.saveAs(maxima, "TIF", "C:\\Users\\barryd\\Desktop\\Maxima.tiff");
+
+                ImageHandler img = ImageHandler.wrap(maxima);
+                
+                IJ.log("Computing Distance Map (EDT) ...");
+                ImageFloat r = EDT.run(img, 1, true, 0);
+                
+                if (r != null) {
+                    r.setTitle("EDT_" + maxima.getTitle());
+                    r.show("EDT");
+                }
+
             }
         };
         previewThread.start();
