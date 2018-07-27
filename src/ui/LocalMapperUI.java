@@ -152,12 +152,12 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         componentList.get(layerIndex).setVariables();
         img = componentList.get(layerIndex).getImg();
-        Properties inputProps = componentList.get(layerIndex).getPanelProps();
+        Properties inputProps = componentList.get(layerIndex).getProps();
         layerIndex++;
         updateLayer();
         checkLayerIndex();
         componentList.get(layerIndex).setImg(img);
-        componentList.get(layerIndex).setInputProps(inputProps);
+        componentList.get(layerIndex).setProps(inputProps);
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
@@ -166,12 +166,12 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         layerIndex--;
         if (layerIndex > 0) {
             img = componentList.get(layerIndex - 1).getImg();
-            inputProps = componentList.get(layerIndex - 1).getPanelProps();
+            inputProps = componentList.get(layerIndex - 1).getProps();
         }
         updateLayer();
         checkLayerIndex();
         componentList.get(layerIndex).setImg(img);
-        componentList.get(layerIndex).setInputProps(inputProps);
+        componentList.get(layerIndex).setProps(inputProps);
     }//GEN-LAST:event_previousButtonActionPerformed
 
     void updateLayer() {

@@ -115,15 +115,15 @@ public class FilteringPanel extends LayerPanel {
         setVariables();
         previewThread = new Thread() {
             public void run() {
-                int series = Integer.parseInt(inputProps.getProperty(SelectInputPanel.SERIES_SELECT_LABEL));
-                int channel = Integer.parseInt(inputProps.getProperty(SelectInputPanel.CHANNEL_SELECT_LABEL));
+                int series = Integer.parseInt(props.getProperty(SelectInputPanel.SERIES_SELECT_LABEL));
+                int channel = Integer.parseInt(props.getProperty(SelectInputPanel.CHANNEL_SELECT_LABEL));
                 double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
                 double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
                 img.setImg(series, channel);
                 ImagePlus image = img.getImg();
-                double[] sigma = new double[]{Double.parseDouble(panelProps.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / xySpatialRes,
-                    Double.parseDouble(panelProps.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / xySpatialRes,
-                    Double.parseDouble(panelProps.getProperty(FilteringPanel.FILT_RAD_Z_LABEL)) / zSpatialRes};
+                double[] sigma = new double[]{Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / xySpatialRes,
+                    Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / xySpatialRes,
+                    Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_Z_LABEL)) / zSpatialRes};
                 GaussianBlur3D.blur(image, sigma[0], sigma[1], sigma[2]);
                 image.show();
             }
