@@ -17,13 +17,11 @@
 package ui;
 
 import IO.BioFormats.BioFormatsFileLister;
-import IO.BioFormats.BioFormatsFileReader;
 import IO.BioFormats.BioFormatsImg;
 import UtilClasses.GenUtils;
 import UtilClasses.Utilities;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
 import UIClasses.LayerPanel;
 import javax.swing.JTextArea;
@@ -35,7 +33,6 @@ import javax.swing.JTextArea;
 public class SelectInputPanel extends LayerPanel {
 
     private static File inputDirectory;
-    private Properties props;
     public static final String INPUT_DIR_LABEL = "Input Directory:";
     public static final String INPUT_FILE_LABEL = "File for Preview";
     public static final String SERIES_SELECT_LABEL = "Series for Preview";
@@ -281,7 +278,7 @@ public class SelectInputPanel extends LayerPanel {
 
     public boolean setVariables() {
         try {
-            setProperties(props, this);
+            setProperties(panelProps, this);
             String fileName = (String) fileNameComboBox.getSelectedItem();
             String fullFileName = String.format("%s%s%s", inputDirectory, File.separator, fileName);
             img = new BioFormatsImg(fullFileName);
@@ -289,10 +286,6 @@ public class SelectInputPanel extends LayerPanel {
             return false;
         }
         return true;
-    }
-
-    public Properties getProps() {
-        return props;
     }
 
     ArrayList<String> listFiles(JTextArea textArea) {

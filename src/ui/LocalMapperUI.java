@@ -20,7 +20,7 @@ import UIClasses.LayerPanel;
 public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
 
     private BioFormatsImg img;
-    private Properties props;
+    private final Properties props = new Properties();
     private final LinkedList<LayerPanel> componentList = new LinkedList();
     private int layerIndex = 0;
 
@@ -152,12 +152,12 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         componentList.get(layerIndex).setVariables();
         img = componentList.get(layerIndex).getImg();
-        Properties inputProps = componentList.get(layerIndex).getPanelProps();
+        props.putAll(componentList.get(layerIndex).getPanelProps());
         layerIndex++;
         updateLayer();
         checkLayerIndex();
         componentList.get(layerIndex).setImg(img);
-        componentList.get(layerIndex).setInputProps(inputProps);
+        componentList.get(layerIndex).setInputProps(props);
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed

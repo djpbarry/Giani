@@ -5,12 +5,11 @@
  */
 package ui;
 
-import ImgLib2.Filters.Gaussian;
 import ij.IJ;
 import UIClasses.LayerPanel;
 import ij.ImagePlus;
 import ij.plugin.GaussianBlur3D;
-import java.util.Properties;
+import ij.process.StackConverter;
 
 /**
  *
@@ -19,8 +18,8 @@ import java.util.Properties;
 public class FilteringPanel extends LayerPanel {
 
     private Thread previewThread;
-    public static final String FILT_RAD_XY_LABEL = String.format("XY Filter Radius (%cm):", IJ.micronSymbol);
-    public static final String FILT_RAD_Z_LABEL = String.format("Z Filter Radius (%cm):", IJ.micronSymbol);
+    public static final String FILT_RAD_XY_LABEL = String.format("XY Gaussian Radius (%cm):", IJ.micronSymbol);
+    public static final String FILT_RAD_Z_LABEL = String.format("Z Gaussian Radius (%cm):", IJ.micronSymbol);
 
     /**
      * Creates new form FilteringPanel
@@ -121,6 +120,7 @@ public class FilteringPanel extends LayerPanel {
                 double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
                 img.setImg(series, channel);
                 ImagePlus image = img.getImg();
+                (new StackConverter(image)).convertToGray32();
                 double[] sigma = new double[]{Double.parseDouble(panelProps.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / xySpatialRes,
                     Double.parseDouble(panelProps.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / xySpatialRes,
                     Double.parseDouble(panelProps.getProperty(FilteringPanel.FILT_RAD_Z_LABEL)) / zSpatialRes};

@@ -16,8 +16,10 @@
  */
 package ui;
 
+import Extrema.MaximaFinder;
 import UIClasses.LayerPanel;
 import ij.IJ;
+import ij.ImagePlus;
 
 /**
  *
@@ -26,8 +28,8 @@ import ij.IJ;
 public class MaximaFinderPanel extends LayerPanel {
 
     private Thread previewThread;
-    public static final String FILT_RAD_XY_LABEL = String.format("XY Filter Radius (%cm):", IJ.micronSymbol);
-    public static final String FILT_RAD_Z_LABEL = String.format("Z Filter Radius (%cm):", IJ.micronSymbol);
+    public static final String FILT_RAD_XY_LABEL = String.format("XY Local Max Radius (%cm):", IJ.micronSymbol);
+    public static final String FILT_RAD_Z_LABEL = String.format("Z Local Max Radius (%cm):", IJ.micronSymbol);
     public static final String NOISE_TOL_LABEL = "Noise Tolerance:";
 
     /**
@@ -133,23 +135,25 @@ public class MaximaFinderPanel extends LayerPanel {
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
         previewThread = new Thread() {
-//            private final BioFormatsImg bioImage = img.copy();
-
             public void run() {
-//                long[] dims = new long[bioImage.getInterval().numDimensions()];
-//                bioImage.getInterval().dimensions(dims);
-//                Img< BitType> maxima = MaximumFinder.findAndDisplayLocalMaxima(bioImage.getInterval(), dims,
-//                        new FloatType(Float.parseFloat(props.getProperty(NOISE_TOL_LABEL))),
-//                        new int[]{(int) Math.round(Double.parseDouble(props.getProperty(FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes()),
-//                            (int) Math.round(Double.parseDouble(props.getProperty(FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes()),
-//                            (int) Math.round(Double.parseDouble(props.getProperty(FILT_RAD_Z_LABEL)) / bioImage.getXySpatRes())}, true);
+                int series = Integer.parseInt(inputProps.getProperty(SelectInputPanel.SERIES_SELECT_LABEL));
+                int channel = Integer.parseInt(inputProps.getProperty(SelectInputPanel.CHANNEL_SELECT_LABEL));
+                img.setImg(series, channel);
+                double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
+                double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
+                int[] sigma = new int[]{(int) Math.round(Double.parseDouble(panelProps.getProperty(MaximaFinderPanel.FILT_RAD_XY_LABEL)) / xySpatialRes),
+                    (int) Math.round(Double.parseDouble(panelProps.getProperty(MaximaFinderPanel.FILT_RAD_XY_LABEL)) / xySpatialRes),
+                    (int) Math.round(Double.parseDouble(panelProps.getProperty(MaximaFinderPanel.FILT_RAD_Z_LABEL)) / zSpatialRes)};
+
+                ImagePlus maxima = MaximaFinder.makeLocalMaximaImage(sigma[0], img.getImg(), Double.parseDouble(panelProps.getProperty(MaximaFinderPanel.NOISE_TOL_LABEL)), true, true, sigma[2], (byte) 0);
+                maxima.show();
 //                
 //               Img<FloatType> distanceMap = bioImage.getImg().factory().create(bioImage.getInterval());
 //                DistanceTransform.transform(maxima, distanceMap, DistanceTransform.DISTANCE_TYPE.EUCLIDIAN);
 //
 //                IJ.saveAs(ImageJFunctions.show(distanceMap, "Distance Transform"), "TIF", "C:/Users/barryd/Desktop/test.tif");
 //                ImageJFunctions.show(maxima, "Detected Maxima");
-
+//
 //                Img<BitType> invertedBinaryImage = ImageInverter.invertBinaryImage(maxima);
 //                DistanceTransform.transform(invertedBinaryImage, DistanceTransform.DISTANCE_TYPE.EUCLIDIAN);
 //                ImageJFunctions.show(invertedBinaryImage, "Inverted Image");
