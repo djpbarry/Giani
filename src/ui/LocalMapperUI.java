@@ -152,21 +152,26 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         componentList.get(layerIndex).setVariables();
         img = componentList.get(layerIndex).getImg();
+        Properties inputProps = componentList.get(layerIndex).getPanelProps();
         layerIndex++;
         updateLayer();
         checkLayerIndex();
         componentList.get(layerIndex).setImg(img);
+        componentList.get(layerIndex).setInputProps(inputProps);
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
+        Properties inputProps = null;
         componentList.get(layerIndex).setVariables();
         layerIndex--;
         if (layerIndex > 0) {
             img = componentList.get(layerIndex - 1).getImg();
+            inputProps = componentList.get(layerIndex - 1).getPanelProps();
         }
         updateLayer();
         checkLayerIndex();
         componentList.get(layerIndex).setImg(img);
+        componentList.get(layerIndex).setInputProps(inputProps);
     }//GEN-LAST:event_previousButtonActionPerformed
 
     void updateLayer() {

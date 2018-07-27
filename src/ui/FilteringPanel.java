@@ -5,8 +5,12 @@
  */
 package ui;
 
+import ImgLib2.Filters.Gaussian;
 import ij.IJ;
 import UIClasses.LayerPanel;
+import ij.ImagePlus;
+import ij.plugin.GaussianBlur3D;
+import java.util.Properties;
 
 /**
  *
@@ -110,16 +114,19 @@ public class FilteringPanel extends LayerPanel {
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
         previewThread = new Thread() {
-//            private final BioFormatsImg bioImage = img.copy();
-//
-//            public void run() {
-//                Img< FloatType> image = bioImage.getImg();
-//                double[] sigma = new double[]{Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes(),
-//                    Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes(),
-//                    Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_Z_LABEL)) / bioImage.getzSpatRes()};
-//                Gaussian.blurGaussian3D(sigma, image, bioImage.getInterval());
-//                ImageJFunctions.show(bioImage.getInterval());
-//            }
+            public void run() {
+                int series = Integer.parseInt(inputProps.getProperty(SelectInputPanel.SERIES_SELECT_LABEL));
+                int channel = Integer.parseInt(inputProps.getProperty(SelectInputPanel.CHANNEL_SELECT_LABEL));
+                double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
+                double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
+                img.setImg(series, channel);
+                ImagePlus image = img.getImg();
+                double[] sigma = new double[]{Double.parseDouble(panelProps.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / xySpatialRes,
+                    Double.parseDouble(panelProps.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / xySpatialRes,
+                    Double.parseDouble(panelProps.getProperty(FilteringPanel.FILT_RAD_Z_LABEL)) / zSpatialRes};
+                GaussianBlur3D.blur(image, sigma[0], sigma[1], sigma[2]);
+                image.show();
+            }
         };
         previewThread.start();
     }//GEN-LAST:event_previewButtonActionPerformed

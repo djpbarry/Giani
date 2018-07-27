@@ -233,7 +233,8 @@ public class SelectInputPanel extends LayerPanel {
         int series = seriesComboBox.getSelectedIndex();
         int channel = channelComboBox.getSelectedIndex();
         try {
-            img.getImg(series, channel).show();
+            img.setImg(series, channel);
+            img.getImg().show();
         } catch (Exception e) {
             GenUtils.error("An error occured while trying to display the image.");
             GenUtils.logError(e);
@@ -260,7 +261,6 @@ public class SelectInputPanel extends LayerPanel {
 
     private void seriesComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seriesComboBoxActionPerformed
         String fileName = (String) fileNameComboBox.getSelectedItem();
-        int series = seriesComboBox.getSelectedIndex();
         try {
             int channels = img.getChannelCount();
             ArrayList<String> channelLabels = new ArrayList();
