@@ -1,12 +1,15 @@
 package ui;
 
 import IO.BioFormats.BioFormatsImg;
+import IO.PropertyWriter;
 import UIClasses.GUIMethods;
 import UIClasses.UIMethods;
 import java.awt.Container;
 import java.util.LinkedList;
 import java.util.Properties;
 import UIClasses.LayerPanel;
+import UIClasses.PropertyExtractor;
+import UtilClasses.GenUtils;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -20,9 +23,10 @@ import UIClasses.LayerPanel;
 public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
 
     private BioFormatsImg img;
-    private final Properties props = new Properties();
+    private Properties props = new Properties();
     private final LinkedList<LayerPanel> componentList = new LinkedList();
     private int layerIndex = 0;
+    private final String title = "Local Mapper";
 
     /**
      * Creates new form LocalMapperUI
@@ -48,10 +52,12 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         buttonPanel = new javax.swing.JPanel();
         previousButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        saveParamsButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         selectInputPanel = new ui.SelectInputPanel(statusTextArea);
         filteringPanel = new ui.FilteringPanel();
         maximaFinderPanel = new ui.MaximaFinderPanel();
+        segmentationPanel = new ui.SegmentationPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -99,13 +105,21 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         buttonPanel.add(nextButton, gridBagConstraints);
 
-        jButton3.setText("Exit");
+        saveParamsButton.setText("Save Parameters");
+        saveParamsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveParamsButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        buttonPanel.add(jButton3, gridBagConstraints);
+        buttonPanel.add(saveParamsButton, gridBagConstraints);
+
+        jButton1.setText("jButton1");
+        buttonPanel.add(jButton1, new java.awt.GridBagConstraints());
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -132,7 +146,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.8;
         getContentPane().add(filteringPanel, gridBagConstraints);
 
@@ -145,6 +159,16 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.8;
         getContentPane().add(maximaFinderPanel, gridBagConstraints);
+
+        segmentationPanel.setVisible(false);
+        componentList.add(segmentationPanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.8;
+        getContentPane().add(segmentationPanel, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -173,6 +197,17 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         componentList.get(layerIndex).setImg(img);
         componentList.get(layerIndex).setInputProps(inputProps);
     }//GEN-LAST:event_previousButtonActionPerformed
+
+    private void saveParamsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveParamsButtonActionPerformed
+        setVariables();
+        try {
+            PropertyWriter.printProperties(props, props.getProperty(SelectInputPanel.INPUT_DIR_LABEL), title, true);
+        } catch (Exception e) {
+            GenUtils.error("Failed to save property file.");
+            GenUtils.logError(e);
+        }
+        cleanUp();
+    }//GEN-LAST:event_saveParamsButtonActionPerformed
 
     void updateLayer() {
         for (int i = 0; i < componentList.size(); i++) {
@@ -207,7 +242,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     }
 
     public void setProperties(Properties p, Container c) {
-
+        props = PropertyExtractor.setProperties(p, c);
     }
 
     /**
@@ -252,11 +287,13 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonPanel;
     private ui.FilteringPanel filteringPanel;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private ui.MaximaFinderPanel maximaFinderPanel;
     private javax.swing.JButton nextButton;
     private javax.swing.JButton previousButton;
+    private javax.swing.JButton saveParamsButton;
+    private ui.SegmentationPanel segmentationPanel;
     private ui.SelectInputPanel selectInputPanel;
     private javax.swing.JTextArea statusTextArea;
     // End of variables declaration//GEN-END:variables

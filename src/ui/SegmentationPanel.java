@@ -5,11 +5,25 @@
  */
 package ui;
 
+import IO.BioFormats.BioFormatsImg;
+import UIClasses.LayerPanel;
+import ij.ImagePlus;
+import ij.plugin.GaussianBlur3D;
+import ij.process.StackConverter;
+import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+import mcib3d.image3d.regionGrowing.Watershed3D;
+
 /**
  *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
-public class SegmentationPanel extends javax.swing.JPanel {
+public class SegmentationPanel extends LayerPanel {
+
+    private Thread previewThread;
+    public static final String CHANNEL_SELECT_LABEL = "Channel for Segmentation";
+    public static final String THRESHOLD_LABEL = "Threshold";
+    private ArrayList<String> channelLabels;
 
     /**
      * Creates new form SegmentationPanel
@@ -26,20 +40,117 @@ public class SegmentationPanel extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        channelSelectLabel = new javax.swing.JLabel();
+        channelSelectComboBox = new javax.swing.JComboBox<>();
+        previewButton = new javax.swing.JButton();
+        thresholdLabel = new javax.swing.JLabel();
+        thresholdTextField = new javax.swing.JTextField();
+
+        setLayout(new java.awt.GridBagLayout());
+
+        channelSelectLabel.setText(CHANNEL_SELECT_LABEL);
+        channelSelectLabel.setLabelFor(channelSelectComboBox);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(channelSelectLabel, gridBagConstraints);
+
+        channelSelectComboBox.setModel(new DefaultComboBoxModel(new String[]{}));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(channelSelectComboBox, gridBagConstraints);
+
+        previewButton.setText("Preview");
+        previewButton.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                previewButtonFocusLost(evt);
+            }
+        });
+        previewButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                previewButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        add(previewButton, gridBagConstraints);
+
+        thresholdLabel.setText(THRESHOLD_LABEL);
+        thresholdLabel.setLabelFor(thresholdTextField);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(thresholdLabel, gridBagConstraints);
+
+        thresholdTextField.setText("0.0");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(thresholdTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
+        setVariables();
+        previewThread = new Thread() {
+            public void run() {
+                ImagePlus maxima = img.getImg().duplicate();
 
+                int series = Integer.parseInt(inputProps.getProperty(SelectInputPanel.SERIES_SELECT_LABEL));
+                int channel = Integer.parseInt(panelProps.getProperty(SegmentationPanel.CHANNEL_SELECT_LABEL));
+                double thresh = Double.parseDouble(panelProps.getProperty(SegmentationPanel.THRESHOLD_LABEL));
+                double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
+                double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
+
+                img.setImg(series, channel);
+                ImagePlus cells = img.getImg();
+                
+                (new StackConverter(cells)).convertToGray32();
+                double[] sigma = new double[]{Double.parseDouble(inputProps.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / xySpatialRes,
+                    Double.parseDouble(inputProps.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / xySpatialRes,
+                    Double.parseDouble(inputProps.getProperty(FilteringPanel.FILT_RAD_Z_LABEL)) / zSpatialRes};
+                GaussianBlur3D.blur(cells, sigma[0], sigma[1], sigma[2]);
+
+                Watershed3D water = new Watershed3D(cells.getImageStack(), maxima.getImageStack(), thresh, 0);
+                water.setLabelSeeds(true);
+                water.getWatershedImage3D().show();
+            }
+        };
+        previewThread.start();
+    }//GEN-LAST:event_previewButtonActionPerformed
+
+    private void previewButtonFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_previewButtonFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_previewButtonFocusLost
+
+    public void setImg(BioFormatsImg img) {
+        this.img = img;
+        int channels = img.getChannelCount();
+        channelLabels = new ArrayList();
+        for (int c = 0; c < channels; c++) {
+            channelLabels.add(String.valueOf(c));
+        }
+        channelSelectComboBox.setModel(new DefaultComboBoxModel(channelLabels.toArray()));
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> channelSelectComboBox;
+    private javax.swing.JLabel channelSelectLabel;
+    private javax.swing.JButton previewButton;
+    private javax.swing.JLabel thresholdLabel;
+    private javax.swing.JTextField thresholdTextField;
     // End of variables declaration//GEN-END:variables
 }

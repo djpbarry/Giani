@@ -126,6 +126,7 @@ public class FilteringPanel extends LayerPanel {
                     Double.parseDouble(panelProps.getProperty(FilteringPanel.FILT_RAD_Z_LABEL)) / zSpatialRes};
                 GaussianBlur3D.blur(image, sigma[0], sigma[1], sigma[2]);
                 image.show();
+                img.setImg(image);
             }
         };
         previewThread.start();

@@ -20,9 +20,6 @@ import Extrema.MaximaFinder;
 import UIClasses.LayerPanel;
 import ij.IJ;
 import ij.ImagePlus;
-import mcib3d.image3d.ImageFloat;
-import mcib3d.image3d.ImageHandler;
-import mcib3d.image3d.distanceMap3d.EDT;
 
 /**
  *
@@ -140,28 +137,18 @@ public class MaximaFinderPanel extends LayerPanel {
         previewThread = new Thread() {
             public void run() {
                 int series = Integer.parseInt(inputProps.getProperty(SelectInputPanel.SERIES_SELECT_LABEL));
-                int channel = Integer.parseInt(inputProps.getProperty(SelectInputPanel.CHANNEL_SELECT_LABEL));
-                img.setImg(series, channel);
+//                int channel = Integer.parseInt(inputProps.getProperty(SelectInputPanel.CHANNEL_SELECT_LABEL));
+                ImagePlus image = img.getImg();
+//                img.setImg(series, channel);
                 double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
                 double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
                 int[] sigma = new int[]{(int) Math.round(Double.parseDouble(panelProps.getProperty(MaximaFinderPanel.FILT_RAD_XY_LABEL)) / xySpatialRes),
                     (int) Math.round(Double.parseDouble(panelProps.getProperty(MaximaFinderPanel.FILT_RAD_XY_LABEL)) / xySpatialRes),
                     (int) Math.round(Double.parseDouble(panelProps.getProperty(MaximaFinderPanel.FILT_RAD_Z_LABEL)) / zSpatialRes)};
 
-                ImagePlus maxima = MaximaFinder.makeLocalMaximaImage(sigma[0], img.getImg(), Double.parseDouble(panelProps.getProperty(MaximaFinderPanel.NOISE_TOL_LABEL)), true, true, sigma[2], (byte) 0);
+                ImagePlus maxima = MaximaFinder.makeLocalMaximaImage(sigma[0], image, Double.parseDouble(panelProps.getProperty(MaximaFinderPanel.NOISE_TOL_LABEL)), true, true, sigma[2], (byte) 0);
                 maxima.show();
-                IJ.saveAs(maxima, "TIF", "C:\\Users\\barryd\\Desktop\\Maxima.tiff");
-
-                ImageHandler img = ImageHandler.wrap(maxima);
-                
-                IJ.log("Computing Distance Map (EDT) ...");
-                ImageFloat r = EDT.run(img, 1, true, 0);
-                
-                if (r != null) {
-                    r.setTitle("EDT_" + maxima.getTitle());
-                    r.show("EDT");
-                }
-
+                img.setImg(maxima);
             }
         };
         previewThread.start();
