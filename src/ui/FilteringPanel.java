@@ -5,11 +5,13 @@
  */
 package ui;
 
-import ij.IJ;
 import UIClasses.LayerPanel;
 import ij.ImagePlus;
 import ij.plugin.GaussianBlur3D;
 import ij.process.StackConverter;
+import params.DefaultParams;
+import static params.DefaultParams.FILT_RAD_XY_LABEL;
+import static params.DefaultParams.FILT_RAD_Z_LABEL;
 
 /**
  *
@@ -18,8 +20,6 @@ import ij.process.StackConverter;
 public class FilteringPanel extends LayerPanel {
 
     private Thread previewThread;
-    public static final String FILT_RAD_XY_LABEL = String.format("XY Gaussian Radius (%cm):", IJ.micronSymbol);
-    public static final String FILT_RAD_Z_LABEL = String.format("Z Gaussian Radius (%cm):", IJ.micronSymbol);
 
     /**
      * Creates new form FilteringPanel
@@ -114,16 +114,16 @@ public class FilteringPanel extends LayerPanel {
         setVariables();
         previewThread = new Thread() {
             public void run() {
-                int series = Integer.parseInt(inputProps.getProperty(SelectInputPanel.SERIES_SELECT_LABEL));
-                int channel = Integer.parseInt(inputProps.getProperty(SelectInputPanel.CHANNEL_SELECT_LABEL));
+                int series = Integer.parseInt(inputProps.getProperty(DefaultParams.SERIES_SELECT_LABEL));
+                int channel = Integer.parseInt(inputProps.getProperty(DefaultParams.CHANNEL_SELECT_LABEL));
                 double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
                 double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
                 img.setImg(series, channel);
                 ImagePlus image = img.getImg();
                 (new StackConverter(image)).convertToGray32();
-                double[] sigma = new double[]{Double.parseDouble(panelProps.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / xySpatialRes,
-                    Double.parseDouble(panelProps.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / xySpatialRes,
-                    Double.parseDouble(panelProps.getProperty(FilteringPanel.FILT_RAD_Z_LABEL)) / zSpatialRes};
+                double[] sigma = new double[]{Double.parseDouble(panelProps.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
+                    Double.parseDouble(panelProps.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
+                    Double.parseDouble(panelProps.getProperty(DefaultParams.FILT_RAD_Z_LABEL)) / zSpatialRes};
                 GaussianBlur3D.blur(image, sigma[0], sigma[1], sigma[2]);
                 image.show();
                 img.setImg(image);

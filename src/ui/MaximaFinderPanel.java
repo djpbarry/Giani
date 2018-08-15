@@ -18,8 +18,11 @@ package ui;
 
 import Extrema.MaximaFinder;
 import UIClasses.LayerPanel;
-import ij.IJ;
 import ij.ImagePlus;
+import params.DefaultParams;
+import static params.DefaultParams.MAX_NOISE_TOL_LABEL;
+import static params.DefaultParams.MAX_RAD_XY_LABEL;
+import static params.DefaultParams.MAX_RAD_Z_LABEL;
 
 /**
  *
@@ -28,9 +31,6 @@ import ij.ImagePlus;
 public class MaximaFinderPanel extends LayerPanel {
 
     private Thread previewThread;
-    public static final String FILT_RAD_XY_LABEL = String.format("XY Local Max Radius (%cm):", IJ.micronSymbol);
-    public static final String FILT_RAD_Z_LABEL = String.format("Z Local Max Radius (%cm):", IJ.micronSymbol);
-    public static final String NOISE_TOL_LABEL = "Noise Tolerance:";
 
     /**
      * Creates new form MaximaFinderPanel
@@ -61,7 +61,7 @@ public class MaximaFinderPanel extends LayerPanel {
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
         setLayout(new java.awt.GridBagLayout());
 
-        xyFiltRadLabel.setText(FILT_RAD_XY_LABEL);
+        xyFiltRadLabel.setText(MAX_RAD_XY_LABEL);
         xyFiltRadLabel.setLabelFor(xyFiltRadTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -76,7 +76,7 @@ public class MaximaFinderPanel extends LayerPanel {
         gridBagConstraints.weighty = 1.0;
         add(xyFiltRadTextField, gridBagConstraints);
 
-        zFiltRadLabel.setText(FILT_RAD_Z_LABEL);
+        zFiltRadLabel.setText(MAX_RAD_Z_LABEL);
         zFiltRadLabel.setLabelFor(zFiltRadTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -112,7 +112,7 @@ public class MaximaFinderPanel extends LayerPanel {
         gridBagConstraints.gridwidth = 2;
         add(previewButton, gridBagConstraints);
 
-        noiseTolLabel.setText(NOISE_TOL_LABEL);
+        noiseTolLabel.setText(MAX_NOISE_TOL_LABEL);
         noiseTolLabel.setLabelFor(noiseTolTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -136,17 +136,17 @@ public class MaximaFinderPanel extends LayerPanel {
         setVariables();
         previewThread = new Thread() {
             public void run() {
-                int series = Integer.parseInt(inputProps.getProperty(SelectInputPanel.SERIES_SELECT_LABEL));
+                int series = Integer.parseInt(inputProps.getProperty(DefaultParams.SERIES_SELECT_LABEL));
 //                int channel = Integer.parseInt(inputProps.getProperty(SelectInputPanel.CHANNEL_SELECT_LABEL));
                 ImagePlus image = img.getImg();
 //                img.setImg(series, channel);
                 double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
                 double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
-                int[] sigma = new int[]{(int) Math.round(Double.parseDouble(panelProps.getProperty(MaximaFinderPanel.FILT_RAD_XY_LABEL)) / xySpatialRes),
-                    (int) Math.round(Double.parseDouble(panelProps.getProperty(MaximaFinderPanel.FILT_RAD_XY_LABEL)) / xySpatialRes),
-                    (int) Math.round(Double.parseDouble(panelProps.getProperty(MaximaFinderPanel.FILT_RAD_Z_LABEL)) / zSpatialRes)};
+                int[] sigma = new int[]{(int) Math.round(Double.parseDouble(panelProps.getProperty(DefaultParams.MAX_RAD_XY_LABEL)) / xySpatialRes),
+                    (int) Math.round(Double.parseDouble(panelProps.getProperty(DefaultParams.MAX_RAD_XY_LABEL)) / xySpatialRes),
+                    (int) Math.round(Double.parseDouble(panelProps.getProperty(DefaultParams.MAX_RAD_Z_LABEL)) / zSpatialRes)};
 
-                ImagePlus maxima = MaximaFinder.makeLocalMaximaImage(sigma[0], image, Float.parseFloat(panelProps.getProperty(MaximaFinderPanel.NOISE_TOL_LABEL)), true, true, sigma[2], (byte) 0);
+                ImagePlus maxima = MaximaFinder.makeLocalMaximaImage(sigma[0], image, Float.parseFloat(panelProps.getProperty(DefaultParams.MAX_NOISE_TOL_LABEL)), true, true, sigma[2], (byte) 0);
                 maxima.show();
                 img.setImg(maxima);
             }

@@ -25,6 +25,10 @@ import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import UIClasses.LayerPanel;
 import javax.swing.JTextArea;
+import static params.DefaultParams.CHANNEL_SELECT_LABEL;
+import static params.DefaultParams.INPUT_DIR_LABEL;
+import static params.DefaultParams.INPUT_FILE_LABEL;
+import static params.DefaultParams.SERIES_SELECT_LABEL;
 
 /**
  *
@@ -33,10 +37,6 @@ import javax.swing.JTextArea;
 public class SelectInputPanel extends LayerPanel {
 
     private static File inputDirectory;
-    public static final String INPUT_DIR_LABEL = "Input Directory:";
-    public static final String INPUT_FILE_LABEL = "File for Preview";
-    public static final String SERIES_SELECT_LABEL = "Series for Preview";
-    public static final String CHANNEL_SELECT_LABEL = "Channel for Preview";
     private final JTextArea textArea;
 //    private BioFormatsImg img;
 

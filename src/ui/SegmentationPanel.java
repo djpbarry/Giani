@@ -13,6 +13,9 @@ import ij.process.StackConverter;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import mcib3d.image3d.regionGrowing.Watershed3D;
+import params.DefaultParams;
+import static params.DefaultParams.SEG_CHAN_SELECT_LABEL;
+import static params.DefaultParams.SEG_THRESH_LABEL;
 
 /**
  *
@@ -21,8 +24,6 @@ import mcib3d.image3d.regionGrowing.Watershed3D;
 public class SegmentationPanel extends LayerPanel {
 
     private Thread previewThread;
-    public static final String CHANNEL_SELECT_LABEL = "Channel for Segmentation";
-    public static final String THRESHOLD_LABEL = "Threshold";
     private ArrayList<String> channelLabels;
 
     /**
@@ -50,7 +51,7 @@ public class SegmentationPanel extends LayerPanel {
 
         setLayout(new java.awt.GridBagLayout());
 
-        channelSelectLabel.setText(CHANNEL_SELECT_LABEL);
+        channelSelectLabel.setText(SEG_CHAN_SELECT_LABEL);
         channelSelectLabel.setLabelFor(channelSelectComboBox);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -84,7 +85,7 @@ public class SegmentationPanel extends LayerPanel {
         gridBagConstraints.gridwidth = 2;
         add(previewButton, gridBagConstraints);
 
-        thresholdLabel.setText(THRESHOLD_LABEL);
+        thresholdLabel.setText(SEG_THRESH_LABEL);
         thresholdLabel.setLabelFor(thresholdTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -110,9 +111,9 @@ public class SegmentationPanel extends LayerPanel {
             public void run() {
                 ImagePlus maxima = img.getImg().duplicate();
 
-                int series = Integer.parseInt(inputProps.getProperty(SelectInputPanel.SERIES_SELECT_LABEL));
-                int channel = Integer.parseInt(panelProps.getProperty(SegmentationPanel.CHANNEL_SELECT_LABEL));
-                double thresh = Double.parseDouble(panelProps.getProperty(SegmentationPanel.THRESHOLD_LABEL));
+                int series = Integer.parseInt(inputProps.getProperty(DefaultParams.SERIES_SELECT_LABEL));
+                int channel = Integer.parseInt(panelProps.getProperty(DefaultParams.SEG_CHAN_SELECT_LABEL));
+                double thresh = Double.parseDouble(panelProps.getProperty(DefaultParams.SEG_THRESH_LABEL));
                 double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
                 double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
 
@@ -120,9 +121,9 @@ public class SegmentationPanel extends LayerPanel {
                 ImagePlus cells = img.getImg();
                 
                 (new StackConverter(cells)).convertToGray32();
-                double[] sigma = new double[]{Double.parseDouble(inputProps.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / xySpatialRes,
-                    Double.parseDouble(inputProps.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / xySpatialRes,
-                    Double.parseDouble(inputProps.getProperty(FilteringPanel.FILT_RAD_Z_LABEL)) / zSpatialRes};
+                double[] sigma = new double[]{Double.parseDouble(inputProps.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
+                    Double.parseDouble(inputProps.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
+                    Double.parseDouble(inputProps.getProperty(DefaultParams.FILT_RAD_Z_LABEL)) / zSpatialRes};
                 GaussianBlur3D.blur(cells, sigma[0], sigma[1], sigma[2]);
 
                 Watershed3D water = new Watershed3D(cells.getImageStack(), maxima.getImageStack(), thresh, 0);

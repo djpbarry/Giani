@@ -26,7 +26,7 @@
     <Component class="javax.swing.JLabel" name="xyFiltRadLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="FILT_RAD_XY_LABEL" type="code"/>
+          <Connection code="MAX_RAD_XY_LABEL" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
@@ -51,7 +51,7 @@
     <Component class="javax.swing.JLabel" name="zFiltRadLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="FILT_RAD_Z_LABEL" type="code"/>
+          <Connection code="MAX_RAD_Z_LABEL" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
@@ -90,7 +90,7 @@
     <Component class="javax.swing.JLabel" name="noiseTolLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="NOISE_TOL_LABEL" type="code"/>
+          <Connection code="MAX_NOISE_TOL_LABEL" type="code"/>
         </Property>
       </Properties>
       <AuxValues>

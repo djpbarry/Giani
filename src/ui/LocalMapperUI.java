@@ -10,6 +10,7 @@ import java.util.Properties;
 import UIClasses.LayerPanel;
 import UIClasses.PropertyExtractor;
 import UtilClasses.GenUtils;
+import params.DefaultParams;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -214,7 +215,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private void saveParamsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveParamsButtonActionPerformed
         setVariables();
         try {
-            PropertyWriter.printProperties(props, props.getProperty(SelectInputPanel.INPUT_DIR_LABEL), title, true);
+            PropertyWriter.printProperties(props, props.getProperty(DefaultParams.INPUT_DIR_LABEL), title, true);
         } catch (Exception e) {
             GenUtils.error("Failed to save property file.");
             GenUtils.logError(e);
@@ -241,8 +242,8 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         }
         componentList.get(layerIndex).setImg(img);
         if (img != null) {
-            statusTextArea.append(img.getInfo(Integer.parseInt(props.getProperty(SelectInputPanel.SERIES_SELECT_LABEL))));
-            System.out.print(img.getInfo(Integer.parseInt(props.getProperty(SelectInputPanel.SERIES_SELECT_LABEL))));
+            statusTextArea.append(img.getInfo(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))));
+            System.out.print(img.getInfo(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))));
         }
     }
 
