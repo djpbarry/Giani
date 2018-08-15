@@ -146,7 +146,7 @@ public class MaximaFinderPanel extends LayerPanel {
                     (int) Math.round(Double.parseDouble(panelProps.getProperty(MaximaFinderPanel.FILT_RAD_XY_LABEL)) / xySpatialRes),
                     (int) Math.round(Double.parseDouble(panelProps.getProperty(MaximaFinderPanel.FILT_RAD_Z_LABEL)) / zSpatialRes)};
 
-                ImagePlus maxima = MaximaFinder.makeLocalMaximaImage(sigma[0], image, Double.parseDouble(panelProps.getProperty(MaximaFinderPanel.NOISE_TOL_LABEL)), true, true, sigma[2], (byte) 0);
+                ImagePlus maxima = MaximaFinder.makeLocalMaximaImage(sigma[0], image, Float.parseFloat(panelProps.getProperty(MaximaFinderPanel.NOISE_TOL_LABEL)), true, true, sigma[2], (byte) 0);
                 maxima.show();
                 img.setImg(maxima);
             }
