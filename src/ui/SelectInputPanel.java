@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import UIClasses.LayerPanel;
+import java.util.Properties;
 import javax.swing.JTextArea;
 import static params.DefaultParams.CHANNEL_SELECT_LABEL;
 import static params.DefaultParams.INPUT_DIR_LABEL;
@@ -44,11 +45,15 @@ public class SelectInputPanel extends LayerPanel {
      * Creates new form SelectInputPanel
      */
     public SelectInputPanel() {
-        this(null);
+        this(null, null);
     }
 
     public SelectInputPanel(JTextArea textArea) {
-        super();
+        this(textArea, null);
+    }
+
+    public SelectInputPanel(JTextArea textArea, Properties props) {
+        super(props);
         this.textArea = textArea;
         initComponents();
     }
@@ -278,7 +283,7 @@ public class SelectInputPanel extends LayerPanel {
 
     public boolean setVariables() {
         try {
-            setProperties(panelProps, this);
+            setProperties(props, this);
             String fileName = (String) fileNameComboBox.getSelectedItem();
             String fullFileName = String.format("%s%s%s", inputDirectory, File.separator, fileName);
             img = new BioFormatsImg(fullFileName);

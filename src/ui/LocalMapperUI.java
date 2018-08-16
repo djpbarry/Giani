@@ -55,10 +55,10 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         nextButton = new javax.swing.JButton();
         saveParamsButton = new javax.swing.JButton();
         loadParametersButton = new javax.swing.JButton();
-        selectInputPanel = new ui.SelectInputPanel(statusTextArea);
-        filteringPanel = new ui.FilteringPanel();
-        maximaFinderPanel = new ui.MaximaFinderPanel();
-        segmentationPanel = new ui.SegmentationPanel();
+        selectInputPanel = new ui.SelectInputPanel(statusTextArea,props);
+        filteringPanel = new ui.FilteringPanel(props);
+        maximaFinderPanel = new ui.MaximaFinderPanel(props);
+        segmentationPanel = new ui.SegmentationPanel(props);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -190,12 +190,10 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         componentList.get(layerIndex).setVariables();
         img = componentList.get(layerIndex).getImg();
-        props.putAll(componentList.get(layerIndex).getPanelProps());
         layerIndex++;
         updateLayer();
         checkLayerIndex();
         componentList.get(layerIndex).setImg(img);
-        componentList.get(layerIndex).setInputProps(props);
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
@@ -204,12 +202,10 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         layerIndex--;
         if (layerIndex > 0) {
             img = componentList.get(layerIndex - 1).getImg();
-            inputProps = componentList.get(layerIndex - 1).getPanelProps();
         }
         updateLayer();
         checkLayerIndex();
         componentList.get(layerIndex).setImg(img);
-        componentList.get(layerIndex).setInputProps(inputProps);
     }//GEN-LAST:event_previousButtonActionPerformed
 
     private void saveParamsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveParamsButtonActionPerformed

@@ -11,6 +11,7 @@ import ij.ImagePlus;
 import ij.plugin.GaussianBlur3D;
 import ij.process.StackConverter;
 import java.util.ArrayList;
+import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
 import mcib3d.image3d.regionGrowing.Watershed3D;
 import params.DefaultParams;
@@ -30,6 +31,11 @@ public class SegmentationPanel extends LayerPanel {
      * Creates new form SegmentationPanel
      */
     public SegmentationPanel() {
+        this(null);
+    }
+
+    public SegmentationPanel(Properties props) {
+        super(props);
         initComponents();
     }
 
@@ -111,19 +117,19 @@ public class SegmentationPanel extends LayerPanel {
             public void run() {
                 ImagePlus maxima = img.getImg().duplicate();
 
-                int series = Integer.parseInt(inputProps.getProperty(DefaultParams.SERIES_SELECT_LABEL));
-                int channel = Integer.parseInt(panelProps.getProperty(DefaultParams.SEG_CHAN_SELECT_LABEL));
-                double thresh = Double.parseDouble(panelProps.getProperty(DefaultParams.SEG_THRESH_LABEL));
+                int series = Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL));
+                int channel = Integer.parseInt(props.getProperty(DefaultParams.SEG_CHAN_SELECT_LABEL));
+                double thresh = Double.parseDouble(props.getProperty(DefaultParams.SEG_THRESH_LABEL));
                 double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
                 double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
 
                 img.setImg(series, channel);
                 ImagePlus cells = img.getImg();
-                
+
                 (new StackConverter(cells)).convertToGray32();
-                double[] sigma = new double[]{Double.parseDouble(inputProps.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
-                    Double.parseDouble(inputProps.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
-                    Double.parseDouble(inputProps.getProperty(DefaultParams.FILT_RAD_Z_LABEL)) / zSpatialRes};
+                double[] sigma = new double[]{Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
+                    Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
+                    Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_Z_LABEL)) / zSpatialRes};
                 GaussianBlur3D.blur(cells, sigma[0], sigma[1], sigma[2]);
 
                 Watershed3D water = new Watershed3D(cells.getImageStack(), maxima.getImageStack(), thresh, 0);

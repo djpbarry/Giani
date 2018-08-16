@@ -19,6 +19,7 @@ package ui;
 import Extrema.MaximaFinder;
 import UIClasses.LayerPanel;
 import ij.ImagePlus;
+import java.util.Properties;
 import params.DefaultParams;
 import static params.DefaultParams.MAX_NOISE_TOL_LABEL;
 import static params.DefaultParams.MAX_RAD_XY_LABEL;
@@ -36,7 +37,11 @@ public class MaximaFinderPanel extends LayerPanel {
      * Creates new form MaximaFinderPanel
      */
     public MaximaFinderPanel() {
-        super();
+        this(null);
+    }
+
+    public MaximaFinderPanel(Properties props) {
+        super(props);
         initComponents();
     }
 
@@ -136,17 +141,17 @@ public class MaximaFinderPanel extends LayerPanel {
         setVariables();
         previewThread = new Thread() {
             public void run() {
-                int series = Integer.parseInt(inputProps.getProperty(DefaultParams.SERIES_SELECT_LABEL));
+                int series = Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL));
 //                int channel = Integer.parseInt(inputProps.getProperty(SelectInputPanel.CHANNEL_SELECT_LABEL));
                 ImagePlus image = img.getImg();
 //                img.setImg(series, channel);
                 double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
                 double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
-                int[] sigma = new int[]{(int) Math.round(Double.parseDouble(panelProps.getProperty(DefaultParams.MAX_RAD_XY_LABEL)) / xySpatialRes),
-                    (int) Math.round(Double.parseDouble(panelProps.getProperty(DefaultParams.MAX_RAD_XY_LABEL)) / xySpatialRes),
-                    (int) Math.round(Double.parseDouble(panelProps.getProperty(DefaultParams.MAX_RAD_Z_LABEL)) / zSpatialRes)};
+                int[] sigma = new int[]{(int) Math.round(Double.parseDouble(props.getProperty(DefaultParams.MAX_RAD_XY_LABEL)) / xySpatialRes),
+                    (int) Math.round(Double.parseDouble(props.getProperty(DefaultParams.MAX_RAD_XY_LABEL)) / xySpatialRes),
+                    (int) Math.round(Double.parseDouble(props.getProperty(DefaultParams.MAX_RAD_Z_LABEL)) / zSpatialRes)};
 
-                ImagePlus maxima = MaximaFinder.makeLocalMaximaImage(sigma[0], image, Float.parseFloat(panelProps.getProperty(DefaultParams.MAX_NOISE_TOL_LABEL)), true, true, sigma[2], (byte) 0);
+                ImagePlus maxima = MaximaFinder.makeLocalMaximaImage(sigma[0], image, Float.parseFloat(props.getProperty(DefaultParams.MAX_NOISE_TOL_LABEL)), true, true, sigma[2], (byte) 0);
                 maxima.show();
                 img.setImg(maxima);
             }
