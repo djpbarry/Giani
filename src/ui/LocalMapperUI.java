@@ -23,8 +23,8 @@ import params.DefaultParams;
  */
 public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
 
-    private BioFormatsImg img;
-    private Properties props = new Properties();
+    private final BioFormatsImg img;
+    private final Properties props = new Properties();
     private final LinkedList<LayerPanel> componentList = new LinkedList();
     private int layerIndex = 0;
     private final String title = "Local Mapper";
@@ -33,9 +33,9 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
      * Creates new form LocalMapperUI
      */
     public LocalMapperUI() {
+        img = new BioFormatsImg();
         initComponents();
         UIMethods.centreContainer(this);
-//       jLayeredPane1.setLayer(jPanel2, 1);
     }
 
     /**
@@ -55,10 +55,10 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         nextButton = new javax.swing.JButton();
         saveParamsButton = new javax.swing.JButton();
         loadParametersButton = new javax.swing.JButton();
-        selectInputPanel = new ui.SelectInputPanel(statusTextArea,props);
-        filteringPanel = new ui.FilteringPanel(props);
-        maximaFinderPanel = new ui.MaximaFinderPanel(props);
-        segmentationPanel = new ui.SegmentationPanel(props);
+        selectInputPanel = new ui.SelectInputPanel(statusTextArea,props,img);
+        filteringPanel = new ui.FilteringPanel(props,img);
+        maximaFinderPanel = new ui.MaximaFinderPanel(props,img);
+        segmentationPanel = new ui.SegmentationPanel(props,img);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -176,6 +176,11 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
 
         segmentationPanel.setVisible(false);
         componentList.add(segmentationPanel);
+        segmentationPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                segmentationPanelComponentShown(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -189,23 +194,14 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         componentList.get(layerIndex).setVariables();
-        img = componentList.get(layerIndex).getImg();
         layerIndex++;
         updateLayer();
-        checkLayerIndex();
-        componentList.get(layerIndex).setImg(img);
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
-        Properties inputProps = null;
         componentList.get(layerIndex).setVariables();
         layerIndex--;
-        if (layerIndex > 0) {
-            img = componentList.get(layerIndex - 1).getImg();
-        }
         updateLayer();
-        checkLayerIndex();
-        componentList.get(layerIndex).setImg(img);
     }//GEN-LAST:event_previousButtonActionPerformed
 
     private void saveParamsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveParamsButtonActionPerformed
@@ -213,8 +209,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         try {
             PropertyWriter.printProperties(props, props.getProperty(DefaultParams.INPUT_DIR_LABEL), title, true);
         } catch (Exception e) {
-            GenUtils.error("Failed to save property file.");
-            GenUtils.logError(e);
+            GenUtils.logError(e, "Failed to save property file.");
         }
         cleanUp();
     }//GEN-LAST:event_saveParamsButtonActionPerformed
@@ -223,10 +218,13 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         try {
             PropertyWriter.loadProperties(props, title);
         } catch (Exception e) {
-            GenUtils.error("Failed to load property file.");
-            GenUtils.logError(e);
+            GenUtils.logError(e, "Failed to load property file.");
         }
     }//GEN-LAST:event_loadParametersButtonActionPerformed
+
+    private void segmentationPanelComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_segmentationPanelComponentShown
+        segmentationPanel.updateChannels();
+    }//GEN-LAST:event_segmentationPanelComponentShown
 
     void updateLayer() {
         for (int i = 0; i < componentList.size(); i++) {
@@ -236,11 +234,11 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
                 componentList.get(i).setVisible(false);
             }
         }
-        componentList.get(layerIndex).setImg(img);
         if (img != null) {
             statusTextArea.append(img.getInfo(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))));
             System.out.print(img.getInfo(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))));
         }
+        checkLayerIndex();
     }
 
     void checkLayerIndex() {
@@ -262,7 +260,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     }
 
     public void setProperties(Properties p, Container c) {
-        props = PropertyExtractor.setProperties(p, c);
+        PropertyExtractor.setProperties(p, c);
     }
 
     /**

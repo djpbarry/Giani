@@ -17,6 +17,7 @@
 package ui;
 
 import Extrema.MaximaFinder;
+import IO.BioFormats.BioFormatsImg;
 import UIClasses.LayerPanel;
 import ij.ImagePlus;
 import java.util.Properties;
@@ -37,11 +38,11 @@ public class MaximaFinderPanel extends LayerPanel {
      * Creates new form MaximaFinderPanel
      */
     public MaximaFinderPanel() {
-        this(null);
+        this(null, null);
     }
 
-    public MaximaFinderPanel(Properties props) {
-        super(props);
+    public MaximaFinderPanel(Properties props, BioFormatsImg img) {
+        super(props, img);
         initComponents();
     }
 
@@ -143,7 +144,7 @@ public class MaximaFinderPanel extends LayerPanel {
             public void run() {
                 int series = Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL));
 //                int channel = Integer.parseInt(inputProps.getProperty(SelectInputPanel.CHANNEL_SELECT_LABEL));
-                ImagePlus image = img.getImg();
+                ImagePlus image = img.getTempImg();
 //                img.setImg(series, channel);
                 double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
                 double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
@@ -153,7 +154,7 @@ public class MaximaFinderPanel extends LayerPanel {
 
                 ImagePlus maxima = MaximaFinder.makeLocalMaximaImage(sigma[0], image, Float.parseFloat(props.getProperty(DefaultParams.MAX_NOISE_TOL_LABEL)), true, true, sigma[2], (byte) 0);
                 maxima.show();
-                img.setImg(maxima);
+                img.setTempImg(maxima);
             }
         };
         previewThread.start();

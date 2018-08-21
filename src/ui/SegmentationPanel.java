@@ -31,11 +31,11 @@ public class SegmentationPanel extends LayerPanel {
      * Creates new form SegmentationPanel
      */
     public SegmentationPanel() {
-        this(null);
+        this(null, null);
     }
 
-    public SegmentationPanel(Properties props) {
-        super(props);
+    public SegmentationPanel(Properties props, BioFormatsImg img) {
+        super(props, img);
         initComponents();
     }
 
@@ -115,7 +115,7 @@ public class SegmentationPanel extends LayerPanel {
         setVariables();
         previewThread = new Thread() {
             public void run() {
-                ImagePlus maxima = img.getImg().duplicate();
+                ImagePlus maxima = img.getTempImg().duplicate();
 
                 int series = Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL));
                 int channel = Integer.parseInt(props.getProperty(DefaultParams.SEG_CHAN_SELECT_LABEL));
@@ -144,8 +144,7 @@ public class SegmentationPanel extends LayerPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_previewButtonFocusLost
 
-    public void setImg(BioFormatsImg img) {
-        this.img = img;
+    public void updateChannels() {
         int channels = img.getChannelCount();
         channelLabels = new ArrayList();
         for (int c = 0; c < channels; c++) {
@@ -153,6 +152,7 @@ public class SegmentationPanel extends LayerPanel {
         }
         channelSelectComboBox.setModel(new DefaultComboBoxModel(channelLabels.toArray()));
     }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> channelSelectComboBox;
     private javax.swing.JLabel channelSelectLabel;

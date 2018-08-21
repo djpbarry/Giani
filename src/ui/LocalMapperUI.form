@@ -118,7 +118,7 @@
     </Container>
     <Component class="ui.SelectInputPanel" name="selectInputPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SelectInputPanel(statusTextArea,props)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SelectInputPanel(statusTextArea,props,img)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="componentList.add(selectInputPanel);"/>
       </AuxValues>
       <Constraints>
@@ -129,7 +129,7 @@
     </Component>
     <Component class="ui.FilteringPanel" name="filteringPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.FilteringPanel(props)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.FilteringPanel(props,img)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="filteringPanel.setVisible(false);&#xa;componentList.add(filteringPanel);"/>
       </AuxValues>
       <Constraints>
@@ -140,7 +140,7 @@
     </Component>
     <Component class="ui.MaximaFinderPanel" name="maximaFinderPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MaximaFinderPanel(props)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MaximaFinderPanel(props,img)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="maximaFinderPanel.setVisible(false);&#xa;componentList.add(maximaFinderPanel);"/>
       </AuxValues>
       <Constraints>
@@ -150,8 +150,11 @@
       </Constraints>
     </Component>
     <Component class="ui.SegmentationPanel" name="segmentationPanel">
+      <Events>
+        <EventHandler event="componentShown" listener="java.awt.event.ComponentListener" parameters="java.awt.event.ComponentEvent" handler="segmentationPanelComponentShown"/>
+      </Events>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(props)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(props,img)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="segmentationPanel.setVisible(false);&#xa;componentList.add(segmentationPanel);"/>
       </AuxValues>
       <Constraints>

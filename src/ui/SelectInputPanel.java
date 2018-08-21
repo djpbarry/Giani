@@ -45,15 +45,11 @@ public class SelectInputPanel extends LayerPanel {
      * Creates new form SelectInputPanel
      */
     public SelectInputPanel() {
-        this(null, null);
+        this(null, null, null);
     }
 
-    public SelectInputPanel(JTextArea textArea) {
-        this(textArea, null);
-    }
-
-    public SelectInputPanel(JTextArea textArea, Properties props) {
-        super(props);
+    public SelectInputPanel(JTextArea textArea, Properties props, BioFormatsImg img) {
+        super(props, img);
         this.textArea = textArea;
         initComponents();
     }
@@ -238,16 +234,14 @@ public class SelectInputPanel extends LayerPanel {
             img.setImg(series, channel);
             img.getImg().show();
         } catch (Exception e) {
-            GenUtils.error("An error occured while trying to display the image.");
-            GenUtils.logError(e);
+            GenUtils.logError(e, "An error occured while trying to display the image.");
         }
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void fileNameComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileNameComboBoxActionPerformed
         String fileName = (String) fileNameComboBox.getSelectedItem();
         try {
-            String fullFileName = String.format("%s%s%s", inputDirectory, File.separator, fileName);
-            img = new BioFormatsImg(fullFileName);
+            img.setId(String.format("%s%s%s", inputDirectory, File.separator, fileName));
             int series = img.getSeriesCount();
             ArrayList<String> seriesLabels = new ArrayList();
             for (int s = 0; s < series; s++) {
@@ -285,8 +279,7 @@ public class SelectInputPanel extends LayerPanel {
         try {
             setProperties(props, this);
             String fileName = (String) fileNameComboBox.getSelectedItem();
-            String fullFileName = String.format("%s%s%s", inputDirectory, File.separator, fileName);
-            img = new BioFormatsImg(fullFileName);
+            img.setId(String.format("%s%s%s", inputDirectory, File.separator, fileName));
         } catch (Exception e) {
             return false;
         }

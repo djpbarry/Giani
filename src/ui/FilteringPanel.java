@@ -5,6 +5,7 @@
  */
 package ui;
 
+import IO.BioFormats.BioFormatsImg;
 import UIClasses.LayerPanel;
 import ij.ImagePlus;
 import ij.plugin.GaussianBlur3D;
@@ -26,11 +27,11 @@ public class FilteringPanel extends LayerPanel {
      * Creates new form FilteringPanel
      */
     public FilteringPanel() {
-        this(null);
+        this(null, null);
     }
-    
-    public FilteringPanel(Properties props) {
-        super(props);
+
+    public FilteringPanel(Properties props, BioFormatsImg img) {
+        super(props, img);
         initComponents();
     }
 
@@ -131,7 +132,7 @@ public class FilteringPanel extends LayerPanel {
                     Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_Z_LABEL)) / zSpatialRes};
                 GaussianBlur3D.blur(image, sigma[0], sigma[1], sigma[2]);
                 image.show();
-                img.setImg(image);
+                img.setTempImg(image);
             }
         };
         previewThread.start();
