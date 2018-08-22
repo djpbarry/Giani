@@ -6,17 +6,12 @@
 package ui;
 
 import IO.BioFormats.BioFormatsImg;
-import Process.MultiThreadedProcess;
-import Process.RunnableProcess;
+import Process.Segmentation.MultiThreadedWatershed;
 import UIClasses.LayerPanel;
-import ij.ImagePlus;
-import ij.plugin.GaussianBlur3D;
-import ij.process.StackConverter;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import javax.swing.DefaultComboBoxModel;
-import mcib3d.image3d.regionGrowing.Watershed3D;
 import params.DefaultParams;
 import static params.DefaultParams.SEG_CHAN_SELECT_LABEL;
 import static params.DefaultParams.SEG_THRESH_LABEL;
@@ -27,7 +22,6 @@ import static params.DefaultParams.SEG_THRESH_LABEL;
  */
 public class SegmentationPanel extends LayerPanel {
 
-    private Thread previewThread;
     private ArrayList<String> channelLabels;
 
     /**
@@ -78,11 +72,6 @@ public class SegmentationPanel extends LayerPanel {
         add(channelSelectComboBox, gridBagConstraints);
 
         previewButton.setText("Preview");
-        previewButton.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                previewButtonFocusLost(evt);
-            }
-        });
         previewButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 previewButtonActionPerformed(evt);
@@ -116,36 +105,18 @@ public class SegmentationPanel extends LayerPanel {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
-        previewThread = new Thread() {
-            public void run() {
-                ImagePlus maxima = img.getTempImg().duplicate();
-
-                int series = Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL));
-                int channel = Integer.parseInt(props.getProperty(DefaultParams.SEG_CHAN_SELECT_LABEL));
-                double thresh = Double.parseDouble(props.getProperty(DefaultParams.SEG_THRESH_LABEL));
-                double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
-                double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
-
-                img.setImg(series, channel);
-                ImagePlus cells = img.getImg();
-
-                (new StackConverter(cells)).convertToGray32();
-                double[] sigma = new double[]{Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
-                    Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
-                    Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_Z_LABEL)) / zSpatialRes};
-                GaussianBlur3D.blur(cells, sigma[0], sigma[1], sigma[2]);
-
-                Watershed3D water = new Watershed3D(cells.getImageStack(), maxima.getImageStack(), thresh, 0);
-                water.setLabelSeeds(true);
-                water.getWatershedImage3D().show();
-            }
-        };
-        previewThread.start();
+        int series = Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL));
+        int channel = Integer.parseInt(props.getProperty(DefaultParams.SEG_CHAN_SELECT_LABEL));
+        double thresh = Double.parseDouble(props.getProperty(DefaultParams.SEG_THRESH_LABEL));
+        double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
+        double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
+        double[] sigma = new double[]{Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
+            Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
+            Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_Z_LABEL)) / zSpatialRes};
+        
+        process = new MultiThreadedWatershed(img, exec, sigma, series, channel, thresh);
+        process.start();
     }//GEN-LAST:event_previewButtonActionPerformed
-
-    private void previewButtonFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_previewButtonFocusLost
-        // TODO add your handling code here:
-    }//GEN-LAST:event_previewButtonFocusLost
 
     public void updateChannels() {
         int channels = img.getChannelCount();

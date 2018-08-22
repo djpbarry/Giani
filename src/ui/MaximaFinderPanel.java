@@ -19,11 +19,8 @@ package ui;
 import Extrema.MultiThreadedMaximaFinder;
 import IO.BioFormats.BioFormatsImg;
 import UIClasses.LayerPanel;
-import UtilClasses.GenUtils;
-import ij.ImagePlus;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 import params.DefaultParams;
 import static params.DefaultParams.MAX_NOISE_TOL_LABEL;
 import static params.DefaultParams.MAX_RAD_XY_LABEL;
@@ -103,11 +100,6 @@ public class MaximaFinderPanel extends LayerPanel {
         add(zFiltRadTextField, gridBagConstraints);
 
         previewButton.setText("Preview");
-        previewButton.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                previewButtonFocusLost(evt);
-            }
-        });
         previewButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 previewButtonActionPerformed(evt);
@@ -154,17 +146,11 @@ public class MaximaFinderPanel extends LayerPanel {
         process.start();
     }//GEN-LAST:event_previewButtonActionPerformed
 
-    private void previewButtonFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_previewButtonFocusLost
-        if (process != null) {
-            process.interrupt();
-        }
-    }//GEN-LAST:event_previewButtonFocusLost
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel noiseTolLabel;
     private javax.swing.JTextField noiseTolTextField;
-    private javax.swing.JButton previewButton;
+    protected javax.swing.JButton previewButton;
     private javax.swing.JLabel xyFiltRadLabel;
     private javax.swing.JTextField xyFiltRadTextField;
     private javax.swing.JLabel zFiltRadLabel;

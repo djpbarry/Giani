@@ -60,11 +60,6 @@ public class FilteringPanel extends LayerPanel {
         setLayout(new java.awt.GridBagLayout());
 
         previewButton.setText("Preview");
-        previewButton.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                previewButtonFocusLost(evt);
-            }
-        });
         previewButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 previewButtonActionPerformed(evt);
@@ -131,12 +126,6 @@ public class FilteringPanel extends LayerPanel {
         process = new MultiThreadedGaussianFilter(img, exec, sigma, series, channel);
         process.start();
     }//GEN-LAST:event_previewButtonActionPerformed
-
-    private void previewButtonFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_previewButtonFocusLost
-        if (process != null) {
-            process.interrupt();
-        }
-    }//GEN-LAST:event_previewButtonFocusLost
 
     private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusGained
 
