@@ -6,11 +6,13 @@
 package ui;
 
 import IO.BioFormats.BioFormatsImg;
+import Process.Filtering.MultiThreadedGaussianFilter;
+import Process.MultiThreadedProcess;
 import UIClasses.LayerPanel;
 import ij.ImagePlus;
-import ij.plugin.GaussianBlur3D;
 import ij.process.StackConverter;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
 import params.DefaultParams;
 import static params.DefaultParams.FILT_RAD_XY_LABEL;
 import static params.DefaultParams.FILT_RAD_Z_LABEL;
@@ -21,17 +23,15 @@ import static params.DefaultParams.FILT_RAD_Z_LABEL;
  */
 public class FilteringPanel extends LayerPanel {
 
-    private Thread previewThread;
-
     /**
      * Creates new form FilteringPanel
      */
     public FilteringPanel() {
-        this(null, null);
+        this(null, null, null);
     }
 
-    public FilteringPanel(Properties props, BioFormatsImg img) {
-        super(props, img);
+    public FilteringPanel(Properties props, BioFormatsImg img, ExecutorService exec) {
+        super(props, img, exec);
         initComponents();
     }
 
@@ -118,29 +118,23 @@ public class FilteringPanel extends LayerPanel {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
-        previewThread = new Thread() {
-            public void run() {
-                int series = Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL));
-                int channel = Integer.parseInt(props.getProperty(DefaultParams.CHANNEL_SELECT_LABEL));
-                double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
-                double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
-                img.setImg(series, channel);
-                ImagePlus image = img.getImg();
-                (new StackConverter(image)).convertToGray32();
-                double[] sigma = new double[]{Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
-                    Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
-                    Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_Z_LABEL)) / zSpatialRes};
-                GaussianBlur3D.blur(image, sigma[0], sigma[1], sigma[2]);
-                image.show();
-                img.setTempImg(image);
-            }
-        };
-        previewThread.start();
+        int series = Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL));
+        int channel = Integer.parseInt(props.getProperty(DefaultParams.CHANNEL_SELECT_LABEL));
+        double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
+        double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
+        img.setImg(series, channel);
+        ImagePlus image = img.getImg();
+        (new StackConverter(image)).convertToGray32();
+        double[] sigma = new double[]{Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
+            Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
+            Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_Z_LABEL)) / zSpatialRes};
+        process = new MultiThreadedGaussianFilter(img, exec, sigma, series, channel);
+        process.start();
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void previewButtonFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_previewButtonFocusLost
-        if (previewThread != null) {
-            previewThread.interrupt();
+        if (process != null) {
+            process.interrupt();
         }
     }//GEN-LAST:event_previewButtonFocusLost
 

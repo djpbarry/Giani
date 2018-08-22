@@ -6,12 +6,15 @@
 package ui;
 
 import IO.BioFormats.BioFormatsImg;
+import Process.MultiThreadedProcess;
+import Process.RunnableProcess;
 import UIClasses.LayerPanel;
 import ij.ImagePlus;
 import ij.plugin.GaussianBlur3D;
 import ij.process.StackConverter;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
 import javax.swing.DefaultComboBoxModel;
 import mcib3d.image3d.regionGrowing.Watershed3D;
 import params.DefaultParams;
@@ -31,11 +34,11 @@ public class SegmentationPanel extends LayerPanel {
      * Creates new form SegmentationPanel
      */
     public SegmentationPanel() {
-        this(null, null);
+        this(null, null, null);
     }
 
-    public SegmentationPanel(Properties props, BioFormatsImg img) {
-        super(props, img);
+    public SegmentationPanel(Properties props, BioFormatsImg img, ExecutorService exec) {
+        super(props, img, exec);
         initComponents();
     }
 
@@ -152,7 +155,7 @@ public class SegmentationPanel extends LayerPanel {
         }
         channelSelectComboBox.setModel(new DefaultComboBoxModel(channelLabels.toArray()));
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> channelSelectComboBox;
     private javax.swing.JLabel channelSelectLabel;

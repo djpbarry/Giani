@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import UIClasses.LayerPanel;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
 import javax.swing.JTextArea;
 import static params.DefaultParams.CHANNEL_SELECT_LABEL;
 import static params.DefaultParams.INPUT_DIR_LABEL;
@@ -45,11 +46,11 @@ public class SelectInputPanel extends LayerPanel {
      * Creates new form SelectInputPanel
      */
     public SelectInputPanel() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
 
-    public SelectInputPanel(JTextArea textArea, Properties props, BioFormatsImg img) {
-        super(props, img);
+    public SelectInputPanel(JTextArea textArea, Properties props, BioFormatsImg img, ExecutorService exec) {
+        super(props, img, exec);
         this.textArea = textArea;
         initComponents();
     }

@@ -2,6 +2,7 @@ package ui;
 
 import IO.BioFormats.BioFormatsImg;
 import IO.PropertyWriter;
+import Process.ProcessPipeline;
 import UIClasses.GUIMethods;
 import UIClasses.UIMethods;
 import java.awt.Container;
@@ -10,6 +11,8 @@ import java.util.Properties;
 import UIClasses.LayerPanel;
 import UIClasses.PropertyExtractor;
 import UtilClasses.GenUtils;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import params.DefaultParams;
 
 /*
@@ -28,12 +31,15 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private final LinkedList<LayerPanel> componentList = new LinkedList();
     private int layerIndex = 0;
     private final String title = "Local Mapper";
+    private final ProcessPipeline pipeline;
+    ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     /**
      * Creates new form LocalMapperUI
      */
     public LocalMapperUI() {
         img = new BioFormatsImg();
+        pipeline = new ProcessPipeline();
         initComponents();
         UIMethods.centreContainer(this);
     }
@@ -55,10 +61,10 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         nextButton = new javax.swing.JButton();
         saveParamsButton = new javax.swing.JButton();
         loadParametersButton = new javax.swing.JButton();
-        selectInputPanel = new ui.SelectInputPanel(statusTextArea,props,img);
-        filteringPanel = new ui.FilteringPanel(props,img);
-        maximaFinderPanel = new ui.MaximaFinderPanel(props,img);
-        segmentationPanel = new ui.SegmentationPanel(props,img);
+        selectInputPanel = new ui.SelectInputPanel(statusTextArea,props,img,null);
+        filteringPanel = new ui.FilteringPanel(props,img,exec);
+        maximaFinderPanel = new ui.MaximaFinderPanel(props,img,exec);
+        segmentationPanel = new ui.SegmentationPanel(props,img,exec);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
