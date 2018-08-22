@@ -133,15 +133,8 @@ public class MaximaFinderPanel extends LayerPanel {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
-        int series = Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL));
-//                int channel = Integer.parseInt(inputProps.getProperty(SelectInputPanel.CHANNEL_SELECT_LABEL));
-//        ImagePlus image = img.getTempImg();
-//                img.setImg(series, channel);
-        double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
-        double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
-        int[] sigma = new int[]{(int) Math.round(Double.parseDouble(props.getProperty(DefaultParams.MAX_RAD_XY_LABEL)) / xySpatialRes),
-            (int) Math.round(Double.parseDouble(props.getProperty(DefaultParams.MAX_RAD_XY_LABEL)) / xySpatialRes),
-            (int) Math.round(Double.parseDouble(props.getProperty(DefaultParams.MAX_RAD_Z_LABEL)) / zSpatialRes)};
+        int[] sigma = getIntSigma(DefaultParams.SERIES_SELECT_LABEL, DefaultParams.FILT_RAD_XY_LABEL,
+                DefaultParams.FILT_RAD_XY_LABEL, DefaultParams.FILT_RAD_Z_LABEL);
         process = new MultiThreadedMaximaFinder(img, exec, sigma, Float.parseFloat(props.getProperty(DefaultParams.MAX_NOISE_TOL_LABEL)), new boolean[]{true, true});
         process.start();
     }//GEN-LAST:event_previewButtonActionPerformed

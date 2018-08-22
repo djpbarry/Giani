@@ -108,12 +108,9 @@ public class SegmentationPanel extends LayerPanel {
         int series = Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL));
         int channel = Integer.parseInt(props.getProperty(DefaultParams.SEG_CHAN_SELECT_LABEL));
         double thresh = Double.parseDouble(props.getProperty(DefaultParams.SEG_THRESH_LABEL));
-        double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
-        double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
-        double[] sigma = new double[]{Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
-            Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
-            Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_Z_LABEL)) / zSpatialRes};
-        
+        double[] sigma = getDoubleSigma(DefaultParams.SERIES_SELECT_LABEL, DefaultParams.FILT_RAD_XY_LABEL,
+                DefaultParams.FILT_RAD_XY_LABEL, DefaultParams.FILT_RAD_Z_LABEL);
+
         process = new MultiThreadedWatershed(img, exec, sigma, series, channel, thresh);
         process.start();
     }//GEN-LAST:event_previewButtonActionPerformed

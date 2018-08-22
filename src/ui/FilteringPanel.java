@@ -7,7 +7,6 @@ package ui;
 
 import IO.BioFormats.BioFormatsImg;
 import Process.Filtering.MultiThreadedGaussianFilter;
-import Process.MultiThreadedProcess;
 import UIClasses.LayerPanel;
 import ij.ImagePlus;
 import ij.process.StackConverter;
@@ -115,14 +114,11 @@ public class FilteringPanel extends LayerPanel {
         setVariables();
         int series = Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL));
         int channel = Integer.parseInt(props.getProperty(DefaultParams.CHANNEL_SELECT_LABEL));
-        double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
-        double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
         img.setImg(series, channel);
         ImagePlus image = img.getImg();
         (new StackConverter(image)).convertToGray32();
-        double[] sigma = new double[]{Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
-            Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_XY_LABEL)) / xySpatialRes,
-            Double.parseDouble(props.getProperty(DefaultParams.FILT_RAD_Z_LABEL)) / zSpatialRes};
+        double[] sigma = getDoubleSigma(DefaultParams.SERIES_SELECT_LABEL, DefaultParams.FILT_RAD_XY_LABEL,
+                DefaultParams.FILT_RAD_XY_LABEL, DefaultParams.FILT_RAD_Z_LABEL);
         process = new MultiThreadedGaussianFilter(img, exec, sigma, series, channel);
         process.start();
     }//GEN-LAST:event_previewButtonActionPerformed
