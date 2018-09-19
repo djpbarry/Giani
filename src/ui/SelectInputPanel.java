@@ -50,7 +50,7 @@ public class SelectInputPanel extends LayerPanel {
     }
 
     public SelectInputPanel(JTextArea textArea, Properties props, BioFormatsImg img, ExecutorService exec) {
-        super(props, img, exec);
+        super(props, img);
         this.textArea = textArea;
         initComponents();
     }

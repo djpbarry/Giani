@@ -12,6 +12,7 @@ import ij.ImagePlus;
 import ij.process.StackConverter;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import params.DefaultParams;
 import static params.DefaultParams.FILT_RAD_XY_LABEL;
 import static params.DefaultParams.FILT_RAD_Z_LABEL;
@@ -26,11 +27,11 @@ public class FilteringPanel extends LayerPanel {
      * Creates new form FilteringPanel
      */
     public FilteringPanel() {
-        this(null, null, null);
+        this(null, null);
     }
 
-    public FilteringPanel(Properties props, BioFormatsImg img, ExecutorService exec) {
-        super(props, img, exec);
+    public FilteringPanel(Properties props, BioFormatsImg img) {
+        super(props, img);
         initComponents();
     }
 
@@ -119,7 +120,7 @@ public class FilteringPanel extends LayerPanel {
         (new StackConverter(image)).convertToGray32();
         double[] sigma = getDoubleSigma(DefaultParams.SERIES_SELECT_LABEL, DefaultParams.FILT_RAD_XY_LABEL,
                 DefaultParams.FILT_RAD_XY_LABEL, DefaultParams.FILT_RAD_Z_LABEL);
-        process = new MultiThreadedGaussianFilter(img, exec, sigma, series, channel);
+        process = new MultiThreadedGaussianFilter(img, sigma, series, channel);
         process.start();
     }//GEN-LAST:event_previewButtonActionPerformed
 

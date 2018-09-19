@@ -36,11 +36,11 @@ public class MaximaFinderPanel extends LayerPanel {
      * Creates new form MaximaFinderPanel
      */
     public MaximaFinderPanel() {
-        this(null, null, null);
+        this(null, null);
     }
 
-    public MaximaFinderPanel(Properties props, BioFormatsImg img, ExecutorService exec) {
-        super(props, img, exec);
+    public MaximaFinderPanel(Properties props, BioFormatsImg img) {
+        super(props, img);
         initComponents();
     }
 
