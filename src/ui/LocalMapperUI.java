@@ -1,8 +1,12 @@
 package ui;
 
+import Extrema.MultiThreadedMaximaFinder;
 import IO.BioFormats.BioFormatsImg;
 import IO.PropertyWriter;
+import Process.Filtering.MultiThreadedGaussianFilter;
+import Process.MultiThreadedProcess;
 import Process.ProcessPipeline;
+import Process.Segmentation.MultiThreadedWatershed;
 import UIClasses.GUIMethods;
 import UIClasses.UIMethods;
 import java.awt.Container;
@@ -11,8 +15,6 @@ import java.util.Properties;
 import UIClasses.LayerPanel;
 import UIClasses.PropertyExtractor;
 import UtilClasses.GenUtils;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import params.DefaultParams;
 
 /*
@@ -200,6 +202,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         componentList.get(layerIndex).setVariables();
+        addProcess();
         layerIndex++;
         updateLayer();
     }//GEN-LAST:event_nextButtonActionPerformed
@@ -207,6 +210,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
         componentList.get(layerIndex).setVariables();
         layerIndex--;
+        removeProcess();
         updateLayer();
     }//GEN-LAST:event_previousButtonActionPerformed
 
@@ -270,8 +274,8 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     }
 
     /**
-     * @param args the command line arguments
-//     */
+     * @param args the command line arguments //
+     */
 //    public static void main(String args[]) {
 //        /* Set the Nimbus look and feel */
 //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -303,9 +307,25 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
 //            }
 //        });
 //    }
-
     void cleanUp() {
         this.dispose();
+    }
+
+    void addProcess() {
+        MultiThreadedProcess process = componentList.get(layerIndex).getProcess();
+        MultiThreadedProcess newProcess = null;
+        if (process instanceof MultiThreadedGaussianFilter) {
+            newProcess = new MultiThreadedGaussianFilter(img, props);
+        } else if (process instanceof MultiThreadedMaximaFinder) {
+            newProcess = new MultiThreadedMaximaFinder(img, props);
+        } else if (process instanceof MultiThreadedWatershed) {
+            newProcess = new MultiThreadedWatershed(img, props);
+        }
+        pipeline.addProcess(newProcess,layerIndex);
+    }
+
+    void removeProcess() {
+        pipeline.removeProcesses(layerIndex);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

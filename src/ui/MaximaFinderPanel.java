@@ -135,7 +135,7 @@ public class MaximaFinderPanel extends LayerPanel {
         setVariables();
         int[] sigma = getIntSigma(DefaultParams.SERIES_SELECT_LABEL, DefaultParams.FILT_RAD_XY_LABEL,
                 DefaultParams.FILT_RAD_XY_LABEL, DefaultParams.FILT_RAD_Z_LABEL);
-        process = new MultiThreadedMaximaFinder(img, exec, sigma, Float.parseFloat(props.getProperty(DefaultParams.MAX_NOISE_TOL_LABEL)), new boolean[]{true, true});
+        process = new MultiThreadedMaximaFinder(img, exec, sigma, Float.parseFloat(props.getProperty(DefaultParams.MAX_NOISE_TOL_LABEL)), new boolean[]{true, true}, props);
         process.start();
     }//GEN-LAST:event_previewButtonActionPerformed
 

@@ -120,7 +120,7 @@ public class FilteringPanel extends LayerPanel {
         (new StackConverter(image)).convertToGray32();
         double[] sigma = getDoubleSigma(DefaultParams.SERIES_SELECT_LABEL, DefaultParams.FILT_RAD_XY_LABEL,
                 DefaultParams.FILT_RAD_XY_LABEL, DefaultParams.FILT_RAD_Z_LABEL);
-        process = new MultiThreadedGaussianFilter(img, sigma, series, channel);
+        process = new MultiThreadedGaussianFilter(img, sigma, series, channel, props);
         process.start();
     }//GEN-LAST:event_previewButtonActionPerformed
 

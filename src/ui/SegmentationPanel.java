@@ -134,7 +134,7 @@ public class SegmentationPanel extends LayerPanel {
         double thresh = Double.parseDouble(props.getProperty(DefaultParams.SEG_THRESH_LABEL));
         double[] sigma = getDoubleSigma(DefaultParams.SERIES_SELECT_LABEL, DefaultParams.FILT_RAD_XY_LABEL,
                 DefaultParams.FILT_RAD_XY_LABEL, DefaultParams.FILT_RAD_Z_LABEL);
-        process = new MultiThreadedWatershed(img, exec, sigma, series, channel, thresh);
+        process = new MultiThreadedWatershed(img, exec, sigma, series, channel, thresh, props);
         process.start();
         try {
             process.join();
@@ -149,7 +149,7 @@ public class SegmentationPanel extends LayerPanel {
             GenUtils.error("Segmentation incomplete.");
             return;
         }
-        process = new MultiThreadedROIConstructor(img);
+        process = new MultiThreadedROIConstructor(img, props);
         process.start();
         try {
             process.join();
