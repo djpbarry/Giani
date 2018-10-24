@@ -17,16 +17,20 @@
 package ui;
 
 import IO.BioFormats.BioFormatsFileLister;
-import IO.BioFormats.BioFormatsFileReader;
 import IO.BioFormats.BioFormatsImg;
 import UtilClasses.GenUtils;
 import UtilClasses.Utilities;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
 import UIClasses.LayerPanel;
+import java.util.Properties;
+import java.util.concurrent.ExecutorService;
 import javax.swing.JTextArea;
+import static params.DefaultParams.CHANNEL_SELECT_LABEL;
+import static params.DefaultParams.INPUT_DIR_LABEL;
+import static params.DefaultParams.INPUT_FILE_LABEL;
+import static params.DefaultParams.SERIES_SELECT_LABEL;
 
 /**
  *
@@ -35,11 +39,6 @@ import javax.swing.JTextArea;
 public class SelectInputPanel extends LayerPanel {
 
     private static File inputDirectory;
-    private Properties props;
-    public static final String INPUT_DIR_LABEL = "Input Directory:";
-    public static final String INPUT_FILE_LABEL = "File for Preview";
-    public static final String SERIES_SELECT_LABEL = "Series for Preview";
-    public static final String CHANNEL_SELECT_LABEL = "Channel for Preview";
     private final JTextArea textArea;
 //    private BioFormatsImg img;
 
@@ -47,11 +46,11 @@ public class SelectInputPanel extends LayerPanel {
      * Creates new form SelectInputPanel
      */
     public SelectInputPanel() {
-        this(null);
+        this(null, null, null, null);
     }
 
-    public SelectInputPanel(JTextArea textArea) {
-        super();
+    public SelectInputPanel(JTextArea textArea, Properties props, BioFormatsImg img, ExecutorService exec) {
+        super(props, img);
         this.textArea = textArea;
         initComponents();
     }
@@ -236,16 +235,14 @@ public class SelectInputPanel extends LayerPanel {
             img.setImg(series, channel);
             img.getImg().show();
         } catch (Exception e) {
-            GenUtils.error("An error occured while trying to display the image.");
-            GenUtils.logError(e);
+            GenUtils.logError(e, "An error occured while trying to display the image.");
         }
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void fileNameComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileNameComboBoxActionPerformed
         String fileName = (String) fileNameComboBox.getSelectedItem();
         try {
-            String fullFileName = String.format("%s%s%s", inputDirectory, File.separator, fileName);
-            img = new BioFormatsImg(fullFileName);
+            img.setId(String.format("%s%s%s", inputDirectory, File.separator, fileName));
             int series = img.getSeriesCount();
             ArrayList<String> seriesLabels = new ArrayList();
             for (int s = 0; s < series; s++) {
@@ -283,16 +280,11 @@ public class SelectInputPanel extends LayerPanel {
         try {
             setProperties(props, this);
             String fileName = (String) fileNameComboBox.getSelectedItem();
-            String fullFileName = String.format("%s%s%s", inputDirectory, File.separator, fileName);
-            img = new BioFormatsImg(fullFileName);
+            img.setId(String.format("%s%s%s", inputDirectory, File.separator, fileName));
         } catch (Exception e) {
             return false;
         }
         return true;
-    }
-
-    public Properties getProps() {
-        return props;
     }
 
     ArrayList<String> listFiles(JTextArea textArea) {

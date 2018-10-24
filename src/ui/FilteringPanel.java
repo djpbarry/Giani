@@ -5,12 +5,17 @@
  */
 package ui;
 
-import ImgLib2.Filters.Gaussian;
-import ij.IJ;
+import IO.BioFormats.BioFormatsImg;
+import Process.Filtering.MultiThreadedGaussianFilter;
 import UIClasses.LayerPanel;
 import ij.ImagePlus;
-import ij.plugin.GaussianBlur3D;
+import ij.process.StackConverter;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import params.DefaultParams;
+import static params.DefaultParams.FILT_RAD_XY_LABEL;
+import static params.DefaultParams.FILT_RAD_Z_LABEL;
 
 /**
  *
@@ -18,15 +23,15 @@ import java.util.Properties;
  */
 public class FilteringPanel extends LayerPanel {
 
-    private Thread previewThread;
-    public static final String FILT_RAD_XY_LABEL = String.format("XY Filter Radius (%cm):", IJ.micronSymbol);
-    public static final String FILT_RAD_Z_LABEL = String.format("Z Filter Radius (%cm):", IJ.micronSymbol);
-
     /**
      * Creates new form FilteringPanel
      */
     public FilteringPanel() {
-        super();
+        this(null, null);
+    }
+
+    public FilteringPanel(Properties props, BioFormatsImg img) {
+        super(props, img);
         initComponents();
     }
 
@@ -55,11 +60,6 @@ public class FilteringPanel extends LayerPanel {
         setLayout(new java.awt.GridBagLayout());
 
         previewButton.setText("Preview");
-        previewButton.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                previewButtonFocusLost(evt);
-            }
-        });
         previewButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 previewButtonActionPerformed(evt);
@@ -113,29 +113,16 @@ public class FilteringPanel extends LayerPanel {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
-        previewThread = new Thread() {
-            public void run() {
-                int series = Integer.parseInt(props.getProperty(SelectInputPanel.SERIES_SELECT_LABEL));
-                int channel = Integer.parseInt(props.getProperty(SelectInputPanel.CHANNEL_SELECT_LABEL));
-                double xySpatialRes = img.getXYSpatialRes(series).value().doubleValue();
-                double zSpatialRes = img.getZSpatialRes(series).value().doubleValue();
-                img.setImg(series, channel);
-                ImagePlus image = img.getImg();
-                double[] sigma = new double[]{Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / xySpatialRes,
-                    Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_XY_LABEL)) / xySpatialRes,
-                    Double.parseDouble(props.getProperty(FilteringPanel.FILT_RAD_Z_LABEL)) / zSpatialRes};
-                GaussianBlur3D.blur(image, sigma[0], sigma[1], sigma[2]);
-                image.show();
-            }
-        };
-        previewThread.start();
+        int series = Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL));
+        int channel = Integer.parseInt(props.getProperty(DefaultParams.CHANNEL_SELECT_LABEL));
+        img.setImg(series, channel);
+        ImagePlus image = img.getImg();
+        (new StackConverter(image)).convertToGray32();
+        double[] sigma = getDoubleSigma(DefaultParams.SERIES_SELECT_LABEL, DefaultParams.FILT_RAD_XY_LABEL,
+                DefaultParams.FILT_RAD_XY_LABEL, DefaultParams.FILT_RAD_Z_LABEL);
+        process = new MultiThreadedGaussianFilter(img, sigma, series, channel, props);
+        process.start();
     }//GEN-LAST:event_previewButtonActionPerformed
-
-    private void previewButtonFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_previewButtonFocusLost
-        if (previewThread != null) {
-            previewThread.interrupt();
-        }
-    }//GEN-LAST:event_previewButtonFocusLost
 
     private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusGained
 

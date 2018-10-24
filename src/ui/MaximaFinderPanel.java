@@ -16,8 +16,15 @@
  */
 package ui;
 
+import Extrema.MultiThreadedMaximaFinder;
+import IO.BioFormats.BioFormatsImg;
 import UIClasses.LayerPanel;
-import ij.IJ;
+import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import params.DefaultParams;
+import static params.DefaultParams.MAX_NOISE_TOL_LABEL;
+import static params.DefaultParams.MAX_RAD_XY_LABEL;
+import static params.DefaultParams.MAX_RAD_Z_LABEL;
 
 /**
  *
@@ -25,16 +32,15 @@ import ij.IJ;
  */
 public class MaximaFinderPanel extends LayerPanel {
 
-    private Thread previewThread;
-    public static final String FILT_RAD_XY_LABEL = String.format("XY Filter Radius (%cm):", IJ.micronSymbol);
-    public static final String FILT_RAD_Z_LABEL = String.format("Z Filter Radius (%cm):", IJ.micronSymbol);
-    public static final String NOISE_TOL_LABEL = "Noise Tolerance:";
-
     /**
      * Creates new form MaximaFinderPanel
      */
     public MaximaFinderPanel() {
-        super();
+        this(null, null);
+    }
+
+    public MaximaFinderPanel(Properties props, BioFormatsImg img) {
+        super(props, img);
         initComponents();
     }
 
@@ -59,7 +65,7 @@ public class MaximaFinderPanel extends LayerPanel {
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
         setLayout(new java.awt.GridBagLayout());
 
-        xyFiltRadLabel.setText(FILT_RAD_XY_LABEL);
+        xyFiltRadLabel.setText(MAX_RAD_XY_LABEL);
         xyFiltRadLabel.setLabelFor(xyFiltRadTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -74,7 +80,7 @@ public class MaximaFinderPanel extends LayerPanel {
         gridBagConstraints.weighty = 1.0;
         add(xyFiltRadTextField, gridBagConstraints);
 
-        zFiltRadLabel.setText(FILT_RAD_Z_LABEL);
+        zFiltRadLabel.setText(MAX_RAD_Z_LABEL);
         zFiltRadLabel.setLabelFor(zFiltRadTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -94,11 +100,6 @@ public class MaximaFinderPanel extends LayerPanel {
         add(zFiltRadTextField, gridBagConstraints);
 
         previewButton.setText("Preview");
-        previewButton.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                previewButtonFocusLost(evt);
-            }
-        });
         previewButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 previewButtonActionPerformed(evt);
@@ -110,7 +111,7 @@ public class MaximaFinderPanel extends LayerPanel {
         gridBagConstraints.gridwidth = 2;
         add(previewButton, gridBagConstraints);
 
-        noiseTolLabel.setText(NOISE_TOL_LABEL);
+        noiseTolLabel.setText(MAX_NOISE_TOL_LABEL);
         noiseTolLabel.setLabelFor(noiseTolTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -132,47 +133,17 @@ public class MaximaFinderPanel extends LayerPanel {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
-        previewThread = new Thread() {
-//            private final BioFormatsImg bioImage = img.copy();
-
-            public void run() {
-//                long[] dims = new long[bioImage.getInterval().numDimensions()];
-//                bioImage.getInterval().dimensions(dims);
-//                Img< BitType> maxima = MaximumFinder.findAndDisplayLocalMaxima(bioImage.getInterval(), dims,
-//                        new FloatType(Float.parseFloat(props.getProperty(NOISE_TOL_LABEL))),
-//                        new int[]{(int) Math.round(Double.parseDouble(props.getProperty(FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes()),
-//                            (int) Math.round(Double.parseDouble(props.getProperty(FILT_RAD_XY_LABEL)) / bioImage.getXySpatRes()),
-//                            (int) Math.round(Double.parseDouble(props.getProperty(FILT_RAD_Z_LABEL)) / bioImage.getXySpatRes())}, true);
-//                
-//               Img<FloatType> distanceMap = bioImage.getImg().factory().create(bioImage.getInterval());
-//                DistanceTransform.transform(maxima, distanceMap, DistanceTransform.DISTANCE_TYPE.EUCLIDIAN);
-//
-//                IJ.saveAs(ImageJFunctions.show(distanceMap, "Distance Transform"), "TIF", "C:/Users/barryd/Desktop/test.tif");
-//                ImageJFunctions.show(maxima, "Detected Maxima");
-
-//                Img<BitType> invertedBinaryImage = ImageInverter.invertBinaryImage(maxima);
-//                DistanceTransform.transform(invertedBinaryImage, DistanceTransform.DISTANCE_TYPE.EUCLIDIAN);
-//                ImageJFunctions.show(invertedBinaryImage, "Inverted Image");
-//                IJ.saveAs(ImageJFunctions.show(invertedBinaryImage, "Distance Transform"), "TIF", "C:/Users/barryd/Desktop/test.tif");
-//                Img< BitType> distanceMaxima = MaximumFinder.findAndDisplayLocalMaxima(maxima, dims,
-//                        new FloatType(0.0f), new int[]{1, 1, 1}, false);
-//                ImageJFunctions.show(distanceMaxima, "Distance Maxima");
-            }
-        };
-        previewThread.start();
+        int[] sigma = getIntSigma(DefaultParams.SERIES_SELECT_LABEL, DefaultParams.FILT_RAD_XY_LABEL,
+                DefaultParams.FILT_RAD_XY_LABEL, DefaultParams.FILT_RAD_Z_LABEL);
+        process = new MultiThreadedMaximaFinder(img, exec, sigma, Float.parseFloat(props.getProperty(DefaultParams.MAX_NOISE_TOL_LABEL)), new boolean[]{true, true}, props);
+        process.start();
     }//GEN-LAST:event_previewButtonActionPerformed
-
-    private void previewButtonFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_previewButtonFocusLost
-        if (previewThread != null) {
-            previewThread.interrupt();
-        }
-    }//GEN-LAST:event_previewButtonFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel noiseTolLabel;
     private javax.swing.JTextField noiseTolTextField;
-    private javax.swing.JButton previewButton;
+    protected javax.swing.JButton previewButton;
     private javax.swing.JLabel xyFiltRadLabel;
     private javax.swing.JTextField xyFiltRadTextField;
     private javax.swing.JLabel zFiltRadLabel;

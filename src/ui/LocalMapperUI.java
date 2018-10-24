@@ -1,12 +1,21 @@
 package ui;
 
+import Extrema.MultiThreadedMaximaFinder;
 import IO.BioFormats.BioFormatsImg;
+import IO.PropertyWriter;
+import Process.Filtering.MultiThreadedGaussianFilter;
+import Process.MultiThreadedProcess;
+import Process.ProcessPipeline;
+import Process.Segmentation.MultiThreadedWatershed;
 import UIClasses.GUIMethods;
 import UIClasses.UIMethods;
 import java.awt.Container;
 import java.util.LinkedList;
 import java.util.Properties;
 import UIClasses.LayerPanel;
+import UIClasses.PropertyExtractor;
+import UtilClasses.GenUtils;
+import params.DefaultParams;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,18 +28,22 @@ import UIClasses.LayerPanel;
  */
 public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
 
-    private BioFormatsImg img;
-    private Properties props;
+    private final BioFormatsImg img;
+    private final Properties props = new Properties();
     private final LinkedList<LayerPanel> componentList = new LinkedList();
     private int layerIndex = 0;
+    private final String title = "Local Mapper";
+    private final ProcessPipeline pipeline;
+//    private final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     /**
      * Creates new form LocalMapperUI
      */
     public LocalMapperUI() {
+        img = new BioFormatsImg();
+        pipeline = new ProcessPipeline();
         initComponents();
         UIMethods.centreContainer(this);
-//       jLayeredPane1.setLayer(jPanel2, 1);
     }
 
     /**
@@ -48,10 +61,12 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         buttonPanel = new javax.swing.JPanel();
         previousButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        selectInputPanel = new ui.SelectInputPanel(statusTextArea);
-        filteringPanel = new ui.FilteringPanel();
-        maximaFinderPanel = new ui.MaximaFinderPanel();
+        saveParamsButton = new javax.swing.JButton();
+        loadParametersButton = new javax.swing.JButton();
+        selectInputPanel = new ui.SelectInputPanel(statusTextArea,props,img,null);
+        filteringPanel = new ui.FilteringPanel(props,img);
+        maximaFinderPanel = new ui.MaximaFinderPanel(props,img);
+        segmentationPanel = new ui.SegmentationPanel(props,img);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -79,9 +94,8 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -94,18 +108,40 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         buttonPanel.add(nextButton, gridBagConstraints);
 
-        jButton3.setText("Exit");
+        saveParamsButton.setText("Save Parameters");
+        saveParamsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveParamsButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        buttonPanel.add(jButton3, gridBagConstraints);
+        buttonPanel.add(saveParamsButton, gridBagConstraints);
+
+        loadParametersButton.setText("Load Parameters");
+        loadParametersButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadParametersButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        buttonPanel.add(loadParametersButton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -132,7 +168,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.8;
         getContentPane().add(filteringPanel, gridBagConstraints);
 
@@ -146,33 +182,59 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.weighty = 0.8;
         getContentPane().add(maximaFinderPanel, gridBagConstraints);
 
+        segmentationPanel.setVisible(false);
+        componentList.add(segmentationPanel);
+        segmentationPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                segmentationPanelComponentShown(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.8;
+        getContentPane().add(segmentationPanel, gridBagConstraints);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         componentList.get(layerIndex).setVariables();
-        img = componentList.get(layerIndex).getImg();
-        Properties inputProps = componentList.get(layerIndex).getProps();
+        addProcess();
         layerIndex++;
         updateLayer();
-        checkLayerIndex();
-        componentList.get(layerIndex).setImg(img);
-        componentList.get(layerIndex).setProps(inputProps);
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
-        Properties inputProps = null;
         componentList.get(layerIndex).setVariables();
         layerIndex--;
-        if (layerIndex > 0) {
-            img = componentList.get(layerIndex - 1).getImg();
-            inputProps = componentList.get(layerIndex - 1).getProps();
-        }
+        removeProcess();
         updateLayer();
-        checkLayerIndex();
-        componentList.get(layerIndex).setImg(img);
-        componentList.get(layerIndex).setProps(inputProps);
     }//GEN-LAST:event_previousButtonActionPerformed
+
+    private void saveParamsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveParamsButtonActionPerformed
+        setVariables();
+        try {
+            PropertyWriter.printProperties(props, props.getProperty(DefaultParams.INPUT_DIR_LABEL), title, true);
+        } catch (Exception e) {
+            GenUtils.logError(e, "Failed to save property file.");
+        }
+        cleanUp();
+    }//GEN-LAST:event_saveParamsButtonActionPerformed
+
+    private void loadParametersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadParametersButtonActionPerformed
+        try {
+            PropertyWriter.loadProperties(props, title);
+        } catch (Exception e) {
+            GenUtils.logError(e, "Failed to load property file.");
+        }
+    }//GEN-LAST:event_loadParametersButtonActionPerformed
+
+    private void segmentationPanelComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_segmentationPanelComponentShown
+        segmentationPanel.updateChannels();
+    }//GEN-LAST:event_segmentationPanelComponentShown
 
     void updateLayer() {
         for (int i = 0; i < componentList.size(); i++) {
@@ -182,10 +244,11 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
                 componentList.get(i).setVisible(false);
             }
         }
-        componentList.get(layerIndex).setImg(img);
         if (img != null) {
-            statusTextArea.append(img.toString());
+            statusTextArea.append(img.getInfo(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))));
+            System.out.print(img.getInfo(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))));
         }
+        checkLayerIndex();
     }
 
     void checkLayerIndex() {
@@ -207,56 +270,74 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     }
 
     public void setProperties(Properties p, Container c) {
-
+        PropertyExtractor.setProperties(p, c);
     }
 
     /**
-     * @param args the command line arguments
+     * @param args the command line arguments //
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LocalMapperUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LocalMapperUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LocalMapperUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LocalMapperUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LocalMapperUI().setVisible(true);
-            }
-        });
-    }
-
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(LocalMapperUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(LocalMapperUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(LocalMapperUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(LocalMapperUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new LocalMapperUI().setVisible(true);
+//            }
+//        });
+//    }
     void cleanUp() {
         this.dispose();
+    }
+
+    void addProcess() {
+        MultiThreadedProcess process = componentList.get(layerIndex).getProcess();
+        MultiThreadedProcess newProcess = null;
+        if (process instanceof MultiThreadedGaussianFilter) {
+            newProcess = new MultiThreadedGaussianFilter(img, props);
+        } else if (process instanceof MultiThreadedMaximaFinder) {
+            newProcess = new MultiThreadedMaximaFinder(img, props);
+        } else if (process instanceof MultiThreadedWatershed) {
+            newProcess = new MultiThreadedWatershed(img, props);
+        }
+        pipeline.addProcess(newProcess,layerIndex);
+    }
+
+    void removeProcess() {
+        pipeline.removeProcesses(layerIndex);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonPanel;
     private ui.FilteringPanel filteringPanel;
-    private javax.swing.JButton jButton3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton loadParametersButton;
     private ui.MaximaFinderPanel maximaFinderPanel;
     private javax.swing.JButton nextButton;
     private javax.swing.JButton previousButton;
+    private javax.swing.JButton saveParamsButton;
+    private ui.SegmentationPanel segmentationPanel;
     private ui.SelectInputPanel selectInputPanel;
     private javax.swing.JTextArea statusTextArea;
     // End of variables declaration//GEN-END:variables
