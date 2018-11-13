@@ -20,7 +20,6 @@ import Extrema.MultiThreadedMaximaFinder;
 import IO.BioFormats.BioFormatsImg;
 import UIClasses.LayerPanel;
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
 import params.DefaultParams;
 import static params.DefaultParams.MAX_NOISE_TOL_LABEL;
 import static params.DefaultParams.MAX_RAD_XY_LABEL;
@@ -133,9 +132,11 @@ public class MaximaFinderPanel extends LayerPanel {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
-        int[] sigma = getIntSigma(DefaultParams.SERIES_SELECT_LABEL, DefaultParams.FILT_RAD_XY_LABEL,
-                DefaultParams.FILT_RAD_XY_LABEL, DefaultParams.FILT_RAD_Z_LABEL);
-        process = new MultiThreadedMaximaFinder(img, exec, sigma, Float.parseFloat(props.getProperty(DefaultParams.MAX_NOISE_TOL_LABEL)), new boolean[]{true, true}, props);
+        String[] propLabels = new String[]{DefaultParams.SERIES_SELECT_LABEL,
+            DefaultParams.MAX_RAD_XY_LABEL,
+            DefaultParams.MAX_RAD_Z_LABEL,
+            DefaultParams.MAX_NOISE_TOL_LABEL};
+        process = new MultiThreadedMaximaFinder(img, props, propLabels);
         process.start();
     }//GEN-LAST:event_previewButtonActionPerformed
 

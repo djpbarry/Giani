@@ -15,6 +15,7 @@ import java.util.Properties;
 import UIClasses.LayerPanel;
 import UIClasses.PropertyExtractor;
 import UtilClasses.GenUtils;
+import core.LocalMapperExecutor;
 import params.DefaultParams;
 
 /*
@@ -63,6 +64,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         nextButton = new javax.swing.JButton();
         saveParamsButton = new javax.swing.JButton();
         loadParametersButton = new javax.swing.JButton();
+        runButton = new javax.swing.JButton();
         selectInputPanel = new ui.SelectInputPanel(statusTextArea,props,img,null);
         filteringPanel = new ui.FilteringPanel(props,img);
         maximaFinderPanel = new ui.MaximaFinderPanel(props,img);
@@ -142,6 +144,23 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         buttonPanel.add(loadParametersButton, gridBagConstraints);
+
+        runButton.setText("Run");
+        runButton.setEnabled(false);
+        runButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                runButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        buttonPanel.add(runButton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -236,6 +255,11 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         segmentationPanel.updateChannels();
     }//GEN-LAST:event_segmentationPanelComponentShown
 
+    private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
+        addProcess();
+        (new LocalMapperExecutor(pipeline, props)).executePipeline();
+    }//GEN-LAST:event_runButtonActionPerformed
+
     void updateLayer() {
         for (int i = 0; i < componentList.size(); i++) {
             if (i == layerIndex) {
@@ -259,8 +283,10 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         }
         if (layerIndex == componentList.size() - 1) {
             nextButton.setEnabled(false);
+            runButton.setEnabled(true);
         } else {
             nextButton.setEnabled(true);
+            runButton.setEnabled(false);
         }
     }
 
@@ -313,15 +339,18 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
 
     void addProcess() {
         MultiThreadedProcess process = componentList.get(layerIndex).getProcess();
+        if (process == null) {
+            return;
+        }
         MultiThreadedProcess newProcess = null;
         if (process instanceof MultiThreadedGaussianFilter) {
-            newProcess = new MultiThreadedGaussianFilter(img, props);
+            newProcess = new MultiThreadedGaussianFilter(img, props, process.getPropLabels());
         } else if (process instanceof MultiThreadedMaximaFinder) {
-            newProcess = new MultiThreadedMaximaFinder(img, props);
+            newProcess = new MultiThreadedMaximaFinder(img, props, process.getPropLabels());
         } else if (process instanceof MultiThreadedWatershed) {
-            newProcess = new MultiThreadedWatershed(img, props);
+            newProcess = new MultiThreadedWatershed(img, props, process.getPropLabels());
         }
-        pipeline.addProcess(newProcess,layerIndex);
+        pipeline.addProcess(newProcess, layerIndex - 1);
     }
 
     void removeProcess() {
@@ -336,6 +365,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private ui.MaximaFinderPanel maximaFinderPanel;
     private javax.swing.JButton nextButton;
     private javax.swing.JButton previousButton;
+    private javax.swing.JButton runButton;
     private javax.swing.JButton saveParamsButton;
     private ui.SegmentationPanel segmentationPanel;
     private ui.SelectInputPanel selectInputPanel;

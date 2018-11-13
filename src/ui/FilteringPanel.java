@@ -113,14 +113,11 @@ public class FilteringPanel extends LayerPanel {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
-        int series = Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL));
-        int channel = Integer.parseInt(props.getProperty(DefaultParams.CHANNEL_SELECT_LABEL));
-        img.setImg(series, channel);
-        ImagePlus image = img.getImg();
-        (new StackConverter(image)).convertToGray32();
-        double[] sigma = getDoubleSigma(DefaultParams.SERIES_SELECT_LABEL, DefaultParams.FILT_RAD_XY_LABEL,
-                DefaultParams.FILT_RAD_XY_LABEL, DefaultParams.FILT_RAD_Z_LABEL);
-        process = new MultiThreadedGaussianFilter(img, sigma, series, channel, props);
+        String[] propLabels = new String[]{DefaultParams.SERIES_SELECT_LABEL,
+            DefaultParams.CHANNEL_SELECT_LABEL,
+            DefaultParams.FILT_RAD_XY_LABEL,
+            DefaultParams.FILT_RAD_Z_LABEL};
+        process = new MultiThreadedGaussianFilter(img, props, propLabels);
         process.start();
     }//GEN-LAST:event_previewButtonActionPerformed
 

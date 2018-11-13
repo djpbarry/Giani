@@ -232,7 +232,7 @@ public class SelectInputPanel extends LayerPanel {
         int series = seriesComboBox.getSelectedIndex();
         int channel = channelComboBox.getSelectedIndex();
         try {
-            img.setImg(series, channel);
+            img.setImg(series, channel, channel + 1, null);
             img.getImg().show();
         } catch (Exception e) {
             GenUtils.logError(e, "An error occured while trying to display the image.");

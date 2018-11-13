@@ -129,12 +129,14 @@ public class SegmentationPanel extends LayerPanel {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
-        int series = Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL));
-        int channel = Integer.parseInt(props.getProperty(DefaultParams.SEG_CHAN_SELECT_LABEL));
-        double thresh = Double.parseDouble(props.getProperty(DefaultParams.SEG_THRESH_LABEL));
-        double[] sigma = getDoubleSigma(DefaultParams.SERIES_SELECT_LABEL, DefaultParams.FILT_RAD_XY_LABEL,
-                DefaultParams.FILT_RAD_XY_LABEL, DefaultParams.FILT_RAD_Z_LABEL);
-        process = new MultiThreadedWatershed(img, exec, sigma, series, channel, thresh, props);
+        
+        String[] propLabels = new String[]{DefaultParams.SERIES_SELECT_LABEL,
+            DefaultParams.SEG_CHAN_SELECT_LABEL,
+            DefaultParams.SEG_THRESH_LABEL,
+            DefaultParams.FILT_RAD_XY_LABEL,
+            DefaultParams.FILT_RAD_Z_LABEL};
+        
+        process = new MultiThreadedWatershed(img, props, propLabels);
         process.start();
         try {
             process.join();
