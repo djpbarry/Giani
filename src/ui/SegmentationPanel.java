@@ -10,10 +10,9 @@ import Process.ROI.MultiThreadedROIConstructor;
 import Process.Segmentation.MultiThreadedWatershed;
 import UIClasses.LayerPanel;
 import UtilClasses.GenUtils;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.Roi;
-import ij.measure.ResultsTable;
-import ij.plugin.filter.Analyzer;
 import java.util.ArrayList;
 import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
@@ -151,30 +150,21 @@ public class SegmentationPanel extends LayerPanel {
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void measurePreviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_measurePreviewButtonActionPerformed
-        if (process.isAlive()) {
-            process.interrupt();
-            GenUtils.error("Segmentation incomplete.");
-            return;
-        }
-        process = new MultiThreadedROIConstructor();
-        process.setup(img, props, null);
-        process.start();
         try {
-            process.join();
+            if (process.isAlive()) {
+                IJ.log("Waiting for segmentation to complete...");
+                process.join();
+            }
+        } catch (InterruptedException e) {
+            GenUtils.logError(e, "Segmentation failed.");
+        }
+        MultiThreadedROIConstructor roiConstructor = new MultiThreadedROIConstructor();
+        roiConstructor.setup(img, props, null);
+        roiConstructor.start();
+        try {
+            roiConstructor.join();
         } catch (InterruptedException e) {
         }
-        objectPop = ((MultiThreadedROIConstructor) process).getObjectPop();
-        ArrayList<double[]> measures = objectPop.getMeasuresStats(img.getLoadedImage().getImageStack());
-        ResultsTable rt = Analyzer.getResultsTable();
-        String[] headings = {"Index", "Mean Pixel Value", "Pixel Standard Deviation", "Min Pixel Value", "Max Pixel Value", "Integrated Density"};
-        for (double[] m : measures) {
-            rt.incrementCounter();
-            for (int i = 0; i < m.length; i++) {
-                rt.addValue(headings[i], m[i]);
-            }
-        }
-        rt.updateResults();
-        rt.show("Measures");
     }//GEN-LAST:event_measurePreviewButtonActionPerformed
 
     public void updateChannels() {
