@@ -61,12 +61,12 @@ public class LocalMapperExecutor {
             int nSeries = img.getSeriesCount();
             for (int s = 0; s < nSeries; s++) {
                 IJ.log(String.format("Analysing series %d", s));
-                img.setImg(s);
+                img.loadPixelData(s);
                 for (MultiThreadedProcess process : pipeline) {
                     if (process != null) {
                         IJ.log(String.format("Process %s", process.getClass().toString()));
                         try {
-                            Future f = exec.submit(process);
+                            Future f = exec.submit(process, img);
                             f.get();
                         } catch (InterruptedException | ExecutionException e) {
                             GenUtils.logError(e, String.format("Failed to execute process %s", process.getClass().toString()));
@@ -74,7 +74,7 @@ public class LocalMapperExecutor {
                     }
                 }
                 IJ.log("Processing complete.");
-                ImagePlus imp = img.getTempImg();
+                ImagePlus imp = img.getProcessedImage();
                 IJ.saveAs(imp, "TIF", String.format("%s%s%s_Series_%d_Output", outputDir, File.separator, file.getName(), s));
             }
         }

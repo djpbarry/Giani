@@ -158,7 +158,7 @@ public class SegmentationPanel extends LayerPanel {
         } catch (InterruptedException e) {
         }
         objectPop = ((MultiThreadedROIConstructor) process).getObjectPop();
-        ArrayList<double[]> measures = objectPop.getMeasuresStats(img.getImg().getImageStack());
+        ArrayList<double[]> measures = objectPop.getMeasuresStats(img.getLoadedImage().getImageStack());
         ResultsTable rt = Analyzer.getResultsTable();
         String[] headings = {"Index", "Mean Pixel Value", "Pixel Standard Deviation", "Min Pixel Value", "Max Pixel Value", "Integrated Density"};
         for (double[] m : measures) {
