@@ -344,12 +344,13 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         }
         MultiThreadedProcess newProcess = null;
         if (process instanceof MultiThreadedGaussianFilter) {
-            newProcess = new MultiThreadedGaussianFilter(img, props, process.getPropLabels());
+            newProcess = new MultiThreadedGaussianFilter();
         } else if (process instanceof MultiThreadedMaximaFinder) {
-            newProcess = new MultiThreadedMaximaFinder(img, props, process.getPropLabels());
+            newProcess = new MultiThreadedMaximaFinder();
         } else if (process instanceof MultiThreadedWatershed) {
-            newProcess = new MultiThreadedWatershed(img, props, process.getPropLabels());
+            newProcess = new MultiThreadedWatershed();
         }
+        newProcess.setup(img, props, process.getPropLabels());
         pipeline.addProcess(newProcess, layerIndex - 1);
     }
 

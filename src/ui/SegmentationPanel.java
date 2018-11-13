@@ -10,6 +10,7 @@ import Process.ROI.MultiThreadedROIConstructor;
 import Process.Segmentation.MultiThreadedWatershed;
 import UIClasses.LayerPanel;
 import UtilClasses.GenUtils;
+import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.measure.ResultsTable;
 import ij.plugin.filter.Analyzer;
@@ -129,20 +130,24 @@ public class SegmentationPanel extends LayerPanel {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
-        
+
         String[] propLabels = new String[]{DefaultParams.SERIES_SELECT_LABEL,
             DefaultParams.SEG_CHAN_SELECT_LABEL,
             DefaultParams.SEG_THRESH_LABEL,
             DefaultParams.FILT_RAD_XY_LABEL,
             DefaultParams.FILT_RAD_Z_LABEL};
-        
-        process = new MultiThreadedWatershed(img, props, propLabels);
+
+        process = new MultiThreadedWatershed();
+        process.setup(img, props, propLabels);
         process.start();
         try {
             process.join();
         } catch (InterruptedException e) {
+            return;
         }
-
+        ImagePlus imp = img.getProcessedImage();
+        imp.resetDisplayRange();
+        imp.show();
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void measurePreviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_measurePreviewButtonActionPerformed
@@ -151,7 +156,8 @@ public class SegmentationPanel extends LayerPanel {
             GenUtils.error("Segmentation incomplete.");
             return;
         }
-        process = new MultiThreadedROIConstructor(img, props);
+        process = new MultiThreadedROIConstructor();
+        process.setup(img, props, null);
         process.start();
         try {
             process.join();

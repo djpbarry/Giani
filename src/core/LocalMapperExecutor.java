@@ -62,10 +62,16 @@ public class LocalMapperExecutor {
             for (int s = 0; s < nSeries; s++) {
                 IJ.log(String.format("Analysing series %d", s));
                 img.loadPixelData(s);
+                if (img.getZSpatialRes(s) == null) {
+                    IJ.log("Only 2 dimensions - skipping.");
+                    continue;
+                }
+                props.setProperty(DefaultParams.SERIES_SELECT_LABEL, String.valueOf(s));
                 for (MultiThreadedProcess process : pipeline) {
                     if (process != null) {
                         IJ.log(String.format("Process %s", process.getClass().toString()));
                         try {
+                            process.setup(img, props, process.getPropLabels());
                             Future f = exec.submit(process, img);
                             f.get();
                         } catch (InterruptedException | ExecutionException e) {

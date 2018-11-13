@@ -136,8 +136,15 @@ public class MaximaFinderPanel extends LayerPanel {
             DefaultParams.MAX_RAD_XY_LABEL,
             DefaultParams.MAX_RAD_Z_LABEL,
             DefaultParams.MAX_NOISE_TOL_LABEL};
-        process = new MultiThreadedMaximaFinder(img, props, propLabels);
+        process = new MultiThreadedMaximaFinder();
+        process.setup(img, props, propLabels);
         process.start();
+        try {
+            process.join();
+        } catch (InterruptedException e) {
+            return;
+        }
+        img.getProcessedImage().show();
     }//GEN-LAST:event_previewButtonActionPerformed
 
 

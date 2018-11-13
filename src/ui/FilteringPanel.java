@@ -8,11 +8,7 @@ package ui;
 import IO.BioFormats.BioFormatsImg;
 import Process.Filtering.MultiThreadedGaussianFilter;
 import UIClasses.LayerPanel;
-import ij.ImagePlus;
-import ij.process.StackConverter;
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import params.DefaultParams;
 import static params.DefaultParams.FILT_RAD_XY_LABEL;
 import static params.DefaultParams.FILT_RAD_Z_LABEL;
@@ -117,8 +113,15 @@ public class FilteringPanel extends LayerPanel {
             DefaultParams.CHANNEL_SELECT_LABEL,
             DefaultParams.FILT_RAD_XY_LABEL,
             DefaultParams.FILT_RAD_Z_LABEL};
-        process = new MultiThreadedGaussianFilter(img, props, propLabels);
+        process = new MultiThreadedGaussianFilter();
+        process.setup(img, props, propLabels);
         process.start();
+        try {
+            process.join();
+        } catch (InterruptedException e) {
+            return;
+        }
+        img.getProcessedImage().show();
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusGained
