@@ -34,7 +34,7 @@ public class Local_Mapper implements PlugIn {
     }
     
     public Local_Mapper() {
-        
+       
     }
 
     public void run(String arg) {

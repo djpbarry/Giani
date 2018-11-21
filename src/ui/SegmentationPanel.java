@@ -12,11 +12,9 @@ import UIClasses.LayerPanel;
 import UtilClasses.GenUtils;
 import ij.IJ;
 import ij.ImagePlus;
-import ij.gui.Roi;
 import java.util.ArrayList;
 import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
-import mcib3d.geom.Objects3DPopulation;
 import params.DefaultParams;
 import static params.DefaultParams.SEG_CHAN_SELECT_LABEL;
 import static params.DefaultParams.SEG_THRESH_LABEL;
@@ -28,8 +26,6 @@ import static params.DefaultParams.SEG_THRESH_LABEL;
 public class SegmentationPanel extends LayerPanel {
 
     private ArrayList<String> channelLabels;
-    Objects3DPopulation objectPop;
-    ArrayList<ArrayList<Roi>> allRois;
 
     /**
      * Creates new form SegmentationPanel
@@ -58,7 +54,6 @@ public class SegmentationPanel extends LayerPanel {
         previewButton = new javax.swing.JButton();
         thresholdLabel = new javax.swing.JLabel();
         thresholdTextField = new javax.swing.JTextField();
-        measurePreviewButton = new javax.swing.JButton();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -90,6 +85,7 @@ public class SegmentationPanel extends LayerPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         add(previewButton, gridBagConstraints);
@@ -112,19 +108,6 @@ public class SegmentationPanel extends LayerPanel {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         add(thresholdTextField, gridBagConstraints);
-
-        measurePreviewButton.setText("Measure Preview");
-        measurePreviewButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                measurePreviewButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        add(measurePreviewButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -149,24 +132,6 @@ public class SegmentationPanel extends LayerPanel {
         imp.show();
     }//GEN-LAST:event_previewButtonActionPerformed
 
-    private void measurePreviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_measurePreviewButtonActionPerformed
-        try {
-            if (process.isAlive()) {
-                IJ.log("Waiting for segmentation to complete...");
-                process.join();
-            }
-        } catch (InterruptedException e) {
-            GenUtils.logError(e, "Segmentation failed.");
-        }
-        MultiThreadedROIConstructor roiConstructor = new MultiThreadedROIConstructor();
-        roiConstructor.setup(img, props, null);
-        roiConstructor.start();
-        try {
-            roiConstructor.join();
-        } catch (InterruptedException e) {
-        }
-    }//GEN-LAST:event_measurePreviewButtonActionPerformed
-
     public void updateChannels() {
         int channels = img.getChannelCount();
         channelLabels = new ArrayList();
@@ -179,7 +144,6 @@ public class SegmentationPanel extends LayerPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> channelSelectComboBox;
     private javax.swing.JLabel channelSelectLabel;
-    private javax.swing.JButton measurePreviewButton;
     private javax.swing.JButton previewButton;
     private javax.swing.JLabel thresholdLabel;
     private javax.swing.JTextField thresholdTextField;

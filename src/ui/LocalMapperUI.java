@@ -6,6 +6,7 @@ import IO.PropertyWriter;
 import Process.Filtering.MultiThreadedGaussianFilter;
 import Process.MultiThreadedProcess;
 import Process.ProcessPipeline;
+import Process.ROI.MultiThreadedROIConstructor;
 import Process.Segmentation.MultiThreadedWatershed;
 import UIClasses.GUIMethods;
 import UIClasses.UIMethods;
@@ -69,6 +70,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         filteringPanel = new ui.FilteringPanel(props,img);
         maximaFinderPanel = new ui.MaximaFinderPanel(props,img);
         segmentationPanel = new ui.SegmentationPanel(props,img);
+        measurementPanel = new ui.MeasurementPanel(props, img);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -216,6 +218,14 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.weighty = 0.8;
         getContentPane().add(segmentationPanel, gridBagConstraints);
 
+        measurementPanel.setVisible(false);
+        componentList.add(measurementPanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        getContentPane().add(measurementPanel, gridBagConstraints);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -349,6 +359,8 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
             newProcess = new MultiThreadedMaximaFinder();
         } else if (process instanceof MultiThreadedWatershed) {
             newProcess = new MultiThreadedWatershed();
+        } else if (process instanceof MultiThreadedROIConstructor) {
+            newProcess = new MultiThreadedROIConstructor();
         }
         newProcess.setup(img, props, process.getPropLabels());
         pipeline.addProcess(newProcess, layerIndex - 1);
@@ -364,6 +376,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton loadParametersButton;
     private ui.MaximaFinderPanel maximaFinderPanel;
+    private ui.MeasurementPanel measurementPanel;
     private javax.swing.JButton nextButton;
     private javax.swing.JButton previousButton;
     private javax.swing.JButton runButton;

@@ -17,12 +17,15 @@
 package core;
 
 import IO.BioFormats.BioFormatsImg;
+import IO.DataWriter;
 import Process.MultiThreadedProcess;
 import Process.ProcessPipeline;
 import UtilClasses.GenUtils;
 import ij.IJ;
 import ij.ImagePlus;
+import ij.plugin.filter.Analyzer;
 import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -83,6 +86,11 @@ public class LocalMapperExecutor {
                 ImagePlus imp = img.getProcessedImage();
                 IJ.saveAs(imp, "TIF", String.format("%s%s%s_Series_%d_Output", outputDir, File.separator, file.getName(), s));
             }
+        }
+        try {
+            DataWriter.saveResultsTable(Analyzer.getResultsTable(), new File(String.format("%s%sLocalMapper_Output", outputDir, File.separator)));
+        } catch (IOException e) {
+            GenUtils.logError(e, "Failed to save results file.");
         }
     }
 
