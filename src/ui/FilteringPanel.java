@@ -8,10 +8,13 @@ package ui;
 import IO.BioFormats.BioFormatsImg;
 import Process.Filtering.MultiThreadedGaussianFilter;
 import UIClasses.LayerPanel;
+import java.util.ArrayList;
 import java.util.Properties;
+import javax.swing.DefaultComboBoxModel;
 import params.DefaultParams;
 import static params.DefaultParams.FILT_RAD_XY_LABEL;
 import static params.DefaultParams.FILT_RAD_Z_LABEL;
+import static params.DefaultParams.SEG_CHAN_SELECT_LABEL;
 
 /**
  *
@@ -19,15 +22,17 @@ import static params.DefaultParams.FILT_RAD_Z_LABEL;
  */
 public class FilteringPanel extends LayerPanel {
 
+    private ArrayList<String> channelLabels;
+
     /**
      * Creates new form FilteringPanel
      */
     public FilteringPanel() {
-        this(null, null);
+        this(null, null, null);
     }
 
-    public FilteringPanel(Properties props, BioFormatsImg img) {
-        super(props, img);
+    public FilteringPanel(Properties props, BioFormatsImg img, MultiThreadedGaussianFilter process) {
+        super(props, img, process);
         initComponents();
     }
 
@@ -46,13 +51,10 @@ public class FilteringPanel extends LayerPanel {
         filterRadiusXYTextField = new javax.swing.JTextField();
         filterRadiusZLabel = new javax.swing.JLabel();
         filterRadiusZTextField = new javax.swing.JTextField();
+        channelSelectLabel = new javax.swing.JLabel();
+        channelSelectComboBox = new javax.swing.JComboBox<>();
 
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                formFocusGained(evt);
-            }
-        });
         setLayout(new java.awt.GridBagLayout());
 
         previewButton.setText("Preview");
@@ -105,15 +107,33 @@ public class FilteringPanel extends LayerPanel {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         add(filterRadiusZTextField, gridBagConstraints);
+
+        channelSelectLabel.setText(SEG_CHAN_SELECT_LABEL);
+        channelSelectLabel.setLabelFor(channelSelectComboBox);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(channelSelectLabel, gridBagConstraints);
+
+        channelSelectComboBox.setModel(new DefaultComboBoxModel(new String[]{}));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(channelSelectComboBox, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
         String[] propLabels = new String[]{DefaultParams.SERIES_SELECT_LABEL,
-            DefaultParams.CHANNEL_SELECT_LABEL,
+            DefaultParams.SEG_CHAN_SELECT_LABEL,
             DefaultParams.FILT_RAD_XY_LABEL,
             DefaultParams.FILT_RAD_Z_LABEL};
-        process = new MultiThreadedGaussianFilter();
         process.setup(img, props, propLabels);
         process.start();
         try {
@@ -121,14 +141,21 @@ public class FilteringPanel extends LayerPanel {
         } catch (InterruptedException e) {
             return;
         }
-        img.getProcessedImage().show();
+        process.getOutput().show();
     }//GEN-LAST:event_previewButtonActionPerformed
 
-    private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusGained
-
-    }//GEN-LAST:event_formFocusGained
+    public void updateChannels() {
+        int channels = img.getChannelCount();
+        channelLabels = new ArrayList();
+        for (int c = 0; c < channels; c++) {
+            channelLabels.add(String.valueOf(c));
+        }
+        channelSelectComboBox.setModel(new DefaultComboBoxModel(channelLabels.toArray()));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> channelSelectComboBox;
+    private javax.swing.JLabel channelSelectLabel;
     private javax.swing.JLabel filterRadiusXYLabel;
     private javax.swing.JTextField filterRadiusXYTextField;
     private javax.swing.JLabel filterRadiusZLabel;

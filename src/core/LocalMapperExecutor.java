@@ -37,7 +37,7 @@ import params.DefaultParams;
  *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
-public class LocalMapperExecutor {
+public class LocalMapperExecutor extends Thread {
 
     private final ProcessPipeline pipeline;
     private final Properties props;
@@ -47,7 +47,7 @@ public class LocalMapperExecutor {
         this.props = props;
     }
 
-    public void executePipeline() {
+    public void run() {
         File inputDir = new File(props.getProperty(DefaultParams.INPUT_DIR_LABEL));
         IJ.log(String.format("Input: %s", inputDir.getAbsolutePath()));
         File outputDir = new File(GenUtils.openResultsDirectory(String.format("%s%s%s", inputDir.getAbsolutePath(), File.separator, "Local_Mapper")));
@@ -62,9 +62,9 @@ public class LocalMapperExecutor {
             }
             IJ.log(String.format("Analysing file %s", file.getName()));
             int nSeries = img.getSeriesCount();
+            ImagePlus output = null;
             for (int s = 0; s < nSeries; s++) {
                 IJ.log(String.format("Analysing series %d", s));
-                img.loadPixelData(s);
                 if (img.getZSpatialRes(s) == null) {
                     IJ.log("Only 2 dimensions - skipping.");
                     continue;
@@ -80,11 +80,13 @@ public class LocalMapperExecutor {
                         } catch (InterruptedException | ExecutionException e) {
                             GenUtils.logError(e, String.format("Failed to execute process %s", process.getClass().toString()));
                         }
+                        output = process.getOutput();
                     }
                 }
                 IJ.log("Processing complete.");
-                ImagePlus imp = img.getProcessedImage();
-                IJ.saveAs(imp, "TIF", String.format("%s%s%s_Series_%d_Output", outputDir, File.separator, file.getName(), s));
+                if (output != null) {
+                    IJ.saveAs(output, "TIF", String.format("%s%s%s_Series_%d_Output", outputDir, File.separator, file.getName(), s));
+                }
             }
         }
         try {

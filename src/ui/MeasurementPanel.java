@@ -31,11 +31,11 @@ public class MeasurementPanel extends LayerPanel {
      * Creates new form MeasurementPanel
      */
     public MeasurementPanel() {
-        this(null, null);
+        this(null, null, null);
     }
 
-    public MeasurementPanel(Properties props, BioFormatsImg img) {
-        super(props, img);
+    public MeasurementPanel(Properties props, BioFormatsImg img, MultiThreadedROIConstructor process) {
+        super(props, img, process);
         initComponents();
     }
 
@@ -69,7 +69,6 @@ public class MeasurementPanel extends LayerPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void measurePreviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_measurePreviewButtonActionPerformed
-        process = new MultiThreadedROIConstructor();
         process.setup(img, props, null);
         process.start();
         try {

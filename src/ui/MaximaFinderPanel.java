@@ -35,11 +35,11 @@ public class MaximaFinderPanel extends LayerPanel {
      * Creates new form MaximaFinderPanel
      */
     public MaximaFinderPanel() {
-        this(null, null);
+        this(null, null, null);
     }
 
-    public MaximaFinderPanel(Properties props, BioFormatsImg img) {
-        super(props, img);
+    public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process) {
+        super(props, img, process);
         initComponents();
     }
 
@@ -133,10 +133,10 @@ public class MaximaFinderPanel extends LayerPanel {
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
         String[] propLabels = new String[]{DefaultParams.SERIES_SELECT_LABEL,
+            DefaultParams.CHANNEL_SELECT_LABEL,
             DefaultParams.MAX_RAD_XY_LABEL,
             DefaultParams.MAX_RAD_Z_LABEL,
             DefaultParams.MAX_NOISE_TOL_LABEL};
-        process = new MultiThreadedMaximaFinder();
         process.setup(img, props, propLabels);
         process.start();
         try {
@@ -144,7 +144,7 @@ public class MaximaFinderPanel extends LayerPanel {
         } catch (InterruptedException e) {
             return;
         }
-        img.getProcessedImage().show();
+        process.getOutput().show();
     }//GEN-LAST:event_previewButtonActionPerformed
 
 

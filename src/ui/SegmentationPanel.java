@@ -6,17 +6,11 @@
 package ui;
 
 import IO.BioFormats.BioFormatsImg;
-import Process.ROI.MultiThreadedROIConstructor;
 import Process.Segmentation.MultiThreadedWatershed;
 import UIClasses.LayerPanel;
-import UtilClasses.GenUtils;
-import ij.IJ;
 import ij.ImagePlus;
-import java.util.ArrayList;
 import java.util.Properties;
-import javax.swing.DefaultComboBoxModel;
 import params.DefaultParams;
-import static params.DefaultParams.SEG_CHAN_SELECT_LABEL;
 import static params.DefaultParams.SEG_THRESH_LABEL;
 
 /**
@@ -25,17 +19,15 @@ import static params.DefaultParams.SEG_THRESH_LABEL;
  */
 public class SegmentationPanel extends LayerPanel {
 
-    private ArrayList<String> channelLabels;
-
     /**
      * Creates new form SegmentationPanel
      */
     public SegmentationPanel() {
-        this(null, null);
+        this(null, null, null);
     }
 
-    public SegmentationPanel(Properties props, BioFormatsImg img) {
-        super(props, img);
+    public SegmentationPanel(Properties props, BioFormatsImg img, MultiThreadedWatershed process) {
+        super(props, img, process);
         initComponents();
     }
 
@@ -49,32 +41,11 @@ public class SegmentationPanel extends LayerPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        channelSelectLabel = new javax.swing.JLabel();
-        channelSelectComboBox = new javax.swing.JComboBox<>();
         previewButton = new javax.swing.JButton();
         thresholdLabel = new javax.swing.JLabel();
         thresholdTextField = new javax.swing.JTextField();
 
         setLayout(new java.awt.GridBagLayout());
-
-        channelSelectLabel.setText(SEG_CHAN_SELECT_LABEL);
-        channelSelectLabel.setLabelFor(channelSelectComboBox);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        add(channelSelectLabel, gridBagConstraints);
-
-        channelSelectComboBox.setModel(new DefaultComboBoxModel(new String[]{}));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        add(channelSelectComboBox, gridBagConstraints);
 
         previewButton.setText("Preview");
         previewButton.addActionListener(new java.awt.event.ActionListener() {
@@ -119,7 +90,6 @@ public class SegmentationPanel extends LayerPanel {
             DefaultParams.FILT_RAD_XY_LABEL,
             DefaultParams.FILT_RAD_Z_LABEL};
 
-        process = new MultiThreadedWatershed();
         process.setup(img, props, propLabels);
         process.start();
         try {
@@ -127,23 +97,13 @@ public class SegmentationPanel extends LayerPanel {
         } catch (InterruptedException e) {
             return;
         }
-        ImagePlus imp = img.getProcessedImage();
+        ImagePlus imp = process.getOutput();
         imp.resetDisplayRange();
         imp.show();
     }//GEN-LAST:event_previewButtonActionPerformed
 
-    public void updateChannels() {
-        int channels = img.getChannelCount();
-        channelLabels = new ArrayList();
-        for (int c = 0; c < channels; c++) {
-            channelLabels.add(String.valueOf(c));
-        }
-        channelSelectComboBox.setModel(new DefaultComboBoxModel(channelLabels.toArray()));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> channelSelectComboBox;
-    private javax.swing.JLabel channelSelectLabel;
     private javax.swing.JButton previewButton;
     private javax.swing.JLabel thresholdLabel;
     private javax.swing.JTextField thresholdTextField;
