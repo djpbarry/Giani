@@ -67,16 +67,16 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         loadParametersButton = new javax.swing.JButton();
         runButton = new javax.swing.JButton();
         selectInputPanel = new ui.SelectInputPanel(statusTextArea,props,img,null);
-        maximaFinderPanel = new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null));
-        filteringPanel = new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null));
-        segmentationPanel = new ui.SegmentationPanel(props, img,
+        nuclearCentreFinderPanel = new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null));
+        nuclearFilteringPanel = new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null));
+        nuclearSegmentationPanel = new ui.SegmentationPanel(props, img,
             new MultiThreadedWatershed(
-                new MultiThreadedProcess[]{maximaFinderPanel.getProcess(), filteringPanel.getProcess()}
+                new MultiThreadedProcess[]{nuclearCentreFinderPanel.getProcess(), nuclearFilteringPanel.getProcess()}
             ));
             measurementPanel = new ui.MeasurementPanel(props, img,
                 new MultiThreadedROIConstructor(
                     new MultiThreadedProcess[]{
-                        segmentationPanel.getProcess()}
+                        nuclearSegmentationPanel.getProcess()}
                 ));
 
                 setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -190,21 +190,21 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
                 gridBagConstraints.weighty = 0.8;
                 getContentPane().add(selectInputPanel, gridBagConstraints);
 
-                maximaFinderPanel.setVisible(false);
-                componentList.add(maximaFinderPanel);
+                nuclearCentreFinderPanel.setVisible(false);
+                componentList.add(nuclearCentreFinderPanel);
                 gridBagConstraints = new java.awt.GridBagConstraints();
                 gridBagConstraints.gridx = 0;
                 gridBagConstraints.gridy = 0;
                 gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
                 gridBagConstraints.weightx = 0.5;
                 gridBagConstraints.weighty = 0.8;
-                getContentPane().add(maximaFinderPanel, gridBagConstraints);
+                getContentPane().add(nuclearCentreFinderPanel, gridBagConstraints);
 
-                filteringPanel.setVisible(false);
-                componentList.add(filteringPanel);
-                filteringPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+                nuclearFilteringPanel.setVisible(false);
+                componentList.add(nuclearFilteringPanel);
+                nuclearFilteringPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
                     public void componentShown(java.awt.event.ComponentEvent evt) {
-                        filteringPanelComponentShown(evt);
+                        nuclearFilteringPanelComponentShown(evt);
                     }
                 });
                 gridBagConstraints = new java.awt.GridBagConstraints();
@@ -213,17 +213,17 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
                 gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
                 gridBagConstraints.weightx = 0.5;
                 gridBagConstraints.weighty = 0.8;
-                getContentPane().add(filteringPanel, gridBagConstraints);
+                getContentPane().add(nuclearFilteringPanel, gridBagConstraints);
 
-                segmentationPanel.setVisible(false);
-                componentList.add(segmentationPanel);
+                nuclearSegmentationPanel.setVisible(false);
+                componentList.add(nuclearSegmentationPanel);
                 gridBagConstraints = new java.awt.GridBagConstraints();
                 gridBagConstraints.gridx = 0;
                 gridBagConstraints.gridy = 0;
                 gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
                 gridBagConstraints.weightx = 0.5;
                 gridBagConstraints.weighty = 0.8;
-                getContentPane().add(segmentationPanel, gridBagConstraints);
+                getContentPane().add(nuclearSegmentationPanel, gridBagConstraints);
 
                 measurementPanel.setVisible(false);
                 componentList.add(measurementPanel);
@@ -274,9 +274,9 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         runButton.setEnabled(false);
     }//GEN-LAST:event_runButtonActionPerformed
 
-    private void filteringPanelComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_filteringPanelComponentShown
-        filteringPanel.updateChannels();
-    }//GEN-LAST:event_filteringPanelComponentShown
+    private void nuclearFilteringPanelComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_nuclearFilteringPanelComponentShown
+        nuclearFilteringPanel.updateChannels();
+    }//GEN-LAST:event_nuclearFilteringPanelComponentShown
 
     void updateLayer() {
         for (int i = 0; i < componentList.size(); i++) {
@@ -380,16 +380,16 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonPanel;
-    private ui.FilteringPanel filteringPanel;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton loadParametersButton;
-    private ui.MaximaFinderPanel maximaFinderPanel;
     private ui.MeasurementPanel measurementPanel;
     private javax.swing.JButton nextButton;
+    private ui.MaximaFinderPanel nuclearCentreFinderPanel;
+    private ui.FilteringPanel nuclearFilteringPanel;
+    private ui.SegmentationPanel nuclearSegmentationPanel;
     private javax.swing.JButton previousButton;
     private javax.swing.JButton runButton;
     private javax.swing.JButton saveParamsButton;
-    private ui.SegmentationPanel segmentationPanel;
     private ui.SelectInputPanel selectInputPanel;
     private javax.swing.JTextArea statusTextArea;
     // End of variables declaration//GEN-END:variables

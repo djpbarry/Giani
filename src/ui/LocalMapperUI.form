@@ -143,10 +143,10 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="ui.MaximaFinderPanel" name="maximaFinderPanel">
+    <Component class="ui.MaximaFinderPanel" name="nuclearCentreFinderPanel">
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null))"/>
-        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="maximaFinderPanel.setVisible(false);&#xa;componentList.add(maximaFinderPanel);"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nuclearCentreFinderPanel.setVisible(false);&#xa;componentList.add(nuclearCentreFinderPanel);"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -154,13 +154,13 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="ui.FilteringPanel" name="filteringPanel">
+    <Component class="ui.FilteringPanel" name="nuclearFilteringPanel">
       <Events>
-        <EventHandler event="componentShown" listener="java.awt.event.ComponentListener" parameters="java.awt.event.ComponentEvent" handler="filteringPanelComponentShown"/>
+        <EventHandler event="componentShown" listener="java.awt.event.ComponentListener" parameters="java.awt.event.ComponentEvent" handler="nuclearFilteringPanelComponentShown"/>
       </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null))"/>
-        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="filteringPanel.setVisible(false);&#xa;componentList.add(filteringPanel);"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nuclearFilteringPanel.setVisible(false);&#xa;componentList.add(nuclearFilteringPanel);"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -168,10 +168,10 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="ui.SegmentationPanel" name="segmentationPanel">
+    <Component class="ui.SegmentationPanel" name="nuclearSegmentationPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(props, img,&#xa;new MultiThreadedWatershed(&#xa;new MultiThreadedProcess[]{maximaFinderPanel.getProcess(), filteringPanel.getProcess()}&#xa;))"/>
-        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="segmentationPanel.setVisible(false);&#xa;componentList.add(segmentationPanel);"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(props, img,&#xa;new MultiThreadedWatershed(&#xa;new MultiThreadedProcess[]{nuclearCentreFinderPanel.getProcess(), nuclearFilteringPanel.getProcess()}&#xa;))"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nuclearSegmentationPanel.setVisible(false);&#xa;componentList.add(nuclearSegmentationPanel);"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -181,7 +181,7 @@
     </Component>
     <Component class="ui.MeasurementPanel" name="measurementPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MeasurementPanel(props, img,&#xa;new MultiThreadedROIConstructor(&#xa;new MultiThreadedProcess[]{&#xa;segmentationPanel.getProcess()}&#xa;))"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MeasurementPanel(props, img,&#xa;new MultiThreadedROIConstructor(&#xa;new MultiThreadedProcess[]{&#xa;nuclearSegmentationPanel.getProcess()}&#xa;))"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="measurementPanel.setVisible(false);&#xa;componentList.add(measurementPanel);"/>
       </AuxValues>
       <Constraints>
