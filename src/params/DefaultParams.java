@@ -25,30 +25,38 @@ import java.util.Properties;
  */
 public class DefaultParams extends Properties {
 
-    public static final String INPUT_DIR_LABEL = "Input Directory:";
-    public static final String SERIES_SELECT_LABEL = "Series for Preview";
-    public static final String INPUT_FILE_LABEL = "File for Preview";
-    public static final String CHANNEL_SELECT_LABEL = "Channel for Preview";
-    public static final String FILT_RAD_XY_LABEL = String.format("XY Gaussian Radius (%cm):", IJ.micronSymbol);
-    public static final String FILT_RAD_Z_LABEL = String.format("Z Gaussian Radius (%cm):", IJ.micronSymbol);
-    public static final String MAX_RAD_Z_LABEL = String.format("Z Local Max Radius (%cm):", IJ.micronSymbol);
-    public static final String MAX_NOISE_TOL_LABEL = "Noise Tolerance:";
-    public static final String MAX_RAD_XY_LABEL = String.format("XY Local Max Radius (%cm):", IJ.micronSymbol);
-    public static final String SEG_THRESH_LABEL = "Threshold";
-    public static final String SEG_CHAN_SELECT_LABEL = "Channel for Segmentation";
+    public static final String INPUT_DIR_LABEL = "Input Directory";
+    public static final String SERIES_SELECT_LABEL = "Preview Series";
+    public static final String INPUT_FILE_LABEL = "Preview File";
+    public static final String CHANNEL_SELECT_LABEL = "Preview Channel";
+    public static final String NUC_FILT_RAD_XY_LABEL = String.format("XY Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
+    public static final String NUC_FILT_RAD_Z_LABEL = String.format("Z Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
+    public static final String BLOB_RAD_Z_LABEL = String.format("Z Nuclear 'Blob' Radius (%cm)", IJ.micronSymbol);
+    public static final String BLOB_NOISE_TOL_LABEL = "Nuclear Blob Detection Threshold";
+    public static final String BLOB_RAD_XY_LABEL = String.format("XY Nuclear 'Blob' Radius (%cm)", IJ.micronSymbol);
+    public static final String NUC_SEG_THRESH_LABEL = "Threshold for Nuclear Segmentation";
+    public static final String NUC_SEG_CHAN_SELECT_LABEL = "Channel for Nuclear Segmentation";
+    public static final String CELL_FILT_RAD_XY_LABEL = String.format("XY Filter Radius for Cell Channel (%cm)", IJ.micronSymbol);
+    public static final String CELL_FILT_RAD_Z_LABEL = String.format("Z Filter Radius for Cell Channel (%cm)", IJ.micronSymbol);
+    public static final String CELL_SEG_THRESH_LABEL = "Threshold for Cell Segmentation";
+    public static final String CELL_SEG_CHAN_SELECT_LABEL = "Channel for Cell Segmentation";
 
     public DefaultParams() {
         this.setProperty(INPUT_DIR_LABEL, System.getProperty("user.home"));
         this.setProperty(SERIES_SELECT_LABEL, "0");
         this.setProperty(INPUT_FILE_LABEL, "0");
         this.setProperty(CHANNEL_SELECT_LABEL, "0");
-        this.setProperty(FILT_RAD_XY_LABEL, "0.0");
-        this.setProperty(FILT_RAD_Z_LABEL, "0.0");
-        this.setProperty(MAX_RAD_Z_LABEL, "0.0");
-        this.setProperty(MAX_NOISE_TOL_LABEL, "0.0");
-        this.setProperty(MAX_RAD_XY_LABEL, "0.0");
-        this.setProperty(SEG_THRESH_LABEL, "0");
-        this.setProperty(SEG_CHAN_SELECT_LABEL, "0");
+        this.setProperty(NUC_FILT_RAD_XY_LABEL, "0.0");
+        this.setProperty(NUC_FILT_RAD_Z_LABEL, "0.0");
+        this.setProperty(BLOB_RAD_Z_LABEL, "0.0");
+        this.setProperty(BLOB_NOISE_TOL_LABEL, "0.0");
+        this.setProperty(BLOB_RAD_XY_LABEL, "0.0");
+        this.setProperty(NUC_SEG_THRESH_LABEL, "0");
+        this.setProperty(NUC_SEG_CHAN_SELECT_LABEL, "0");
+        this.setProperty(CELL_FILT_RAD_XY_LABEL, "0.0");
+        this.setProperty(CELL_FILT_RAD_Z_LABEL, "0.0");
+        this.setProperty(CELL_SEG_THRESH_LABEL, "0");
+        this.setProperty(CELL_SEG_CHAN_SELECT_LABEL, "0");
     }
 
 }

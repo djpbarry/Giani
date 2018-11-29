@@ -134,7 +134,7 @@
     </Container>
     <Component class="ui.SelectInputPanel" name="selectInputPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SelectInputPanel(statusTextArea,props,img,null)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SelectInputPanel(statusTextArea,props,img,&#xa;new String[]{&#xa;DefaultParams.INPUT_DIR_LABEL,&#xa;DefaultParams.INPUT_FILE_LABEL,&#xa;DefaultParams.SERIES_SELECT_LABEL,&#xa;DefaultParams.CHANNEL_SELECT_LABEL})"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="componentList.add(selectInputPanel);"/>
       </AuxValues>
       <Constraints>
@@ -145,7 +145,7 @@
     </Component>
     <Component class="ui.MaximaFinderPanel" name="nuclearCentreFinderPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null))"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null),&#xa;    new String[]{&#xa;        DefaultParams.BLOB_RAD_XY_LABEL,&#xa;        DefaultParams.BLOB_RAD_Z_LABEL,&#xa;        DefaultParams.BLOB_NOISE_TOL_LABEL})"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nuclearCentreFinderPanel.setVisible(false);&#xa;componentList.add(nuclearCentreFinderPanel);"/>
       </AuxValues>
       <Constraints>
@@ -156,7 +156,7 @@
     </Component>
     <Component class="ui.FilteringPanel" name="nuclearFilteringPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null))"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),&#xa;    new String[]{&#xa;        DefaultParams.NUC_SEG_CHAN_SELECT_LABEL,&#xa;        DefaultParams.NUC_FILT_RAD_XY_LABEL,&#xa;        DefaultParams.NUC_FILT_RAD_Z_LABEL})"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nuclearFilteringPanel.setVisible(false);&#xa;componentList.add(nuclearFilteringPanel);"/>
       </AuxValues>
       <Constraints>
@@ -167,7 +167,7 @@
     </Component>
     <Component class="ui.SegmentationPanel" name="nuclearSegmentationPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(props, img,&#xa;new MultiThreadedWatershed(&#xa;new MultiThreadedProcess[]{nuclearCentreFinderPanel.getProcess(), nuclearFilteringPanel.getProcess()}&#xa;))"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(props, img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{nuclearCentreFinderPanel.getProcess(), nuclearFilteringPanel.getProcess()}&#xa;    ),&#xa;    new String[]{&#xa;        DefaultParams.NUC_SEG_THRESH_LABEL})"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nuclearSegmentationPanel.setVisible(false);&#xa;componentList.add(nuclearSegmentationPanel);"/>
       </AuxValues>
       <Constraints>
@@ -178,7 +178,7 @@
     </Component>
     <Component class="ui.FilteringPanel" name="cellFilteringPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null))"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),&#xa;new String[]{&#xa;        DefaultParams.CELL_SEG_CHAN_SELECT_LABEL,&#xa;        DefaultParams.CELL_FILT_RAD_XY_LABEL,&#xa;        DefaultParams.CELL_FILT_RAD_Z_LABEL})"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="cellFilteringPanel.setVisible(false);&#xa;componentList.add(cellFilteringPanel);"/>
       </AuxValues>
       <Constraints>
@@ -189,7 +189,7 @@
     </Component>
     <Component class="ui.SegmentationPanel" name="cellSegmentationPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(props, img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{nuclearSegmentationPanel.getProcess(), cellFilteringPanel.getProcess()}&#xa;    ))"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(props, img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{nuclearSegmentationPanel.getProcess(), cellFilteringPanel.getProcess()}&#xa;    ),&#xa;    new String[]{DefaultParams.CELL_SEG_THRESH_LABEL})"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="cellSegmentationPanel.setVisible(false);&#xa;componentList.add(cellSegmentationPanel);"/>
       </AuxValues>
       <Constraints>
@@ -200,7 +200,7 @@
     </Component>
     <Component class="ui.MeasurementPanel" name="measurementPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MeasurementPanel(props, img,&#xa;new MultiThreadedROIConstructor(&#xa;new MultiThreadedProcess[]{&#xa;nuclearSegmentationPanel.getProcess()}&#xa;))"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MeasurementPanel(props, img,&#xa;    new MultiThreadedROIConstructor(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearSegmentationPanel.getProcess()}&#xa;    ))"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="measurementPanel.setVisible(false);&#xa;componentList.add(measurementPanel);"/>
       </AuxValues>
       <Constraints>

@@ -25,12 +25,7 @@ import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import UIClasses.LayerPanel;
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
 import javax.swing.JTextArea;
-import static params.DefaultParams.CHANNEL_SELECT_LABEL;
-import static params.DefaultParams.INPUT_DIR_LABEL;
-import static params.DefaultParams.INPUT_FILE_LABEL;
-import static params.DefaultParams.SERIES_SELECT_LABEL;
 
 /**
  *
@@ -49,8 +44,8 @@ public class SelectInputPanel extends LayerPanel {
         this(null, null, null, null);
     }
 
-    public SelectInputPanel(JTextArea textArea, Properties props, BioFormatsImg img, ExecutorService exec) {
-        super(props, img, null);
+    public SelectInputPanel(JTextArea textArea, Properties props, BioFormatsImg img, String[] propLabels) {
+        super(props, img, null, propLabels);
         this.textArea = textArea;
         initComponents();
     }
@@ -104,7 +99,7 @@ public class SelectInputPanel extends LayerPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(chooseInputDirButton, gridBagConstraints);
 
-        inputDirLabel.setText(INPUT_DIR_LABEL);
+        inputDirLabel.setText(propLabels[0]);
         inputDirLabel.setLabelFor(inputDirTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -116,7 +111,7 @@ public class SelectInputPanel extends LayerPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(inputDirLabel, gridBagConstraints);
 
-        fileNameComboLabel.setText(INPUT_FILE_LABEL);
+        fileNameComboLabel.setText(propLabels[1]);
         fileNameComboLabel.setEnabled(false);
         fileNameComboLabel.setLabelFor(fileNameComboBox);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -142,7 +137,7 @@ public class SelectInputPanel extends LayerPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(fileNameComboBox, gridBagConstraints);
 
-        seriesSelectLabel.setText(SERIES_SELECT_LABEL);
+        seriesSelectLabel.setText(propLabels[2]);
         seriesSelectLabel.setEnabled(false);
         seriesSelectLabel.setLabelFor(seriesComboBox);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -153,7 +148,7 @@ public class SelectInputPanel extends LayerPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(seriesSelectLabel, gridBagConstraints);
 
-        channelSelectLabel.setText(CHANNEL_SELECT_LABEL);
+        channelSelectLabel.setText(propLabels[3]);
         channelSelectLabel.setEnabled(false);
         channelSelectLabel.setLabelFor(channelComboBox);
         gridBagConstraints = new java.awt.GridBagConstraints();

@@ -10,8 +10,6 @@ import Process.Segmentation.MultiThreadedWatershed;
 import UIClasses.LayerPanel;
 import ij.ImagePlus;
 import java.util.Properties;
-import params.DefaultParams;
-import static params.DefaultParams.SEG_THRESH_LABEL;
 
 /**
  *
@@ -23,11 +21,11 @@ public class SegmentationPanel extends LayerPanel {
      * Creates new form SegmentationPanel
      */
     public SegmentationPanel() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
 
-    public SegmentationPanel(Properties props, BioFormatsImg img, MultiThreadedWatershed process) {
-        super(props, img, process);
+    public SegmentationPanel(Properties props, BioFormatsImg img, MultiThreadedWatershed process, String[] propLabels) {
+        super(props, img, process, propLabels);
         initComponents();
     }
 
@@ -61,7 +59,7 @@ public class SegmentationPanel extends LayerPanel {
         gridBagConstraints.weighty = 1.0;
         add(previewButton, gridBagConstraints);
 
-        thresholdLabel.setText(SEG_THRESH_LABEL);
+        thresholdLabel.setText(propLabels[0]);
         thresholdLabel.setLabelFor(thresholdTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -83,12 +81,6 @@ public class SegmentationPanel extends LayerPanel {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
-
-        String[] propLabels = new String[]{DefaultParams.SERIES_SELECT_LABEL,
-            DefaultParams.SEG_CHAN_SELECT_LABEL,
-            DefaultParams.SEG_THRESH_LABEL,
-            DefaultParams.FILT_RAD_XY_LABEL,
-            DefaultParams.FILT_RAD_Z_LABEL};
 
         process.setup(img, props, propLabels);
         process.start();

@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
 import params.DefaultParams;
-import static params.DefaultParams.FILT_RAD_XY_LABEL;
-import static params.DefaultParams.FILT_RAD_Z_LABEL;
-import static params.DefaultParams.SEG_CHAN_SELECT_LABEL;
 
 /**
  *
@@ -28,11 +25,15 @@ public class FilteringPanel extends LayerPanel {
      * Creates new form FilteringPanel
      */
     public FilteringPanel() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
 
     public FilteringPanel(Properties props, BioFormatsImg img, MultiThreadedGaussianFilter process) {
-        super(props, img, process);
+        this(props, img, process, null);
+    }
+
+    public FilteringPanel(Properties props, BioFormatsImg img, MultiThreadedGaussianFilter process, String[] propLabels) {
+        super(props, img, process, propLabels);
         initComponents();
     }
 
@@ -69,7 +70,7 @@ public class FilteringPanel extends LayerPanel {
         gridBagConstraints.gridwidth = 2;
         add(previewButton, gridBagConstraints);
 
-        filterRadiusXYLabel.setText(FILT_RAD_XY_LABEL);
+        filterRadiusXYLabel.setText(propLabels[1]);
         filterRadiusXYLabel.setLabelFor(filterRadiusXYTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -89,7 +90,7 @@ public class FilteringPanel extends LayerPanel {
         gridBagConstraints.weighty = 1.0;
         add(filterRadiusXYTextField, gridBagConstraints);
 
-        filterRadiusZLabel.setText(FILT_RAD_Z_LABEL);
+        filterRadiusZLabel.setText(propLabels[2]);
         filterRadiusZLabel.setLabelFor(filterRadiusZTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -108,7 +109,7 @@ public class FilteringPanel extends LayerPanel {
         gridBagConstraints.weighty = 1.0;
         add(filterRadiusZTextField, gridBagConstraints);
 
-        channelSelectLabel.setText(SEG_CHAN_SELECT_LABEL);
+        channelSelectLabel.setText(propLabels[0]);
         channelSelectLabel.setLabelFor(channelSelectComboBox);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -130,11 +131,9 @@ public class FilteringPanel extends LayerPanel {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
-        String[] propLabels = new String[]{DefaultParams.SERIES_SELECT_LABEL,
-            DefaultParams.SEG_CHAN_SELECT_LABEL,
-            DefaultParams.FILT_RAD_XY_LABEL,
-            DefaultParams.FILT_RAD_Z_LABEL};
-        process.setup(img, props, propLabels);
+        process.setup(img, props, new String[]{
+            DefaultParams.SERIES_SELECT_LABEL, propLabels[0], propLabels[1], propLabels[2]
+        });
         process.start();
         try {
             process.join();

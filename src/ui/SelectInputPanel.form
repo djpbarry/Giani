@@ -51,7 +51,7 @@
     <Component class="javax.swing.JLabel" name="inputDirLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="INPUT_DIR_LABEL" type="code"/>
+          <Connection code="propLabels[0]" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
@@ -66,7 +66,7 @@
     <Component class="javax.swing.JLabel" name="fileNameComboLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="INPUT_FILE_LABEL" type="code"/>
+          <Connection code="propLabels[1]" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
@@ -105,7 +105,7 @@
     <Component class="javax.swing.JLabel" name="seriesSelectLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="SERIES_SELECT_LABEL" type="code"/>
+          <Connection code="propLabels[2]" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
@@ -120,7 +120,7 @@
     <Component class="javax.swing.JLabel" name="channelSelectLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="CHANNEL_SELECT_LABEL" type="code"/>
+          <Connection code="propLabels[3]" type="code"/>
         </Property>
       </Properties>
       <AuxValues>

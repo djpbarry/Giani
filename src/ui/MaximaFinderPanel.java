@@ -21,9 +21,6 @@ import IO.BioFormats.BioFormatsImg;
 import UIClasses.LayerPanel;
 import java.util.Properties;
 import params.DefaultParams;
-import static params.DefaultParams.MAX_NOISE_TOL_LABEL;
-import static params.DefaultParams.MAX_RAD_XY_LABEL;
-import static params.DefaultParams.MAX_RAD_Z_LABEL;
 
 /**
  *
@@ -35,11 +32,11 @@ public class MaximaFinderPanel extends LayerPanel {
      * Creates new form MaximaFinderPanel
      */
     public MaximaFinderPanel() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
 
-    public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process) {
-        super(props, img, process);
+    public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process, String[] propLabels) {
+        super(props, img, process, propLabels);
         initComponents();
     }
 
@@ -64,7 +61,7 @@ public class MaximaFinderPanel extends LayerPanel {
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
         setLayout(new java.awt.GridBagLayout());
 
-        xyFiltRadLabel.setText(MAX_RAD_XY_LABEL);
+        xyFiltRadLabel.setText(propLabels[0]);
         xyFiltRadLabel.setLabelFor(xyFiltRadTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -79,7 +76,7 @@ public class MaximaFinderPanel extends LayerPanel {
         gridBagConstraints.weighty = 1.0;
         add(xyFiltRadTextField, gridBagConstraints);
 
-        zFiltRadLabel.setText(MAX_RAD_Z_LABEL);
+        zFiltRadLabel.setText(propLabels[1]);
         zFiltRadLabel.setLabelFor(zFiltRadTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -110,7 +107,7 @@ public class MaximaFinderPanel extends LayerPanel {
         gridBagConstraints.gridwidth = 2;
         add(previewButton, gridBagConstraints);
 
-        noiseTolLabel.setText(MAX_NOISE_TOL_LABEL);
+        noiseTolLabel.setText(propLabels[2]);
         noiseTolLabel.setLabelFor(noiseTolTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -132,12 +129,10 @@ public class MaximaFinderPanel extends LayerPanel {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
-        String[] propLabels = new String[]{DefaultParams.SERIES_SELECT_LABEL,
+        process.setup(img, props, new String[]{
+            DefaultParams.SERIES_SELECT_LABEL,
             DefaultParams.CHANNEL_SELECT_LABEL,
-            DefaultParams.MAX_RAD_XY_LABEL,
-            DefaultParams.MAX_RAD_Z_LABEL,
-            DefaultParams.MAX_NOISE_TOL_LABEL};
-        process.setup(img, props, propLabels);
+            propLabels[0], propLabels[1], propLabels[2]});
         process.start();
         try {
             process.join();

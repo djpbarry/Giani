@@ -35,7 +35,7 @@ public class MeasurementPanel extends LayerPanel {
     }
 
     public MeasurementPanel(Properties props, BioFormatsImg img, MultiThreadedROIConstructor process) {
-        super(props, img, process);
+        super(props, img, process, null);
         initComponents();
     }
 
