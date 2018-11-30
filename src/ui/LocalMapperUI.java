@@ -102,7 +102,8 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         measurementPanel = new ui.MeasurementPanel(props, img,
             new MultiThreadedROIConstructor(
                 new MultiThreadedProcess[]{
-                    nuclearSegmentationPanel.getProcess()}
+                    nuclearSegmentationPanel.getProcess(),
+                    cellSegmentationPanel.getProcess()}
             ),
             new String[]{DefaultParams.CHAN_FOR_MEASURE});
 
