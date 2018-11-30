@@ -12,12 +12,13 @@ import java.util.ArrayList;
 import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
 import params.DefaultParams;
+import UIClasses.Updateable;
 
 /**
  *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
-public class FilteringPanel extends LayerPanel {
+public class FilteringPanel extends LayerPanel implements Updateable {
 
     private ArrayList<String> channelLabels;
 
@@ -143,7 +144,7 @@ public class FilteringPanel extends LayerPanel {
         process.getOutput().show();
     }//GEN-LAST:event_previewButtonActionPerformed
 
-    public void updateChannels() {
+    public void update() {
         int channels = img.getChannelCount();
         channelLabels = new ArrayList();
         for (int c = 0; c < channels; c++) {

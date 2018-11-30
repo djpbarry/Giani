@@ -19,23 +19,26 @@ package ui;
 import IO.BioFormats.BioFormatsImg;
 import Process.ROI.MultiThreadedROIConstructor;
 import UIClasses.LayerPanel;
+import UIClasses.Updateable;
 import java.util.Properties;
+import javax.swing.DefaultListModel;
+import params.DefaultParams;
 
 /**
  *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
-public class MeasurementPanel extends LayerPanel {
+public class MeasurementPanel extends LayerPanel implements Updateable {
 
     /**
      * Creates new form MeasurementPanel
      */
     public MeasurementPanel() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
 
-    public MeasurementPanel(Properties props, BioFormatsImg img, MultiThreadedROIConstructor process) {
-        super(props, img, process, null);
+    public MeasurementPanel(Properties props, BioFormatsImg img, MultiThreadedROIConstructor process, String[] propLabels) {
+        super(props, img, process, propLabels);
         initComponents();
     }
 
@@ -50,6 +53,9 @@ public class MeasurementPanel extends LayerPanel {
         java.awt.GridBagConstraints gridBagConstraints;
 
         measurePreviewButton = new javax.swing.JButton();
+        channelScrollPane = new javax.swing.JScrollPane();
+        channelList = new javax.swing.JList<>();
+        channelSelectLabel = new javax.swing.JLabel();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -61,15 +67,37 @@ public class MeasurementPanel extends LayerPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(measurePreviewButton, gridBagConstraints);
+
+        channelList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        channelScrollPane.setViewportView(channelList);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(channelScrollPane, gridBagConstraints);
+
+        channelSelectLabel.setText(propLabels[0]);
+        channelSelectLabel.setLabelFor(channelScrollPane);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        add(channelSelectLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void measurePreviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_measurePreviewButtonActionPerformed
-        process.setup(img, props, null);
+        setVariables();
+        process.setup(img, props, new String[]{DefaultParams.SERIES_SELECT_LABEL, propLabels[0]});
         process.start();
         try {
             process.join();
@@ -77,8 +105,19 @@ public class MeasurementPanel extends LayerPanel {
         }
     }//GEN-LAST:event_measurePreviewButtonActionPerformed
 
+    public void update() {
+        int channels = img.getChannelCount();
+        DefaultListModel model = new DefaultListModel();
+        for (int c = 0; c < channels; c++) {
+            model.addElement(String.format("Channel %d", c));
+        }
+        channelList.setModel(model);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList<String> channelList;
+    private javax.swing.JScrollPane channelScrollPane;
+    private javax.swing.JLabel channelSelectLabel;
     private javax.swing.JButton measurePreviewButton;
     // End of variables declaration//GEN-END:variables
 }

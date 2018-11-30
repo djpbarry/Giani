@@ -40,6 +40,7 @@ public class DefaultParams extends Properties {
     public static final String CELL_FILT_RAD_Z_LABEL = String.format("Z Filter Radius for Cell Channel (%cm)", IJ.micronSymbol);
     public static final String CELL_SEG_THRESH_LABEL = "Threshold for Cell Segmentation";
     public static final String CELL_SEG_CHAN_SELECT_LABEL = "Channel for Cell Segmentation";
+    public static final String CHAN_FOR_MEASURE = "Select Channels to Measure";
 
     public DefaultParams() {
         this.setProperty(INPUT_DIR_LABEL, System.getProperty("user.home"));
@@ -57,6 +58,7 @@ public class DefaultParams extends Properties {
         this.setProperty(CELL_FILT_RAD_Z_LABEL, "0.0");
         this.setProperty(CELL_SEG_THRESH_LABEL, "0");
         this.setProperty(CELL_SEG_CHAN_SELECT_LABEL, "0");
+        this.setProperty(CHAN_FOR_MEASURE, "0");
     }
 
 }

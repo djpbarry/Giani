@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.Properties;
 import UIClasses.LayerPanel;
 import UIClasses.PropertyExtractor;
+import UIClasses.Updateable;
 import UtilClasses.GenUtils;
 import core.LocalMapperExecutor;
 import params.DefaultParams;
@@ -102,179 +103,180 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
             new MultiThreadedROIConstructor(
                 new MultiThreadedProcess[]{
                     nuclearSegmentationPanel.getProcess()}
-            ));
+            ),
+            new String[]{DefaultParams.CHAN_FOR_MEASURE});
 
-            setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-            getContentPane().setLayout(new java.awt.GridBagLayout());
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
-            statusTextArea.setColumns(20);
-            statusTextArea.setRows(5);
-            jScrollPane1.setViewportView(statusTextArea);
+        statusTextArea.setColumns(20);
+        statusTextArea.setRows(5);
+        jScrollPane1.setViewportView(statusTextArea);
 
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 1;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.weightx = 0.5;
-            gridBagConstraints.weighty = 0.8;
-            getContentPane().add(jScrollPane1, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.8;
+        getContentPane().add(jScrollPane1, gridBagConstraints);
 
-            buttonPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-            buttonPanel.setLayout(new java.awt.GridBagLayout());
+        buttonPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        buttonPanel.setLayout(new java.awt.GridBagLayout());
 
-            previousButton.setText("Previous");
-            previousButton.setEnabled(false);
-            previousButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    previousButtonActionPerformed(evt);
-                }
-            });
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 1;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.weightx = 1.0;
-            gridBagConstraints.weighty = 1.0;
-            gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-            buttonPanel.add(previousButton, gridBagConstraints);
+        previousButton.setText("Previous");
+        previousButton.setEnabled(false);
+        previousButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                previousButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        buttonPanel.add(previousButton, gridBagConstraints);
 
-            nextButton.setText("Next");
-            nextButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    nextButtonActionPerformed(evt);
-                }
-            });
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 2;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.weightx = 1.0;
-            gridBagConstraints.weighty = 1.0;
-            gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-            buttonPanel.add(nextButton, gridBagConstraints);
+        nextButton.setText("Next");
+        nextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        buttonPanel.add(nextButton, gridBagConstraints);
 
-            saveParamsButton.setText("Save Parameters");
-            saveParamsButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    saveParamsButtonActionPerformed(evt);
-                }
-            });
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 3;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.weightx = 1.0;
-            gridBagConstraints.weighty = 1.0;
-            gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-            buttonPanel.add(saveParamsButton, gridBagConstraints);
+        saveParamsButton.setText("Save Parameters");
+        saveParamsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveParamsButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        buttonPanel.add(saveParamsButton, gridBagConstraints);
 
-            loadParametersButton.setText("Load Parameters");
-            loadParametersButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    loadParametersButtonActionPerformed(evt);
-                }
-            });
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.weightx = 1.0;
-            gridBagConstraints.weighty = 1.0;
-            gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-            buttonPanel.add(loadParametersButton, gridBagConstraints);
+        loadParametersButton.setText("Load Parameters");
+        loadParametersButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadParametersButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        buttonPanel.add(loadParametersButton, gridBagConstraints);
 
-            runButton.setText("Run");
-            runButton.setEnabled(false);
-            runButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    runButtonActionPerformed(evt);
-                }
-            });
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 1;
-            gridBagConstraints.gridy = 1;
-            gridBagConstraints.gridwidth = 2;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-            gridBagConstraints.weightx = 1.0;
-            gridBagConstraints.weighty = 1.0;
-            gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-            buttonPanel.add(runButton, gridBagConstraints);
+        runButton.setText("Run");
+        runButton.setEnabled(false);
+        runButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                runButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        buttonPanel.add(runButton, gridBagConstraints);
 
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 1;
-            gridBagConstraints.gridwidth = 2;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-            gridBagConstraints.weightx = 1.0;
-            gridBagConstraints.weighty = 0.2;
-            getContentPane().add(buttonPanel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.2;
+        getContentPane().add(buttonPanel, gridBagConstraints);
 
-            componentList.add(selectInputPanel);
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.weightx = 0.5;
-            gridBagConstraints.weighty = 0.8;
-            getContentPane().add(selectInputPanel, gridBagConstraints);
+        componentList.add(selectInputPanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.8;
+        getContentPane().add(selectInputPanel, gridBagConstraints);
 
-            nuclearCentreFinderPanel.setVisible(false);
-            componentList.add(nuclearCentreFinderPanel);
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.weightx = 0.5;
-            gridBagConstraints.weighty = 0.8;
-            getContentPane().add(nuclearCentreFinderPanel, gridBagConstraints);
+        nuclearCentreFinderPanel.setVisible(false);
+        componentList.add(nuclearCentreFinderPanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.8;
+        getContentPane().add(nuclearCentreFinderPanel, gridBagConstraints);
 
-            nuclearFilteringPanel.setVisible(false);
-            componentList.add(nuclearFilteringPanel);
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.weightx = 0.5;
-            gridBagConstraints.weighty = 0.8;
-            getContentPane().add(nuclearFilteringPanel, gridBagConstraints);
+        nuclearFilteringPanel.setVisible(false);
+        componentList.add(nuclearFilteringPanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.8;
+        getContentPane().add(nuclearFilteringPanel, gridBagConstraints);
 
-            nuclearSegmentationPanel.setVisible(false);
-            componentList.add(nuclearSegmentationPanel);
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.weightx = 0.5;
-            gridBagConstraints.weighty = 0.8;
-            getContentPane().add(nuclearSegmentationPanel, gridBagConstraints);
+        nuclearSegmentationPanel.setVisible(false);
+        componentList.add(nuclearSegmentationPanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.8;
+        getContentPane().add(nuclearSegmentationPanel, gridBagConstraints);
 
-            cellFilteringPanel.setVisible(false);
-            componentList.add(cellFilteringPanel);
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.weightx = 0.5;
-            gridBagConstraints.weighty = 0.8;
-            getContentPane().add(cellFilteringPanel, gridBagConstraints);
+        cellFilteringPanel.setVisible(false);
+        componentList.add(cellFilteringPanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.8;
+        getContentPane().add(cellFilteringPanel, gridBagConstraints);
 
-            cellSegmentationPanel.setVisible(false);
-            componentList.add(cellSegmentationPanel);
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints.weightx = 0.5;
-            gridBagConstraints.weighty = 0.8;
-            getContentPane().add(cellSegmentationPanel, gridBagConstraints);
+        cellSegmentationPanel.setVisible(false);
+        componentList.add(cellSegmentationPanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.8;
+        getContentPane().add(cellSegmentationPanel, gridBagConstraints);
 
-            measurementPanel.setVisible(false);
-            componentList.add(measurementPanel);
-            gridBagConstraints = new java.awt.GridBagConstraints();
-            gridBagConstraints.gridx = 0;
-            gridBagConstraints.gridy = 0;
-            gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-            getContentPane().add(measurementPanel, gridBagConstraints);
+        measurementPanel.setVisible(false);
+        componentList.add(measurementPanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        getContentPane().add(measurementPanel, gridBagConstraints);
 
-            pack();
-        }// </editor-fold>//GEN-END:initComponents
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         componentList.get(layerIndex).setVariables();
@@ -318,8 +320,8 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         for (int i = 0; i < componentList.size(); i++) {
             if (i == layerIndex) {
                 componentList.get(i).setVisible(true);
-                if (componentList.get(i) instanceof FilteringPanel) {
-                    ((FilteringPanel) componentList.get(i)).updateChannels();
+                if (componentList.get(i) instanceof Updateable) {
+                    ((Updateable) componentList.get(i)).update();
                 }
             } else {
                 componentList.get(i).setVisible(false);
@@ -395,6 +397,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     }
 
     void addProcess() {
+        componentList.get(layerIndex).setVariables();
         MultiThreadedProcess process = componentList.get(layerIndex).getProcess();
         if (process == null) {
             return;
