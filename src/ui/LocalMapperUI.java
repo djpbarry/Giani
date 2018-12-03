@@ -85,7 +85,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
                 DefaultParams.NUC_FILT_RAD_Z_LABEL});
         nuclearSegmentationPanel = new ui.SegmentationPanel(props, img,
             new MultiThreadedWatershed(
-                new MultiThreadedProcess[]{nuclearCentreFinderPanel.getProcess(), nuclearFilteringPanel.getProcess()}
+                new MultiThreadedProcess[]{nuclearCentreFinderPanel.getProcess(), nuclearFilteringPanel.getProcess()}, "Nuclei"
             ),
             new String[]{
                 DefaultParams.NUC_SEG_THRESH_LABEL});
@@ -96,7 +96,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
                 DefaultParams.CELL_FILT_RAD_Z_LABEL});
         cellSegmentationPanel = new ui.SegmentationPanel(props, img,
             new MultiThreadedWatershed(
-                new MultiThreadedProcess[]{nuclearSegmentationPanel.getProcess(), cellFilteringPanel.getProcess()}
+                new MultiThreadedProcess[]{nuclearSegmentationPanel.getProcess(), cellFilteringPanel.getProcess()}, "Cells"
             ),
             new String[]{DefaultParams.CELL_SEG_THRESH_LABEL});
         measurementPanel = new ui.MeasurementPanel(props, img,

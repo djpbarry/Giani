@@ -167,7 +167,7 @@
     </Component>
     <Component class="ui.SegmentationPanel" name="nuclearSegmentationPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(props, img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{nuclearCentreFinderPanel.getProcess(), nuclearFilteringPanel.getProcess()}&#xa;    ),&#xa;    new String[]{&#xa;        DefaultParams.NUC_SEG_THRESH_LABEL})"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(props, img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{nuclearCentreFinderPanel.getProcess(), nuclearFilteringPanel.getProcess()}, &quot;Nuclei&quot;&#xa;    ),&#xa;    new String[]{&#xa;        DefaultParams.NUC_SEG_THRESH_LABEL})"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nuclearSegmentationPanel.setVisible(false);&#xa;componentList.add(nuclearSegmentationPanel);"/>
       </AuxValues>
       <Constraints>
@@ -189,7 +189,7 @@
     </Component>
     <Component class="ui.SegmentationPanel" name="cellSegmentationPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(props, img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{nuclearSegmentationPanel.getProcess(), cellFilteringPanel.getProcess()}&#xa;    ),&#xa;    new String[]{DefaultParams.CELL_SEG_THRESH_LABEL})"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(props, img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{nuclearSegmentationPanel.getProcess(), cellFilteringPanel.getProcess()}, &quot;Cells&quot;&#xa;    ),&#xa;    new String[]{DefaultParams.CELL_SEG_THRESH_LABEL})"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="cellSegmentationPanel.setVisible(false);&#xa;componentList.add(cellSegmentationPanel);"/>
       </AuxValues>
       <Constraints>
