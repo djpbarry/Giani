@@ -11,8 +11,10 @@ import UIClasses.LayerPanel;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.LutLoader;
+import ij.process.AutoThresholder;
 import java.io.File;
 import java.util.Properties;
+import javax.swing.DefaultComboBoxModel;
 
 /**
  *
@@ -44,7 +46,7 @@ public class SegmentationPanel extends LayerPanel {
 
         previewButton = new javax.swing.JButton();
         thresholdLabel = new javax.swing.JLabel();
-        thresholdTextField = new javax.swing.JTextField();
+        thresholdComboBox = new javax.swing.JComboBox<>();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -56,14 +58,14 @@ public class SegmentationPanel extends LayerPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         add(previewButton, gridBagConstraints);
 
         thresholdLabel.setText(propLabels[0]);
-        thresholdLabel.setLabelFor(thresholdTextField);
+        thresholdLabel.setLabelFor(thresholdComboBox);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -72,14 +74,14 @@ public class SegmentationPanel extends LayerPanel {
         gridBagConstraints.weighty = 1.0;
         add(thresholdLabel, gridBagConstraints);
 
-        thresholdTextField.setText("0.0");
+        thresholdComboBox.setModel(new DefaultComboBoxModel(AutoThresholder.Method.values()));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        add(thresholdTextField, gridBagConstraints);
+        add(thresholdComboBox, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -105,7 +107,7 @@ public class SegmentationPanel extends LayerPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton previewButton;
+    private javax.swing.JComboBox<String> thresholdComboBox;
     private javax.swing.JLabel thresholdLabel;
-    private javax.swing.JTextField thresholdTextField;
     // End of variables declaration//GEN-END:variables
 }
