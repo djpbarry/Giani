@@ -19,6 +19,10 @@ package ui;
 import Extrema.MultiThreadedMaximaFinder;
 import IO.BioFormats.BioFormatsImg;
 import UIClasses.LayerPanel;
+import ij.ImagePlus;
+import ij.gui.OvalRoi;
+import ij.gui.Overlay;
+import java.util.ArrayList;
 import java.util.Properties;
 import params.DefaultParams;
 
@@ -139,8 +143,25 @@ public class MaximaFinderPanel extends LayerPanel {
         } catch (InterruptedException e) {
             return;
         }
-        process.getOutput().show();
+        showOutput(((MultiThreadedMaximaFinder) process).getMaxima());
     }//GEN-LAST:event_previewButtonActionPerformed
+
+    private void showOutput(ArrayList<int[]> maxima) {
+        ImagePlus imp = img.getLoadedImage();
+        Overlay o = new Overlay();
+        double xyRadius = Math.round(Double.parseDouble(props.getProperty(propLabels[0]))
+                / img.getXYSpatialRes(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))).value().doubleValue());
+
+        for (int[] pix : maxima) {
+            int radius = (int) Math.round(xyRadius);
+            OvalRoi roi = new OvalRoi(pix[0] - radius, pix[1] - radius, 2 * radius + 1, 2 * radius + 1);
+            roi.setPosition(pix[2] + 1);
+            o.add(roi);
+        }
+        imp.setTitle("Detected Blobs");
+        imp.show();
+        imp.setOverlay(o);
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
