@@ -93,10 +93,13 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
                     nuclearFilteringPanel.getProcess()
                 },
                 "Nuclei",
+                false,
                 false
             ),
             new String[]{
-                DefaultParams.NUC_SEG_THRESH_LABEL
+                DefaultParams.NUC_SEG_THRESH_LABEL,
+                DefaultParams.VOL_MARKER,
+                DefaultParams.MEM_MARKER
             }
         );
         cellFilteringPanel = new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),
@@ -113,10 +116,13 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
                     cellFilteringPanel.getProcess()
                 },
                 "Cells",
+                true,
                 true
             ),
             new String[]{
-                DefaultParams.CELL_SEG_THRESH_LABEL
+                DefaultParams.CELL_SEG_THRESH_LABEL,
+                DefaultParams.VOL_MARKER,
+                DefaultParams.MEM_MARKER
             }
         );
         measurementPanel = new ui.MeasurementPanel(
@@ -131,7 +137,8 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
                             nuclearSegmentationPanel.getProcess(),
                             cellSegmentationPanel.getProcess()
                         },
-                        "Cytoplasm"
+                        "Cytoplasm",
+                        "Difference"
                     )
                 }
             ),
@@ -140,7 +147,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
             }
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         statusTextArea.setColumns(20);

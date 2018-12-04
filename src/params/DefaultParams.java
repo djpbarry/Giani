@@ -41,6 +41,8 @@ public class DefaultParams extends Properties {
     public static final String CELL_SEG_THRESH_LABEL = "Threshold for Cell Segmentation";
     public static final String CELL_SEG_CHAN_SELECT_LABEL = "Channel for Cell Segmentation";
     public static final String CHAN_FOR_MEASURE = "Select Channels to Measure";
+    public static final String VOL_MARKER = "Volume Marker";
+    public static final String MEM_MARKER = "Membrane Marker";
 
     public DefaultParams() {
         this.setProperty(INPUT_DIR_LABEL, System.getProperty("user.home"));
@@ -59,6 +61,8 @@ public class DefaultParams extends Properties {
         this.setProperty(CELL_SEG_THRESH_LABEL, "0");
         this.setProperty(CELL_SEG_CHAN_SELECT_LABEL, "0");
         this.setProperty(CHAN_FOR_MEASURE, "0");
+        this.setProperty(VOL_MARKER, "true");
+        this.setProperty(MEM_MARKER, "false");
     }
 
 }

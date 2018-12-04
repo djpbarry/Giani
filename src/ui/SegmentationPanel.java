@@ -47,6 +47,8 @@ public class SegmentationPanel extends LayerPanel {
         previewButton = new javax.swing.JButton();
         thresholdLabel = new javax.swing.JLabel();
         thresholdComboBox = new javax.swing.JComboBox<>();
+        volumeToggleButton = new javax.swing.JToggleButton();
+        membraneToggleButton = new javax.swing.JToggleButton();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -82,6 +84,30 @@ public class SegmentationPanel extends LayerPanel {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         add(thresholdComboBox, gridBagConstraints);
+
+        volumeToggleButton.setText(propLabels[1]);
+        volumeToggleButton.setSelected(true);
+        volumeToggleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                volumeToggleButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        add(volumeToggleButton, gridBagConstraints);
+
+        membraneToggleButton.setText(propLabels[2]);
+        membraneToggleButton.setSelected(false);
+        membraneToggleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                membraneToggleButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        add(membraneToggleButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -104,10 +130,20 @@ public class SegmentationPanel extends LayerPanel {
         imp.show();
     }//GEN-LAST:event_previewButtonActionPerformed
 
+    private void volumeToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volumeToggleButtonActionPerformed
+        membraneToggleButton.setSelected(!volumeToggleButton.isSelected());
+    }//GEN-LAST:event_volumeToggleButtonActionPerformed
+
+    private void membraneToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_membraneToggleButtonActionPerformed
+        volumeToggleButton.setSelected(!membraneToggleButton.isSelected());
+    }//GEN-LAST:event_membraneToggleButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToggleButton membraneToggleButton;
     private javax.swing.JButton previewButton;
     private javax.swing.JComboBox<String> thresholdComboBox;
     private javax.swing.JLabel thresholdLabel;
+    private javax.swing.JToggleButton volumeToggleButton;
     // End of variables declaration//GEN-END:variables
 }
