@@ -3,6 +3,7 @@ package ui;
 import Extrema.MultiThreadedMaximaFinder;
 import IO.BioFormats.BioFormatsImg;
 import IO.PropertyWriter;
+import Process.Calculate.MultiThreadedImageCalculator;
 import Process.Filtering.MultiThreadedGaussianFilter;
 import Process.MultiThreadedProcess;
 import Process.ProcessPipeline;
@@ -17,7 +18,7 @@ import UIClasses.LayerPanel;
 import UIClasses.PropertyExtractor;
 import UIClasses.Updateable;
 import UtilClasses.GenUtils;
-import core.LocalMapperExecutor;
+import Local_Mapper.LocalMapperExecutor;
 import params.DefaultParams;
 
 /*
@@ -83,29 +84,61 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
                 DefaultParams.NUC_SEG_CHAN_SELECT_LABEL,
                 DefaultParams.NUC_FILT_RAD_XY_LABEL,
                 DefaultParams.NUC_FILT_RAD_Z_LABEL});
-        nuclearSegmentationPanel = new ui.SegmentationPanel(props, img,
+        nuclearSegmentationPanel = new ui.SegmentationPanel(
+            props,
+            img,
             new MultiThreadedWatershed(
-                new MultiThreadedProcess[]{nuclearCentreFinderPanel.getProcess(), nuclearFilteringPanel.getProcess()}, "Nuclei"
+                new MultiThreadedProcess[]{
+                    nuclearCentreFinderPanel.getProcess(),
+                    nuclearFilteringPanel.getProcess()
+                },
+                "Nuclei",
+                false
             ),
             new String[]{
-                DefaultParams.NUC_SEG_THRESH_LABEL});
+                DefaultParams.NUC_SEG_THRESH_LABEL
+            }
+        );
         cellFilteringPanel = new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),
             new String[]{
                 DefaultParams.CELL_SEG_CHAN_SELECT_LABEL,
                 DefaultParams.CELL_FILT_RAD_XY_LABEL,
                 DefaultParams.CELL_FILT_RAD_Z_LABEL});
-        cellSegmentationPanel = new ui.SegmentationPanel(props, img,
+        cellSegmentationPanel = new ui.SegmentationPanel(
+            props,
+            img,
             new MultiThreadedWatershed(
-                new MultiThreadedProcess[]{nuclearSegmentationPanel.getProcess(), cellFilteringPanel.getProcess()}, "Cells"
+                new MultiThreadedProcess[]{
+                    nuclearSegmentationPanel.getProcess(),
+                    cellFilteringPanel.getProcess()
+                },
+                "Cells",
+                true
             ),
-            new String[]{DefaultParams.CELL_SEG_THRESH_LABEL});
-        measurementPanel = new ui.MeasurementPanel(props, img,
+            new String[]{
+                DefaultParams.CELL_SEG_THRESH_LABEL
+            }
+        );
+        measurementPanel = new ui.MeasurementPanel(
+            props,
+            img,
             new MultiThreadedROIConstructor(
                 new MultiThreadedProcess[]{
                     nuclearSegmentationPanel.getProcess(),
-                    cellSegmentationPanel.getProcess()}
+                    cellSegmentationPanel.getProcess(),
+                    new MultiThreadedImageCalculator(
+                        new MultiThreadedProcess[]{
+                            nuclearSegmentationPanel.getProcess(),
+                            cellSegmentationPanel.getProcess()
+                        },
+                        "Cytoplasm"
+                    )
+                }
             ),
-            new String[]{DefaultParams.CHAN_FOR_MEASURE});
+            new String[]{
+                DefaultParams.CHAN_FOR_MEASURE
+            }
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());

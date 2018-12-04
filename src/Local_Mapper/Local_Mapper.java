@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package core;
+package Local_Mapper;
 
 import ij.plugin.PlugIn;
 import ui.LocalMapperUI;
@@ -25,20 +25,20 @@ import ui.LocalMapperUI;
  */
 public class Local_Mapper implements PlugIn {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
+        new Local_Mapper().run(null);
+    }
+
+    public Local_Mapper() {
+
+    }
+
+    public void run(String arg) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new LocalMapperUI().setVisible(true);
             }
         });
-    }
-    
-    public Local_Mapper() {
-       
-    }
-
-    public void run(String arg) {
-
     }
 
 }
