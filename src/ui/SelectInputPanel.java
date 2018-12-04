@@ -220,6 +220,7 @@ public class SelectInputPanel extends LayerPanel {
             GenUtils.error("There was a problem with directory selection.");
         }
         enableFileDropDown(listFiles(textArea));
+        fileNameComboBoxActionPerformed(evt);
     }//GEN-LAST:event_chooseInputDirButtonActionPerformed
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -238,37 +239,47 @@ public class SelectInputPanel extends LayerPanel {
         String fileName = (String) fileNameComboBox.getSelectedItem();
         try {
             img.setId(String.format("%s%s%s", inputDirectory, File.separator, fileName));
-            int series = img.getSeriesCount();
-            ArrayList<String> seriesLabels = new ArrayList();
-            for (int s = 0; s < series; s++) {
-                seriesLabels.add(String.valueOf(s));
+            if (!img.isValidID()) {
+                seriesComboBox.setEnabled(false);
+            } else {
+                int series = img.getSeriesCount();
+                ArrayList<String> seriesLabels = new ArrayList();
+                for (int s = 0; s < series; s++) {
+                    seriesLabels.add(String.valueOf(s));
+                }
+                seriesComboBox.setModel(new DefaultComboBoxModel(seriesLabels.toArray()));
+                seriesComboBox.setEnabled(true);
+                seriesSelectLabel.setEnabled(true);
             }
-            seriesComboBox.setModel(new DefaultComboBoxModel(seriesLabels.toArray()));
-            seriesComboBox.setEnabled(true);
-            seriesSelectLabel.setEnabled(true);
         } catch (Exception e) {
             GenUtils.error(String.format("Problem reading %s", fileName));
         }
+        seriesComboBoxActionPerformed(evt);
     }//GEN-LAST:event_fileNameComboBoxActionPerformed
 
     private void seriesComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seriesComboBoxActionPerformed
         String fileName = (String) fileNameComboBox.getSelectedItem();
         try {
-            int channels = img.getChannelCount();
-            ArrayList<String> channelLabels = new ArrayList();
-            for (int c = 0; c < channels; c++) {
-                channelLabels.add(String.valueOf(c));
+            if (!img.isValidID()) {
+                channelComboBox.setEnabled(false);
+            } else {
+                int channels = img.getChannelCount();
+                ArrayList<String> channelLabels = new ArrayList();
+                for (int c = 0; c < channels; c++) {
+                    channelLabels.add(String.valueOf(c));
+                }
+                channelComboBox.setModel(new DefaultComboBoxModel(channelLabels.toArray()));
+                channelComboBox.setEnabled(true);
+                channelSelectLabel.setEnabled(true);
             }
-            channelComboBox.setModel(new DefaultComboBoxModel(channelLabels.toArray()));
-            channelComboBox.setEnabled(true);
-            channelSelectLabel.setEnabled(true);
         } catch (Exception e) {
             GenUtils.error(String.format("Problem reading %s", fileName));
         }
+        channelComboBoxActionPerformed(evt);
     }//GEN-LAST:event_seriesComboBoxActionPerformed
 
     private void channelComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_channelComboBoxActionPerformed
-        previewButton.setEnabled(true);
+        previewButton.setEnabled(img.isValidID());
     }//GEN-LAST:event_channelComboBoxActionPerformed
 
     public boolean setVariables() {
