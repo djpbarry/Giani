@@ -149,14 +149,26 @@ public class MaximaFinderPanel extends LayerPanel {
     private void showOutput(ArrayList<int[]> maxima) {
         ImagePlus imp = img.getLoadedImage();
         Overlay o = new Overlay();
-        double xyRadius = Math.round(Double.parseDouble(props.getProperty(propLabels[0]))
-                / img.getXYSpatialRes(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))).value().doubleValue());
-
+        double zSpatRes = img.getZSpatialRes(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))).value().doubleValue();
+        double xySpatRes = img.getXYSpatialRes(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))).value().doubleValue();
+        double maxXYRadiusMic = Double.parseDouble(props.getProperty(propLabels[0]));
+        double maxZRadiusMic = Double.parseDouble(props.getProperty(propLabels[1]));
+        double maxZRadiusMic2 = Math.pow(maxZRadiusMic, 2.0);
+        double maxXYRadiusMic2 = Math.pow(maxXYRadiusMic, 2.0);
+        int zRadiusPix = (int) Math.ceil(maxZRadiusMic / zSpatRes);
         for (int[] pix : maxima) {
-            int radius = (int) Math.round(xyRadius);
-            OvalRoi roi = new OvalRoi(pix[0] - radius, pix[1] - radius, 2 * radius + 1, 2 * radius + 1);
-            roi.setPosition(pix[2] + 1);
-            o.add(roi);
+            int z0 = pix[2] + 1;
+            for (int z = z0 - zRadiusPix; z <= z0 + zRadiusPix; z++) {
+                double z2 = Math.pow((z - z0) * zSpatRes, 2.0);
+                double cr = Math.sqrt((1.0 - z2 / maxZRadiusMic2) * maxXYRadiusMic2);
+                int currentRadius = (int) Math.round(cr / xySpatRes);
+                if (currentRadius < 1) {
+                    currentRadius = 1;
+                }
+                OvalRoi roi = new OvalRoi(pix[0] - currentRadius, pix[1] - currentRadius, 2 * currentRadius + 1, 2 * currentRadius + 1);
+                roi.setPosition(z);
+                o.add(roi);
+            }
         }
         imp.setTitle("Detected Blobs");
         imp.show();
