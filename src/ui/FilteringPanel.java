@@ -132,6 +132,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
+        restartProcess();
         process.setup(img, props, new String[]{
             DefaultParams.SERIES_SELECT_LABEL, propLabels[0], propLabels[1], propLabels[2]
         });

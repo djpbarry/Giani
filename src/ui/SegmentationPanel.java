@@ -112,7 +112,7 @@ public class SegmentationPanel extends LayerPanel {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
-
+        restartProcess();
         process.setup(img, props, propLabels);
         process.start();
         try {

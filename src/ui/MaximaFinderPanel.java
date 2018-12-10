@@ -133,6 +133,7 @@ public class MaximaFinderPanel extends LayerPanel {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
+        restartProcess();
         process.setup(img, props, new String[]{
             DefaultParams.SERIES_SELECT_LABEL,
             DefaultParams.CHANNEL_SELECT_LABEL,
