@@ -73,9 +73,10 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
                 DefaultParams.INPUT_DIR_LABEL,
                 DefaultParams.INPUT_FILE_LABEL,
                 DefaultParams.SERIES_SELECT_LABEL,
-                DefaultParams.CHANNEL_SELECT_LABEL});
+                DefaultParams.PREVIEW_CHAN_SELECT_LABEL});
         nuclearCentreFinderPanel = new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null),
             new String[]{
+                DefaultParams.BLOB_FIND_CHAN_SELECT_LABEL,
                 DefaultParams.BLOB_RAD_XY_LABEL,
                 DefaultParams.BLOB_RAD_Z_LABEL,
                 DefaultParams.BLOB_NOISE_TOL_LABEL});

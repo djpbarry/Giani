@@ -28,7 +28,8 @@ public class DefaultParams extends Properties {
     public static final String INPUT_DIR_LABEL = "Input Directory";
     public static final String SERIES_SELECT_LABEL = "Preview Series";
     public static final String INPUT_FILE_LABEL = "Preview File";
-    public static final String CHANNEL_SELECT_LABEL = "Preview Channel";
+    public static final String PREVIEW_CHAN_SELECT_LABEL = "Preview Channel";
+    public static final String BLOB_FIND_CHAN_SELECT_LABEL = "Nuclear Channel";
     public static final String NUC_FILT_RAD_XY_LABEL = String.format("XY Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
     public static final String NUC_FILT_RAD_Z_LABEL = String.format("Z Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
     public static final String BLOB_RAD_Z_LABEL = String.format("Z Nuclear 'Blob' Radius (%cm)", IJ.micronSymbol);
@@ -48,7 +49,8 @@ public class DefaultParams extends Properties {
         this.setProperty(INPUT_DIR_LABEL, System.getProperty("user.home"));
         this.setProperty(SERIES_SELECT_LABEL, "0");
         this.setProperty(INPUT_FILE_LABEL, "0");
-        this.setProperty(CHANNEL_SELECT_LABEL, "0");
+        this.setProperty(PREVIEW_CHAN_SELECT_LABEL, "0");
+        this.setProperty(BLOB_FIND_CHAN_SELECT_LABEL, "0");
         this.setProperty(NUC_FILT_RAD_XY_LABEL, "0.0");
         this.setProperty(NUC_FILT_RAD_Z_LABEL, "0.0");
         this.setProperty(BLOB_RAD_Z_LABEL, "0.0");
