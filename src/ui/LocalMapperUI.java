@@ -60,15 +60,13 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        statusTextArea = new javax.swing.JTextArea();
         buttonPanel = new javax.swing.JPanel();
         previousButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
         saveParamsButton = new javax.swing.JButton();
         loadParametersButton = new javax.swing.JButton();
         runButton = new javax.swing.JButton();
-        selectInputPanel = new ui.SelectInputPanel(statusTextArea,props,img,
+        selectInputPanel = new ui.SelectInputPanel(props,img,
             new String[]{
                 DefaultParams.INPUT_DIR_LABEL,
                 DefaultParams.INPUT_FILE_LABEL,
@@ -150,18 +148,6 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
-
-        statusTextArea.setColumns(20);
-        statusTextArea.setRows(5);
-        jScrollPane1.setViewportView(statusTextArea);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.8;
-        getContentPane().add(jScrollPane1, gridBagConstraints);
 
         buttonPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         buttonPanel.setLayout(new java.awt.GridBagLayout());
@@ -370,7 +356,6 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
             }
         }
         if (img != null) {
-            statusTextArea.append(img.getInfo(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))));
             System.out.print(img.getInfo(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))));
         }
         checkLayerIndex();
@@ -466,7 +451,6 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private javax.swing.JPanel buttonPanel;
     private ui.FilteringPanel cellFilteringPanel;
     private ui.SegmentationPanel cellSegmentationPanel;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton loadParametersButton;
     private ui.MeasurementPanel measurementPanel;
     private javax.swing.JButton nextButton;
@@ -477,6 +461,5 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private javax.swing.JButton runButton;
     private javax.swing.JButton saveParamsButton;
     private ui.SelectInputPanel selectInputPanel;
-    private javax.swing.JTextArea statusTextArea;
     // End of variables declaration//GEN-END:variables
 }

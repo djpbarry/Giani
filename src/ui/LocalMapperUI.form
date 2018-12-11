@@ -23,26 +23,6 @@
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout"/>
   <SubComponents>
-    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
-      <AuxValues>
-        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-      </AuxValues>
-      <Constraints>
-        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-          <GridBagConstraints gridX="1" gridY="0" gridWidth="1" gridHeight="1" fill="1" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.5" weightY="0.8"/>
-        </Constraint>
-      </Constraints>
-
-      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-      <SubComponents>
-        <Component class="javax.swing.JTextArea" name="statusTextArea">
-          <Properties>
-            <Property name="columns" type="int" value="20"/>
-            <Property name="rows" type="int" value="5"/>
-          </Properties>
-        </Component>
-      </SubComponents>
-    </Container>
     <Container class="javax.swing.JPanel" name="buttonPanel">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -134,7 +114,7 @@
     </Container>
     <Component class="ui.SelectInputPanel" name="selectInputPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SelectInputPanel(statusTextArea,props,img,&#xa;    new String[]{&#xa;        DefaultParams.INPUT_DIR_LABEL,&#xa;        DefaultParams.INPUT_FILE_LABEL,&#xa;        DefaultParams.SERIES_SELECT_LABEL,&#xa;        DefaultParams.PREVIEW_CHAN_SELECT_LABEL})"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SelectInputPanel(props,img,&#xa;    new String[]{&#xa;        DefaultParams.INPUT_DIR_LABEL,&#xa;        DefaultParams.INPUT_FILE_LABEL,&#xa;        DefaultParams.SERIES_SELECT_LABEL,&#xa;        DefaultParams.PREVIEW_CHAN_SELECT_LABEL})"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="componentList.add(selectInputPanel);"/>
       </AuxValues>
       <Constraints>

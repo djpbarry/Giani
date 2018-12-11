@@ -24,8 +24,8 @@ import java.io.File;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import UIClasses.LayerPanel;
+import ij.IJ;
 import java.util.Properties;
-import javax.swing.JTextArea;
 
 /**
  *
@@ -34,19 +34,17 @@ import javax.swing.JTextArea;
 public class SelectInputPanel extends LayerPanel {
 
     private static File inputDirectory;
-    private final JTextArea textArea;
 //    private BioFormatsImg img;
 
     /**
      * Creates new form SelectInputPanel
      */
     public SelectInputPanel() {
-        this(null, null, null, null);
+        this(null, null, null);
     }
 
-    public SelectInputPanel(JTextArea textArea, Properties props, BioFormatsImg img, String[] propLabels) {
+    public SelectInputPanel(Properties props, BioFormatsImg img, String[] propLabels) {
         super(props, img, null, propLabels);
-        this.textArea = textArea;
         initComponents();
     }
 
@@ -219,7 +217,7 @@ public class SelectInputPanel extends LayerPanel {
         } catch (Exception e) {
             GenUtils.error("There was a problem with directory selection.");
         }
-        enableFileDropDown(listFiles(textArea));
+        enableFileDropDown(listFiles());
         fileNameComboBoxActionPerformed(evt);
     }//GEN-LAST:event_chooseInputDirButtonActionPerformed
 
@@ -293,20 +291,17 @@ public class SelectInputPanel extends LayerPanel {
         return true;
     }
 
-    ArrayList<String> listFiles(JTextArea textArea) {
+    ArrayList<String> listFiles() {
         ArrayList<String> fileNames = BioFormatsFileLister.obtainValidFileList(inputDirectory);
-        if (textArea != null) {
-            textArea.setText("");
-            textArea.append(String.format("%s\n", inputDirectory.getAbsolutePath()));
+            IJ.log(String.format("%s\n", inputDirectory.getAbsolutePath()));
             if (fileNames.size() > 0) {
-                textArea.append(String.format("%d valid files found.\n", fileNames.size()));
+                IJ.log(String.format("%d valid files found.\n", fileNames.size()));
                 for (String file : fileNames) {
-                    textArea.append(String.format("%s\n", file));
+                    IJ.log(String.format("%s\n", file));
                 }
             } else {
-                textArea.append("No valid files found.\n");
+                IJ.log("No valid files found.\n");
             }
-        }
         return fileNames;
     }
 
