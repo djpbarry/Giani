@@ -60,8 +60,6 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
 
         xyFiltRadLabel = new javax.swing.JLabel();
         xyFiltRadTextField = new javax.swing.JTextField();
-        zFiltRadLabel = new javax.swing.JLabel();
-        zFiltRadTextField = new javax.swing.JTextField();
         previewButton = new javax.swing.JButton();
         noiseTolLabel = new javax.swing.JLabel();
         noiseTolTextField = new javax.swing.JTextField();
@@ -90,25 +88,6 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weighty = 1.0;
         add(xyFiltRadTextField, gridBagConstraints);
 
-        zFiltRadLabel.setText(propLabels[2]);
-        zFiltRadLabel.setLabelFor(zFiltRadTextField);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        add(zFiltRadLabel, gridBagConstraints);
-
-        zFiltRadTextField.setText("0.0");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        add(zFiltRadTextField, gridBagConstraints);
-
         previewButton.setText("Preview");
         previewButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -121,7 +100,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.gridwidth = 2;
         add(previewButton, gridBagConstraints);
 
-        noiseTolLabel.setText(propLabels[3]);
+        noiseTolLabel.setText(propLabels[2]);
         noiseTolLabel.setLabelFor(noiseTolTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -165,7 +144,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         restartProcess();
         process.setup(img, props, new String[]{
             DefaultParams.SERIES_SELECT_LABEL,
-            propLabels[0], propLabels[1], propLabels[2], propLabels[3]});
+            propLabels[0], propLabels[1], propLabels[2]});
         process.start();
         try {
             process.join();
@@ -181,7 +160,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         double zSpatRes = img.getZSpatialRes(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))).value().doubleValue();
         double xySpatRes = img.getXYSpatialRes(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))).value().doubleValue();
         double maxXYRadiusMic = Double.parseDouble(props.getProperty(propLabels[1]));
-        double maxZRadiusMic = Double.parseDouble(props.getProperty(propLabels[2]));
+        double maxZRadiusMic = Double.parseDouble(props.getProperty(propLabels[1]));
         double maxZRadiusMic2 = Math.pow(maxZRadiusMic, 2.0);
         double maxXYRadiusMic2 = Math.pow(maxXYRadiusMic, 2.0);
         int zRadiusPix = (int) Math.ceil(maxZRadiusMic / zSpatRes);
@@ -221,7 +200,5 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     protected javax.swing.JButton previewButton;
     private javax.swing.JLabel xyFiltRadLabel;
     private javax.swing.JTextField xyFiltRadTextField;
-    private javax.swing.JLabel zFiltRadLabel;
-    private javax.swing.JTextField zFiltRadTextField;
     // End of variables declaration//GEN-END:variables
 }

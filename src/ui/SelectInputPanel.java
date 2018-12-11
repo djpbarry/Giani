@@ -231,6 +231,7 @@ public class SelectInputPanel extends LayerPanel {
         } catch (Exception e) {
             GenUtils.logError(e, "An error occured while trying to display the image.");
         }
+        IJ.log(String.format("Displaying %s, series %d, channel %d", img.getId(), series, channel));
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void fileNameComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileNameComboBoxActionPerformed

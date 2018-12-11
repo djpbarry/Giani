@@ -75,8 +75,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         nuclearCentreFinderPanel = new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null),
             new String[]{
                 DefaultParams.BLOB_FIND_CHAN_SELECT_LABEL,
-                DefaultParams.BLOB_RAD_XY_LABEL,
-                DefaultParams.BLOB_RAD_Z_LABEL,
+                DefaultParams.BLOB_RAD_LABEL,
                 DefaultParams.BLOB_NOISE_TOL_LABEL});
         nuclearFilteringPanel = new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),
             new String[]{
@@ -354,9 +353,6 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
             } else {
                 componentList.get(i).setVisible(false);
             }
-        }
-        if (img != null) {
-            System.out.print(img.getInfo(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))));
         }
         checkLayerIndex();
     }

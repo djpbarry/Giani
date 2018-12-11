@@ -32,9 +32,8 @@ public class DefaultParams extends Properties {
     public static final String BLOB_FIND_CHAN_SELECT_LABEL = "Nuclear Channel";
     public static final String NUC_FILT_RAD_XY_LABEL = String.format("XY Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
     public static final String NUC_FILT_RAD_Z_LABEL = String.format("Z Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
-    public static final String BLOB_RAD_Z_LABEL = String.format("Z Nuclear 'Blob' Radius (%cm)", IJ.micronSymbol);
     public static final String BLOB_NOISE_TOL_LABEL = "Nuclear Blob Detection Threshold";
-    public static final String BLOB_RAD_XY_LABEL = String.format("XY Nuclear 'Blob' Radius (%cm)", IJ.micronSymbol);
+    public static final String BLOB_RAD_LABEL = String.format("Nuclear 'Blob' Radius (%cm)", IJ.micronSymbol);
     public static final String NUC_SEG_THRESH_LABEL = "Threshold for Nuclear Segmentation";
     public static final String NUC_SEG_CHAN_SELECT_LABEL = "Channel for Nuclear Segmentation";
     public static final String CELL_FILT_RAD_XY_LABEL = String.format("XY Filter Radius for Cell Channel (%cm)", IJ.micronSymbol);
@@ -53,9 +52,8 @@ public class DefaultParams extends Properties {
         this.setProperty(BLOB_FIND_CHAN_SELECT_LABEL, "0");
         this.setProperty(NUC_FILT_RAD_XY_LABEL, "0.0");
         this.setProperty(NUC_FILT_RAD_Z_LABEL, "0.0");
-        this.setProperty(BLOB_RAD_Z_LABEL, "0.0");
         this.setProperty(BLOB_NOISE_TOL_LABEL, "0.0");
-        this.setProperty(BLOB_RAD_XY_LABEL, "0.0");
+        this.setProperty(BLOB_RAD_LABEL, "0.0");
         this.setProperty(NUC_SEG_THRESH_LABEL, "0");
         this.setProperty(NUC_SEG_CHAN_SELECT_LABEL, "0");
         this.setProperty(CELL_FILT_RAD_XY_LABEL, "0.0");

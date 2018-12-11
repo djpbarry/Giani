@@ -125,7 +125,7 @@
     </Component>
     <Component class="ui.MaximaFinderPanel" name="nuclearCentreFinderPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null),&#xa;    new String[]{&#xa;        DefaultParams.BLOB_FIND_CHAN_SELECT_LABEL,&#xa;        DefaultParams.BLOB_RAD_XY_LABEL,&#xa;        DefaultParams.BLOB_RAD_Z_LABEL,&#xa;        DefaultParams.BLOB_NOISE_TOL_LABEL})"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null),&#xa;    new String[]{&#xa;        DefaultParams.BLOB_FIND_CHAN_SELECT_LABEL,&#xa;        DefaultParams.BLOB_RAD_LABEL,&#xa;        DefaultParams.BLOB_NOISE_TOL_LABEL})"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nuclearCentreFinderPanel.setVisible(false);&#xa;componentList.add(nuclearCentreFinderPanel);"/>
       </AuxValues>
       <Constraints>
