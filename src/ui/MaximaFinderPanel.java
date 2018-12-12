@@ -151,10 +151,10 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         } catch (InterruptedException e) {
             return;
         }
-        showOutput(((MultiThreadedMaximaFinder) process).getMaxima());
+        showOutput(((MultiThreadedMaximaFinder) process).getMaxima(), process.getOutput().getTitle());
     }//GEN-LAST:event_previewButtonActionPerformed
 
-    private void showOutput(ArrayList<int[]> maxima) {
+    private void showOutput(ArrayList<int[]> maxima, String title) {
         ImagePlus imp = img.getLoadedImage();
         Overlay o = new Overlay();
         double zSpatRes = img.getZSpatialRes(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))).value().doubleValue();
@@ -178,7 +178,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
                 o.add(roi);
             }
         }
-        imp.setTitle("Detected Blobs");
+        imp.setTitle(title);
         imp.show();
         imp.setOverlay(o);
     }

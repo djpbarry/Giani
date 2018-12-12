@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import UIClasses.LayerPanel;
 import ij.IJ;
+import ij.ImagePlus;
 import java.util.Properties;
 
 /**
@@ -227,11 +228,12 @@ public class SelectInputPanel extends LayerPanel {
         int channel = channelComboBox.getSelectedIndex();
         try {
             img.loadPixelData(series, channel, channel + 1, null);
-            img.getLoadedImage().show();
+            ImagePlus imp = img.getLoadedImage();
+            imp.show();
+            IJ.log(String.format("Displaying \"%s\"", imp.getTitle()));
         } catch (Exception e) {
             GenUtils.logError(e, "An error occured while trying to display the image.");
         }
-        IJ.log(String.format("Displaying %s, series %d, channel %d", img.getId(), series, channel));
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void fileNameComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileNameComboBoxActionPerformed
@@ -294,15 +296,15 @@ public class SelectInputPanel extends LayerPanel {
 
     ArrayList<String> listFiles() {
         ArrayList<String> fileNames = BioFormatsFileLister.obtainValidFileList(inputDirectory);
-            IJ.log(String.format("%s\n", inputDirectory.getAbsolutePath()));
-            if (fileNames.size() > 0) {
-                IJ.log(String.format("%d valid files found.\n", fileNames.size()));
-                for (String file : fileNames) {
-                    IJ.log(String.format("%s\n", file));
-                }
-            } else {
-                IJ.log("No valid files found.\n");
+        IJ.log(String.format("%s\n", inputDirectory.getAbsolutePath()));
+        if (fileNames.size() > 0) {
+            IJ.log(String.format("%d valid files found.\n", fileNames.size()));
+            for (String file : fileNames) {
+                IJ.log(String.format("%s\n", file));
             }
+        } else {
+            IJ.log("No valid files found.\n");
+        }
         return fileNames;
     }
 
