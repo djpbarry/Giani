@@ -26,6 +26,7 @@ import javax.swing.DefaultComboBoxModel;
 import UIClasses.LayerPanel;
 import ij.IJ;
 import ij.ImagePlus;
+import java.awt.Color;
 import java.util.Properties;
 
 /**
@@ -74,6 +75,11 @@ public class SelectInputPanel extends LayerPanel {
         setLayout(new java.awt.GridBagLayout());
 
         inputDirTextField.setText("Select input file...");
+        inputDirTextField.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                inputDirTextFieldCaretUpdate(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -203,23 +209,12 @@ public class SelectInputPanel extends LayerPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void chooseInputDirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseInputDirButtonActionPerformed
-        boolean valid = false;
         try {
-            while (!valid) {
-                inputDirectory = Utilities.getFolder(inputDirectory, "Select input directory...", true);
-                if (!inputDirectory.exists()) {
-                    GenUtils.error(String.format("%s is not a valid input directory", inputDirectory.getPath()));
-                    valid = false;
-                } else {
-                    valid = true;
-                    inputDirTextField.setText(inputDirectory.getAbsolutePath());
-                }
-            }
+            inputDirTextField.setText(Utilities.getFolder(inputDirectory, "Select input directory...", true).getAbsolutePath());
+            inputDirTextFieldCaretUpdate(null);
         } catch (Exception e) {
-            GenUtils.error("There was a problem with directory selection.");
+            GenUtils.logError(e, "There was a problem with directory selection.");
         }
-        enableFileDropDown(listFiles());
-        fileNameComboBoxActionPerformed(evt);
     }//GEN-LAST:event_chooseInputDirButtonActionPerformed
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -282,6 +277,17 @@ public class SelectInputPanel extends LayerPanel {
     private void channelComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_channelComboBoxActionPerformed
         previewButton.setEnabled(img.isValidID());
     }//GEN-LAST:event_channelComboBoxActionPerformed
+
+    private void inputDirTextFieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_inputDirTextFieldCaretUpdate
+        inputDirectory = new File(inputDirTextField.getText());
+        if (inputDirectory.exists() && inputDirectory.isDirectory()) {
+            inputDirTextField.setForeground(Color.black);
+            enableFileDropDown(listFiles());
+            fileNameComboBoxActionPerformed(null);
+        } else {
+            inputDirTextField.setForeground(Color.red);
+        }
+    }//GEN-LAST:event_inputDirTextFieldCaretUpdate
 
     public boolean setVariables() {
         try {

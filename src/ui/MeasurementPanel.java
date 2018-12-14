@@ -20,6 +20,7 @@ import IO.BioFormats.BioFormatsImg;
 import Process.ROI.MultiThreadedROIConstructor;
 import UIClasses.LayerPanel;
 import UIClasses.Updateable;
+import ij.plugin.filter.Analyzer;
 import java.util.Properties;
 import javax.swing.DefaultListModel;
 import params.DefaultParams;
@@ -104,6 +105,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
             process.join();
         } catch (InterruptedException e) {
         }
+        Analyzer.getResultsTable().show("Measurements");
     }//GEN-LAST:event_measurePreviewButtonActionPerformed
 
     public void update() {

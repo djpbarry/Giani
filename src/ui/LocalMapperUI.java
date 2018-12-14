@@ -38,8 +38,8 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private int layerIndex = 0;
     private final String title = "Local Mapper";
     private final ProcessPipeline pipeline;
-//    private final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
+//    private final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     /**
      * Creates new form LocalMapperUI
      */
@@ -326,12 +326,12 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to save property file.");
         }
-        cleanUp();
     }//GEN-LAST:event_saveParamsButtonActionPerformed
 
     private void loadParametersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadParametersButtonActionPerformed
         try {
             PropertyWriter.loadProperties(props, title);
+            updateProperties(props, this);
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to load property file.");
         }
@@ -378,7 +378,11 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     }
 
     public void setProperties(Properties p, Container c) {
-        PropertyExtractor.setProperties(p, c);
+        PropertyExtractor.setProperties(p, c, PropertyExtractor.WRITE);
+    }
+
+    private void updateProperties(Properties p, Container c) {
+        PropertyExtractor.setProperties(p, c, PropertyExtractor.READ);
     }
 
     /**
