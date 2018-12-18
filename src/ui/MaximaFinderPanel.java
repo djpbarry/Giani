@@ -190,6 +190,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
             channelLabels.add(String.valueOf(c));
         }
         channelSelectComboBox.setModel(new DefaultComboBoxModel(channelLabels.toArray()));
+        channelSelectComboBox.setSelectedItem(props.get(DefaultParams.BLOB_FIND_CHAN_SELECT_LABEL));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

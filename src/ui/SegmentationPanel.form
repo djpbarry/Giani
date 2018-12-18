@@ -47,7 +47,7 @@
     <Component class="javax.swing.JComboBox" name="thresholdComboBox">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new DefaultComboBoxModel(AutoThresholder.Method.values())" type="code"/>
+          <Connection code="new DefaultComboBoxModel(AutoThresholder.getMethods())" type="code"/>
         </Property>
       </Properties>
       <AuxValues>

@@ -152,6 +152,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
             channelLabels.add(String.valueOf(c));
         }
         channelSelectComboBox.setModel(new DefaultComboBoxModel(channelLabels.toArray()));
+        channelSelectComboBox.setSelectedItem(props.get(propLabels[0]));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

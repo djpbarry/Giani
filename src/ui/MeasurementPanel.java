@@ -99,7 +99,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
     private void measurePreviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_measurePreviewButtonActionPerformed
         setVariables();
         restartProcess();
-        process.setup(img, props, new String[]{DefaultParams.SERIES_SELECT_LABEL, propLabels[0]});
+        process.setup(img, props, new String[]{DefaultParams.SERIES_SELECT_LABEL, propLabels[0], DefaultParams.INPUT_DIR_LABEL});
         process.start();
         try {
             process.join();

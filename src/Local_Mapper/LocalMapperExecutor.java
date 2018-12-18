@@ -64,7 +64,6 @@ public class LocalMapperExecutor extends Thread {
             }
             IJ.log(String.format("Analysing file %s", file.getName()));
             int nSeries = img.getSeriesCount();
-            ImagePlus output = null;
             for (int s = 0; s < nSeries; s++) {
                 IJ.log(String.format("Analysing series %d", s));
                 if (img.getZSpatialRes(s) == null) {
@@ -72,7 +71,6 @@ public class LocalMapperExecutor extends Thread {
                     continue;
                 }
                 props.setProperty(DefaultParams.SERIES_SELECT_LABEL, String.valueOf(s));
-                int p = 0;
                 for (MultiThreadedProcess process : pipeline) {
                     if (process != null) {
                         IJ.log(String.format("Process %s", process.getClass().toString()));
@@ -83,18 +81,12 @@ public class LocalMapperExecutor extends Thread {
                         } catch (InterruptedException | ExecutionException e) {
                             GenUtils.logError(e, String.format("Failed to execute process %s", process.getClass().toString()));
                         }
-                        output = process.getOutput();
-                        IJ.saveAs(output, "TIF", String.format("%s%s%s_Process_%d_Output", outputDir, File.separator, file.getName(), p++));
                     }
-                }
-                IJ.log("Processing complete.");
-                if (output != null) {
-                    IJ.saveAs(output, "TIF", String.format("%s%s%s_Series_%d_Output", outputDir, File.separator, file.getName(), s));
                 }
             }
         }
         try {
-            DataWriter.saveResultsTable(Analyzer.getResultsTable(), new File(String.format("%s%sLocalMapper_Output", outputDir, File.separator)));
+            DataWriter.saveResultsTable(Analyzer.getResultsTable(), new File(String.format("%s%sLocalMapper_Output.csv", outputDir, File.separator)));
         } catch (IOException e) {
             GenUtils.logError(e, "Failed to save results file.");
         }

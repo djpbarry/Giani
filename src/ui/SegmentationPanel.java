@@ -76,7 +76,7 @@ public class SegmentationPanel extends LayerPanel {
         gridBagConstraints.weighty = 1.0;
         add(thresholdLabel, gridBagConstraints);
 
-        thresholdComboBox.setModel(new DefaultComboBoxModel(AutoThresholder.Method.values()));
+        thresholdComboBox.setModel(new DefaultComboBoxModel(AutoThresholder.getMethods()));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
