@@ -55,10 +55,12 @@ public class LocalMapperExecutor extends Thread {
         File[] files = inputDir.listFiles();
         ExecutorService exec = Executors.newSingleThreadExecutor();
         for (File file : files) {
-            BioFormatsImg img = new BioFormatsImg(file.getAbsolutePath());
-            if (!img.isValidID()) {
+            BioFormatsImg img = new BioFormatsImg();
+            if (!img.checkID(file.getAbsolutePath())) {
                 IJ.log(String.format("Skipping %s", file.getName()));
                 continue;
+            } else {
+                img.setId(file.getAbsolutePath());
             }
             IJ.log(String.format("Analysing file %s", file.getName()));
             int nSeries = img.getSeriesCount();
@@ -70,7 +72,7 @@ public class LocalMapperExecutor extends Thread {
                     continue;
                 }
                 props.setProperty(DefaultParams.SERIES_SELECT_LABEL, String.valueOf(s));
-                int p=0;
+                int p = 0;
                 for (MultiThreadedProcess process : pipeline) {
                     if (process != null) {
                         IJ.log(String.format("Process %s", process.getClass().toString()));
@@ -96,6 +98,7 @@ public class LocalMapperExecutor extends Thread {
         } catch (IOException e) {
             GenUtils.logError(e, "Failed to save results file.");
         }
+        IJ.log("Done");
     }
 
 }
