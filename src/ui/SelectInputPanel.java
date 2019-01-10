@@ -28,6 +28,7 @@ import ij.IJ;
 import ij.ImagePlus;
 import java.awt.Color;
 import java.util.Properties;
+import params.DefaultParams;
 
 /**
  *
@@ -304,6 +305,7 @@ public class SelectInputPanel extends LayerPanel {
             setProperties(props, this);
             String fileName = (String) fileNameComboBox.getSelectedItem();
             img.setId(String.format("%s%s%s", inputDirectory, File.separator, fileName));
+            props.setProperty(DefaultParams.OUTPUT_DIR_LABEL, String.format("%s%s%s", inputDirectory.getAbsolutePath(), File.separator, "Local_Mapper"));
         } catch (Exception e) {
             return false;
         }

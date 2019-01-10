@@ -146,6 +146,9 @@ public class FilteringPanel extends LayerPanel implements Updateable {
     }//GEN-LAST:event_previewButtonActionPerformed
 
     public void update() {
+        if (img.getId() == null) {
+            return;
+        }
         int channels = img.getChannelCount();
         channelLabels = new ArrayList();
         for (int c = 0; c < channels; c++) {

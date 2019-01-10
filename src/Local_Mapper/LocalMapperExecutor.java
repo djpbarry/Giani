@@ -50,7 +50,7 @@ public class LocalMapperExecutor extends Thread {
     public void run() {
         File inputDir = new File(props.getProperty(DefaultParams.INPUT_DIR_LABEL));
         IJ.log(String.format("Input: %s", inputDir.getAbsolutePath()));
-        File outputDir = new File(GenUtils.openResultsDirectory(String.format("%s%s%s", inputDir.getAbsolutePath(), File.separator, "Local_Mapper")));
+        File outputDir = new File(props.getProperty(DefaultParams.OUTPUT_DIR_LABEL));
         IJ.log(String.format("Output: %s", outputDir.getAbsolutePath()));
         File[] files = inputDir.listFiles();
         ExecutorService exec = Executors.newSingleThreadExecutor();

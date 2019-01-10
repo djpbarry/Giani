@@ -26,6 +26,7 @@ import java.util.Properties;
 public class DefaultParams extends Properties {
 
     public static final String INPUT_DIR_LABEL = "Input Directory";
+    public static final String OUTPUT_DIR_LABEL = "Output Directory";
     public static final String SERIES_SELECT_LABEL = "Preview Series";
     public static final String INPUT_FILE_LABEL = "Preview File";
     public static final String PREVIEW_CHAN_SELECT_LABEL = "Preview Channel";
@@ -46,6 +47,7 @@ public class DefaultParams extends Properties {
 
     public DefaultParams() {
         this.setProperty(INPUT_DIR_LABEL, System.getProperty("user.home"));
+        this.setProperty(OUTPUT_DIR_LABEL, "");
         this.setProperty(SERIES_SELECT_LABEL, "0");
         this.setProperty(INPUT_FILE_LABEL, "0");
         this.setProperty(PREVIEW_CHAN_SELECT_LABEL, "0");
@@ -64,5 +66,5 @@ public class DefaultParams extends Properties {
         this.setProperty(VOL_MARKER, "true");
         this.setProperty(MEM_MARKER, "false");
     }
-    
+
 }

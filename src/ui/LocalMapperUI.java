@@ -63,7 +63,6 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         buttonPanel = new javax.swing.JPanel();
         previousButton = new javax.swing.JButton();
         nextButton = new javax.swing.JButton();
-        saveParamsButton = new javax.swing.JButton();
         loadParametersButton = new javax.swing.JButton();
         runButton = new javax.swing.JButton();
         selectInputPanel = new ui.SelectInputPanel(props,img,
@@ -161,9 +160,10 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
         buttonPanel.add(previousButton, gridBagConstraints);
 
         nextButton.setText("Next");
@@ -175,24 +175,11 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
         buttonPanel.add(nextButton, gridBagConstraints);
-
-        saveParamsButton.setText("Save Parameters");
-        saveParamsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveParamsButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        buttonPanel.add(saveParamsButton, gridBagConstraints);
 
         loadParametersButton.setText("Load Parameters");
         loadParametersButton.addActionListener(new java.awt.event.ActionListener() {
@@ -203,9 +190,10 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
         buttonPanel.add(loadParametersButton, gridBagConstraints);
 
         runButton.setText("Run");
@@ -216,13 +204,13 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
         buttonPanel.add(runButton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -319,15 +307,6 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         updateLayer();
     }//GEN-LAST:event_previousButtonActionPerformed
 
-    private void saveParamsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveParamsButtonActionPerformed
-        setVariables();
-        try {
-            PropertyWriter.printProperties(props, props.getProperty(DefaultParams.INPUT_DIR_LABEL), title, true);
-        } catch (Exception e) {
-            GenUtils.logError(e, "Failed to save property file.");
-        }
-    }//GEN-LAST:event_saveParamsButtonActionPerformed
-
     private void loadParametersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadParametersButtonActionPerformed
         try {
             PropertyWriter.loadProperties(props, title);
@@ -338,6 +317,14 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     }//GEN-LAST:event_loadParametersButtonActionPerformed
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
+        setVariables();
+        String outputDirectoryName = GenUtils.openResultsDirectory(props.getProperty(DefaultParams.OUTPUT_DIR_LABEL));
+        props.setProperty(DefaultParams.OUTPUT_DIR_LABEL, outputDirectoryName);
+        try {
+            PropertyWriter.printProperties(props, outputDirectoryName, title, true);
+        } catch (Exception e) {
+            GenUtils.logError(e, "Failed to save property file.");
+        }
         addProcess();
         (new LocalMapperExecutor(pipeline, props)).start();
         runButton.setEnabled(false);
@@ -459,7 +446,6 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private ui.SegmentationPanel nuclearSegmentationPanel;
     private javax.swing.JButton previousButton;
     private javax.swing.JButton runButton;
-    private javax.swing.JButton saveParamsButton;
     private ui.SelectInputPanel selectInputPanel;
     // End of variables declaration//GEN-END:variables
 }

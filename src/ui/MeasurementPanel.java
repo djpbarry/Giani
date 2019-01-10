@@ -99,7 +99,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
     private void measurePreviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_measurePreviewButtonActionPerformed
         setVariables();
         restartProcess();
-        process.setup(img, props, new String[]{DefaultParams.SERIES_SELECT_LABEL, propLabels[0], DefaultParams.INPUT_DIR_LABEL});
+        process.setup(img, props, new String[]{DefaultParams.SERIES_SELECT_LABEL, propLabels[0], DefaultParams.OUTPUT_DIR_LABEL});
         process.start();
         try {
             process.join();
@@ -109,6 +109,9 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
     }//GEN-LAST:event_measurePreviewButtonActionPerformed
 
     public void update() {
+        if (img.getId() == null) {
+            return;
+        }
         int channels = img.getChannelCount();
         DefaultListModel model = new DefaultListModel();
         for (int c = 0; c < channels; c++) {
