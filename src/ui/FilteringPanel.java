@@ -131,11 +131,8 @@ public class FilteringPanel extends LayerPanel implements Updateable {
     }// </editor-fold>//GEN-END:initComponents
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
-        setVariables();
         restartProcess();
-        process.setup(img, props, new String[]{
-            DefaultParams.SERIES_SELECT_LABEL, propLabels[0], propLabels[1], propLabels[2]
-        });
+        setVariables();
         process.start();
         try {
             process.join();
@@ -144,6 +141,12 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         }
         process.getOutput().show();
     }//GEN-LAST:event_previewButtonActionPerformed
+
+    protected void setupProcess() {
+        process.setup(img, props, new String[]{
+            DefaultParams.SERIES_SELECT_LABEL, propLabels[0], propLabels[1], propLabels[2]
+        });
+    }
 
     public void update() {
         if (img.getId() == null) {

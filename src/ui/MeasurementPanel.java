@@ -97,9 +97,8 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
     }// </editor-fold>//GEN-END:initComponents
 
     private void measurePreviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_measurePreviewButtonActionPerformed
-        setVariables();
         restartProcess();
-        process.setup(img, props, new String[]{DefaultParams.SERIES_SELECT_LABEL, propLabels[0], DefaultParams.OUTPUT_DIR_LABEL});
+        setVariables();
         process.start();
         try {
             process.join();
@@ -107,6 +106,10 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         }
         Analyzer.getResultsTable().show("Measurements");
     }//GEN-LAST:event_measurePreviewButtonActionPerformed
+
+    protected void setupProcess() {
+        process.setup(img, props, new String[]{DefaultParams.SERIES_SELECT_LABEL, propLabels[0], DefaultParams.OUTPUT_DIR_LABEL});
+    }
 
     public void update() {
         if (img.getId() == null) {

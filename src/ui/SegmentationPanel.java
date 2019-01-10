@@ -111,9 +111,8 @@ public class SegmentationPanel extends LayerPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
-        setVariables();
         restartProcess();
-        process.setup(img, props, propLabels);
+        setVariables();
         process.start();
         try {
             process.join();
@@ -129,6 +128,10 @@ public class SegmentationPanel extends LayerPanel {
         imp.resetDisplayRange();
         imp.show();
     }//GEN-LAST:event_previewButtonActionPerformed
+
+    protected void setupProcess() {
+        process.setup(img, props, propLabels);
+    }
 
     private void volumeToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volumeToggleButtonActionPerformed
         membraneToggleButton.setSelected(!volumeToggleButton.isSelected());
