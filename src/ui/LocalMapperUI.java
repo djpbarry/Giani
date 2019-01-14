@@ -91,6 +91,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
                 },
                 "Nuclei",
                 false,
+                false,
                 false
             ),
             new String[]{
@@ -113,6 +114,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
                     cellFilteringPanel.getProcess()
                 },
                 "Cells",
+                true,
                 true,
                 true
             ),
@@ -294,14 +296,12 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     }// </editor-fold>//GEN-END:initComponents
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
-        componentList.get(layerIndex).setVariables();
         addProcess();
         layerIndex++;
         updateLayer();
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
-        componentList.get(layerIndex).setVariables();
         layerIndex--;
         removeProcess();
         updateLayer();
