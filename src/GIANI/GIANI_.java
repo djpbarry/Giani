@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package Local_Mapper;
+package GIANI;
 
 import ij.plugin.PlugIn;
 import ui.LocalMapperUI;
@@ -23,13 +23,13 @@ import ui.LocalMapperUI;
  *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
-public class Local_Mapper implements PlugIn {
+public class GIANI_ implements PlugIn {
 
     public static void main(String[] args) {
-        new Local_Mapper().run(null);
+        new GIANI_().run(null);
     }
 
-    public Local_Mapper() {
+    public GIANI_() {
 
     }
 

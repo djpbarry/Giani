@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package Local_Mapper;
+package GIANI;
 
 import IO.BioFormats.BioFormatsImg;
 import IO.DataWriter;

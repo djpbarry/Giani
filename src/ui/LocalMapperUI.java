@@ -18,7 +18,7 @@ import UIClasses.LayerPanel;
 import UIClasses.PropertyExtractor;
 import UIClasses.Updateable;
 import UtilClasses.GenUtils;
-import Local_Mapper.LocalMapperExecutor;
+import GIANI.LocalMapperExecutor;
 import params.DefaultParams;
 
 /*
