@@ -130,15 +130,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
             new MultiThreadedROIConstructor(
                 new MultiThreadedProcess[]{
                     nuclearSegmentationPanel.getProcess(),
-                    cellSegmentationPanel.getProcess(),
-                    new MultiThreadedImageCalculator(
-                        new MultiThreadedProcess[]{
-                            nuclearSegmentationPanel.getProcess(),
-                            cellSegmentationPanel.getProcess()
-                        },
-                        "Cytoplasm",
-                        "Difference"
-                    )
+                    cellSegmentationPanel.getProcess()
                 }
             ),
             new String[]{

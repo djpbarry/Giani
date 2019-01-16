@@ -167,7 +167,7 @@
     </Component>
     <Component class="ui.MeasurementPanel" name="measurementPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MeasurementPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedROIConstructor(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearSegmentationPanel.getProcess(),&#xa;            cellSegmentationPanel.getProcess(),&#xa;            new MultiThreadedImageCalculator(&#xa;                new MultiThreadedProcess[]{&#xa;                    nuclearSegmentationPanel.getProcess(),&#xa;                    cellSegmentationPanel.getProcess()&#xa;                },&#xa;                &quot;Cytoplasm&quot;,&#xa;                &quot;Difference&quot;&#xa;            )&#xa;        }&#xa;    ),&#xa;    new String[]{&#xa;        DefaultParams.CHAN_FOR_MEASURE&#xa;    }&#xa;)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MeasurementPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedROIConstructor(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearSegmentationPanel.getProcess(),&#xa;            cellSegmentationPanel.getProcess()&#xa;        }&#xa;    ),&#xa;    new String[]{&#xa;        DefaultParams.CHAN_FOR_MEASURE&#xa;    }&#xa;)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="measurementPanel.setVisible(false);&#xa;componentList.add(measurementPanel);"/>
       </AuxValues>
       <Constraints>
