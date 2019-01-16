@@ -3,7 +3,6 @@ package ui;
 import Extrema.MultiThreadedMaximaFinder;
 import IO.BioFormats.BioFormatsImg;
 import IO.PropertyWriter;
-import Process.Calculate.MultiThreadedImageCalculator;
 import Process.Filtering.MultiThreadedGaussianFilter;
 import Process.MultiThreadedProcess;
 import Process.ProcessPipeline;
@@ -19,6 +18,7 @@ import UIClasses.PropertyExtractor;
 import UIClasses.Updateable;
 import UtilClasses.GenUtils;
 import GIANI.LocalMapperExecutor;
+import Revision.Revision;
 import params.DefaultParams;
 
 /*
@@ -36,7 +36,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     private final Properties props = new Properties();
     private final LinkedList<LayerPanel> componentList = new LinkedList();
     private int layerIndex = 0;
-    private final String title = "Local Mapper";
+    public static final String TITLE = String.format("GIANI v%d.%d", Revision.VERSION, Revision.revisionNumber);
     private final ProcessPipeline pipeline;
 
 //    private final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
@@ -139,6 +139,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle(TITLE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         buttonPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -301,7 +302,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
 
     private void loadParametersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadParametersButtonActionPerformed
         try {
-            PropertyWriter.loadProperties(props, title);
+            PropertyWriter.loadProperties(props, TITLE);
             updateProperties(props, this);
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to load property file.");
@@ -313,7 +314,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
         String outputDirectoryName = GenUtils.openResultsDirectory(props.getProperty(DefaultParams.OUTPUT_DIR_LABEL));
         props.setProperty(DefaultParams.OUTPUT_DIR_LABEL, outputDirectoryName);
         try {
-            PropertyWriter.printProperties(props, outputDirectoryName, title, true);
+            PropertyWriter.printProperties(props, outputDirectoryName, TITLE, true);
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to save property file.");
         }
