@@ -96,8 +96,8 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
             ),
             new String[]{
                 DefaultParams.NUC_SEG_THRESH_LABEL,
-                DefaultParams.VOL_MARKER,
-                DefaultParams.MEM_MARKER
+                DefaultParams.NUC_VOL_MARKER,
+                DefaultParams.NUC_MEM_MARKER
             }
         );
         cellFilteringPanel = new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),
@@ -120,8 +120,8 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
             ),
             new String[]{
                 DefaultParams.CELL_SEG_THRESH_LABEL,
-                DefaultParams.VOL_MARKER,
-                DefaultParams.MEM_MARKER
+                DefaultParams.CELL_VOL_MARKER,
+                DefaultParams.CELL_MEM_MARKER
             }
         );
         measurementPanel = new ui.MeasurementPanel(

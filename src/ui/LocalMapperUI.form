@@ -134,7 +134,7 @@
     </Component>
     <Component class="ui.SegmentationPanel" name="nuclearSegmentationPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearCentreFinderPanel.getProcess(),&#xa;            nuclearFilteringPanel.getProcess()&#xa;        },&#xa;        &quot;Nuclei&quot;,&#xa;        false,&#xa;        false,&#xa;        false&#xa;    ),&#xa;    new String[]{&#xa;        DefaultParams.NUC_SEG_THRESH_LABEL,&#xa;        DefaultParams.VOL_MARKER,&#xa;        DefaultParams.MEM_MARKER&#xa;    }&#xa;)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearCentreFinderPanel.getProcess(),&#xa;            nuclearFilteringPanel.getProcess()&#xa;        },&#xa;        &quot;Nuclei&quot;,&#xa;        false,&#xa;        false,&#xa;        false&#xa;    ),&#xa;    new String[]{&#xa;        DefaultParams.NUC_SEG_THRESH_LABEL,&#xa;        DefaultParams.NUC_VOL_MARKER,&#xa;        DefaultParams.NUC_MEM_MARKER&#xa;    }&#xa;)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nuclearSegmentationPanel.setVisible(false);&#xa;componentList.add(nuclearSegmentationPanel);"/>
       </AuxValues>
       <Constraints>
@@ -156,7 +156,7 @@
     </Component>
     <Component class="ui.SegmentationPanel" name="cellSegmentationPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearSegmentationPanel.getProcess(),&#xa;            cellFilteringPanel.getProcess()&#xa;        },&#xa;        &quot;Cells&quot;,&#xa;        true,&#xa;        true,&#xa;        true&#xa;    ),&#xa;    new String[]{&#xa;        DefaultParams.CELL_SEG_THRESH_LABEL,&#xa;        DefaultParams.VOL_MARKER,&#xa;        DefaultParams.MEM_MARKER&#xa;    }&#xa;)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearSegmentationPanel.getProcess(),&#xa;            cellFilteringPanel.getProcess()&#xa;        },&#xa;        &quot;Cells&quot;,&#xa;        true,&#xa;        true,&#xa;        true&#xa;    ),&#xa;    new String[]{&#xa;        DefaultParams.CELL_SEG_THRESH_LABEL,&#xa;        DefaultParams.CELL_VOL_MARKER,&#xa;        DefaultParams.CELL_MEM_MARKER&#xa;    }&#xa;)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="cellSegmentationPanel.setVisible(false);&#xa;componentList.add(cellSegmentationPanel);"/>
       </AuxValues>
       <Constraints>

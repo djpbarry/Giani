@@ -22,8 +22,9 @@ import Process.MultiThreadedProcess;
 import Process.ProcessPipeline;
 import UtilClasses.GenUtils;
 import ij.IJ;
-import ij.ImagePlus;
+import ij.measure.ResultsTable;
 import ij.plugin.filter.Analyzer;
+import ij.plugin.frame.RoiManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
@@ -48,6 +49,14 @@ public class LocalMapperExecutor extends Thread {
     }
 
     public void run() {
+        RoiManager rm = RoiManager.getInstance();
+        if (rm != null) {
+            rm.reset();
+        }
+        ResultsTable rt = ResultsTable.getResultsTable();
+        if (rt != null) {
+            rt.reset();
+        }
         File inputDir = new File(props.getProperty(DefaultParams.INPUT_DIR_LABEL));
         IJ.log(String.format("Input: %s", inputDir.getAbsolutePath()));
         File outputDir = new File(props.getProperty(DefaultParams.OUTPUT_DIR_LABEL));
