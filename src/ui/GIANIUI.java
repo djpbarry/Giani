@@ -30,7 +30,7 @@ import params.DefaultParams;
  *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
-public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
+public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
     private final BioFormatsImg img;
     private final Properties props = new Properties();
@@ -43,7 +43,7 @@ public class LocalMapperUI extends javax.swing.JFrame implements GUIMethods {
     /**
      * Creates new form LocalMapperUI
      */
-    public LocalMapperUI() {
+    public GIANIUI() {
         img = new BioFormatsImg();
         pipeline = new ProcessPipeline();
         initComponents();
