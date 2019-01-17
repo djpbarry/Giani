@@ -23,6 +23,7 @@ import UIClasses.Updateable;
 import ij.plugin.filter.Analyzer;
 import java.util.Properties;
 import javax.swing.DefaultListModel;
+import javax.swing.ListSelectionModel;
 import params.DefaultParams;
 
 /**
@@ -79,6 +80,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        channelList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         channelScrollPane.setViewportView(channelList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -121,6 +123,13 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
             model.addElement(String.format("Channel %d", c));
         }
         channelList.setModel(model);
+        int selection = Integer.parseInt(props.getProperty(propLabels[0]));
+        int n = model.getSize();
+        for (int i = 0; i < n; i++) {
+            if ((selection & (int) Math.pow(2.0, i)) != 0) {
+                channelList.addSelectionInterval(i, i);
+            }
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

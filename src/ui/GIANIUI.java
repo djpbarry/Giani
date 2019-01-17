@@ -304,6 +304,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         try {
             PropertyWriter.loadProperties(props, TITLE);
             updateProperties(props, this);
+            runButton.setEnabled(true);
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to load property file.");
         }
