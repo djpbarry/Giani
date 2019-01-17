@@ -142,7 +142,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         setTitle(TITLE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
-        buttonPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        buttonPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         buttonPanel.setLayout(new java.awt.GridBagLayout());
 
         previousButton.setText("Previous");
@@ -211,11 +211,11 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.2;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(buttonPanel, gridBagConstraints);
 
         componentList.add(selectInputPanel);
@@ -223,8 +223,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(selectInputPanel, gridBagConstraints);
 
         nuclearCentreFinderPanel.setVisible(false);
@@ -233,8 +234,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(nuclearCentreFinderPanel, gridBagConstraints);
 
         nuclearFilteringPanel.setVisible(false);
@@ -243,8 +245,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(nuclearFilteringPanel, gridBagConstraints);
 
         nuclearSegmentationPanel.setVisible(false);
@@ -253,8 +256,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(nuclearSegmentationPanel, gridBagConstraints);
 
         cellFilteringPanel.setVisible(false);
@@ -263,8 +267,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(cellFilteringPanel, gridBagConstraints);
 
         cellSegmentationPanel.setVisible(false);
@@ -273,8 +278,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(cellSegmentationPanel, gridBagConstraints);
 
         measurementPanel.setVisible(false);
@@ -283,6 +289,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(measurementPanel, gridBagConstraints);
 
         pack();

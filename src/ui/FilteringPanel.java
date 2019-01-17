@@ -56,7 +56,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         channelSelectLabel = new javax.swing.JLabel();
         channelSelectComboBox = new javax.swing.JComboBox<>();
 
-        setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
 
         previewButton.setText("Preview");
@@ -69,6 +69,8 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(previewButton, gridBagConstraints);
 
         filterRadiusXYLabel.setText(propLabels[1]);
@@ -79,6 +81,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(filterRadiusXYLabel, gridBagConstraints);
 
         filterRadiusXYTextField.setText("0.0");
@@ -89,6 +92,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(filterRadiusXYTextField, gridBagConstraints);
 
         filterRadiusZLabel.setText(propLabels[2]);
@@ -99,6 +103,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(filterRadiusZLabel, gridBagConstraints);
 
         filterRadiusZTextField.setText("0.0");
@@ -108,6 +113,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(filterRadiusZTextField, gridBagConstraints);
 
         channelSelectLabel.setText(propLabels[0]);
@@ -118,6 +124,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(channelSelectLabel, gridBagConstraints);
 
         channelSelectComboBox.setModel(new DefaultComboBoxModel(new String[]{}));
@@ -127,6 +134,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(channelSelectComboBox, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 

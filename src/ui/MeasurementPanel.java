@@ -59,6 +59,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         channelList = new javax.swing.JList<>();
         channelSelectLabel = new javax.swing.JLabel();
 
+        setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
 
         measurePreviewButton.setText("Measure Preview");
@@ -70,8 +71,8 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(measurePreviewButton, gridBagConstraints);
 
@@ -86,7 +87,9 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(channelScrollPane, gridBagConstraints);
 
@@ -95,6 +98,9 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         add(channelSelectLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -123,7 +129,11 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
             model.addElement(String.format("Channel %d", c));
         }
         channelList.setModel(model);
-        int selection = Integer.parseInt(props.getProperty(propLabels[0]));
+        String selectedChannels = props.getProperty(propLabels[0]);
+        if (selectedChannels == null) {
+            return;
+        }
+        int selection = Integer.parseInt(selectedChannels);
         int n = model.getSize();
         for (int i = 0; i < n; i++) {
             if ((selection & (int) Math.pow(2.0, i)) != 0) {
