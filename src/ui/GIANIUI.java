@@ -329,8 +329,15 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
             GenUtils.logError(e, "Failed to save property file.");
         }
         addProcess();
-        (new LocalMapperExecutor(pipeline, props)).start();
+        LocalMapperExecutor exec = new LocalMapperExecutor(pipeline, props);
+        exec.start();
         runButton.setEnabled(false);
+        try {
+            exec.join();
+        } catch (InterruptedException e) {
+            GenUtils.logError(e, "Failed to execute pipeline.");
+        }
+        runButton.setEnabled(true);
     }//GEN-LAST:event_runButtonActionPerformed
 
     void updateLayer() {
