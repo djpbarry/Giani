@@ -199,7 +199,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         if (img.getId() == null) {
             return;
         }
-        int channels = img.getChannelCount();
+        int channels = img.getSizeC();
         channelLabels = new ArrayList();
         for (int c = 0; c < channels; c++) {
             channelLabels.add(String.valueOf(c));

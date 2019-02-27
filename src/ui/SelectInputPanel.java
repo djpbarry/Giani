@@ -281,7 +281,7 @@ public class SelectInputPanel extends LayerPanel {
                 if (!img.isValidID()) {
                     channelComboBox.setEnabled(false);
                 } else {
-                    int channels = img.getChannelCount();
+                    int channels = img.getSizeC();
                     ArrayList<String> channelLabels = new ArrayList();
                     for (int c = 0; c < channels; c++) {
                         channelLabels.add(String.valueOf(c));
