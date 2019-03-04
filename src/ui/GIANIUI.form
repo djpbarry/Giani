@@ -115,7 +115,7 @@
     </Component>
     <Component class="ui.MaximaFinderPanel" name="nuclearCentreFinderPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null),&#xa;    new String[]{&#xa;        DefaultParams.BLOB_FIND_CHAN_SELECT_LABEL,&#xa;        DefaultParams.BLOB_RAD_LABEL,&#xa;        DefaultParams.BLOB_NOISE_TOL_LABEL})"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null),&#xa;    new String[]{&#xa;        DefaultParams.BLOB_NUC_CHAN_SELECT_LABEL,&#xa;        DefaultParams.BLOB_NUC_RAD_LABEL,&#xa;        DefaultParams.BLOB_NUC_NOISE_TOL_LABEL},&#xa;    true, -1)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nuclearCentreFinderPanel.setVisible(false);&#xa;componentList.add(nuclearCentreFinderPanel);"/>
       </AuxValues>
       <Constraints>
@@ -169,6 +169,9 @@
       </Constraints>
     </Component>
     <Component class="ui.MeasurementPanel" name="measurementPanel">
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="measurementPanelMouseClicked"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MeasurementPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedROIConstructor(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearSegmentationPanel.getProcess(),&#xa;            cellSegmentationPanel.getProcess()&#xa;        }&#xa;    ),&#xa;    new String[]{&#xa;        DefaultParams.CHAN_FOR_MEASURE&#xa;    }&#xa;)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="measurementPanel.setVisible(false);&#xa;componentList.add(measurementPanel);"/>

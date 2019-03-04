@@ -19,6 +19,8 @@ import UIClasses.Updateable;
 import UtilClasses.GenUtils;
 import GIANI.LocalMapperExecutor;
 import Revision.Revision;
+import java.awt.GridBagConstraints;
+import java.util.ArrayList;
 import params.DefaultParams;
 
 /*
@@ -38,6 +40,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     private int layerIndex = 0;
     public static final String TITLE = String.format("GIANI v%d.%d", Revision.VERSION, Revision.revisionNumber);
     private final ProcessPipeline pipeline;
+    private ArrayList<MaximaFinderPanel> maximaFinderPanels;
 
 //    private final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     /**
@@ -73,9 +76,10 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 DefaultParams.PREVIEW_CHAN_SELECT_LABEL});
         nuclearCentreFinderPanel = new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null),
             new String[]{
-                DefaultParams.BLOB_FIND_CHAN_SELECT_LABEL,
-                DefaultParams.BLOB_RAD_LABEL,
-                DefaultParams.BLOB_NOISE_TOL_LABEL});
+                DefaultParams.BLOB_NUC_CHAN_SELECT_LABEL,
+                DefaultParams.BLOB_NUC_RAD_LABEL,
+                DefaultParams.BLOB_NUC_NOISE_TOL_LABEL},
+            true, -1);
         nuclearFilteringPanel = new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),
             new String[]{
                 DefaultParams.NUC_SEG_CHAN_SELECT_LABEL,
@@ -285,6 +289,11 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
         measurementPanel.setVisible(false);
         componentList.add(measurementPanel);
+        measurementPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                measurementPanelMouseClicked(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -339,6 +348,10 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         }
         runButton.setEnabled(true);
     }//GEN-LAST:event_runButtonActionPerformed
+
+    private void measurementPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_measurementPanelMouseClicked
+        addAdditionalBlobDetectionPanels();
+    }//GEN-LAST:event_measurementPanelMouseClicked
 
     void updateLayer() {
         for (int i = 0; i < componentList.size(); i++) {
@@ -426,22 +439,52 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         if (process == null) {
             return;
         }
-//        MultiThreadedProcess newProcess = null;
-//        if (process instanceof MultiThreadedGaussianFilter) {
-//            newProcess = new MultiThreadedGaussianFilter();
-//        } else if (process instanceof MultiThreadedMaximaFinder) {
-//            newProcess = new MultiThreadedMaximaFinder();
-//        } else if (process instanceof MultiThreadedWatershed) {
-//            newProcess = new MultiThreadedWatershed();
-//        } else if (process instanceof MultiThreadedROIConstructor) {
-//            newProcess = new MultiThreadedROIConstructor();
-//        }
-//        newProcess.setup(img, props, process.getPropLabels(), null);
         pipeline.addProcess(process, layerIndex - 1);
     }
 
     void removeProcess() {
         pipeline.removeProcesses(layerIndex);
+    }
+
+    protected boolean addAdditionalBlobDetectionPanels() {
+        setVariables();
+        if (maximaFinderPanels != null) {
+            for (MaximaFinderPanel mfp : maximaFinderPanels) {
+                componentList.remove(mfp);
+                getContentPane().remove(mfp);
+            }
+        }
+        maximaFinderPanels = new ArrayList();
+        String selectedChannels = props.getProperty(DefaultParams.CHAN_FOR_MEASURE);
+        if (selectedChannels == null) {
+            return false;
+        }
+        int channels = Integer.parseInt(selectedChannels);
+        int n = img.getSizeC();
+        for (int i = 0; i < n; i++) {
+            if ((channels & (int) Math.pow(2.0, i)) != 0) {
+                MaximaFinderPanel mFP = new ui.MaximaFinderPanel(props, img, new MultiThreadedMaximaFinder(null),
+                        new String[]{
+                            String.format("%s%d", DefaultParams.BLOB_CHAN_SELECT_LABEL, i),
+                            String.format("%s%d", DefaultParams.BLOB_CHAN_RAD_LABEL, i),
+                            String.format("%s%d", DefaultParams.BLOB_CHAN_NOISE_TOL_LABEL, i)}, false, i);
+                mFP.setVisible(false);
+                componentList.add(mFP);
+                maximaFinderPanels.add(mFP);
+                GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
+                gridBagConstraints.gridx = 0;
+                gridBagConstraints.gridy = 0;
+                gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+                gridBagConstraints.weightx = 1.0;
+                gridBagConstraints.weighty = 0.8;
+                gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+                getContentPane().add(mFP, gridBagConstraints);
+            }
+        }
+        getContentPane().revalidate();
+        getContentPane().repaint();
+        checkLayerIndex();
+        return true;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

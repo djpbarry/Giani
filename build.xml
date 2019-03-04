@@ -72,9 +72,9 @@
     -->
     <target name="-pre-init">
         <exec executable="C:\Users\barryd\Strawberry\perl\bin\perl.exe">
-            <arg line="C:\Users\barryd\documents\Perl_Scripts\get_mercurial_revision_number.pl"/>
+            <arg line="C:\Users\barryd\documents\Perl_Scripts\get_git_version_number.pl"/>
             <arg line="${basedir}"/>
-            <arg line="1"/>
+            <arg line="2"/>
         </exec>
     </target>
 </project>

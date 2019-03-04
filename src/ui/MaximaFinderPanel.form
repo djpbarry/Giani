@@ -93,7 +93,7 @@
     <Component class="javax.swing.JLabel" name="channelSelectLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="DefaultParams.BLOB_FIND_CHAN_SELECT_LABEL" type="code"/>
+          <Connection code="propLabels[0]" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
@@ -117,6 +117,7 @@
         </Property>
       </Properties>
       <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="channelSelectComboBox.setVisible(allowChannelSelect);&#xa;if(defaultChannel &gt; -1){&#xa;    channelSelectComboBox.setSelectedIndex(defaultChannel);&#xa;}"/>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
       <Constraints>

@@ -35,17 +35,21 @@ import params.DefaultParams;
 public class MaximaFinderPanel extends LayerPanel implements Updateable {
 
     private ArrayList<String> channelLabels;
+    boolean allowChannelSelect;
+    int defaultChannel;
 
     /**
      * Creates new form MaximaFinderPanel
      */
     public MaximaFinderPanel() {
-        this(null, null, null, null);
+        this(null, null, null, null, true, -1);
     }
 
-    public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process, String[] propLabels) {
+    public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process, String[] propLabels, boolean allowChannelSelect, int defaultChannel) {
         super(props, img, process, propLabels);
         initComponents();
+        this.allowChannelSelect = allowChannelSelect;
+        this.defaultChannel = defaultChannel;
     }
 
     /**
@@ -126,7 +130,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(noiseTolTextField, gridBagConstraints);
 
-        channelSelectLabel.setText(DefaultParams.BLOB_FIND_CHAN_SELECT_LABEL);
+        channelSelectLabel.setText(propLabels[0]);
         channelSelectLabel.setLabelFor(channelSelectComboBox);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -138,6 +142,10 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         add(channelSelectLabel, gridBagConstraints);
 
         channelSelectComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        channelSelectComboBox.setVisible(allowChannelSelect);
+        if(defaultChannel > -1){
+            channelSelectComboBox.setSelectedIndex(defaultChannel);
+        }
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -205,7 +213,11 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
             channelLabels.add(String.valueOf(c));
         }
         channelSelectComboBox.setModel(new DefaultComboBoxModel(channelLabels.toArray()));
-        channelSelectComboBox.setSelectedItem(props.get(DefaultParams.BLOB_FIND_CHAN_SELECT_LABEL));
+        channelSelectComboBox.setSelectedItem(props.get(propLabels[0]));
+        channelSelectComboBox.setVisible(allowChannelSelect);
+        if (defaultChannel > -1) {
+            channelSelectComboBox.setSelectedIndex(defaultChannel);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

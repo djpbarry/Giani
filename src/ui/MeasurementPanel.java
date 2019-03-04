@@ -82,6 +82,11 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
             public String getElementAt(int i) { return strings[i]; }
         });
         channelList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        channelList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                channelListMouseClicked(evt);
+            }
+        });
         channelScrollPane.setViewportView(channelList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -114,6 +119,10 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         }
         Analyzer.getResultsTable().show("Measurements");
     }//GEN-LAST:event_measurePreviewButtonActionPerformed
+
+    private void channelListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_channelListMouseClicked
+        this.dispatchEvent(evt);
+    }//GEN-LAST:event_channelListMouseClicked
 
     protected void setupProcess() {
         process.setup(img, props, new String[]{DefaultParams.SERIES_SELECT_LABEL, propLabels[0], DefaultParams.OUTPUT_DIR_LABEL});
