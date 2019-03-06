@@ -21,6 +21,7 @@ import GIANI.LocalMapperExecutor;
 import Revision.Revision;
 import java.awt.GridBagConstraints;
 import java.util.ArrayList;
+import mcib3d.geom.Objects3DPopulation;
 import params.DefaultParams;
 
 /*
@@ -41,6 +42,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     public static final String TITLE = String.format("GIANI v%d.%d", Revision.VERSION, Revision.revisionNumber);
     private final ProcessPipeline pipeline;
     private ArrayList<MaximaFinderPanel> maximaFinderPanels;
+    private final Objects3DPopulation cells;
 
 //    private final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     /**
@@ -49,6 +51,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     public GIANIUI() {
         img = new BioFormatsImg();
         pipeline = new ProcessPipeline();
+        cells = new Objects3DPopulation();
         initComponents();
         UIMethods.centreContainer(this);
     }
@@ -96,7 +99,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 "Nuclei",
                 false,
                 false,
-                false
+                false,
+                cells,
+                MultiThreadedWatershed.NUCLEI
             ),
             new String[]{
                 DefaultParams.NUC_SEG_THRESH_LABEL,
@@ -120,7 +125,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 "Cells",
                 true,
                 true,
-                true
+                true,
+                cells,
+                MultiThreadedWatershed.CELLS
             ),
             new String[]{
                 DefaultParams.CELL_SEG_THRESH_LABEL,
@@ -135,7 +142,8 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 new MultiThreadedProcess[]{
                     nuclearSegmentationPanel.getProcess(),
                     cellSegmentationPanel.getProcess()
-                }
+                },
+                cells
             ),
             new String[]{
                 DefaultParams.CHAN_FOR_MEASURE
