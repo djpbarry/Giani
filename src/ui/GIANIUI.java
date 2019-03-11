@@ -20,7 +20,9 @@ import UtilClasses.GenUtils;
 import GIANI.LocalMapperExecutor;
 import Revision.Revision;
 import java.awt.GridBagConstraints;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import javax.swing.text.NumberFormatter;
 import mcib3d.geom.Objects3DPopulation;
 import params.DefaultParams;
 
@@ -39,7 +41,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     private final Properties props = new Properties();
     private final LinkedList<LayerPanel> componentList = new LinkedList();
     private int layerIndex = 0;
-    public static final String TITLE = String.format("GIANI v%d.%d", Revision.VERSION, Revision.revisionNumber);
+    public static final String TITLE = String.format("GIANI v%d.00%d", Revision.VERSION, Revision.revisionNumber);
     private final ProcessPipeline pipeline;
     private ArrayList<MaximaFinderPanel> maximaFinderPanels;
     private final Objects3DPopulation cells;
