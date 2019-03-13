@@ -349,6 +349,10 @@ public class SelectInputPanel extends LayerPanel {
             fileNameComboBox.setModel(new DefaultComboBoxModel(fileNames.toArray()));
         }
     }
+    
+    protected void setupProcess(){
+        
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> channelComboBox;

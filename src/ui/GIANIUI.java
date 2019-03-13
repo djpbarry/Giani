@@ -18,11 +18,10 @@ import UIClasses.PropertyExtractor;
 import UIClasses.Updateable;
 import UtilClasses.GenUtils;
 import GIANI.LocalMapperExecutor;
+import Process.Colocalise.MultiThreadedColocalise;
 import Revision.Revision;
 import java.awt.GridBagConstraints;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import javax.swing.text.NumberFormatter;
 import mcib3d.geom.Objects3DPopulation;
 import params.DefaultParams;
 
@@ -44,6 +43,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     public static final String TITLE = String.format("GIANI v%d.00%d", Revision.VERSION, Revision.revisionNumber);
     private final ProcessPipeline pipeline;
     private ArrayList<MaximaFinderPanel> maximaFinderPanels;
+    private LocalisationPanel localisationPanel;
     private final Objects3DPopulation cells;
 
 //    private final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
@@ -463,6 +463,8 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 componentList.remove(mfp);
                 getContentPane().remove(mfp);
             }
+            componentList.remove(localisationPanel);
+            getContentPane().remove(localisationPanel);
         }
         maximaFinderPanels = new ArrayList();
         String selectedChannels = props.getProperty(DefaultParams.CHAN_FOR_MEASURE);
@@ -478,23 +480,36 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                             String.format("%s%d", DefaultParams.BLOB_CHAN_SELECT_LABEL, i),
                             String.format("%s%d", DefaultParams.BLOB_CHAN_RAD_LABEL, i),
                             String.format("%s%d", DefaultParams.BLOB_CHAN_NOISE_TOL_LABEL, i)}, false, i);
-                mFP.setVisible(false);
-                componentList.add(mFP);
                 maximaFinderPanels.add(mFP);
-                GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
-                gridBagConstraints.gridx = 0;
-                gridBagConstraints.gridy = 0;
-                gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-                gridBagConstraints.weightx = 1.0;
-                gridBagConstraints.weighty = 0.8;
-                gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-                getContentPane().add(mFP, gridBagConstraints);
+                addPanel(mFP);
             }
         }
+        int nInputs = maximaFinderPanels.size() + 2;
+        MultiThreadedProcess[] localisationInputs = new MultiThreadedProcess[nInputs];
+        for (int j = 0; j < maximaFinderPanels.size(); j++) {
+            localisationInputs[j] = maximaFinderPanels.get(j).getProcess();
+        }
+        localisationInputs[nInputs - 2] = cellSegmentationPanel.getProcess();
+        localisationInputs[nInputs - 1] = nuclearSegmentationPanel.getProcess();
+        localisationPanel = new ui.LocalisationPanel(props, img, new MultiThreadedColocalise(localisationInputs, cells), new String[]{DefaultParams.SERIES_SELECT_LABEL,DefaultParams.OUTPUT_DIR_LABEL});
+        addPanel(localisationPanel);
         getContentPane().revalidate();
         getContentPane().repaint();
         checkLayerIndex();
         return true;
+    }
+
+    void addPanel(LayerPanel panel) {
+        panel.setVisible(false);
+        componentList.add(panel);
+        GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        getContentPane().add(panel, gridBagConstraints);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

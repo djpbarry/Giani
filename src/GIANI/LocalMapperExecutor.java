@@ -101,5 +101,9 @@ public class LocalMapperExecutor extends Thread {
         }
         IJ.log("Done");
     }
+    
+    boolean checkSeriesChannels(BioFormatsImg img){
+        return true;
+    }
 
 }

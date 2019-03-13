@@ -16,21 +16,33 @@
  */
 package ui;
 
+import IO.BioFormats.BioFormatsImg;
+import Process.Colocalise.MultiThreadedColocalise;
 import UIClasses.LayerPanel;
+import java.util.Properties;
 
 /**
  *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
-public class ColocalisationPanel extends LayerPanel {
+public class LocalisationPanel extends LayerPanel {
 
     /**
      * Creates new form ColocalisationPanel
      */
-    public ColocalisationPanel() {
+    public LocalisationPanel() {
+        this(null, null, null, null);
+    }
+
+    public LocalisationPanel(Properties props, BioFormatsImg img, MultiThreadedColocalise process, String[] propLabels) {
+        super(props, img, process, propLabels);
         initComponents();
     }
 
+    protected void setupProcess() {
+        process.setup(img, props, propLabels);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
