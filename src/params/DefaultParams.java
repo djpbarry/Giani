@@ -49,6 +49,7 @@ public class DefaultParams extends Properties {
     public static final String NUC_MEM_MARKER = "Nuclear Membrane Marker";
     public static final String CELL_VOL_MARKER = "Cell Volume Marker";
     public static final String CELL_MEM_MARKER = "Cell Membrane Marker";
+    public static final String LOCALISE_SPOTS = "Localise Spots";
 
     public DefaultParams() {
         this.setProperty(INPUT_DIR_LABEL, System.getProperty("user.home"));
@@ -75,6 +76,7 @@ public class DefaultParams extends Properties {
         this.setProperty(NUC_MEM_MARKER, "false");
         this.setProperty(CELL_VOL_MARKER, "true");
         this.setProperty(CELL_MEM_MARKER, "false");
+        this.setProperty(LOCALISE_SPOTS, "false");
     }
 
 }

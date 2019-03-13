@@ -154,6 +154,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(TITLE);
+        setMinimumSize(new java.awt.Dimension(400, 600));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         buttonPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -464,12 +465,14 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 componentList.remove(mfp);
                 getContentPane().remove(mfp);
             }
-            componentList.remove(localisationPanel);
-            getContentPane().remove(localisationPanel);
+            if (localisationPanel != null) {
+                componentList.remove(localisationPanel);
+                getContentPane().remove(localisationPanel);
+            }
         }
         maximaFinderPanels = new ArrayList();
         String selectedChannels = props.getProperty(DefaultParams.CHAN_FOR_MEASURE);
-        if (selectedChannels == null) {
+        if (selectedChannels == null || !Boolean.parseBoolean(props.getProperty(DefaultParams.LOCALISE_SPOTS))) {
             return false;
         }
         int channels = Integer.parseInt(selectedChannels);
