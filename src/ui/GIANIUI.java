@@ -332,6 +332,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         try {
             PropertyWriter.loadProperties(props, TITLE);
             updateProperties(props, this);
+            measurementPanelMouseClicked(null);
             runButton.setEnabled(true);
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to load property file.");
@@ -491,11 +492,12 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         }
         localisationInputs[nInputs - 2] = cellSegmentationPanel.getProcess();
         localisationInputs[nInputs - 1] = nuclearSegmentationPanel.getProcess();
-        localisationPanel = new ui.LocalisationPanel(props, img, new MultiThreadedColocalise(localisationInputs, cells), new String[]{DefaultParams.SERIES_SELECT_LABEL,DefaultParams.OUTPUT_DIR_LABEL});
+        localisationPanel = new ui.LocalisationPanel(props, img, new MultiThreadedColocalise(localisationInputs, cells), new String[]{DefaultParams.SERIES_SELECT_LABEL, DefaultParams.OUTPUT_DIR_LABEL});
         addPanel(localisationPanel);
         getContentPane().revalidate();
         getContentPane().repaint();
         checkLayerIndex();
+        updateProperties(props, this);
         return true;
     }
 
