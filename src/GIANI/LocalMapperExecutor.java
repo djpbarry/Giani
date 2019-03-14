@@ -33,6 +33,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import params.DefaultParams;
+import ui.GIANIUI;
 
 /**
  *
@@ -95,14 +96,14 @@ public class LocalMapperExecutor extends Thread {
             }
         }
         try {
-            DataWriter.saveResultsTable(Analyzer.getResultsTable(), new File(String.format("%s%sLocalMapper_Output.csv", outputDir, File.separator)));
+            DataWriter.saveResultsTable(Analyzer.getResultsTable(), new File(String.format("%s%s%s_Output.csv", outputDir, File.separator, GIANIUI.TITLE)));
         } catch (IOException e) {
             GenUtils.logError(e, "Failed to save results file.");
         }
         IJ.log("Done");
     }
-    
-    boolean checkSeriesChannels(BioFormatsImg img){
+
+    boolean checkSeriesChannels(BioFormatsImg img) {
         return true;
     }
 

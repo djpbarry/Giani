@@ -21,6 +21,7 @@ import GIANI.LocalMapperExecutor;
 import Process.Colocalise.MultiThreadedColocalise;
 import Revision.Revision;
 import java.awt.GridBagConstraints;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import mcib3d.geom.Objects3DPopulation;
 import params.DefaultParams;
@@ -40,7 +41,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     private final Properties props = new Properties();
     private final LinkedList<LayerPanel> componentList = new LinkedList();
     private int layerIndex = 0;
-    public static final String TITLE = String.format("GIANI v%d.00%d", Revision.VERSION, Revision.revisionNumber);
+    public static final String TITLE = String.format("GIANI v%d.%s", Revision.VERSION, new DecimalFormat("000").format(Revision.revisionNumber));
     private final ProcessPipeline pipeline;
     private ArrayList<MaximaFinderPanel> maximaFinderPanels;
     private LocalisationPanel localisationPanel;
