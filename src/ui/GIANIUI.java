@@ -473,6 +473,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         maximaFinderPanels = new ArrayList();
         String selectedChannels = props.getProperty(DefaultParams.CHAN_FOR_MEASURE);
         if (selectedChannels == null || !Boolean.parseBoolean(props.getProperty(DefaultParams.LOCALISE_SPOTS))) {
+            updateUI();
             return false;
         }
         int channels = Integer.parseInt(selectedChannels);
@@ -497,11 +498,15 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         localisationInputs[nInputs - 1] = nuclearSegmentationPanel.getProcess();
         localisationPanel = new ui.LocalisationPanel(props, img, new MultiThreadedColocalise(localisationInputs, cells), new String[]{DefaultParams.SERIES_SELECT_LABEL, DefaultParams.OUTPUT_DIR_LABEL});
         addPanel(localisationPanel);
+        updateUI();
+        return true;
+    }
+
+    void updateUI() {
         getContentPane().revalidate();
         getContentPane().repaint();
         checkLayerIndex();
         updateProperties(props, this);
-        return true;
     }
 
     void addPanel(LayerPanel panel) {
