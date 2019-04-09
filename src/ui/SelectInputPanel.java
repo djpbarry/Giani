@@ -224,7 +224,6 @@ public class SelectInputPanel extends LayerPanel {
     private void chooseInputDirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseInputDirButtonActionPerformed
         try {
             inputDirTextField.setText(Utilities.getFolder(inputDirectory, "Select input directory...", true).getAbsolutePath());
-            inputDirTextFieldCaretUpdate(null);
         } catch (Exception e) {
             GenUtils.logError(e, "There was a problem with directory selection.");
         }
@@ -252,18 +251,14 @@ public class SelectInputPanel extends LayerPanel {
             String fileName = (String) fileNameComboBox.getSelectedItem();
             try {
                 img.setId(String.format("%s%s%s", inputDirectory, File.separator, fileName));
-                if (!img.isValidID()) {
-                    seriesComboBox.setEnabled(false);
-                } else {
-                    int series = img.getSeriesCount();
-                    ArrayList<String> seriesLabels = new ArrayList();
-                    for (int s = 0; s < series; s++) {
-                        seriesLabels.add(String.valueOf(s));
-                    }
-                    seriesComboBox.setModel(new DefaultComboBoxModel(seriesLabels.toArray()));
-                    seriesComboBox.setEnabled(true);
-                    seriesSelectLabel.setEnabled(true);
+                int series = img.getSeriesCount();
+                ArrayList<String> seriesLabels = new ArrayList();
+                for (int s = 0; s < series; s++) {
+                    seriesLabels.add(String.valueOf(s));
                 }
+                seriesComboBox.setModel(new DefaultComboBoxModel(seriesLabels.toArray()));
+                seriesComboBox.setEnabled(true);
+                seriesSelectLabel.setEnabled(true);
             } catch (Exception e) {
                 GenUtils.error(String.format("Problem reading %s", fileName));
             }
@@ -278,18 +273,14 @@ public class SelectInputPanel extends LayerPanel {
         } else {
             String fileName = (String) fileNameComboBox.getSelectedItem();
             try {
-                if (!img.isValidID()) {
-                    channelComboBox.setEnabled(false);
-                } else {
-                    int channels = img.getSizeC();
-                    ArrayList<String> channelLabels = new ArrayList();
-                    for (int c = 0; c < channels; c++) {
-                        channelLabels.add(String.valueOf(c));
-                    }
-                    channelComboBox.setModel(new DefaultComboBoxModel(channelLabels.toArray()));
-                    channelComboBox.setEnabled(true);
-                    channelSelectLabel.setEnabled(true);
+                int channels = img.getSizeC();
+                ArrayList<String> channelLabels = new ArrayList();
+                for (int c = 0; c < channels; c++) {
+                    channelLabels.add(String.valueOf(c));
                 }
+                channelComboBox.setModel(new DefaultComboBoxModel(channelLabels.toArray()));
+                channelComboBox.setEnabled(true);
+                channelSelectLabel.setEnabled(true);
             } catch (Exception e) {
                 GenUtils.error(String.format("Problem reading %s", fileName));
             }
@@ -298,7 +289,7 @@ public class SelectInputPanel extends LayerPanel {
     }//GEN-LAST:event_seriesComboBoxActionPerformed
 
     private void channelComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_channelComboBoxActionPerformed
-        previewButton.setEnabled(channelComboBox.isEnabled() && img.isValidID());
+        previewButton.setEnabled(channelComboBox.isEnabled());
     }//GEN-LAST:event_channelComboBoxActionPerformed
 
     private void inputDirTextFieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_inputDirTextFieldCaretUpdate
@@ -309,7 +300,6 @@ public class SelectInputPanel extends LayerPanel {
             inputDirTextField.setForeground(Color.red);
         }
         enableFileDropDown(listFiles());
-        fileNameComboBoxActionPerformed(null);
     }//GEN-LAST:event_inputDirTextFieldCaretUpdate
 
     public boolean setVariables() {
@@ -349,9 +339,9 @@ public class SelectInputPanel extends LayerPanel {
             fileNameComboBox.setModel(new DefaultComboBoxModel(fileNames.toArray()));
         }
     }
-    
-    protected void setupProcess(){
-        
+
+    protected void setupProcess() {
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

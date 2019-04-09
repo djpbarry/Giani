@@ -16,6 +16,7 @@
  */
 package GIANI;
 
+import IO.BioFormats.BioFormatsFileLister;
 import IO.BioFormats.BioFormatsImg;
 import IO.DataWriter;
 import Process.MultiThreadedProcess;
@@ -27,11 +28,13 @@ import ij.plugin.filter.Analyzer;
 import ij.plugin.frame.RoiManager;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import org.apache.commons.io.FilenameUtils;
 import params.DefaultParams;
 import ui.GIANIUI;
 
@@ -62,17 +65,12 @@ public class LocalMapperExecutor extends Thread {
         IJ.log(String.format("Input: %s", inputDir.getAbsolutePath()));
         File outputDir = new File(props.getProperty(DefaultParams.OUTPUT_DIR_LABEL));
         IJ.log(String.format("Output: %s", outputDir.getAbsolutePath()));
-        File[] files = inputDir.listFiles();
+        ArrayList<String> files = BioFormatsFileLister.obtainValidFileList(inputDir);
         ExecutorService exec = Executors.newSingleThreadExecutor();
-        for (File file : files) {
+        for (String file : files) {
             BioFormatsImg img = new BioFormatsImg();
-            if (!img.checkID(file.getAbsolutePath())) {
-                IJ.log(String.format("Skipping %s", file.getName()));
-                continue;
-            } else {
-                img.setId(file.getAbsolutePath());
-            }
-            IJ.log(String.format("Analysing file %s", file.getName()));
+            img.setId(file);
+            IJ.log(String.format("Analysing file %s", FilenameUtils.getName(file)));
             int nSeries = img.getSeriesCount();
             for (int s = 0; s < nSeries; s++) {
                 IJ.log(String.format("Analysing series %d", s));

@@ -332,7 +332,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
     private void loadParametersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadParametersButtonActionPerformed
         try {
-            PropertyWriter.loadProperties(props, TITLE);
+            PropertyWriter.loadProperties(props, TITLE, null);
             updateProperties(props, this);
             measurementPanelMouseClicked(null);
             runButton.setEnabled(true);
