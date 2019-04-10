@@ -34,6 +34,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import loci.formats.FormatException;
 import org.apache.commons.io.FilenameUtils;
 import params.DefaultParams;
 import ui.GIANIUI;
@@ -69,7 +70,11 @@ public class LocalMapperExecutor extends Thread {
         ExecutorService exec = Executors.newSingleThreadExecutor();
         for (String file : files) {
             BioFormatsImg img = new BioFormatsImg();
-            img.setId(file);
+            try {
+                img.setId(file);
+            } catch (IOException | FormatException e) {
+                GenUtils.logError(e, String.format("Failed to initialise %s", file));
+            }
             IJ.log(String.format("Analysing file %s", FilenameUtils.getName(file)));
             int nSeries = img.getSeriesCount();
             for (int s = 0; s < nSeries; s++) {
