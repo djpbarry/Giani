@@ -24,7 +24,7 @@ import ij.plugin.filter.Analyzer;
 import java.util.Properties;
 import javax.swing.DefaultListModel;
 import javax.swing.ListSelectionModel;
-import params.DefaultParams;
+import gianiparams.GianiDefaultParams;
 
 /**
  *
@@ -109,7 +109,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weighty = 1.0;
         add(channelSelectLabel, gridBagConstraints);
 
-        localiseSpotsToggleButton.setText(DefaultParams.LOCALISE_SPOTS);
+        localiseSpotsToggleButton.setText(GianiDefaultParams.LOCALISE_SPOTS);
         localiseSpotsToggleButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 localiseSpotsToggleButtonMouseClicked(evt);
@@ -144,7 +144,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
     }//GEN-LAST:event_localiseSpotsToggleButtonMouseClicked
 
     protected void setupProcess() {
-        process.setup(img, props, new String[]{DefaultParams.SERIES_SELECT_LABEL, propLabels[0], DefaultParams.OUTPUT_DIR_LABEL});
+        process.setup(img, props, new String[]{GianiDefaultParams.SERIES_SELECT_LABEL, propLabels[0], GianiDefaultParams.OUTPUT_DIR_LABEL});
     }
 
     public void update() {

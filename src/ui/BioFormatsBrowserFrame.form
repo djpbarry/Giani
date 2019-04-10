@@ -31,7 +31,7 @@
   <SubComponents>
     <Component class="ui.SelectInputPanel" name="selectInputPanel1">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SelectInputPanel(new DefaultParams(),&#xa;    new BioFormatsImg(),&#xa;    new String[]{&#xa;    DefaultParams.INPUT_DIR_LABEL,&#xa;    DefaultParams.INPUT_FILE_LABEL,&#xa;    DefaultParams.SERIES_SELECT_LABEL,&#xa;    DefaultParams.PREVIEW_CHAN_SELECT_LABEL})"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SelectInputPanel(new params.GianiDefaultParams(),&#xa;    new BioFormatsImg(),&#xa;    new String[]{&#xa;        params.GianiDefaultParams.INPUT_DIR_LABEL,&#xa;        params.GianiDefaultParams.INPUT_FILE_LABEL,&#xa;        params.GianiDefaultParams.SERIES_SELECT_LABEL,&#xa;        params.GianiDefaultParams.PREVIEW_CHAN_SELECT_LABEL})"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

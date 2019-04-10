@@ -28,7 +28,7 @@ import ij.IJ;
 import ij.ImagePlus;
 import java.awt.Color;
 import java.util.Properties;
-import params.DefaultParams;
+import gianiparams.GianiDefaultParams;
 
 /**
  *
@@ -307,7 +307,7 @@ public class SelectInputPanel extends LayerPanel {
             setProperties(props, this);
             String fileName = (String) fileNameComboBox.getSelectedItem();
             img.setId(String.format("%s%s%s", inputDirectory, File.separator, fileName));
-            props.setProperty(DefaultParams.OUTPUT_DIR_LABEL, String.format("%s%s%s", inputDirectory.getAbsolutePath(), File.separator, GIANIUI.TITLE));
+            props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, String.format("%s%s%s", inputDirectory.getAbsolutePath(), File.separator, GIANIUI.TITLE));
         } catch (Exception e) {
             return false;
         }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package params;
+package gianiparams;
 
 import ij.IJ;
 import java.util.Properties;
@@ -23,7 +23,7 @@ import java.util.Properties;
  *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
-public class DefaultParams extends Properties {
+public class GianiDefaultParams extends Properties {
 
     public static final String INPUT_DIR_LABEL = "Input Directory";
     public static final String OUTPUT_DIR_LABEL = "Output Directory";
@@ -51,7 +51,7 @@ public class DefaultParams extends Properties {
     public static final String CELL_MEM_MARKER = "Cell Membrane Marker";
     public static final String LOCALISE_SPOTS = "Localise Spots";
 
-    public DefaultParams() {
+    public GianiDefaultParams() {
         this.setProperty(INPUT_DIR_LABEL, System.getProperty("user.home"));
         this.setProperty(OUTPUT_DIR_LABEL, "");
         this.setProperty(SERIES_SELECT_LABEL, "0");

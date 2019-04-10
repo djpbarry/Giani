@@ -8,7 +8,7 @@ package ui;
 import IO.BioFormats.BioFormatsImg;
 import Revision.Revision;
 import java.text.DecimalFormat;
-import params.DefaultParams;
+import gianiparams.GianiDefaultParams;
 
 /**
  *
@@ -36,13 +36,13 @@ public class BioFormatsBrowserFrame extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        selectInputPanel1 = new ui.SelectInputPanel(new DefaultParams(),
+        selectInputPanel1 = new ui.SelectInputPanel(new GianiDefaultParams(),
             new BioFormatsImg(),
             new String[]{
-                DefaultParams.INPUT_DIR_LABEL,
-                DefaultParams.INPUT_FILE_LABEL,
-                DefaultParams.SERIES_SELECT_LABEL,
-                DefaultParams.PREVIEW_CHAN_SELECT_LABEL});
+                GianiDefaultParams.INPUT_DIR_LABEL,
+                GianiDefaultParams.INPUT_FILE_LABEL,
+                GianiDefaultParams.SERIES_SELECT_LABEL,
+                GianiDefaultParams.PREVIEW_CHAN_SELECT_LABEL});
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(TITLE);

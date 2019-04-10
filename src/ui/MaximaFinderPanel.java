@@ -26,7 +26,7 @@ import ij.gui.Overlay;
 import java.util.ArrayList;
 import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
-import params.DefaultParams;
+import gianiparams.GianiDefaultParams;
 
 /**
  *
@@ -170,15 +170,15 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
 
     protected void setupProcess() {
         process.setup(img, props, new String[]{
-            DefaultParams.SERIES_SELECT_LABEL,
+            GianiDefaultParams.SERIES_SELECT_LABEL,
             propLabels[0], propLabels[1], propLabels[2]});
     }
 
     private void showOutput(ArrayList<int[]> maxima, String title) {
         ImagePlus imp = img.getLoadedImage();
         Overlay o = new Overlay();
-        double zSpatRes = img.getZSpatialRes(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))).value().doubleValue();
-        double xySpatRes = img.getXYSpatialRes(Integer.parseInt(props.getProperty(DefaultParams.SERIES_SELECT_LABEL))).value().doubleValue();
+        double zSpatRes = img.getZSpatialRes(Integer.parseInt(props.getProperty(GianiDefaultParams.SERIES_SELECT_LABEL))).value().doubleValue();
+        double xySpatRes = img.getXYSpatialRes(Integer.parseInt(props.getProperty(GianiDefaultParams.SERIES_SELECT_LABEL))).value().doubleValue();
         double maxXYRadiusMic = Double.parseDouble(props.getProperty(propLabels[1]));
         double maxZRadiusMic = Double.parseDouble(props.getProperty(propLabels[1]));
         double maxZRadiusMic2 = Math.pow(maxZRadiusMic, 2.0);

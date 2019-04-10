@@ -36,7 +36,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import loci.formats.FormatException;
 import org.apache.commons.io.FilenameUtils;
-import params.DefaultParams;
+import gianiparams.GianiDefaultParams;
 import ui.GIANIUI;
 
 /**
@@ -62,9 +62,9 @@ public class LocalMapperExecutor extends Thread {
         if (rt != null) {
             rt.reset();
         }
-        File inputDir = new File(props.getProperty(DefaultParams.INPUT_DIR_LABEL));
+        File inputDir = new File(props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL));
         IJ.log(String.format("Input: %s", inputDir.getAbsolutePath()));
-        File outputDir = new File(props.getProperty(DefaultParams.OUTPUT_DIR_LABEL));
+        File outputDir = new File(props.getProperty(GianiDefaultParams.OUTPUT_DIR_LABEL));
         IJ.log(String.format("Output: %s", outputDir.getAbsolutePath()));
         ArrayList<String> files = BioFormatsFileLister.obtainValidFileList(inputDir);
         ExecutorService exec = Executors.newSingleThreadExecutor();
@@ -83,7 +83,7 @@ public class LocalMapperExecutor extends Thread {
                     IJ.log("Only 2 dimensions - skipping.");
                     continue;
                 }
-                props.setProperty(DefaultParams.SERIES_SELECT_LABEL, String.valueOf(s));
+                props.setProperty(GianiDefaultParams.SERIES_SELECT_LABEL, String.valueOf(s));
                 for (MultiThreadedProcess process : pipeline) {
                     if (process != null) {
                         IJ.log(String.format("Process %s", process.getClass().toString()));

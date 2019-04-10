@@ -24,7 +24,7 @@ import java.awt.GridBagConstraints;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import mcib3d.geom.Objects3DPopulation;
-import params.DefaultParams;
+import gianiparams.GianiDefaultParams;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -76,21 +76,21 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         runButton = new javax.swing.JButton();
         selectInputPanel = new ui.SelectInputPanel(props,img,
             new String[]{
-                DefaultParams.INPUT_DIR_LABEL,
-                DefaultParams.INPUT_FILE_LABEL,
-                DefaultParams.SERIES_SELECT_LABEL,
-                DefaultParams.PREVIEW_CHAN_SELECT_LABEL});
+                GianiDefaultParams.INPUT_DIR_LABEL,
+                GianiDefaultParams.INPUT_FILE_LABEL,
+                GianiDefaultParams.SERIES_SELECT_LABEL,
+                GianiDefaultParams.PREVIEW_CHAN_SELECT_LABEL});
         nuclearCentreFinderPanel = new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null),
             new String[]{
-                DefaultParams.BLOB_NUC_CHAN_SELECT_LABEL,
-                DefaultParams.BLOB_NUC_RAD_LABEL,
-                DefaultParams.BLOB_NUC_NOISE_TOL_LABEL},
+                GianiDefaultParams.BLOB_NUC_CHAN_SELECT_LABEL,
+                GianiDefaultParams.BLOB_NUC_RAD_LABEL,
+                GianiDefaultParams.BLOB_NUC_NOISE_TOL_LABEL},
             true, -1);
         nuclearFilteringPanel = new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),
             new String[]{
-                DefaultParams.NUC_SEG_CHAN_SELECT_LABEL,
-                DefaultParams.NUC_FILT_RAD_XY_LABEL,
-                DefaultParams.NUC_FILT_RAD_Z_LABEL});
+                GianiDefaultParams.NUC_SEG_CHAN_SELECT_LABEL,
+                GianiDefaultParams.NUC_FILT_RAD_XY_LABEL,
+                GianiDefaultParams.NUC_FILT_RAD_Z_LABEL});
         nuclearSegmentationPanel = new ui.SegmentationPanel(
             props,
             img,
@@ -107,16 +107,16 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 MultiThreadedWatershed.NUCLEI
             ),
             new String[]{
-                DefaultParams.NUC_SEG_THRESH_LABEL,
-                DefaultParams.NUC_VOL_MARKER,
-                DefaultParams.NUC_MEM_MARKER
+                GianiDefaultParams.NUC_SEG_THRESH_LABEL,
+                GianiDefaultParams.NUC_VOL_MARKER,
+                GianiDefaultParams.NUC_MEM_MARKER
             }
         );
         cellFilteringPanel = new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),
             new String[]{
-                DefaultParams.CELL_SEG_CHAN_SELECT_LABEL,
-                DefaultParams.CELL_FILT_RAD_XY_LABEL,
-                DefaultParams.CELL_FILT_RAD_Z_LABEL});
+                GianiDefaultParams.CELL_SEG_CHAN_SELECT_LABEL,
+                GianiDefaultParams.CELL_FILT_RAD_XY_LABEL,
+                GianiDefaultParams.CELL_FILT_RAD_Z_LABEL});
         cellSegmentationPanel = new ui.SegmentationPanel(
             props,
             img,
@@ -133,9 +133,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 MultiThreadedWatershed.CELLS
             ),
             new String[]{
-                DefaultParams.CELL_SEG_THRESH_LABEL,
-                DefaultParams.CELL_VOL_MARKER,
-                DefaultParams.CELL_MEM_MARKER
+                GianiDefaultParams.CELL_SEG_THRESH_LABEL,
+                GianiDefaultParams.CELL_VOL_MARKER,
+                GianiDefaultParams.CELL_MEM_MARKER
             }
         );
         measurementPanel = new ui.MeasurementPanel(
@@ -149,7 +149,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 cells
             ),
             new String[]{
-                DefaultParams.CHAN_FOR_MEASURE
+                GianiDefaultParams.CHAN_FOR_MEASURE
             }
         );
 
@@ -343,8 +343,8 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
         setVariables();
-        String outputDirectoryName = GenUtils.openResultsDirectory(props.getProperty(DefaultParams.OUTPUT_DIR_LABEL));
-        props.setProperty(DefaultParams.OUTPUT_DIR_LABEL, outputDirectoryName);
+        String outputDirectoryName = GenUtils.openResultsDirectory(props.getProperty(GianiDefaultParams.OUTPUT_DIR_LABEL));
+        props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, outputDirectoryName);
         try {
             PropertyWriter.printProperties(props, outputDirectoryName, TITLE, true);
         } catch (Exception e) {
@@ -472,8 +472,8 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
             }
         }
         maximaFinderPanels = new ArrayList();
-        String selectedChannels = props.getProperty(DefaultParams.CHAN_FOR_MEASURE);
-        if (selectedChannels == null || !Boolean.parseBoolean(props.getProperty(DefaultParams.LOCALISE_SPOTS))) {
+        String selectedChannels = props.getProperty(GianiDefaultParams.CHAN_FOR_MEASURE);
+        if (selectedChannels == null || !Boolean.parseBoolean(props.getProperty(GianiDefaultParams.LOCALISE_SPOTS))) {
             updateUI();
             return false;
         }
@@ -483,9 +483,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
             if ((channels & (int) Math.pow(2.0, i)) != 0) {
                 MaximaFinderPanel mFP = new ui.MaximaFinderPanel(props, img, new MultiThreadedMaximaFinder(null),
                         new String[]{
-                            String.format("%s%d", DefaultParams.BLOB_CHAN_SELECT_LABEL, i),
-                            String.format("%s%d", DefaultParams.BLOB_CHAN_RAD_LABEL, i),
-                            String.format("%s%d", DefaultParams.BLOB_CHAN_NOISE_TOL_LABEL, i)}, false, i);
+                            String.format("%s%d", GianiDefaultParams.BLOB_CHAN_SELECT_LABEL, i),
+                            String.format("%s%d", GianiDefaultParams.BLOB_CHAN_RAD_LABEL, i),
+                            String.format("%s%d", GianiDefaultParams.BLOB_CHAN_NOISE_TOL_LABEL, i)}, false, i);
                 maximaFinderPanels.add(mFP);
                 addPanel(mFP);
             }
@@ -497,7 +497,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         }
         localisationInputs[nInputs - 2] = cellSegmentationPanel.getProcess();
         localisationInputs[nInputs - 1] = nuclearSegmentationPanel.getProcess();
-        localisationPanel = new ui.LocalisationPanel(props, img, new MultiThreadedColocalise(localisationInputs, cells), new String[]{DefaultParams.SERIES_SELECT_LABEL, DefaultParams.OUTPUT_DIR_LABEL});
+        localisationPanel = new ui.LocalisationPanel(props, img, new MultiThreadedColocalise(localisationInputs, cells), new String[]{GianiDefaultParams.SERIES_SELECT_LABEL, GianiDefaultParams.OUTPUT_DIR_LABEL});
         addPanel(localisationPanel);
         updateUI();
         return true;

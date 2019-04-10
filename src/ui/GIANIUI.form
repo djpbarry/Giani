@@ -107,7 +107,7 @@
     </Container>
     <Component class="ui.SelectInputPanel" name="selectInputPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SelectInputPanel(props,img,&#xa;    new String[]{&#xa;        DefaultParams.INPUT_DIR_LABEL,&#xa;        DefaultParams.INPUT_FILE_LABEL,&#xa;        DefaultParams.SERIES_SELECT_LABEL,&#xa;        DefaultParams.PREVIEW_CHAN_SELECT_LABEL})"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SelectInputPanel(props,img,&#xa;    new String[]{&#xa;        gianiparams.DefaultParams.INPUT_DIR_LABEL,&#xa;        gianiparams.DefaultParams.INPUT_FILE_LABEL,&#xa;        gianiparams.DefaultParams.SERIES_SELECT_LABEL,&#xa;        gianiparams.DefaultParams.PREVIEW_CHAN_SELECT_LABEL})"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="componentList.add(selectInputPanel);"/>
       </AuxValues>
       <Constraints>
@@ -118,7 +118,7 @@
     </Component>
     <Component class="ui.MaximaFinderPanel" name="nuclearCentreFinderPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null),&#xa;    new String[]{&#xa;        DefaultParams.BLOB_NUC_CHAN_SELECT_LABEL,&#xa;        DefaultParams.BLOB_NUC_RAD_LABEL,&#xa;        DefaultParams.BLOB_NUC_NOISE_TOL_LABEL},&#xa;    true, -1)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null),&#xa;    new String[]{&#xa;        gianiparams.DefaultParams.BLOB_NUC_CHAN_SELECT_LABEL,&#xa;        gianiparams.DefaultParams.BLOB_NUC_RAD_LABEL,&#xa;        gianiparams.DefaultParams.BLOB_NUC_NOISE_TOL_LABEL},&#xa;    true, -1)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nuclearCentreFinderPanel.setVisible(false);&#xa;componentList.add(nuclearCentreFinderPanel);"/>
       </AuxValues>
       <Constraints>
@@ -129,7 +129,7 @@
     </Component>
     <Component class="ui.FilteringPanel" name="nuclearFilteringPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),&#xa;    new String[]{&#xa;        DefaultParams.NUC_SEG_CHAN_SELECT_LABEL,&#xa;        DefaultParams.NUC_FILT_RAD_XY_LABEL,&#xa;        DefaultParams.NUC_FILT_RAD_Z_LABEL})"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),&#xa;    new String[]{&#xa;        gianiparams.DefaultParams.NUC_SEG_CHAN_SELECT_LABEL,&#xa;        gianiparams.DefaultParams.NUC_FILT_RAD_XY_LABEL,&#xa;        gianiparams.DefaultParams.NUC_FILT_RAD_Z_LABEL})"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nuclearFilteringPanel.setVisible(false);&#xa;componentList.add(nuclearFilteringPanel);"/>
       </AuxValues>
       <Constraints>
@@ -140,7 +140,7 @@
     </Component>
     <Component class="ui.SegmentationPanel" name="nuclearSegmentationPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearCentreFinderPanel.getProcess(),&#xa;            nuclearFilteringPanel.getProcess()&#xa;        },&#xa;        &quot;Nuclei&quot;,&#xa;        false,&#xa;        false,&#xa;        false,&#xa;        cells,&#xa;        MultiThreadedWatershed.NUCLEI&#xa;    ),&#xa;    new String[]{&#xa;        DefaultParams.NUC_SEG_THRESH_LABEL,&#xa;        DefaultParams.NUC_VOL_MARKER,&#xa;        DefaultParams.NUC_MEM_MARKER&#xa;    }&#xa;)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearCentreFinderPanel.getProcess(),&#xa;            nuclearFilteringPanel.getProcess()&#xa;        },&#xa;        &quot;Nuclei&quot;,&#xa;        false,&#xa;        false,&#xa;        false,&#xa;        cells,&#xa;        MultiThreadedWatershed.NUCLEI&#xa;    ),&#xa;    new String[]{&#xa;        gianiparams.DefaultParams.NUC_SEG_THRESH_LABEL,&#xa;        gianiparams.DefaultParams.NUC_VOL_MARKER,&#xa;        gianiparams.DefaultParams.NUC_MEM_MARKER&#xa;    }&#xa;)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nuclearSegmentationPanel.setVisible(false);&#xa;componentList.add(nuclearSegmentationPanel);"/>
       </AuxValues>
       <Constraints>
@@ -151,7 +151,7 @@
     </Component>
     <Component class="ui.FilteringPanel" name="cellFilteringPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),&#xa;new String[]{&#xa;        DefaultParams.CELL_SEG_CHAN_SELECT_LABEL,&#xa;        DefaultParams.CELL_FILT_RAD_XY_LABEL,&#xa;        DefaultParams.CELL_FILT_RAD_Z_LABEL})"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),&#xa;new String[]{&#xa;        gianiparams.DefaultParams.CELL_SEG_CHAN_SELECT_LABEL,&#xa;        gianiparams.DefaultParams.CELL_FILT_RAD_XY_LABEL,&#xa;        gianiparams.DefaultParams.CELL_FILT_RAD_Z_LABEL})"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="cellFilteringPanel.setVisible(false);&#xa;componentList.add(cellFilteringPanel);"/>
       </AuxValues>
       <Constraints>
@@ -162,7 +162,7 @@
     </Component>
     <Component class="ui.SegmentationPanel" name="cellSegmentationPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearSegmentationPanel.getProcess(),&#xa;            cellFilteringPanel.getProcess()&#xa;        },&#xa;        &quot;Cells&quot;,&#xa;        true,&#xa;        true,&#xa;        true,&#xa;        cells,&#xa;        MultiThreadedWatershed.CELLS&#xa;    ),&#xa;    new String[]{&#xa;        DefaultParams.CELL_SEG_THRESH_LABEL,&#xa;        DefaultParams.CELL_VOL_MARKER,&#xa;        DefaultParams.CELL_MEM_MARKER&#xa;    }&#xa;)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearSegmentationPanel.getProcess(),&#xa;            cellFilteringPanel.getProcess()&#xa;        },&#xa;        &quot;Cells&quot;,&#xa;        true,&#xa;        true,&#xa;        true,&#xa;        cells,&#xa;        MultiThreadedWatershed.CELLS&#xa;    ),&#xa;    new String[]{&#xa;        gianiparams.DefaultParams.CELL_SEG_THRESH_LABEL,&#xa;        gianiparams.DefaultParams.CELL_VOL_MARKER,&#xa;        gianiparams.DefaultParams.CELL_MEM_MARKER&#xa;    }&#xa;)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="cellSegmentationPanel.setVisible(false);&#xa;componentList.add(cellSegmentationPanel);"/>
       </AuxValues>
       <Constraints>
@@ -176,7 +176,7 @@
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="measurementPanelMouseClicked"/>
       </Events>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MeasurementPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedROIConstructor(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearSegmentationPanel.getProcess(),&#xa;            cellSegmentationPanel.getProcess()&#xa;        },&#xa;        cells&#xa;    ),&#xa;    new String[]{&#xa;        DefaultParams.CHAN_FOR_MEASURE&#xa;    }&#xa;)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MeasurementPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedROIConstructor(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearSegmentationPanel.getProcess(),&#xa;            cellSegmentationPanel.getProcess()&#xa;        },&#xa;        cells&#xa;    ),&#xa;    new String[]{&#xa;        gianiparams.DefaultParams.CHAN_FOR_MEASURE&#xa;    }&#xa;)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="measurementPanel.setVisible(false);&#xa;componentList.add(measurementPanel);"/>
       </AuxValues>
       <Constraints>

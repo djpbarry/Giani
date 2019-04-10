@@ -11,7 +11,7 @@ import UIClasses.LayerPanel;
 import java.util.ArrayList;
 import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
-import params.DefaultParams;
+import gianiparams.GianiDefaultParams;
 import UIClasses.Updateable;
 
 /**
@@ -152,7 +152,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
 
     protected void setupProcess() {
         process.setup(img, props, new String[]{
-            DefaultParams.SERIES_SELECT_LABEL, propLabels[0], propLabels[1], propLabels[2]
+            GianiDefaultParams.SERIES_SELECT_LABEL, propLabels[0], propLabels[1], propLabels[2]
         });
     }
 
