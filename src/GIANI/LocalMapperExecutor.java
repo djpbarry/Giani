@@ -71,7 +71,7 @@ public class LocalMapperExecutor extends Thread {
         for (String file : files) {
             BioFormatsImg img = new BioFormatsImg();
             try {
-                img.setId(file);
+                img.setId(String.format("%s%s%s", inputDir, File.separator, file));
             } catch (IOException | FormatException e) {
                 GenUtils.logError(e, String.format("Failed to initialise %s", file));
             }

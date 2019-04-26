@@ -68,7 +68,7 @@ public class SegmentationPanel extends LayerPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(previewButton, gridBagConstraints);
 
-        thresholdLabel.setText(propLabels[0]);
+        thresholdLabel.setText(propLabels[1]);
         thresholdLabel.setLabelFor(thresholdComboBox);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -89,7 +89,7 @@ public class SegmentationPanel extends LayerPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(thresholdComboBox, gridBagConstraints);
 
-        volumeToggleButton.setText(propLabels[1]);
+        volumeToggleButton.setText(propLabels[2]);
         volumeToggleButton.setSelected(true);
         volumeToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -105,7 +105,7 @@ public class SegmentationPanel extends LayerPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(volumeToggleButton, gridBagConstraints);
 
-        membraneToggleButton.setText(propLabels[2]);
+        membraneToggleButton.setText(propLabels[3]);
         membraneToggleButton.setSelected(false);
         membraneToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

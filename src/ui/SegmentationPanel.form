@@ -39,7 +39,7 @@
     <Component class="javax.swing.JLabel" name="thresholdLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="propLabels[0]" type="code"/>
+          <Connection code="propLabels[1]" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
@@ -69,7 +69,7 @@
     <Component class="javax.swing.JToggleButton" name="volumeToggleButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="propLabels[1]" type="code"/>
+          <Connection code="propLabels[2]" type="code"/>
         </Property>
       </Properties>
       <Events>
@@ -87,7 +87,7 @@
     <Component class="javax.swing.JToggleButton" name="membraneToggleButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="propLabels[2]" type="code"/>
+          <Connection code="propLabels[3]" type="code"/>
         </Property>
       </Properties>
       <Events>

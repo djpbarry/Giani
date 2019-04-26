@@ -107,6 +107,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 MultiThreadedWatershed.NUCLEI
             ),
             new String[]{
+                GianiDefaultParams.SERIES_SELECT_LABEL,
                 GianiDefaultParams.NUC_SEG_THRESH_LABEL,
                 GianiDefaultParams.NUC_VOL_MARKER,
                 GianiDefaultParams.NUC_MEM_MARKER
@@ -133,6 +134,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 MultiThreadedWatershed.CELLS
             ),
             new String[]{
+                GianiDefaultParams.SERIES_SELECT_LABEL,
                 GianiDefaultParams.CELL_SEG_THRESH_LABEL,
                 GianiDefaultParams.CELL_VOL_MARKER,
                 GianiDefaultParams.CELL_MEM_MARKER
