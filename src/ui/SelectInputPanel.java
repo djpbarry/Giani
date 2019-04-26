@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import UIClasses.LayerPanel;
+import com.sun.glass.events.KeyEvent;
 import ij.IJ;
 import ij.ImagePlus;
 import java.awt.Color;
@@ -76,9 +77,9 @@ public class SelectInputPanel extends LayerPanel {
         setLayout(new java.awt.GridBagLayout());
 
         inputDirTextField.setText("Select input file...");
-        inputDirTextField.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                inputDirTextFieldCaretUpdate(evt);
+        inputDirTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                inputDirTextFieldKeyPressed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -134,9 +135,13 @@ public class SelectInputPanel extends LayerPanel {
 
         fileNameComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         fileNameComboBox.setEnabled(false);
-        fileNameComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fileNameComboBoxActionPerformed(evt);
+        fileNameComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                fileNameComboBoxPopupMenuWillBecomeInvisible(evt);
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -174,9 +179,13 @@ public class SelectInputPanel extends LayerPanel {
 
         seriesComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         seriesComboBox.setEnabled(false);
-        seriesComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                seriesComboBoxActionPerformed(evt);
+        seriesComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                seriesComboBoxPopupMenuWillBecomeInvisible(evt);
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -190,9 +199,13 @@ public class SelectInputPanel extends LayerPanel {
 
         channelComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         channelComboBox.setEnabled(false);
-        channelComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                channelComboBoxActionPerformed(evt);
+        channelComboBox.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                channelComboBoxPopupMenuWillBecomeInvisible(evt);
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -227,6 +240,7 @@ public class SelectInputPanel extends LayerPanel {
         } catch (Exception e) {
             GenUtils.logError(e, "There was a problem with directory selection.");
         }
+        directoryUpdated();
     }//GEN-LAST:event_chooseInputDirButtonActionPerformed
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -243,8 +257,16 @@ public class SelectInputPanel extends LayerPanel {
         }
     }//GEN-LAST:event_previewButtonActionPerformed
 
-    private void fileNameComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileNameComboBoxActionPerformed
-        if (!fileNameComboBox.isEnabled()) {
+    private void inputDirTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputDirTextFieldKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() != KeyEvent.VK_ENTER) {
+            return;
+        }
+        directoryUpdated();
+    }//GEN-LAST:event_inputDirTextFieldKeyPressed
+
+    private void fileNameComboBoxPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_fileNameComboBoxPopupMenuWillBecomeInvisible
+        if (!fileNameComboBox.isEnabled() || evt == null) {
             seriesComboBox.setEnabled(false);
             seriesSelectLabel.setEnabled(false);
         } else {
@@ -263,10 +285,10 @@ public class SelectInputPanel extends LayerPanel {
                 GenUtils.error(String.format("Problem reading %s", fileName));
             }
         }
-        seriesComboBoxActionPerformed(evt);
-    }//GEN-LAST:event_fileNameComboBoxActionPerformed
+        seriesComboBoxPopupMenuWillBecomeInvisible(null);
+    }//GEN-LAST:event_fileNameComboBoxPopupMenuWillBecomeInvisible
 
-    private void seriesComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seriesComboBoxActionPerformed
+    private void seriesComboBoxPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_seriesComboBoxPopupMenuWillBecomeInvisible
         if (!seriesComboBox.isEnabled()) {
             channelComboBox.setEnabled(false);
             channelSelectLabel.setEnabled(false);
@@ -285,14 +307,14 @@ public class SelectInputPanel extends LayerPanel {
                 GenUtils.error(String.format("Problem reading %s", fileName));
             }
         }
-        channelComboBoxActionPerformed(evt);
-    }//GEN-LAST:event_seriesComboBoxActionPerformed
+        channelComboBoxPopupMenuWillBecomeInvisible(evt);
+    }//GEN-LAST:event_seriesComboBoxPopupMenuWillBecomeInvisible
 
-    private void channelComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_channelComboBoxActionPerformed
+    private void channelComboBoxPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_channelComboBoxPopupMenuWillBecomeInvisible
         previewButton.setEnabled(channelComboBox.isEnabled());
-    }//GEN-LAST:event_channelComboBoxActionPerformed
+    }//GEN-LAST:event_channelComboBoxPopupMenuWillBecomeInvisible
 
-    private void inputDirTextFieldCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_inputDirTextFieldCaretUpdate
+    private void directoryUpdated() {
         inputDirectory = new File(inputDirTextField.getText());
         if (inputDirectory.exists() && inputDirectory.isDirectory()) {
             inputDirTextField.setForeground(Color.black);
@@ -300,13 +322,13 @@ public class SelectInputPanel extends LayerPanel {
             inputDirTextField.setForeground(Color.red);
         }
         enableFileDropDown(listFiles());
-    }//GEN-LAST:event_inputDirTextFieldCaretUpdate
+    }
 
     public boolean setVariables() {
         try {
             setProperties(props, this);
             String fileName = (String) fileNameComboBox.getSelectedItem();
-            img.setId(String.format("%s%s%s", inputDirectory, File.separator, fileName));
+//            img.setId(String.format("%s%s%s", inputDirectory, File.separator, fileName));
             props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, String.format("%s%s%s", inputDirectory.getAbsolutePath(), File.separator, GIANIUI.TITLE));
         } catch (Exception e) {
             return false;
@@ -338,6 +360,7 @@ public class SelectInputPanel extends LayerPanel {
         if (validFileNames) {
             fileNameComboBox.setModel(new DefaultComboBoxModel(fileNames.toArray()));
         }
+        fileNameComboBoxPopupMenuWillBecomeInvisible(null);
     }
 
     protected void setupProcess() {
