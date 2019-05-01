@@ -109,7 +109,8 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weighty = 1.0;
         add(channelSelectLabel, gridBagConstraints);
 
-        localiseSpotsToggleButton.setText(GianiDefaultParams.LOCALISE_SPOTS);
+        localiseSpotsToggleButton.setText(propLabels[1]);
+        localiseSpotsToggleButton.setSelected(Boolean.parseBoolean(props.getProperty(propLabels[1])));
         localiseSpotsToggleButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 localiseSpotsToggleButtonMouseClicked(evt);

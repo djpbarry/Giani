@@ -76,7 +76,7 @@ public class SelectInputPanel extends LayerPanel {
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
 
-        inputDirTextField.setText("Select input file...");
+        inputDirTextField.setText(props.getProperty(propLabels[0]));
         inputDirTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 inputDirTextFieldKeyPressed(evt);

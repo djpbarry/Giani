@@ -84,8 +84,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(filterRadiusXYLabel, gridBagConstraints);
 
-        filterRadiusXYTextField.setText("0.0");
-        filterRadiusXYTextField.setText("0.0");
+        filterRadiusXYTextField.setText(props.getProperty(propLabels[1]));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -106,7 +105,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(filterRadiusZLabel, gridBagConstraints);
 
-        filterRadiusZTextField.setText("0.0");
+        filterRadiusZTextField.setText(props.getProperty(propLabels[2]));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;

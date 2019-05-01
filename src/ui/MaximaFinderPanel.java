@@ -84,7 +84,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(xyFiltRadLabel, gridBagConstraints);
 
-        xyFiltRadTextField.setText("0.0");
+        xyFiltRadTextField.setText(props.getProperty(propLabels[1]));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;

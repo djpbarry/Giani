@@ -176,7 +176,7 @@
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="measurementPanelMouseClicked"/>
       </Events>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MeasurementPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedROIConstructor(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearSegmentationPanel.getProcess(),&#xa;            cellSegmentationPanel.getProcess()&#xa;        },&#xa;        cells&#xa;    ),&#xa;    new String[]{&#xa;        GianiDefaultParams.CHAN_FOR_MEASURE&#xa;    }&#xa;)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MeasurementPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedROIConstructor(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearSegmentationPanel.getProcess(),&#xa;            cellSegmentationPanel.getProcess()&#xa;        },&#xa;        cells&#xa;    ),&#xa;    new String[]{&#xa;        GianiDefaultParams.CHAN_FOR_MEASURE,&#xa;        GianiDefaultParams.LOCALISE_SPOTS&#xa;    }&#xa;)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="measurementPanel.setVisible(false);&#xa;componentList.add(measurementPanel);"/>
       </AuxValues>
       <Constraints>

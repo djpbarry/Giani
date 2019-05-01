@@ -159,7 +159,8 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 cells
             ),
             new String[]{
-                GianiDefaultParams.CHAN_FOR_MEASURE
+                GianiDefaultParams.CHAN_FOR_MEASURE,
+                GianiDefaultParams.LOCALISE_SPOTS
             }
         );
 
