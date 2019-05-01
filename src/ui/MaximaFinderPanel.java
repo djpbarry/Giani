@@ -47,9 +47,9 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
 
     public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process, String[] propLabels, boolean allowChannelSelect, int defaultChannel) {
         super(props, img, process, propLabels);
-        initComponents();
         this.allowChannelSelect = allowChannelSelect;
         this.defaultChannel = defaultChannel;
+        initComponents();
     }
 
     /**
@@ -141,7 +141,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(channelSelectLabel, gridBagConstraints);
 
-        channelSelectComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        channelSelectComboBox.setModel(new DefaultComboBoxModel(new String[]{}));
         channelSelectComboBox.setVisible(allowChannelSelect);
         if(defaultChannel > -1){
             channelSelectComboBox.setSelectedIndex(defaultChannel);

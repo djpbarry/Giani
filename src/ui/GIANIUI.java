@@ -25,6 +25,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import mcib3d.geom.Objects3DPopulation;
 import gianiparams.GianiDefaultParams;
+import java.awt.event.ComponentEvent;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -189,6 +190,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         buttonPanel.add(previousButton, gridBagConstraints);
 
         nextButton.setText("Next");
+        nextButton.setEnabled(false);
         nextButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nextButtonActionPerformed(evt);
@@ -246,6 +248,14 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         getContentPane().add(buttonPanel, gridBagConstraints);
 
         componentList.add(selectInputPanel);
+        selectInputPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
+                selectInputPanelComponentHidden(evt);
+            }
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                selectInputPanelComponentShown(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -376,6 +386,14 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     private void measurementPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_measurementPanelMouseClicked
         addAdditionalBlobDetectionPanels();
     }//GEN-LAST:event_measurementPanelMouseClicked
+
+    private void selectInputPanelComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_selectInputPanelComponentShown
+        nextButton.setEnabled(true);
+    }//GEN-LAST:event_selectInputPanelComponentShown
+
+    private void selectInputPanelComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_selectInputPanelComponentHidden
+        nextButton.setEnabled(false);
+    }//GEN-LAST:event_selectInputPanelComponentHidden
 
     void updateLayer() {
         for (int i = 0; i < componentList.size(); i++) {

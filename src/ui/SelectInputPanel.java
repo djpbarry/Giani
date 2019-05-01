@@ -30,6 +30,7 @@ import ij.ImagePlus;
 import java.awt.Color;
 import java.util.Properties;
 import gianiparams.GianiDefaultParams;
+import java.awt.event.ComponentEvent;
 
 /**
  *
@@ -312,6 +313,10 @@ public class SelectInputPanel extends LayerPanel {
 
     private void channelComboBoxPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_channelComboBoxPopupMenuWillBecomeInvisible
         previewButton.setEnabled(channelComboBox.isEnabled());
+        if (previewButton.isEnabled())
+            this.dispatchEvent(new ComponentEvent(channelComboBox, ComponentEvent.COMPONENT_SHOWN));
+        else
+            this.dispatchEvent(new ComponentEvent(channelComboBox, ComponentEvent.COMPONENT_HIDDEN));
     }//GEN-LAST:event_channelComboBoxPopupMenuWillBecomeInvisible
 
     private void directoryUpdated() {
