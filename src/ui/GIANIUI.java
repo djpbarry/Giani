@@ -38,7 +38,7 @@ import gianiparams.GianiDefaultParams;
 public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
     private final BioFormatsImg img;
-    private final Properties props = new Properties();
+    private static Properties props;
     private final LinkedList<LayerPanel> componentList = new LinkedList();
     private int layerIndex = 0;
     public static final String TITLE = String.format("GIANI v%d.%s", Revision.VERSION, new DecimalFormat("000").format(Revision.revisionNumber));
@@ -46,6 +46,12 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     private ArrayList<MaximaFinderPanel> maximaFinderPanels;
     private LocalisationPanel localisationPanel;
     private final Objects3DPopulation cells;
+
+    static {
+        if (props == null) {
+            props = new GianiDefaultParams();
+        }
+    }
 
 //    private final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     /**
@@ -110,7 +116,8 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 GianiDefaultParams.SERIES_SELECT_LABEL,
                 GianiDefaultParams.NUC_SEG_THRESH_LABEL,
                 GianiDefaultParams.NUC_VOL_MARKER,
-                GianiDefaultParams.NUC_MEM_MARKER
+                GianiDefaultParams.NUC_MEM_MARKER,
+                GianiDefaultParams.DIST_WEIGHTING
             }
         );
         cellFilteringPanel = new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),
@@ -137,7 +144,8 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 GianiDefaultParams.SERIES_SELECT_LABEL,
                 GianiDefaultParams.CELL_SEG_THRESH_LABEL,
                 GianiDefaultParams.CELL_VOL_MARKER,
-                GianiDefaultParams.CELL_MEM_MARKER
+                GianiDefaultParams.CELL_MEM_MARKER,
+                GianiDefaultParams.DIST_WEIGHTING
             }
         );
         measurementPanel = new ui.MeasurementPanel(

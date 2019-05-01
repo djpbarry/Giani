@@ -49,6 +49,8 @@ public class SegmentationPanel extends LayerPanel {
         thresholdComboBox = new javax.swing.JComboBox<>();
         volumeToggleButton = new javax.swing.JToggleButton();
         membraneToggleButton = new javax.swing.JToggleButton();
+        distWeightingLabel = new javax.swing.JLabel();
+        distWeightingTextField = new javax.swing.JTextField();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -61,7 +63,7 @@ public class SegmentationPanel extends LayerPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -80,6 +82,7 @@ public class SegmentationPanel extends LayerPanel {
         add(thresholdLabel, gridBagConstraints);
 
         thresholdComboBox.setModel(new DefaultComboBoxModel(AutoThresholder.getMethods()));
+        thresholdComboBox.setSelectedItem("Default");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -120,6 +123,29 @@ public class SegmentationPanel extends LayerPanel {
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(membraneToggleButton, gridBagConstraints);
+
+        distWeightingLabel.setText(propLabels[4]);
+        distWeightingLabel.setLabelFor(distWeightingTextField);
+        distWeightingLabel.setEnabled(membraneToggleButton.isSelected());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(distWeightingLabel, gridBagConstraints);
+
+        distWeightingTextField.setText("");
+        distWeightingTextField.setEnabled(membraneToggleButton.isSelected());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(distWeightingTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -147,14 +173,23 @@ public class SegmentationPanel extends LayerPanel {
 
     private void volumeToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volumeToggleButtonActionPerformed
         membraneToggleButton.setSelected(!volumeToggleButton.isSelected());
+        updateDistanceWeighting();
     }//GEN-LAST:event_volumeToggleButtonActionPerformed
 
     private void membraneToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_membraneToggleButtonActionPerformed
         volumeToggleButton.setSelected(!membraneToggleButton.isSelected());
+        updateDistanceWeighting();
     }//GEN-LAST:event_membraneToggleButtonActionPerformed
+
+    void updateDistanceWeighting() {
+        distWeightingLabel.setEnabled(membraneToggleButton.isSelected());
+        distWeightingTextField.setEnabled(membraneToggleButton.isSelected());
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel distWeightingLabel;
+    private javax.swing.JTextField distWeightingTextField;
     private javax.swing.JToggleButton membraneToggleButton;
     private javax.swing.JButton previewButton;
     private javax.swing.JComboBox<String> thresholdComboBox;

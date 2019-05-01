@@ -49,6 +49,7 @@ public class GianiDefaultParams extends Properties {
     public static final String NUC_MEM_MARKER = "Nuclear Membrane Marker";
     public static final String CELL_VOL_MARKER = "Cell Volume Marker";
     public static final String CELL_MEM_MARKER = "Cell Membrane Marker";
+    public static final String DIST_WEIGHTING = "Distance Weighting";
     public static final String LOCALISE_SPOTS = "Localise Spots";
 
     public GianiDefaultParams() {
@@ -65,17 +66,18 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(BLOB_NUC_RAD_LABEL, "0.0");
         this.setProperty(BLOB_CHAN_NOISE_TOL_LABEL, "0.0");
         this.setProperty(BLOB_CHAN_RAD_LABEL, "0.0");
-        this.setProperty(NUC_SEG_THRESH_LABEL, "0");
+        this.setProperty(NUC_SEG_THRESH_LABEL, "Default");
         this.setProperty(NUC_SEG_CHAN_SELECT_LABEL, "0");
         this.setProperty(CELL_FILT_RAD_XY_LABEL, "0.0");
         this.setProperty(CELL_FILT_RAD_Z_LABEL, "0.0");
-        this.setProperty(CELL_SEG_THRESH_LABEL, "0");
+        this.setProperty(CELL_SEG_THRESH_LABEL, "Default");
         this.setProperty(CELL_SEG_CHAN_SELECT_LABEL, "0");
         this.setProperty(CHAN_FOR_MEASURE, "0");
         this.setProperty(NUC_VOL_MARKER, "true");
         this.setProperty(NUC_MEM_MARKER, "false");
         this.setProperty(CELL_VOL_MARKER, "true");
         this.setProperty(CELL_MEM_MARKER, "false");
+        this.setProperty(DIST_WEIGHTING, "0.5");
         this.setProperty(LOCALISE_SPOTS, "false");
     }
 
