@@ -25,7 +25,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import mcib3d.geom.Objects3DPopulation;
 import gianiparams.GianiDefaultParams;
-import java.awt.event.ComponentEvent;
+import javax.swing.JComboBox;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -387,13 +387,13 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         addAdditionalBlobDetectionPanels();
     }//GEN-LAST:event_measurementPanelMouseClicked
 
-    private void selectInputPanelComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_selectInputPanelComponentShown
-        nextButton.setEnabled(true);
-    }//GEN-LAST:event_selectInputPanelComponentShown
-
     private void selectInputPanelComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_selectInputPanelComponentHidden
-        nextButton.setEnabled(false);
+        if(evt.getComponent() instanceof JComboBox)nextButton.setEnabled(false);
     }//GEN-LAST:event_selectInputPanelComponentHidden
+
+    private void selectInputPanelComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_selectInputPanelComponentShown
+        if(evt.getComponent() instanceof JComboBox)nextButton.setEnabled(true);
+    }//GEN-LAST:event_selectInputPanelComponentShown
 
     void updateLayer() {
         for (int i = 0; i < componentList.size(); i++) {

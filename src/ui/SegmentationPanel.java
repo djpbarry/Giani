@@ -186,7 +186,7 @@ public class SegmentationPanel extends LayerPanel {
         distWeightingTextField.setEnabled(membraneToggleButton.isSelected());
     }
 
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel distWeightingLabel;
     private javax.swing.JTextField distWeightingTextField;
