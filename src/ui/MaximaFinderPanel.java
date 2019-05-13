@@ -143,9 +143,6 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
 
         channelSelectComboBox.setModel(new DefaultComboBoxModel(new String[]{}));
         channelSelectComboBox.setVisible(allowChannelSelect);
-        if(defaultChannel > -1){
-            channelSelectComboBox.setSelectedIndex(defaultChannel);
-        }
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -186,7 +183,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         int zRadiusPix = (int) Math.ceil(maxZRadiusMic / zSpatRes);
         for (int[] pix : maxima) {
             int z0 = pix[2] + 1;
-            for (int z = z0 - zRadiusPix; z <= z0 + zRadiusPix; z++) {
+            for (int z = z0 - zRadiusPix < 1 ? 1 :z0 - zRadiusPix ; z <= z0 + zRadiusPix && z <= imp.getNSlices(); z++) {
                 double z2 = Math.pow((z - z0) * zSpatRes, 2.0);
                 double cr = Math.sqrt((1.0 - z2 / maxZRadiusMic2) * maxXYRadiusMic2);
                 int currentRadius = (int) Math.round(cr / xySpatRes);
