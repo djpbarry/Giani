@@ -53,7 +53,6 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
     private final Objects3DPopulation popImp;
     private File inputDirectory;
     public static final String TITLE = String.format("GIANI Results Browser v%d.%s", Revision.VERSION, new DecimalFormat("000").format(Revision.revisionNumber));
-    private JScrollPane roiManagerScrollPane;
 
     /**
      * Creates new form GianiResultsBrowser
@@ -109,14 +108,16 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
         loadObjectsButton = new javax.swing.JButton();
         setDirectoryButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle(TITLE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         objectList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            String[] strings = {"Select input directory..."};
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        objectList.setEnabled(false);
         jScrollPane1.setViewportView(objectList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -130,12 +131,13 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(jScrollPane1, gridBagConstraints);
 
-        loadObjectsButton.setText("jButton1");
+        loadObjectsButton.setText("Load Dataset");
         loadObjectsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loadObjectsButtonActionPerformed(evt);
             }
         });
+        loadObjectsButton.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -146,7 +148,7 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(loadObjectsButton, gridBagConstraints);
 
-        setDirectoryButton.setText("jButton2");
+        setDirectoryButton.setText("Select Results Directory");
         setDirectoryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setDirectoryButtonActionPerformed(evt);
@@ -169,7 +171,11 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
             inputDirectory = Utilities.getFolder(inputDirectory, "Select results directory", false);
         } catch (InterruptedException | InvocationTargetException e) {
             GenUtils.logError(e, "Failed to open results directory.");
+            loadObjectsButton.setEnabled(false);
+            objectList.setEnabled(false);
         }
+        loadObjectsButton.setEnabled(true);
+        objectList.setEnabled(true);
         updateObjectList();
         openResultsTable();
     }//GEN-LAST:event_setDirectoryButtonActionPerformed
