@@ -16,6 +16,8 @@
  */
 package ResultsBrowser;
 
+import IO.BioFormats.BioFormatsFileLister;
+import IO.BioFormats.BioFormatsImg;
 import Revision.Revision;
 import UtilClasses.GenUtils;
 import UtilClasses.Utilities;
@@ -25,12 +27,15 @@ import java.awt.Container;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import loci.formats.FormatException;
 import mcib3d.geom.Objects3DPopulation;
 import mcib_plugins.tools.RoiManager3D_2;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
@@ -78,7 +83,7 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
         if (e.getSource() instanceof JList) {
             String label = (String) roiManagerObjectList.getSelectedValue();
             for (int r = 0; r < resultsTable.getRowCount(); r++) {
-                if(label.contentEquals((String)resultsTable.getValueAt(r, 0))){
+                if (label.contentEquals((String) resultsTable.getValueAt(r, 0))) {
                     resultsTable.setRowSelectionInterval(r, r);
                 }
             }
@@ -86,7 +91,6 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
             int row = resultsTable.getSelectedRow();
             String label = (String) resultsTable.getValueAt(row, 0);
             roiManagerObjectList.setSelectedValue(label, true);
-            IJ.wait(0);
         }
     }
 
@@ -171,7 +175,13 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
     }//GEN-LAST:event_setDirectoryButtonActionPerformed
 
     private void loadObjectsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadObjectsButtonActionPerformed
-        popImp.loadObjects(String.format("%s%s%s", inputDirectory, File.separator, objectList.getSelectedValue()));
+        String selectedObjects = objectList.getSelectedValue();
+        try {
+            openImage(inputDirectory.getParentFile(), getOriginalFileName(selectedObjects), getSeries(selectedObjects));
+        } catch (Exception e) {
+            GenUtils.logError(e, String.format("Failed to open original image file for %s", selectedObjects));
+        }
+        popImp.loadObjects(String.format("%s%s%s", inputDirectory, File.separator, selectedObjects));
         if (roiManager == null) {
             roiManager = new RoiManager3D_2();
         }
@@ -206,6 +216,28 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
         resultsTable = tableWrapper.getResultsTable();
         resultsTable.addMouseListener(this);
         tableWrapper.setVisible(true);
+    }
+
+    void openImage(File directory, String name, int series) throws IOException, FormatException {
+        ArrayList<String> files = BioFormatsFileLister.obtainValidFileList(directory);
+        BioFormatsImg img = new BioFormatsImg();
+        for (String f : files) {
+            if (f.contains(name)) {
+                img.setId(String.format("%s%s%s", directory, File.separator, f));
+                img.loadPixelData(series);
+                img.getLoadedImage().show();
+                return;
+            }
+        }
+        IJ.log(String.format("%s not found in %s.", name, directory));
+    }
+
+    String getOriginalFileName(String name) {
+        return name.substring(0, name.lastIndexOf("-S"));
+    }
+
+    int getSeries(String name) {
+        return Integer.parseInt(name.substring(name.lastIndexOf("-S") + 2, name.lastIndexOf("_")));
     }
 
     /**
