@@ -51,7 +51,7 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
     private GianiResultsTable tableWrapper;
     private JTable resultsTable;
     private final Objects3DPopulation popImp;
-    private File inputDirectory;
+    private static File inputDirectory;
     public static final String TITLE = String.format("GIANI Results Browser v%d.%s", Revision.VERSION, new DecimalFormat("000").format(Revision.revisionNumber));
 
     /**

@@ -24,13 +24,13 @@ import java.io.File;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import UIClasses.LayerPanel;
-import com.sun.glass.events.KeyEvent;
 import ij.IJ;
 import ij.ImagePlus;
 import java.awt.Color;
 import java.util.Properties;
 import gianiparams.GianiDefaultParams;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
 
 /**
  *
