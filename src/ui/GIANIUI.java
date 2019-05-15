@@ -366,11 +366,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         setVariables();
         String outputDirectoryName = GenUtils.openResultsDirectory(props.getProperty(GianiDefaultParams.OUTPUT_DIR_LABEL));
         props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, outputDirectoryName);
-        try {
-            PropertyWriter.printProperties(props, outputDirectoryName, TITLE, true);
-        } catch (Exception e) {
-            GenUtils.logError(e, "Failed to save property file.");
-        }
         addProcess();
         LocalMapperExecutor exec = new LocalMapperExecutor(pipeline, props);
         exec.start();

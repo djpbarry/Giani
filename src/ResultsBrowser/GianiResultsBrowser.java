@@ -18,9 +18,11 @@ package ResultsBrowser;
 
 import IO.BioFormats.BioFormatsFileLister;
 import IO.BioFormats.BioFormatsImg;
+import IO.PropertyWriter;
 import Revision.Revision;
 import UtilClasses.GenUtils;
 import UtilClasses.Utilities;
+import gianiparams.GianiDefaultParams;
 import ij.IJ;
 import java.awt.Component;
 import java.awt.Container;
@@ -182,8 +184,14 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
 
     private void loadObjectsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadObjectsButtonActionPerformed
         String selectedObjects = objectList.getSelectedValue();
+        GianiDefaultParams props = new GianiDefaultParams();
         try {
-            openImage(inputDirectory.getParentFile(), getOriginalFileName(selectedObjects), getSeries(selectedObjects));
+            PropertyWriter.loadProperties(props, TITLE, new File(String.format("%s%s%s.xml", inputDirectory.getAbsolutePath(), File.separator, PropertyWriter.FILENAME)));
+        } catch (Exception e) {
+            GenUtils.logError(e, "Failed to load property file.");
+        }
+        try {
+            openImage(inputDirectory.getParentFile(), props.getProperty(getOriginalFileName(selectedObjects)), getSeries(selectedObjects));
         } catch (Exception e) {
             GenUtils.logError(e, String.format("Failed to open original image file for %s", selectedObjects));
         }

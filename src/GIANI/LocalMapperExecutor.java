@@ -19,6 +19,7 @@ package GIANI;
 import IO.BioFormats.BioFormatsFileLister;
 import IO.BioFormats.BioFormatsImg;
 import IO.DataWriter;
+import IO.PropertyWriter;
 import Process.MultiThreadedProcess;
 import Process.ProcessPipeline;
 import UtilClasses.GenUtils;
@@ -38,6 +39,7 @@ import loci.formats.FormatException;
 import org.apache.commons.io.FilenameUtils;
 import gianiparams.GianiDefaultParams;
 import ui.GIANIUI;
+import static ui.GIANIUI.TITLE;
 
 /**
  *
@@ -75,6 +77,7 @@ public class LocalMapperExecutor extends Thread {
             } catch (IOException | FormatException e) {
                 GenUtils.logError(e, String.format("Failed to initialise %s", file));
             }
+            props.put(img.reformatFileName(), file);
             IJ.log(String.format("Analysing file %s", FilenameUtils.getName(file)));
             int nSeries = img.getSeriesCount();
             for (int s = 0; s < nSeries; s++) {
@@ -102,6 +105,11 @@ public class LocalMapperExecutor extends Thread {
             DataWriter.saveResultsTable(Analyzer.getResultsTable(), new File(String.format("%s%s%s_Output.csv", outputDir, File.separator, GIANIUI.TITLE)));
         } catch (IOException e) {
             GenUtils.logError(e, "Failed to save results file.");
+        }
+        try {
+            PropertyWriter.saveProperties(props, outputDir.getAbsolutePath(), TITLE, true);
+        } catch (Exception e) {
+            GenUtils.logError(e, "Failed to save property file.");
         }
         IJ.log("Done");
     }
