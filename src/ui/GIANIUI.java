@@ -25,6 +25,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import mcib3d.geom.Objects3DPopulation;
 import gianiparams.GianiDefaultParams;
+import java.net.URL;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 
 /*
@@ -64,6 +66,10 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         cells = new Objects3DPopulation();
         initComponents();
         UIMethods.centreContainer(this);
+        URL iconURL = getClass().getResource("/icon/icon.png");
+// iconURL is null when not found
+        ImageIcon icon = new ImageIcon(iconURL);
+        this.setIconImage(icon.getImage());
     }
 
     /**
@@ -173,7 +179,8 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(TITLE);
-        setMinimumSize(new java.awt.Dimension(400, 600));
+        setIconImages(null);
+        setMinimumSize(new java.awt.Dimension(800, 800));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         buttonPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -389,11 +396,13 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }//GEN-LAST:event_measurementPanelMouseClicked
 
     private void selectInputPanelComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_selectInputPanelComponentHidden
-        if(evt.getComponent() instanceof JComboBox)nextButton.setEnabled(false);
+        if (evt.getComponent() instanceof JComboBox)
+            nextButton.setEnabled(false);
     }//GEN-LAST:event_selectInputPanelComponentHidden
 
     private void selectInputPanelComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_selectInputPanelComponentShown
-        if(evt.getComponent() instanceof JComboBox)nextButton.setEnabled(true);
+        if (evt.getComponent() instanceof JComboBox)
+            nextButton.setEnabled(true);
     }//GEN-LAST:event_selectInputPanelComponentShown
 
     void updateLayer() {
@@ -511,11 +520,19 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         int n = img.getSizeC();
         for (int i = 0; i < n; i++) {
             if ((channels & (int) Math.pow(2.0, i)) != 0) {
+                String[] propLabels = new String[MultiThreadedMaximaFinder.N_PROP_LABELS];
+                propLabels[MultiThreadedMaximaFinder.CHANNEL_SELECT] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_SELECT_LABEL, i);
+                propLabels[MultiThreadedMaximaFinder.BLOB_DETECT] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_BLOBS, i);
+                props.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_BLOBS, i), "true");
+                propLabels[MultiThreadedMaximaFinder.BLOB_SIZE] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_RAD_LABEL, i);
+                propLabels[MultiThreadedMaximaFinder.BLOB_THRESH] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_NOISE_TOL_LABEL, i);
+                propLabels[MultiThreadedMaximaFinder.EDM_DETECT] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_EDM_MAXIMA, i);
+                propLabels[MultiThreadedMaximaFinder.EDM_MAX_SIZE] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_EDM_MAX_SIZE, i);
+                propLabels[MultiThreadedMaximaFinder.EDM_MIN_SIZE] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_EDM_MIN_SIZE, i);
+                propLabels[MultiThreadedMaximaFinder.EDM_THRESH] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_EDM_THRESH, i);
+                propLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
                 MaximaFinderPanel mFP = new ui.MaximaFinderPanel(props, img, new MultiThreadedMaximaFinder(null),
-                        new String[]{
-                            String.format("%s%d", GianiDefaultParams.BLOB_CHAN_SELECT_LABEL, i),
-                            String.format("%s%d", GianiDefaultParams.BLOB_CHAN_RAD_LABEL, i),
-                            String.format("%s%d", GianiDefaultParams.BLOB_CHAN_NOISE_TOL_LABEL, i)}, false, i);
+                        propLabels, false, i);
                 maximaFinderPanels.add(mFP);
                 addPanel(mFP);
             }

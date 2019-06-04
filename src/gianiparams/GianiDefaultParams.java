@@ -31,7 +31,7 @@ public class GianiDefaultParams extends Properties {
     public static final String INPUT_FILE_LABEL = "Preview File";
     public static final String PREVIEW_CHAN_SELECT_LABEL = "Preview Channel";
     public static final String BLOB_NUC_CHAN_SELECT_LABEL = "Nuclear Channel";
-    public static final String BLOB_CHAN_SELECT_LABEL = "Detect Blobs in Channel ";
+    public static final String BLOB_CHAN_SELECT_LABEL = "Detect Spots in Channel ";
     public static final String NUC_FILT_RAD_XY_LABEL = String.format("XY Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
     public static final String NUC_FILT_RAD_Z_LABEL = String.format("Z Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
     public static final String BLOB_NUC_NOISE_TOL_LABEL = "Nuclear Blob Detection Threshold";
@@ -55,7 +55,12 @@ public class GianiDefaultParams extends Properties {
     public static final String NUC_MAXIMA_DETECT_EDM_MAXIMA = "Nuclear EDM Maxima Detector";
     public static final String NUC_MAXIMA_DETECT_EDM_THRESH = "Nuclear Threshold for EDM Detection";
     public static final String NUC_MAXIMA_DETECT_EDM_MIN_SIZE = "Nuclear Min Size for EDM Detection";
-    public static final String NUC_MAXIMA_DETECT_EDM_MAX_SIZE = "Nuclear Max Size for EDM Detection";    
+    public static final String NUC_MAXIMA_DETECT_EDM_MAX_SIZE = "Nuclear Max Size for EDM Detection";
+    public static final String FOCI_MAXIMA_DETECT_BLOBS = "Blob Detector for Channel ";
+    public static final String FOCI_MAXIMA_DETECT_EDM_MAXIMA = "EDM Maxima Detector for Channel ";
+    public static final String FOCI_MAXIMA_DETECT_EDM_THRESH = "Threshold for EDM Detection for Channel ";
+    public static final String FOCI_MAXIMA_DETECT_EDM_MIN_SIZE = "Min Size for EDM Detection for Channel ";
+    public static final String FOCI_MAXIMA_DETECT_EDM_MAX_SIZE = "Max Size for EDM Detection for Channel ";
 
     public GianiDefaultParams() {
         initialise();
