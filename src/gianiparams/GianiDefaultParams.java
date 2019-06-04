@@ -51,8 +51,17 @@ public class GianiDefaultParams extends Properties {
     public static final String CELL_MEM_MARKER = "Cell Membrane Marker";
     public static final String DIST_WEIGHTING = "Distance Weighting";
     public static final String LOCALISE_SPOTS = "Localise Spots";
+    public static final String NUC_MAXIMA_DETECT_BLOBS = "Nuclear Blob Detector";
+    public static final String NUC_MAXIMA_DETECT_EDM_MAXIMA = "Nuclear EDM Maxima Detector";
+    public static final String NUC_MAXIMA_DETECT_EDM_THRESH = "Nuclear Threshold for EDM Detection";
+    public static final String NUC_MAXIMA_DETECT_EDM_MIN_SIZE = "Nuclear Min Size for EDM Detection";
+    public static final String NUC_MAXIMA_DETECT_EDM_MAX_SIZE = "Nuclear Max Size for EDM Detection";    
 
     public GianiDefaultParams() {
+        initialise();
+    }
+
+    private void initialise() {
         this.setProperty(INPUT_DIR_LABEL, System.getProperty("user.home"));
         this.setProperty(OUTPUT_DIR_LABEL, "");
         this.setProperty(SERIES_SELECT_LABEL, "0");
@@ -79,6 +88,10 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(CELL_MEM_MARKER, "false");
         this.setProperty(DIST_WEIGHTING, "0.5");
         this.setProperty(LOCALISE_SPOTS, "false");
+        this.setProperty(NUC_MAXIMA_DETECT_BLOBS, "true");
+        this.setProperty(NUC_MAXIMA_DETECT_EDM_MAXIMA, "false");
+        this.setProperty(NUC_MAXIMA_DETECT_EDM_THRESH, "Default");
+        this.setProperty(NUC_MAXIMA_DETECT_EDM_MIN_SIZE, "0.0");
+        this.setProperty(NUC_MAXIMA_DETECT_EDM_MAX_SIZE, "0.0");
     }
-
 }

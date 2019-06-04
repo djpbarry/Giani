@@ -87,12 +87,18 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 GianiDefaultParams.INPUT_FILE_LABEL,
                 GianiDefaultParams.SERIES_SELECT_LABEL,
                 GianiDefaultParams.PREVIEW_CHAN_SELECT_LABEL});
+        String[] nuclearCentreFinderPanelPropLabels = new String[MultiThreadedMaximaFinder.N_PROP_LABELS];
+        nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.CHANNEL_SELECT] = GianiDefaultParams.BLOB_NUC_CHAN_SELECT_LABEL;
+        nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.BLOB_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS;
+        nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.BLOB_SIZE] = GianiDefaultParams.BLOB_NUC_RAD_LABEL;
+        nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.BLOB_THRESH] = GianiDefaultParams.BLOB_NUC_NOISE_TOL_LABEL;
+        nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.EDM_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_EDM_MAXIMA;
+        nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.EDM_MAX_SIZE] = GianiDefaultParams.NUC_MAXIMA_DETECT_EDM_MAX_SIZE;
+        nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.EDM_MIN_SIZE] = GianiDefaultParams.NUC_MAXIMA_DETECT_EDM_MIN_SIZE;
+        nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.EDM_THRESH] = GianiDefaultParams.NUC_MAXIMA_DETECT_EDM_THRESH;
+        nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
         nuclearCentreFinderPanel = new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null),
-            new String[]{
-                GianiDefaultParams.BLOB_NUC_CHAN_SELECT_LABEL,
-                GianiDefaultParams.BLOB_NUC_RAD_LABEL,
-                GianiDefaultParams.BLOB_NUC_NOISE_TOL_LABEL},
-            true, -1);
+            nuclearCentreFinderPanelPropLabels, true, -1);
         nuclearFilteringPanel = new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),
             new String[]{
                 GianiDefaultParams.NUC_SEG_CHAN_SELECT_LABEL,
