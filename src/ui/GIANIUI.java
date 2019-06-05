@@ -66,8 +66,11 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         cells = new Objects3DPopulation();
         initComponents();
         UIMethods.centreContainer(this);
+        setIcon();
+    }
+
+    private void setIcon() {
         URL iconURL = getClass().getResource("/icon/icon.png");
-// iconURL is null when not found
         ImageIcon icon = new ImageIcon(iconURL);
         this.setIconImage(icon.getImage());
     }

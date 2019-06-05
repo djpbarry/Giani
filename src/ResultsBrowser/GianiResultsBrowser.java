@@ -23,6 +23,7 @@ import Revision.Revision;
 import UtilClasses.GenUtils;
 import UtilClasses.Utilities;
 import gianiparams.GianiDefaultParams;
+import ij.CompositeImage;
 import ij.IJ;
 import java.awt.Component;
 import java.awt.Container;
@@ -31,13 +32,16 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import loci.formats.FormatException;
+import mcib3d.geom.Object3D;
 import mcib3d.geom.Objects3DPopulation;
 import mcib_plugins.tools.RoiManager3D_2;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
@@ -54,6 +58,7 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
     private JTable resultsTable;
     private final Objects3DPopulation popImp;
     private static File inputDirectory;
+    private CompositeImage imp;
     public static final String TITLE = String.format("GIANI Results Browser v%d.%s", Revision.VERSION, new DecimalFormat("000").format(Revision.revisionNumber));
 
     /**
@@ -62,6 +67,13 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
     public GianiResultsBrowser() {
         popImp = new Objects3DPopulation();
         initComponents();
+        setIcon();
+    }
+
+    private void setIcon() {
+        URL iconURL = getClass().getResource("/icon/icon.png");
+        ImageIcon icon = new ImageIcon(iconURL);
+        this.setIconImage(icon.getImage());
     }
 
     public void mouseExited(MouseEvent e) {
@@ -86,13 +98,22 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
             for (int r = 0; r < resultsTable.getRowCount(); r++) {
                 if (label.contentEquals((String) resultsTable.getValueAt(r, 0))) {
                     resultsTable.setRowSelectionInterval(r, r);
+                    setStackPosition();
                 }
             }
         } else if (e.getSource() instanceof JTable) {
             int row = resultsTable.getSelectedRow();
             String label = (String) resultsTable.getValueAt(row, 0);
             roiManagerObjectList.setSelectedValue(label, true);
+            setStackPosition();
         }
+    }
+
+    void setStackPosition() {
+        int index = roiManagerObjectList.getSelectedIndex();
+        Object3D object = popImp.getObject(index);
+        int z = (int) Math.round(object.getCenterZ());
+        imp.setZ(z);
     }
 
     /**
@@ -239,7 +260,8 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
             if (f.contains(name)) {
                 img.setId(String.format("%s%s%s", directory, File.separator, f));
                 img.loadPixelData(series);
-                img.getLoadedImage().show();
+                imp = new CompositeImage(img.getLoadedImage(), IJ.COMPOSITE);
+                imp.show();
                 return;
             }
         }
