@@ -8,6 +8,7 @@ package ui;
 import IO.BioFormats.BioFormatsImg;
 import Process.Segmentation.MultiThreadedWatershed;
 import UIClasses.LayerPanel;
+import UIClasses.Updateable;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.LutLoader;
@@ -20,7 +21,7 @@ import javax.swing.DefaultComboBoxModel;
  *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
-public class SegmentationPanel extends LayerPanel {
+public class SegmentationPanel extends LayerPanel implements Updateable {
 
     /**
      * Creates new form SegmentationPanel
@@ -109,7 +110,7 @@ public class SegmentationPanel extends LayerPanel {
         add(volumeToggleButton, gridBagConstraints);
 
         membraneToggleButton.setText(propLabels[3]);
-        membraneToggleButton.setSelected(!volumeToggleButton.isSelected());
+        membraneToggleButton.setSelected(!Boolean.parseBoolean(props.getProperty(propLabels[2])));
         membraneToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 membraneToggleButtonActionPerformed(evt);
@@ -126,7 +127,7 @@ public class SegmentationPanel extends LayerPanel {
 
         distWeightingLabel.setText(propLabels[4]);
         distWeightingLabel.setLabelFor(distWeightingTextField);
-        distWeightingLabel.setEnabled(membraneToggleButton.isSelected());
+        distWeightingLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[2])));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -137,7 +138,7 @@ public class SegmentationPanel extends LayerPanel {
         add(distWeightingLabel, gridBagConstraints);
 
         distWeightingTextField.setText(props.getProperty(propLabels[4]));
-        distWeightingTextField.setEnabled(membraneToggleButton.isSelected());
+        distWeightingTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[2])));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -173,7 +174,7 @@ public class SegmentationPanel extends LayerPanel {
 
     private void volumeToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volumeToggleButtonActionPerformed
         membraneToggleButton.setSelected(!volumeToggleButton.isSelected());
-        updateDistanceWeighting();
+        membraneToggleButtonActionPerformed(evt);
     }//GEN-LAST:event_volumeToggleButtonActionPerformed
 
     private void membraneToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_membraneToggleButtonActionPerformed
@@ -186,7 +187,10 @@ public class SegmentationPanel extends LayerPanel {
         distWeightingTextField.setEnabled(membraneToggleButton.isSelected());
     }
 
-    
+    public void update() {
+        volumeToggleButtonActionPerformed(null);
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel distWeightingLabel;
     private javax.swing.JTextField distWeightingTextField;

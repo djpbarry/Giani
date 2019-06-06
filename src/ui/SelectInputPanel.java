@@ -312,6 +312,7 @@ public class SelectInputPanel extends LayerPanel {
     }//GEN-LAST:event_seriesComboBoxPopupMenuWillBecomeInvisible
 
     private void channelComboBoxPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_channelComboBoxPopupMenuWillBecomeInvisible
+        setVariables();
         previewButton.setEnabled(channelComboBox.isEnabled());
         if (previewButton.isEnabled())
             this.dispatchEvent(new ComponentEvent(channelComboBox, ComponentEvent.COMPONENT_SHOWN));

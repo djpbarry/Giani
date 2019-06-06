@@ -348,6 +348,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         if (defaultChannel > -1) {
             channelSelectComboBox.setSelectedIndex(defaultChannel);
         }
+        blobDetectToggleButtonActionPerformed(null);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -95,7 +95,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="membraneToggleButtonActionPerformed"/>
       </Events>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="membraneToggleButton.setSelected(!volumeToggleButton.isSelected());"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="membraneToggleButton.setSelected(!Boolean.parseBoolean(props.getProperty(propLabels[2])));"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -110,7 +110,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="distWeightingLabel.setLabelFor(distWeightingTextField);&#xa;distWeightingLabel.setEnabled(membraneToggleButton.isSelected());"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="distWeightingLabel.setLabelFor(distWeightingTextField);&#xa;distWeightingLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[2])));"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -125,7 +125,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="distWeightingTextField.setEnabled(membraneToggleButton.isSelected());"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="distWeightingTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[2])));"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

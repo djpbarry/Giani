@@ -25,6 +25,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import mcib3d.geom.Objects3DPopulation;
 import gianiparams.GianiDefaultParams;
+import java.io.File;
 import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
@@ -222,6 +223,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         buttonPanel.add(nextButton, gridBagConstraints);
 
         loadParametersButton.setText("Load Parameters");
+        loadParametersButton.setEnabled(false);
         loadParametersButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loadParametersButtonActionPerformed(evt);
@@ -369,7 +371,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
     private void loadParametersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadParametersButtonActionPerformed
         try {
-            PropertyWriter.loadProperties(props, TITLE, null);
+            PropertyWriter.loadProperties(props, TITLE, new File(props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL)));
             updateProperties(props, this);
             measurementPanelMouseClicked(null);
             runButton.setEnabled(true);
@@ -399,13 +401,17 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }//GEN-LAST:event_measurementPanelMouseClicked
 
     private void selectInputPanelComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_selectInputPanelComponentHidden
-        if (evt.getComponent() instanceof JComboBox)
+        if (evt.getComponent() instanceof JComboBox) {
             nextButton.setEnabled(false);
+            loadParametersButton.setEnabled(false);
+        }
     }//GEN-LAST:event_selectInputPanelComponentHidden
 
     private void selectInputPanelComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_selectInputPanelComponentShown
-        if (evt.getComponent() instanceof JComboBox)
+        if (evt.getComponent() instanceof JComboBox) {
             nextButton.setEnabled(true);
+            loadParametersButton.setEnabled(true);
+        }
     }//GEN-LAST:event_selectInputPanelComponentShown
 
     void updateLayer() {
