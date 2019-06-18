@@ -8,4 +8,4 @@ Enable the CALM update site in the FIJI updater.
 
 ## Instructions for use
 
-See the Wiki.
+See [the Wiki](https://github.com/djpbarry/Giani/wiki).
