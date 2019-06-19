@@ -134,7 +134,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 GianiDefaultParams.NUC_SEG_THRESH_LABEL,
                 GianiDefaultParams.NUC_VOL_MARKER,
                 GianiDefaultParams.NUC_MEM_MARKER,
-                GianiDefaultParams.DIST_WEIGHTING
+                GianiDefaultParams.NUC_DIST_WEIGHTING
             }
         );
         cellFilteringPanel = new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),
@@ -162,7 +162,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 GianiDefaultParams.CELL_SEG_THRESH_LABEL,
                 GianiDefaultParams.CELL_VOL_MARKER,
                 GianiDefaultParams.CELL_MEM_MARKER,
-                GianiDefaultParams.DIST_WEIGHTING
+                GianiDefaultParams.CELL_DIST_WEIGHTING
             }
         );
         measurementPanel = new ui.MeasurementPanel(

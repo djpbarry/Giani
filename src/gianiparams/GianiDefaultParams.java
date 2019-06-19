@@ -49,7 +49,9 @@ public class GianiDefaultParams extends Properties {
     public static final String NUC_MEM_MARKER = "Nuclear Membrane Marker";
     public static final String CELL_VOL_MARKER = "Cell Volume Marker";
     public static final String CELL_MEM_MARKER = "Cell Membrane Marker";
-    public static final String DIST_WEIGHTING = "Distance Weighting";
+    public static final String NUC_DIST_WEIGHTING = "Nuclear Distance Weighting";
+    public static final String CELL_DIST_WEIGHTING = "Cell Distance Weighting";
+    public static final String FOCI_DIST_WEIGHTING = "Distance Weighting for Channel ";
     public static final String LOCALISE_SPOTS = "Localise Spots";
     public static final String NUC_MAXIMA_DETECT_BLOBS = "Nuclear Blob Detector";
     public static final String NUC_MAXIMA_DETECT_EDM_MAXIMA = "Nuclear EDM Maxima Detector";
@@ -91,7 +93,8 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(NUC_MEM_MARKER, "false");
         this.setProperty(CELL_VOL_MARKER, "true");
         this.setProperty(CELL_MEM_MARKER, "false");
-        this.setProperty(DIST_WEIGHTING, "0.5");
+        this.setProperty(NUC_DIST_WEIGHTING, "0.5");
+        this.setProperty(CELL_DIST_WEIGHTING, "0.5");
         this.setProperty(LOCALISE_SPOTS, "false");
         this.setProperty(NUC_MAXIMA_DETECT_BLOBS, "true");
         this.setProperty(NUC_MAXIMA_DETECT_EDM_MAXIMA, "false");
