@@ -219,6 +219,7 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
         popImp.loadObjects(String.format("%s%s%s", inputDirectory, File.separator, selectedObjects));
         if (roiManager == null) {
             roiManager = new RoiManager3D_2();
+            roiManager.run(null);
         }
         roiManager.addObjects3DPopulation(popImp);
         addListenerToRoiManager3DObjectList(roiManager.getComponents());
