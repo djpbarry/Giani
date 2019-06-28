@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import mcib3d.geom.Objects3DPopulation;
 import gianiparams.GianiDefaultParams;
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
@@ -96,7 +98,8 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 GianiDefaultParams.INPUT_DIR_LABEL,
                 GianiDefaultParams.INPUT_FILE_LABEL,
                 GianiDefaultParams.SERIES_SELECT_LABEL,
-                GianiDefaultParams.PREVIEW_CHAN_SELECT_LABEL});
+                GianiDefaultParams.PREVIEW_CHAN_SELECT_LABEL},
+            getHelpURI("https://github.com/djpbarry/Giani/wiki/Selecting-the-Input-Files"));
         String[] nuclearCentreFinderPanelPropLabels = new String[MultiThreadedMaximaFinder.N_PROP_LABELS];
         nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.CHANNEL_SELECT] = GianiDefaultParams.BLOB_NUC_CHAN_SELECT_LABEL;
         nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.BLOB_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS;
@@ -108,12 +111,14 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.EDM_THRESH] = GianiDefaultParams.NUC_MAXIMA_DETECT_EDM_THRESH;
         nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
         nuclearCentreFinderPanel = new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null),
-            nuclearCentreFinderPanelPropLabels, true, -1);
+            nuclearCentreFinderPanelPropLabels, true, -1,
+            getHelpURI("https://github.com/djpbarry/Giani/wiki/Estimating-the-centres-of-nuclei"));
         nuclearFilteringPanel = new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),
             new String[]{
                 GianiDefaultParams.NUC_SEG_CHAN_SELECT_LABEL,
                 GianiDefaultParams.NUC_FILT_RAD_XY_LABEL,
-                GianiDefaultParams.NUC_FILT_RAD_Z_LABEL});
+                GianiDefaultParams.NUC_FILT_RAD_Z_LABEL},
+            getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation"));
         nuclearSegmentationPanel = new ui.SegmentationPanel(
             props,
             img,
@@ -135,13 +140,15 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 GianiDefaultParams.NUC_VOL_MARKER,
                 GianiDefaultParams.NUC_MEM_MARKER,
                 GianiDefaultParams.NUC_DIST_WEIGHTING
-            }
+            },
+            getHelpURI("https://github.com/djpbarry/Giani/wiki/Segmenting-Nuclei")
         );
         cellFilteringPanel = new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),
             new String[]{
                 GianiDefaultParams.CELL_SEG_CHAN_SELECT_LABEL,
                 GianiDefaultParams.CELL_FILT_RAD_XY_LABEL,
-                GianiDefaultParams.CELL_FILT_RAD_Z_LABEL});
+                GianiDefaultParams.CELL_FILT_RAD_Z_LABEL},
+            getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Cell-Segmentation"));
         cellSegmentationPanel = new ui.SegmentationPanel(
             props,
             img,
@@ -163,7 +170,8 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 GianiDefaultParams.CELL_VOL_MARKER,
                 GianiDefaultParams.CELL_MEM_MARKER,
                 GianiDefaultParams.CELL_DIST_WEIGHTING
-            }
+            },
+            getHelpURI("https://github.com/djpbarry/Giani/wiki/Complete-Segmentation-of-Cells")
         );
         measurementPanel = new ui.MeasurementPanel(
             props,
@@ -178,7 +186,8 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
             new String[]{
                 GianiDefaultParams.CHAN_FOR_MEASURE,
                 GianiDefaultParams.LOCALISE_SPOTS
-            }
+            },
+            getHelpURI("https://github.com/djpbarry/Giani/wiki/Specifying-Channels-to-Measure")
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -541,7 +550,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 propLabels[MultiThreadedMaximaFinder.EDM_THRESH] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_EDM_THRESH, i);
                 propLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
                 MaximaFinderPanel mFP = new ui.MaximaFinderPanel(props, img, new MultiThreadedMaximaFinder(null),
-                        propLabels, false, i);
+                        propLabels, false, i, null);
                 maximaFinderPanels.add(mFP);
                 addPanel(mFP);
             }
@@ -577,6 +586,16 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.weighty = 0.8;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(panel, gridBagConstraints);
+    }
+
+    private URI getHelpURI(String url) {
+        URI helpURI;
+        try {
+            helpURI = new URI(url);
+        } catch (URISyntaxException e) {
+            return null;
+        }
+        return helpURI;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

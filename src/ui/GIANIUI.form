@@ -120,7 +120,7 @@
         <EventHandler event="componentShown" listener="java.awt.event.ComponentListener" parameters="java.awt.event.ComponentEvent" handler="selectInputPanelComponentShown"/>
       </Events>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SelectInputPanel(props,img,&#xa;    new String[]{&#xa;        GianiDefaultParams.INPUT_DIR_LABEL,&#xa;        GianiDefaultParams.INPUT_FILE_LABEL,&#xa;        GianiDefaultParams.SERIES_SELECT_LABEL,&#xa;        GianiDefaultParams.PREVIEW_CHAN_SELECT_LABEL})"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SelectInputPanel(props,img,&#xa;    new String[]{&#xa;        GianiDefaultParams.INPUT_DIR_LABEL,&#xa;        GianiDefaultParams.INPUT_FILE_LABEL,&#xa;        GianiDefaultParams.SERIES_SELECT_LABEL,&#xa;        GianiDefaultParams.PREVIEW_CHAN_SELECT_LABEL},&#xa;        getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Selecting-the-Input-Files&quot;))"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="componentList.add(selectInputPanel);"/>
       </AuxValues>
       <Constraints>
@@ -131,7 +131,7 @@
     </Component>
     <Component class="ui.MaximaFinderPanel" name="nuclearCentreFinderPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null),&#xa;    nuclearCentreFinderPanelPropLabels, true, -1)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MaximaFinderPanel(props,img,new MultiThreadedMaximaFinder(null),&#xa;    nuclearCentreFinderPanelPropLabels, true, -1,&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Estimating-the-centres-of-nuclei&quot;))"/>
         <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="String[] nuclearCentreFinderPanelPropLabels = new String[MultiThreadedMaximaFinder.N_PROP_LABELS];&#xa;nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.CHANNEL_SELECT] = GianiDefaultParams.BLOB_NUC_CHAN_SELECT_LABEL;&#xa;nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.BLOB_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS;&#xa;nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.BLOB_SIZE] = GianiDefaultParams.BLOB_NUC_RAD_LABEL;&#xa;nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.BLOB_THRESH] = GianiDefaultParams.BLOB_NUC_NOISE_TOL_LABEL;&#xa;nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.EDM_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_EDM_MAXIMA;&#xa;nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.EDM_MAX_SIZE] = GianiDefaultParams.NUC_MAXIMA_DETECT_EDM_MAX_SIZE;&#xa;nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.EDM_MIN_SIZE] = GianiDefaultParams.NUC_MAXIMA_DETECT_EDM_MIN_SIZE;&#xa;nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.EDM_THRESH] = GianiDefaultParams.NUC_MAXIMA_DETECT_EDM_THRESH;&#xa;nuclearCentreFinderPanelPropLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nuclearCentreFinderPanel.setVisible(false);&#xa;componentList.add(nuclearCentreFinderPanel);"/>
       </AuxValues>
@@ -143,7 +143,7 @@
     </Component>
     <Component class="ui.FilteringPanel" name="nuclearFilteringPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),&#xa;    new String[]{&#xa;        GianiDefaultParams.NUC_SEG_CHAN_SELECT_LABEL,&#xa;        GianiDefaultParams.NUC_FILT_RAD_XY_LABEL,&#xa;        GianiDefaultParams.NUC_FILT_RAD_Z_LABEL})"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),&#xa;    new String[]{&#xa;        GianiDefaultParams.NUC_SEG_CHAN_SELECT_LABEL,&#xa;        GianiDefaultParams.NUC_FILT_RAD_XY_LABEL,&#xa;        GianiDefaultParams.NUC_FILT_RAD_Z_LABEL},&#xa;        getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation&quot;))"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nuclearFilteringPanel.setVisible(false);&#xa;componentList.add(nuclearFilteringPanel);"/>
       </AuxValues>
       <Constraints>
@@ -154,7 +154,7 @@
     </Component>
     <Component class="ui.SegmentationPanel" name="nuclearSegmentationPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearCentreFinderPanel.getProcess(),&#xa;            nuclearFilteringPanel.getProcess()&#xa;        },&#xa;        &quot;Nuclei&quot;,&#xa;        false,&#xa;        false,&#xa;        false,&#xa;        cells,&#xa;        MultiThreadedWatershed.NUCLEI&#xa;    ),&#xa;    new String[]{&#xa;        GianiDefaultParams.SERIES_SELECT_LABEL,&#xa;        GianiDefaultParams.NUC_SEG_THRESH_LABEL,&#xa;        GianiDefaultParams.NUC_VOL_MARKER,&#xa;        GianiDefaultParams.NUC_MEM_MARKER,&#xa;        GianiDefaultParams.NUC_DIST_WEIGHTING&#xa;    }&#xa;)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearCentreFinderPanel.getProcess(),&#xa;            nuclearFilteringPanel.getProcess()&#xa;        },&#xa;        &quot;Nuclei&quot;,&#xa;        false,&#xa;        false,&#xa;        false,&#xa;        cells,&#xa;        MultiThreadedWatershed.NUCLEI&#xa;    ),&#xa;    new String[]{&#xa;        GianiDefaultParams.SERIES_SELECT_LABEL,&#xa;        GianiDefaultParams.NUC_SEG_THRESH_LABEL,&#xa;        GianiDefaultParams.NUC_VOL_MARKER,&#xa;        GianiDefaultParams.NUC_MEM_MARKER,&#xa;        GianiDefaultParams.NUC_DIST_WEIGHTING&#xa;    },&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Segmenting-Nuclei&quot;)&#xa;)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="nuclearSegmentationPanel.setVisible(false);&#xa;componentList.add(nuclearSegmentationPanel);"/>
       </AuxValues>
       <Constraints>
@@ -165,7 +165,7 @@
     </Component>
     <Component class="ui.FilteringPanel" name="cellFilteringPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),&#xa;    new String[]{&#xa;        GianiDefaultParams.CELL_SEG_CHAN_SELECT_LABEL,&#xa;        GianiDefaultParams.CELL_FILT_RAD_XY_LABEL,&#xa;        GianiDefaultParams.CELL_FILT_RAD_Z_LABEL})"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.FilteringPanel(props,img, new MultiThreadedGaussianFilter(null),&#xa;    new String[]{&#xa;        GianiDefaultParams.CELL_SEG_CHAN_SELECT_LABEL,&#xa;        GianiDefaultParams.CELL_FILT_RAD_XY_LABEL,&#xa;        GianiDefaultParams.CELL_FILT_RAD_Z_LABEL},&#xa;        getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Cell-Segmentation&quot;))"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="cellFilteringPanel.setVisible(false);&#xa;componentList.add(cellFilteringPanel);"/>
       </AuxValues>
       <Constraints>
@@ -176,7 +176,7 @@
     </Component>
     <Component class="ui.SegmentationPanel" name="cellSegmentationPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearSegmentationPanel.getProcess(),&#xa;            cellFilteringPanel.getProcess()&#xa;        },&#xa;        &quot;Cells&quot;,&#xa;        true,&#xa;        true,&#xa;        true,&#xa;        cells,&#xa;        MultiThreadedWatershed.CELLS&#xa;    ),&#xa;    new String[]{&#xa;        GianiDefaultParams.SERIES_SELECT_LABEL,&#xa;        GianiDefaultParams.CELL_SEG_THRESH_LABEL,&#xa;        GianiDefaultParams.CELL_VOL_MARKER,&#xa;        GianiDefaultParams.CELL_MEM_MARKER,&#xa;        GianiDefaultParams.CELL_DIST_WEIGHTING&#xa;    }&#xa;)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.SegmentationPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedWatershed(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearSegmentationPanel.getProcess(),&#xa;            cellFilteringPanel.getProcess()&#xa;        },&#xa;        &quot;Cells&quot;,&#xa;        true,&#xa;        true,&#xa;        true,&#xa;        cells,&#xa;        MultiThreadedWatershed.CELLS&#xa;    ),&#xa;    new String[]{&#xa;        GianiDefaultParams.SERIES_SELECT_LABEL,&#xa;        GianiDefaultParams.CELL_SEG_THRESH_LABEL,&#xa;        GianiDefaultParams.CELL_VOL_MARKER,&#xa;        GianiDefaultParams.CELL_MEM_MARKER,&#xa;        GianiDefaultParams.CELL_DIST_WEIGHTING&#xa;    },&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Complete-Segmentation-of-Cells&quot;)&#xa;)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="cellSegmentationPanel.setVisible(false);&#xa;componentList.add(cellSegmentationPanel);"/>
       </AuxValues>
       <Constraints>
@@ -190,7 +190,7 @@
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="measurementPanelMouseClicked"/>
       </Events>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MeasurementPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedROIConstructor(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearSegmentationPanel.getProcess(),&#xa;            cellSegmentationPanel.getProcess()&#xa;        },&#xa;        cells&#xa;    ),&#xa;    new String[]{&#xa;        GianiDefaultParams.CHAN_FOR_MEASURE,&#xa;        GianiDefaultParams.LOCALISE_SPOTS&#xa;    }&#xa;)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ui.MeasurementPanel(&#xa;    props,&#xa;    img,&#xa;    new MultiThreadedROIConstructor(&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearSegmentationPanel.getProcess(),&#xa;            cellSegmentationPanel.getProcess()&#xa;        },&#xa;        cells&#xa;    ),&#xa;    new String[]{&#xa;        GianiDefaultParams.CHAN_FOR_MEASURE,&#xa;        GianiDefaultParams.LOCALISE_SPOTS&#xa;    },&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Specifying-Channels-to-Measure&quot;)&#xa;)"/>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="measurementPanel.setVisible(false);&#xa;componentList.add(measurementPanel);"/>
       </AuxValues>
       <Constraints>

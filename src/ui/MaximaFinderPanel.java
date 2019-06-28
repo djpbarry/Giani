@@ -28,6 +28,7 @@ import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
 import gianiparams.GianiDefaultParams;
 import ij.process.AutoThresholder;
+import java.net.URI;
 
 /**
  *
@@ -43,11 +44,11 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
      * Creates new form MaximaFinderPanel
      */
     public MaximaFinderPanel() {
-        this(null, null, null, null, true, -1);
+        this(null, null, null, null, true, -1, null);
     }
 
-    public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process, String[] propLabels, boolean allowChannelSelect, int defaultChannel) {
-        super(props, img, process, propLabels);
+    public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process, String[] propLabels, boolean allowChannelSelect, int defaultChannel, URI helpURI) {
+        super(props, img, process, propLabels, helpURI);
         this.allowChannelSelect = allowChannelSelect;
         this.defaultChannel = defaultChannel;
         initComponents();
@@ -78,6 +79,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         edmThreshComboBox = new javax.swing.JComboBox<>();
         edmMinSizeTextField = new javax.swing.JTextField();
         edmMaxSizeTextField = new javax.swing.JTextField();
+        helpButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -114,7 +116,6 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 7;
-        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -263,6 +264,20 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(edmMaxSizeTextField, gridBagConstraints);
+
+        helpButton.setText("Help");
+        helpButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(helpButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -295,6 +310,10 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         edmMaxSizeLabel.setEnabled(edmDetectToggleButton.isSelected());
         edmMaxSizeTextField.setEnabled(edmDetectToggleButton.isSelected());
     }//GEN-LAST:event_edmDetectToggleButtonActionPerformed
+
+    private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed
+        openHelpPage(GianiDefaultParams.HELP_ERROR_MESSAGE);
+    }//GEN-LAST:event_helpButtonActionPerformed
 
     protected void setupProcess() {
         process.setup(img, props, propLabels);
@@ -364,6 +383,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     private javax.swing.JTextField edmMinSizeTextField;
     private javax.swing.JComboBox<String> edmThreshComboBox;
     private javax.swing.JLabel edmThreshLabel;
+    private javax.swing.JButton helpButton;
     private javax.swing.JLabel noiseTolLabel;
     private javax.swing.JTextField noiseTolTextField;
     protected javax.swing.JButton previewButton;

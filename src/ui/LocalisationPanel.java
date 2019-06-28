@@ -35,7 +35,7 @@ public class LocalisationPanel extends LayerPanel {
     }
 
     public LocalisationPanel(Properties props, BioFormatsImg img, MultiThreadedColocalise process, String[] propLabels) {
-        super(props, img, process, propLabels);
+        super(props, img, process, propLabels, null);
         initComponents();
     }
 

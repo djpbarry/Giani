@@ -31,6 +31,7 @@ import java.util.Properties;
 import gianiparams.GianiDefaultParams;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import java.net.URI;
 
 /**
  *
@@ -49,7 +50,11 @@ public class SelectInputPanel extends LayerPanel {
     }
 
     public SelectInputPanel(Properties props, BioFormatsImg img, String[] propLabels) {
-        super(props, img, null, propLabels);
+        this(props, img, propLabels, null);
+    }
+
+    public SelectInputPanel(Properties props, BioFormatsImg img, String[] propLabels, URI helpURI) {
+        super(props, img, null, propLabels, helpURI);
         initComponents();
     }
 
@@ -73,6 +78,7 @@ public class SelectInputPanel extends LayerPanel {
         seriesComboBox = new javax.swing.JComboBox<>();
         channelComboBox = new javax.swing.JComboBox<>();
         previewButton = new javax.swing.JButton();
+        helpButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -228,11 +234,24 @@ public class SelectInputPanel extends LayerPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(previewButton, gridBagConstraints);
+
+        helpButton.setText("Help");
+        helpButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(helpButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void chooseInputDirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseInputDirButtonActionPerformed
@@ -320,6 +339,10 @@ public class SelectInputPanel extends LayerPanel {
             this.dispatchEvent(new ComponentEvent(channelComboBox, ComponentEvent.COMPONENT_HIDDEN));
     }//GEN-LAST:event_channelComboBoxPopupMenuWillBecomeInvisible
 
+    private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed
+        openHelpPage(GianiDefaultParams.HELP_ERROR_MESSAGE);
+    }//GEN-LAST:event_helpButtonActionPerformed
+
     private void directoryUpdated() {
         inputDirectory = new File(inputDirTextField.getText());
         if (inputDirectory.exists() && inputDirectory.isDirectory()) {
@@ -379,6 +402,7 @@ public class SelectInputPanel extends LayerPanel {
     private javax.swing.JButton chooseInputDirButton;
     private javax.swing.JComboBox<String> fileNameComboBox;
     private javax.swing.JLabel fileNameComboLabel;
+    private javax.swing.JButton helpButton;
     private javax.swing.JLabel inputDirLabel;
     private javax.swing.JTextField inputDirTextField;
     private javax.swing.JButton previewButton;

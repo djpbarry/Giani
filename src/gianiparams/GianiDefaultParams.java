@@ -63,6 +63,7 @@ public class GianiDefaultParams extends Properties {
     public static final String FOCI_MAXIMA_DETECT_EDM_THRESH = "Threshold for EDM Detection for Channel ";
     public static final String FOCI_MAXIMA_DETECT_EDM_MIN_SIZE = "Min Size for EDM Detection for Channel ";
     public static final String FOCI_MAXIMA_DETECT_EDM_MAX_SIZE = "Max Size for EDM Detection for Channel ";
+    public static final String HELP_ERROR_MESSAGE = "Error: Can't open online help docs.";
 
     public GianiDefaultParams() {
         initialise();

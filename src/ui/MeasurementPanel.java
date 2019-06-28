@@ -25,6 +25,7 @@ import java.util.Properties;
 import javax.swing.DefaultListModel;
 import javax.swing.ListSelectionModel;
 import gianiparams.GianiDefaultParams;
+import java.net.URI;
 
 /**
  *
@@ -36,11 +37,11 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
      * Creates new form MeasurementPanel
      */
     public MeasurementPanel() {
-        this(null, null, null, null);
+        this(null, null, null, null, null);
     }
 
-    public MeasurementPanel(Properties props, BioFormatsImg img, MultiThreadedROIConstructor process, String[] propLabels) {
-        super(props, img, process, propLabels);
+    public MeasurementPanel(Properties props, BioFormatsImg img, MultiThreadedROIConstructor process, String[] propLabels, URI helpURI) {
+        super(props, img, process, propLabels, helpURI);
         initComponents();
     }
 
@@ -59,6 +60,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         channelList = new javax.swing.JList<>();
         channelSelectLabel = new javax.swing.JLabel();
         localiseSpotsToggleButton = new javax.swing.JToggleButton();
+        helpButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -93,6 +95,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -104,6 +107,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -119,10 +123,25 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(localiseSpotsToggleButton, gridBagConstraints);
+
+        helpButton.setText("Help");
+        helpButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(helpButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void measurePreviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_measurePreviewButtonActionPerformed
@@ -143,6 +162,10 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
     private void localiseSpotsToggleButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_localiseSpotsToggleButtonMouseClicked
         channelListMouseClicked(evt);
     }//GEN-LAST:event_localiseSpotsToggleButtonMouseClicked
+
+    private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed
+        openHelpPage(GianiDefaultParams.HELP_ERROR_MESSAGE);
+    }//GEN-LAST:event_helpButtonActionPerformed
 
     protected void setupProcess() {
         process.setup(img, props, new String[]{GianiDefaultParams.SERIES_SELECT_LABEL, propLabels[0], GianiDefaultParams.OUTPUT_DIR_LABEL});
@@ -175,6 +198,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
     private javax.swing.JList<String> channelList;
     private javax.swing.JScrollPane channelScrollPane;
     private javax.swing.JLabel channelSelectLabel;
+    private javax.swing.JButton helpButton;
     private javax.swing.JToggleButton localiseSpotsToggleButton;
     private javax.swing.JButton measurePreviewButton;
     // End of variables declaration//GEN-END:variables

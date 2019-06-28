@@ -9,11 +9,13 @@ import IO.BioFormats.BioFormatsImg;
 import Process.Segmentation.MultiThreadedWatershed;
 import UIClasses.LayerPanel;
 import UIClasses.Updateable;
+import gianiparams.GianiDefaultParams;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.LutLoader;
 import ij.process.AutoThresholder;
 import java.io.File;
+import java.net.URI;
 import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
 
@@ -27,11 +29,11 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
      * Creates new form SegmentationPanel
      */
     public SegmentationPanel() {
-        this(null, null, null, null);
+        this(null, null, null, null, null);
     }
 
-    public SegmentationPanel(Properties props, BioFormatsImg img, MultiThreadedWatershed process, String[] propLabels) {
-        super(props, img, process, propLabels);
+    public SegmentationPanel(Properties props, BioFormatsImg img, MultiThreadedWatershed process, String[] propLabels, URI helpURI) {
+        super(props, img, process, propLabels, helpURI);
         initComponents();
     }
 
@@ -52,6 +54,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         membraneToggleButton = new javax.swing.JToggleButton();
         distWeightingLabel = new javax.swing.JLabel();
         distWeightingTextField = new javax.swing.JTextField();
+        helpButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -65,7 +68,6 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -147,6 +149,20 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(distWeightingTextField, gridBagConstraints);
+
+        helpButton.setText("Help");
+        helpButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(helpButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -182,6 +198,10 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         updateDistanceWeighting();
     }//GEN-LAST:event_membraneToggleButtonActionPerformed
 
+    private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed
+        openHelpPage(GianiDefaultParams.HELP_ERROR_MESSAGE);
+    }//GEN-LAST:event_helpButtonActionPerformed
+
     void updateDistanceWeighting() {
         distWeightingLabel.setEnabled(membraneToggleButton.isSelected());
         distWeightingTextField.setEnabled(membraneToggleButton.isSelected());
@@ -194,6 +214,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel distWeightingLabel;
     private javax.swing.JTextField distWeightingTextField;
+    private javax.swing.JButton helpButton;
     private javax.swing.JToggleButton membraneToggleButton;
     private javax.swing.JButton previewButton;
     private javax.swing.JComboBox<String> thresholdComboBox;
