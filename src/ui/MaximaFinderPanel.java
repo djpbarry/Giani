@@ -315,7 +315,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         openHelpPage(GianiDefaultParams.HELP_ERROR_MESSAGE);
     }//GEN-LAST:event_helpButtonActionPerformed
 
-    protected void setupProcess() {
+    public void setupProcess() {
         process.setup(img, props, propLabels);
     }
 

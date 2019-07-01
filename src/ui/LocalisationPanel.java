@@ -39,7 +39,7 @@ public class LocalisationPanel extends LayerPanel {
         initComponents();
     }
 
-    protected void setupProcess() {
+    public void setupProcess() {
         process.setup(img, props, propLabels);
     }
     

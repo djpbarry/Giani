@@ -379,20 +379,23 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }//GEN-LAST:event_previousButtonActionPerformed
 
     private void loadParametersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadParametersButtonActionPerformed
+        loadParameters(props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL));
+    }//GEN-LAST:event_loadParametersButtonActionPerformed
+
+    public void loadParameters(String location) {
         try {
-            PropertyWriter.loadProperties(props, TITLE, new File(props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL)));
+            PropertyWriter.loadProperties(props, TITLE, new File(location));
             updateProperties(props, this);
             measurementPanelMouseClicked(null);
             runButton.setEnabled(true);
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to load property file.");
         }
-    }//GEN-LAST:event_loadParametersButtonActionPerformed
+    }
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
         setVariables();
-        String outputDirectoryName = GenUtils.openResultsDirectory(props.getProperty(GianiDefaultParams.OUTPUT_DIR_LABEL));
-        props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, outputDirectoryName);
+        setOutputDirectory(props);
         addProcess();
         LocalMapperExecutor exec = new LocalMapperExecutor(pipeline, props);
         exec.start();
@@ -405,6 +408,12 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         runButton.setEnabled(true);
     }//GEN-LAST:event_runButtonActionPerformed
 
+    public void setOutputDirectory(Properties props){
+        props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, String.format("%s%s%s", props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL), File.separator, GIANIUI.TITLE));
+        String outputDirectoryName = GenUtils.openResultsDirectory(props.getProperty(GianiDefaultParams.OUTPUT_DIR_LABEL));
+        props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, outputDirectoryName);
+    }
+    
     private void measurementPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_measurementPanelMouseClicked
         addAdditionalBlobDetectionPanels();
     }//GEN-LAST:event_measurementPanelMouseClicked
@@ -597,6 +606,23 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         }
         return helpURI;
     }
+
+    public ProcessPipeline buildPipeline() {
+        ProcessPipeline output = new ProcessPipeline();
+        for (LayerPanel c : componentList) {
+            c.setupProcess();
+            MultiThreadedProcess process = c.getProcess();
+            if (process != null) {
+                output.addProcess(process);
+            }
+        }
+        return output;
+    }
+
+    public static Properties getProps() {
+        return props;
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonPanel;

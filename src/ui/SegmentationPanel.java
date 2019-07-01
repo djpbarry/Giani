@@ -184,7 +184,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         imp.show();
     }//GEN-LAST:event_previewButtonActionPerformed
 
-    protected void setupProcess() {
+    public void setupProcess() {
         process.setup(img, props, propLabels);
     }
 

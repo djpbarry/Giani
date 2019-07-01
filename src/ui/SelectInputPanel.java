@@ -358,7 +358,7 @@ public class SelectInputPanel extends LayerPanel {
             setProperties(props, this);
             String fileName = (String) fileNameComboBox.getSelectedItem();
 //            img.setId(String.format("%s%s%s", inputDirectory, File.separator, fileName));
-            props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, String.format("%s%s%s", inputDirectory.getAbsolutePath(), File.separator, GIANIUI.TITLE));
+//            props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, String.format("%s%s%s", inputDirectory.getAbsolutePath(), File.separator, GIANIUI.TITLE));
         } catch (Exception e) {
             return false;
         }
@@ -392,7 +392,7 @@ public class SelectInputPanel extends LayerPanel {
         fileNameComboBoxPopupMenuWillBecomeInvisible(null);
     }
 
-    protected void setupProcess() {
+    public void setupProcess() {
 
     }
 

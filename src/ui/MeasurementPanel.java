@@ -167,7 +167,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         openHelpPage(GianiDefaultParams.HELP_ERROR_MESSAGE);
     }//GEN-LAST:event_helpButtonActionPerformed
 
-    protected void setupProcess() {
+    public void setupProcess() {
         process.setup(img, props, new String[]{GianiDefaultParams.SERIES_SELECT_LABEL, propLabels[0], GianiDefaultParams.OUTPUT_DIR_LABEL});
     }
 
