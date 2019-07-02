@@ -16,7 +16,11 @@
  */
 package gianiparams;
 
+import Revision.Revision;
+import UtilClasses.GenUtils;
 import ij.IJ;
+import java.io.File;
+import java.text.DecimalFormat;
 import java.util.Properties;
 
 /**
@@ -64,6 +68,7 @@ public class GianiDefaultParams extends Properties {
     public static final String FOCI_MAXIMA_DETECT_EDM_MIN_SIZE = "Min Size for EDM Detection for Channel ";
     public static final String FOCI_MAXIMA_DETECT_EDM_MAX_SIZE = "Max Size for EDM Detection for Channel ";
     public static final String HELP_ERROR_MESSAGE = "Error: Can't open online help docs.";
+    public static final String TITLE = String.format("GIANI v%d.%s", Revision.VERSION, new DecimalFormat("000").format(Revision.revisionNumber));
 
     public GianiDefaultParams() {
         initialise();
@@ -102,5 +107,11 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(NUC_MAXIMA_DETECT_EDM_THRESH, "Default");
         this.setProperty(NUC_MAXIMA_DETECT_EDM_MIN_SIZE, "0.0");
         this.setProperty(NUC_MAXIMA_DETECT_EDM_MAX_SIZE, "0.0");
+    }
+
+    public static void setOutputDirectory(Properties props) {
+        props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, String.format("%s%s%s", props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL), File.separator, GianiDefaultParams.TITLE));
+        String outputDirectoryName = GenUtils.openResultsDirectory(props.getProperty(GianiDefaultParams.OUTPUT_DIR_LABEL));
+        props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, outputDirectoryName);
     }
 }

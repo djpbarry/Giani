@@ -20,9 +20,7 @@ import UtilClasses.GenUtils;
 import GIANI.LocalMapperExecutor;
 import GIANI.PipelineBuilder;
 import Process.Colocalise.MultiThreadedColocalise;
-import Revision.Revision;
 import java.awt.GridBagConstraints;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import mcib3d.geom.Objects3DPopulation;
 import gianiparams.GianiDefaultParams;
@@ -48,7 +46,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     private static Properties props;
     private final LinkedList<LayerPanel> componentList = new LinkedList();
     private int layerIndex = 0;
-    public static final String TITLE = String.format("GIANI v%d.%s", Revision.VERSION, new DecimalFormat("000").format(Revision.revisionNumber));
     private final ProcessPipeline pipeline;
     private ArrayList<MaximaFinderPanel> maximaFinderPanels;
     private LocalisationPanel localisationPanel;
@@ -152,7 +149,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     );
 
     setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-    setTitle(TITLE);
+    setTitle(GianiDefaultParams.TITLE);
     setIconImages(null);
     setMinimumSize(new java.awt.Dimension(800, 800));
     getContentPane().setLayout(new java.awt.GridBagLayout());
@@ -345,7 +342,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
     public void loadParameters(String location) {
         try {
-            PropertyWriter.loadProperties(props, TITLE, new File(location));
+            PropertyWriter.loadProperties(props, GianiDefaultParams.TITLE, new File(location));
             updateProperties(props, this);
             measurementPanelMouseClicked(null);
             runButton.setEnabled(true);
@@ -356,7 +353,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
         setVariables();
-        setOutputDirectory(props);
+        GianiDefaultParams.setOutputDirectory(props);
         addProcess();
         LocalMapperExecutor exec = new LocalMapperExecutor(pipeline, props);
         exec.start();
@@ -369,12 +366,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         runButton.setEnabled(true);
     }//GEN-LAST:event_runButtonActionPerformed
 
-    public void setOutputDirectory(Properties props){
-        props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, String.format("%s%s%s", props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL), File.separator, GIANIUI.TITLE));
-        String outputDirectoryName = GenUtils.openResultsDirectory(props.getProperty(GianiDefaultParams.OUTPUT_DIR_LABEL));
-        props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, outputDirectoryName);
-    }
-    
     private void measurementPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_measurementPanelMouseClicked
         addAdditionalBlobDetectionPanels();
     }//GEN-LAST:event_measurementPanelMouseClicked
@@ -579,7 +570,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 //        }
 //        return output;
 //    }
-
     public static Properties getProps() {
         return props;
     }

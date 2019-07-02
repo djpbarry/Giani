@@ -38,8 +38,6 @@ import java.util.concurrent.Future;
 import loci.formats.FormatException;
 import org.apache.commons.io.FilenameUtils;
 import gianiparams.GianiDefaultParams;
-import ui.GIANIUI;
-import static ui.GIANIUI.TITLE;
 
 /**
  *
@@ -102,12 +100,12 @@ public class LocalMapperExecutor extends Thread {
             }
         }
         try {
-            DataWriter.saveResultsTable(Analyzer.getResultsTable(), new File(String.format("%s%s%s_Output.csv", outputDir, File.separator, GIANIUI.TITLE)));
+            DataWriter.saveResultsTable(Analyzer.getResultsTable(), new File(String.format("%s%s%s_Output.csv", outputDir, File.separator, GianiDefaultParams.TITLE)));
         } catch (IOException e) {
             GenUtils.logError(e, "Failed to save results file.");
         }
         try {
-            PropertyWriter.saveProperties(props, outputDir.getAbsolutePath(), TITLE, true);
+            PropertyWriter.saveProperties(props, outputDir.getAbsolutePath(), GianiDefaultParams.TITLE, true);
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to save property file.");
         }

@@ -20,6 +20,7 @@ import Extrema.MultiThreadedMaximaFinder;
 import IO.BioFormats.BioFormatsImg;
 import Process.Filtering.MultiThreadedGaussianFilter;
 import Process.MultiThreadedProcess;
+import Process.ProcessPipeline;
 import Process.ROI.MultiThreadedROIConstructor;
 import Process.Segmentation.MultiThreadedWatershed;
 import gianiparams.GianiDefaultParams;
@@ -120,5 +121,26 @@ public class PipelineBuilder {
         );
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
+    }
+
+    public static ProcessPipeline buildFullPipeline(Properties props, Objects3DPopulation cells) {
+        ProcessPipeline pipeline = new ProcessPipeline();
+
+        pipeline.addProcess(PipelineBuilder.getDefaultMaximaFinder(props));
+        pipeline.addProcess(PipelineBuilder.getDefaultNucFilteringProcess(props));
+        pipeline.addProcess(PipelineBuilder.getDefaultNucSegmenter(props,
+                new MultiThreadedProcess[]{
+                    pipeline.getProcess(0), pipeline.getProcess(1)
+                }, cells));
+        pipeline.addProcess(PipelineBuilder.getDefaultCellFilteringProcess(props));
+        pipeline.addProcess(PipelineBuilder.getDefaultCellSegmenter(props,
+                new MultiThreadedProcess[]{
+                    pipeline.getProcess(2), pipeline.getProcess(3)
+                }, cells));
+        pipeline.addProcess(PipelineBuilder.getDefaultMeasure(props,
+                new MultiThreadedProcess[]{
+                    pipeline.getProcess(2), pipeline.getProcess(4)
+                }, cells));
+        return pipeline;
     }
 }
