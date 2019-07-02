@@ -75,7 +75,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(previewButton, gridBagConstraints);
 
-        filterRadiusXYLabel.setText(propLabels[1]);
+        filterRadiusXYLabel.setText(propLabels[MultiThreadedGaussianFilter.XY_FILT_LABEL]);
         filterRadiusXYLabel.setLabelFor(filterRadiusXYTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -96,7 +96,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(filterRadiusXYTextField, gridBagConstraints);
 
-        filterRadiusZLabel.setText(propLabels[2]);
+        filterRadiusZLabel.setText(propLabels[MultiThreadedGaussianFilter.Z_FILT_LABEL]);
         filterRadiusZLabel.setLabelFor(filterRadiusZTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -117,7 +117,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(filterRadiusZTextField, gridBagConstraints);
 
-        channelSelectLabel.setText(propLabels[0]);
+        channelSelectLabel.setText(propLabels[MultiThreadedGaussianFilter.CHANNEL_LABEL]);
         channelSelectLabel.setLabelFor(channelSelectComboBox);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -170,9 +170,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
     }//GEN-LAST:event_helpButtonActionPerformed
 
     public void setupProcess() {
-        process.setup(img, props, new String[]{
-            GianiDefaultParams.SERIES_SELECT_LABEL, propLabels[0], propLabels[1], propLabels[2]
-        });
+        process.setup(img, props, propLabels);
     }
 
     public void update() {
@@ -185,7 +183,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
             channelLabels.add(String.valueOf(c));
         }
         channelSelectComboBox.setModel(new DefaultComboBoxModel(channelLabels.toArray()));
-        channelSelectComboBox.setSelectedItem(props.get(propLabels[0]));
+        channelSelectComboBox.setSelectedItem(props.get(propLabels[MultiThreadedGaussianFilter.CHANNEL_LABEL]));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -33,17 +33,17 @@ public class Main {
     public static void main(String[] args) {
         System.setProperty("java.awt.headless", "true"); 
         GIANIUI gui = new GIANIUI();
-        ProcessPipeline pipeline = gui.buildPipeline();
-        Properties props = new GianiDefaultParams();
-        try {
-            PropertyWriter.loadProperties(props, null, new File(args[1]));
-        } catch (Exception e) {
-            GenUtils.logError(e, "Failed to load properties file.");
-        }
-        props.setProperty(GianiDefaultParams.INPUT_DIR_LABEL, args[0]);
-        gui.setOutputDirectory(props);
-        LocalMapperExecutor exec = new LocalMapperExecutor(pipeline, props);
-        exec.run();
+//        ProcessPipeline pipeline = gui.buildPipeline();
+//        Properties props = new GianiDefaultParams();
+//        try {
+//            PropertyWriter.loadProperties(props, null, new File(args[1]));
+//        } catch (Exception e) {
+//            GenUtils.logError(e, "Failed to load properties file.");
+//        }
+//        props.setProperty(GianiDefaultParams.INPUT_DIR_LABEL, args[0]);
+//        gui.setOutputDirectory(props);
+//        LocalMapperExecutor exec = new LocalMapperExecutor(pipeline, props);
+//        exec.run();
         System.exit(0);
     }
 

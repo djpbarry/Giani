@@ -39,7 +39,7 @@
     <Component class="javax.swing.JLabel" name="thresholdLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="propLabels[1]" type="code"/>
+          <Connection code="propLabels[MultiThreadedWatershed.THRESHOLD_LABEL]" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
@@ -70,7 +70,7 @@
     <Component class="javax.swing.JToggleButton" name="volumeToggleButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="propLabels[2]" type="code"/>
+          <Connection code="propLabels[MultiThreadedWatershed.VOL_MARKER_LABEL]" type="code"/>
         </Property>
       </Properties>
       <Events>
@@ -88,7 +88,7 @@
     <Component class="javax.swing.JToggleButton" name="membraneToggleButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="propLabels[3]" type="code"/>
+          <Connection code="propLabels[MultiThreadedWatershed.MEMB_MARKER_LABEL]" type="code"/>
         </Property>
       </Properties>
       <Events>
@@ -106,7 +106,7 @@
     <Component class="javax.swing.JLabel" name="distWeightingLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="propLabels[4]" type="code"/>
+          <Connection code="propLabels[MultiThreadedWatershed.LAMBDA_LABEL]" type="code"/>
         </Property>
       </Properties>
       <AuxValues>

@@ -102,7 +102,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(channelScrollPane, gridBagConstraints);
 
-        channelSelectLabel.setText(propLabels[0]);
+        channelSelectLabel.setText(propLabels[MultiThreadedROIConstructor.CHANNELS_LABEL]);
         channelSelectLabel.setLabelFor(channelScrollPane);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -113,7 +113,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weighty = 1.0;
         add(channelSelectLabel, gridBagConstraints);
 
-        localiseSpotsToggleButton.setText(propLabels[1]);
+        localiseSpotsToggleButton.setText(propLabels[MultiThreadedROIConstructor.LOCALISE_LABEL]);
         localiseSpotsToggleButton.setSelected(Boolean.parseBoolean(props.getProperty(propLabels[1])));
         localiseSpotsToggleButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -168,7 +168,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
     }//GEN-LAST:event_helpButtonActionPerformed
 
     public void setupProcess() {
-        process.setup(img, props, new String[]{GianiDefaultParams.SERIES_SELECT_LABEL, propLabels[0], GianiDefaultParams.OUTPUT_DIR_LABEL});
+        process.setup(img, props, propLabels);
     }
 
     public void update() {
@@ -181,7 +181,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
             model.addElement(String.format("Channel %d", c));
         }
         channelList.setModel(model);
-        String selectedChannels = props.getProperty(propLabels[0]);
+        String selectedChannels = props.getProperty(propLabels[MultiThreadedROIConstructor.CHANNELS_LABEL]);
         if (selectedChannels == null) {
             return;
         }

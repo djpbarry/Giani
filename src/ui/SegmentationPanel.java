@@ -73,7 +73,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(previewButton, gridBagConstraints);
 
-        thresholdLabel.setText(propLabels[1]);
+        thresholdLabel.setText(propLabels[MultiThreadedWatershed.THRESHOLD_LABEL]);
         thresholdLabel.setLabelFor(thresholdComboBox);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -95,7 +95,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(thresholdComboBox, gridBagConstraints);
 
-        volumeToggleButton.setText(propLabels[2]);
+        volumeToggleButton.setText(propLabels[MultiThreadedWatershed.VOL_MARKER_LABEL]);
         volumeToggleButton.setSelected(Boolean.parseBoolean(props.getProperty(propLabels[2])));
         volumeToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -111,7 +111,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(volumeToggleButton, gridBagConstraints);
 
-        membraneToggleButton.setText(propLabels[3]);
+        membraneToggleButton.setText(propLabels[MultiThreadedWatershed.MEMB_MARKER_LABEL]);
         membraneToggleButton.setSelected(!Boolean.parseBoolean(props.getProperty(propLabels[2])));
         membraneToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -127,7 +127,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(membraneToggleButton, gridBagConstraints);
 
-        distWeightingLabel.setText(propLabels[4]);
+        distWeightingLabel.setText(propLabels[MultiThreadedWatershed.LAMBDA_LABEL]);
         distWeightingLabel.setLabelFor(distWeightingTextField);
         distWeightingLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[2])));
         gridBagConstraints = new java.awt.GridBagConstraints();
