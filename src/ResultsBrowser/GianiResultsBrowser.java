@@ -37,6 +37,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -197,10 +198,13 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
             loadObjectsButton.setEnabled(false);
             objectList.setEnabled(false);
         }
+        if(!updateObjectList()){
+            GenUtils.error("GIANI output data not found");
+            return;
+        }
+        openResultsTable();
         loadObjectsButton.setEnabled(true);
         objectList.setEnabled(true);
-        updateObjectList();
-        openResultsTable();
     }//GEN-LAST:event_setDirectoryButtonActionPerformed
 
     private void loadObjectsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadObjectsButtonActionPerformed
@@ -223,6 +227,7 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
         }
         roiManager.addObjects3DPopulation(popImp);
         addListenerToRoiManager3DObjectList(roiManager.getComponents());
+        enableRoiManagerLiveMode(roiManager.getComponents());
     }//GEN-LAST:event_loadObjectsButtonActionPerformed
 
     void addListenerToRoiManager3DObjectList(Component[] components) {
@@ -236,13 +241,30 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
         }
     }
 
-    void updateObjectList() {
+    void enableRoiManagerLiveMode(Component[] components) {
+        for (Component c : components) {
+            if (c instanceof JButton) {
+                String text = ((JButton) c).getText();
+                if (text.contains("Live Roi")) {
+                    ((JButton) c).doClick();
+                }
+            } else if (c instanceof Container) {
+                enableRoiManagerLiveMode(((Container) c).getComponents());
+            }
+        }
+    }
+
+    boolean updateObjectList() {
         DefaultListModel model = new DefaultListModel();
         String[] files = inputDirectory.list(new SuffixFileFilter(".zip"));
+        if (files.length < 1) {
+            return false;
+        }
         for (int f = 0; f < files.length; f++) {
             model.addElement(files[f]);
         }
         objectList.setModel(model);
+        return true;
     }
 
     void openResultsTable() {
