@@ -17,7 +17,7 @@ import UIClasses.LayerPanel;
 import UIClasses.PropertyExtractor;
 import UIClasses.Updateable;
 import UtilClasses.GenUtils;
-import GIANI.LocalMapperExecutor;
+import GIANI.PipelineExecutor;
 import GIANI.PipelineBuilder;
 import Process.Colocalise.MultiThreadedColocalise;
 import java.awt.GridBagConstraints;
@@ -355,7 +355,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         setVariables();
         GianiDefaultParams.setOutputDirectory(props);
         addProcess();
-        LocalMapperExecutor exec = new LocalMapperExecutor(pipeline, props);
+        PipelineExecutor exec = new PipelineExecutor(pipeline, props);
         exec.start();
         runButton.setEnabled(false);
         try {

@@ -41,7 +41,7 @@ public class Main {
         props.setProperty(GianiDefaultParams.INPUT_DIR_LABEL, args[0]);
         GianiDefaultParams.setOutputDirectory(props);
         ProcessPipeline pipeline = PipelineBuilder.buildFullPipeline(props, new Objects3DPopulation());
-        LocalMapperExecutor exec = new LocalMapperExecutor(pipeline, props);
+        PipelineExecutor exec = new PipelineExecutor(pipeline, props);
         exec.run();
         System.exit(0);
     }

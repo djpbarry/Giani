@@ -43,12 +43,12 @@ import gianiparams.GianiDefaultParams;
  *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
-public class LocalMapperExecutor extends Thread {
+public class PipelineExecutor extends Thread {
 
     private final ProcessPipeline pipeline;
     private final Properties props;
 
-    public LocalMapperExecutor(ProcessPipeline pipeline, Properties props) {
+    public PipelineExecutor(ProcessPipeline pipeline, Properties props) {
         this.pipeline = pipeline;
         this.props = props;
     }
