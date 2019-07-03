@@ -27,8 +27,11 @@ import java.util.ArrayList;
 import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
 import gianiparams.GianiDefaultParams;
+import ij.gui.Roi;
 import ij.process.AutoThresholder;
+import java.awt.Color;
 import java.net.URI;
+import ome.units.quantity.Length;
 
 /**
  *
@@ -289,7 +292,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         } catch (InterruptedException e) {
             return;
         }
-        showOutput(((MultiThreadedMaximaFinder) process).getMaxima(), process.getOutput().getTitle());
+        showOutput(((MultiThreadedMaximaFinder) process).getMaxima(), process.getOutput().getTitle(), ((MultiThreadedMaximaFinder) process).getEdmThresholdOutline());
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void blobDetectToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blobDetectToggleButtonActionPerformed
@@ -319,14 +322,22 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         process.setup(img, props, propLabels);
     }
 
-    private void showOutput(ArrayList<int[]> maxima, String title) {
+    private void showOutput(ArrayList<int[]> maxima, String title, Roi[] binaryOutline) {
         ImagePlus imp = img.getLoadedImage();
         Overlay o = new Overlay();
-        double zSpatRes = img.getZSpatialRes(Integer.parseInt(props.getProperty(GianiDefaultParams.SERIES_SELECT_LABEL))).value().doubleValue();
-        double xySpatRes = img.getXYSpatialRes(Integer.parseInt(props.getProperty(GianiDefaultParams.SERIES_SELECT_LABEL))).value().doubleValue();
+        Length zLength = img.getZSpatialRes(Integer.parseInt(props.getProperty(GianiDefaultParams.SERIES_SELECT_LABEL)));
+        double zSpatRes = 1.0;
+        if (zLength != null) {
+            zSpatRes = zLength.value().doubleValue();
+        }
+        Length xyLength = img.getXYSpatialRes(Integer.parseInt(props.getProperty(GianiDefaultParams.SERIES_SELECT_LABEL)));
+        double xySpatRes = 1.0;
+        if (xyLength != null) {
+            xySpatRes = xyLength.value().doubleValue();
+        }
         double maxXYRadiusMic = Double.parseDouble(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_SIZE]));
         double maxZRadiusMic = Double.parseDouble(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_SIZE]));
-        if(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT]))){
+        if (!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT]))) {
             maxXYRadiusMic = Double.parseDouble(props.getProperty(propLabels[MultiThreadedMaximaFinder.EDM_MIN_SIZE]));
             maxZRadiusMic = Double.parseDouble(props.getProperty(propLabels[MultiThreadedMaximaFinder.EDM_MIN_SIZE]));
         }
@@ -345,6 +356,13 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
                 OvalRoi roi = new OvalRoi(pix[0] - currentRadius, pix[1] - currentRadius, 2 * currentRadius + 1, 2 * currentRadius + 1);
                 roi.setPosition(z);
                 o.add(roi);
+            }
+        }
+        if (edmDetectToggleButton.isSelected()) {
+            for (int i = 0; i < imp.getNSlices(); i++) {
+                binaryOutline[i].setStrokeColor(Color.red);
+                binaryOutline[i].setPosition(i + 1);
+                o.add(binaryOutline[i]);
             }
         }
         imp.setTitle(title);

@@ -60,8 +60,8 @@ public class GianiDefaultParams extends Properties {
     public static final String NUC_MAXIMA_DETECT_BLOBS = "Nuclear Blob Detector";
     public static final String NUC_MAXIMA_DETECT_EDM_MAXIMA = "Nuclear EDM Maxima Detector";
     public static final String NUC_MAXIMA_DETECT_EDM_THRESH = "Nuclear Threshold for EDM Detection";
-    public static final String NUC_MAXIMA_DETECT_EDM_MIN_SIZE = "Nuclear Min Size for EDM Detection";
-    public static final String NUC_MAXIMA_DETECT_EDM_MAX_SIZE = "Nuclear Max Size for EDM Detection";
+    public static final String NUC_MAXIMA_DETECT_EDM_MIN_SIZE = String.format("Min Nuclear Radius for EDM Detection (%cm)", IJ.micronSymbol);
+    public static final String NUC_MAXIMA_DETECT_EDM_MAX_SIZE = String.format("Max Nuclear Radius for EDM Detection (%cm)", IJ.micronSymbol);
     public static final String FOCI_MAXIMA_DETECT_BLOBS = "Blob Detector for Channel ";
     public static final String FOCI_MAXIMA_DETECT_EDM_MAXIMA = "EDM Maxima Detector for Channel ";
     public static final String FOCI_MAXIMA_DETECT_EDM_THRESH = "Threshold for EDM Detection for Channel ";
