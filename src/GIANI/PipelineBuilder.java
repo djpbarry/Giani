@@ -44,6 +44,7 @@ public class PipelineBuilder {
         propLabels[MultiThreadedMaximaFinder.EDM_MIN_SIZE] = GianiDefaultParams.NUC_MAXIMA_DETECT_EDM_MIN_SIZE;
         propLabels[MultiThreadedMaximaFinder.EDM_THRESH] = GianiDefaultParams.NUC_MAXIMA_DETECT_EDM_THRESH;
         propLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
+        propLabels[MultiThreadedMaximaFinder.EDM_FILTER] = GianiDefaultParams.NUC_MAXIMA_DETECT_FILTER_RAD;
         MultiThreadedMaximaFinder process = new MultiThreadedMaximaFinder(null);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;

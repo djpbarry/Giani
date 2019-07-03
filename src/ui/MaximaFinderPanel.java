@@ -83,6 +83,8 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         edmMinSizeTextField = new javax.swing.JTextField();
         edmMaxSizeTextField = new javax.swing.JTextField();
         helpButton = new javax.swing.JButton();
+        edmFilterLabel = new javax.swing.JLabel();
+        edmFilterTextField = new javax.swing.JTextField();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -118,7 +120,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -216,7 +218,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         edmMinSizeLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -228,7 +230,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         edmMaxSizeLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -250,7 +252,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         edmMinSizeTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -261,7 +263,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         edmMaxSizeTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -276,11 +278,34 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(helpButton, gridBagConstraints);
+
+        edmFilterLabel.setText(propLabels[MultiThreadedMaximaFinder.EDM_FILTER]);
+        edmFilterLabel.setLabelFor(edmFilterTextField);
+        edmFilterLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(edmFilterLabel, gridBagConstraints);
+
+        edmFilterTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.EDM_FILTER]));
+        edmFilterTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(edmFilterTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -312,6 +337,8 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         edmMinSizeTextField.setEnabled(edmDetectToggleButton.isSelected());
         edmMaxSizeLabel.setEnabled(edmDetectToggleButton.isSelected());
         edmMaxSizeTextField.setEnabled(edmDetectToggleButton.isSelected());
+        edmFilterLabel.setEnabled(edmDetectToggleButton.isSelected());
+        edmFilterTextField.setEnabled(edmDetectToggleButton.isSelected());
     }//GEN-LAST:event_edmDetectToggleButtonActionPerformed
 
     private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed
@@ -360,6 +387,9 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         }
         if (edmDetectToggleButton.isSelected()) {
             for (int i = 0; i < imp.getNSlices(); i++) {
+                if (binaryOutline[i] == null) {
+                    continue;
+                }
                 binaryOutline[i].setStrokeColor(Color.red);
                 binaryOutline[i].setPosition(i + 1);
                 o.add(binaryOutline[i]);
@@ -395,6 +425,8 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     private javax.swing.JComboBox<String> channelSelectComboBox;
     private javax.swing.JLabel channelSelectLabel;
     private javax.swing.JToggleButton edmDetectToggleButton;
+    private javax.swing.JLabel edmFilterLabel;
+    private javax.swing.JTextField edmFilterTextField;
     private javax.swing.JLabel edmMaxSizeLabel;
     private javax.swing.JTextField edmMaxSizeTextField;
     private javax.swing.JLabel edmMinSizeLabel;

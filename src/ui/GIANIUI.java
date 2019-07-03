@@ -509,6 +509,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 propLabels[MultiThreadedMaximaFinder.EDM_MAX_SIZE] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_EDM_MAX_SIZE, i);
                 propLabels[MultiThreadedMaximaFinder.EDM_MIN_SIZE] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_EDM_MIN_SIZE, i);
                 propLabels[MultiThreadedMaximaFinder.EDM_THRESH] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_EDM_THRESH, i);
+                propLabels[MultiThreadedMaximaFinder.EDM_FILTER] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_FILTER_RAD, i);
                 propLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
                 MaximaFinderPanel mFP = new ui.MaximaFinderPanel(props, img, new MultiThreadedMaximaFinder(null),
                         propLabels, false, i, null);
