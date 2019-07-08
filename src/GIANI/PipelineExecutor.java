@@ -22,6 +22,7 @@ import IO.DataWriter;
 import IO.PropertyWriter;
 import Process.MultiThreadedProcess;
 import Process.ProcessPipeline;
+import TimeAndDate.TimeAndDate;
 import UtilClasses.GenUtils;
 import ij.IJ;
 import ij.measure.ResultsTable;
@@ -54,6 +55,7 @@ public class PipelineExecutor extends Thread {
     }
 
     public void run() {
+        IJ.log(String.format("%s %s", GianiDefaultParams.TITLE, TimeAndDate.getCurrentTimeAndDate()));
         RoiManager rm = RoiManager.getInstance();
         if (rm != null) {
             rm.reset();
@@ -128,7 +130,7 @@ public class PipelineExecutor extends Thread {
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to save property file.");
         }
-        IJ.log("Done");
+        IJ.log(String.format("Done %s", TimeAndDate.getCurrentTimeAndDate()));
     }
 
     boolean checkSeriesChannels(BioFormatsImg img) {
