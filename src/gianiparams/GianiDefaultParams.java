@@ -114,7 +114,7 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(SPECIFIC_SERIES, "-1");
     }
 
-    public static void setOutputDirectory(Properties props) {
+    public static void setOutputDirectory(Properties props, String label) {
         File input = new File(props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL));
         String parent;
         if (input.isDirectory()) {
@@ -122,7 +122,11 @@ public class GianiDefaultParams extends Properties {
         } else {
             parent = input.getParent();
         }
-        props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, String.format("%s%s%s", parent, File.separator, GianiDefaultParams.TITLE));
+        if (label != null) {
+            props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, String.format("%s%s%s_%s", parent, File.separator, GianiDefaultParams.TITLE, label));
+        } else {
+            props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, String.format("%s%s%s", parent, File.separator, GianiDefaultParams.TITLE));
+        }
         String outputDirectoryName = GenUtils.openResultsDirectory(props.getProperty(GianiDefaultParams.OUTPUT_DIR_LABEL));
         props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, outputDirectoryName);
     }

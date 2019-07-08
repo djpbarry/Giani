@@ -353,7 +353,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
         setVariables();
-        GianiDefaultParams.setOutputDirectory(props);
+        GianiDefaultParams.setOutputDirectory(props, null);
         addProcess();
         PipelineExecutor exec = new PipelineExecutor(pipeline, props);
         exec.start();

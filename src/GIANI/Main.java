@@ -20,6 +20,7 @@ import IO.PropertyWriter;
 import Process.ProcessPipeline;
 import UtilClasses.GenUtils;
 import gianiparams.GianiDefaultParams;
+import ij.IJ;
 import java.io.File;
 import java.util.Properties;
 import mcib3d.geom.Objects3DPopulation;
@@ -42,11 +43,17 @@ public class Main {
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to load properties file.");
         }
+        File input = new File(args[0]);
+        if(!input.exists()){
+            IJ.log(String.format("%s is not a valid input - skipping.", args[0]));
+        }
         props.setProperty(GianiDefaultParams.INPUT_DIR_LABEL, args[0]);
-        GianiDefaultParams.setOutputDirectory(props);
+        String label = input.getName();
         if (args.length > 2) {
             props.setProperty(GianiDefaultParams.SPECIFIC_SERIES, args[2]);
+            label = String.format("%s_S%s", label, args[2]);
         }
+        GianiDefaultParams.setOutputDirectory(props, label);
         ProcessPipeline pipeline = PipelineBuilder.buildFullPipeline(props, new Objects3DPopulation());
         PipelineExecutor exec = new PipelineExecutor(pipeline, props);
         exec.run();
