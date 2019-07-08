@@ -16,7 +16,14 @@
  */
 package GIANI;
 
+import IO.PropertyWriter;
+import Process.ProcessPipeline;
+import UtilClasses.GenUtils;
+import gianiparams.GianiDefaultParams;
+import ij.IJ;
 import java.io.File;
+import java.util.Properties;
+import mcib3d.geom.Objects3DPopulation;
 
 /**
  *
@@ -25,32 +32,31 @@ import java.io.File;
 public class Main {
 
     public static void main(String[] args) {
-//        if (args.length < 2) {
-//            System.out.println("An input and output directory must be specified.");
-//            System.exit(0);
-//        }
-//        System.setProperty("java.awt.headless", "true");
-//        Properties props = new GianiDefaultParams();
-//        try {
-//            PropertyWriter.loadProperties(props, null, new File(args[1]));
-//        } catch (Exception e) {
-//            GenUtils.logError(e, "Failed to load properties file.");
-//        }
-//        File input = new File(args[0]);
-//        if(!input.exists()){
-//            IJ.log(String.format("%s is not a valid input - skipping.", args[0]));
-//        }
-//        props.setProperty(GianiDefaultParams.INPUT_DIR_LABEL, args[0]);
-//        String label = input.getName();
-//        if (args.length > 2) {
-//            props.setProperty(GianiDefaultParams.SPECIFIC_SERIES, args[2]);
-//            label = String.format("%s_S%s", label, args[2]);
-//        }
-//        GianiDefaultParams.setOutputDirectory(props, label);
-//        ProcessPipeline pipeline = PipelineBuilder.buildFullPipeline(props, new Objects3DPopulation());
-//        PipelineExecutor exec = new PipelineExecutor(pipeline, props);
-//        exec.run();
-        (new SlurmScriptGenerator(new File("Z:\\working\\barryd\\hpc\\giani_test"))).generateScript();
+        if (args.length < 2) {
+            System.out.println("An input and output directory must be specified.");
+            System.exit(0);
+        }
+        System.setProperty("java.awt.headless", "true");
+        Properties props = new GianiDefaultParams();
+        try {
+            PropertyWriter.loadProperties(props, null, new File(args[1]));
+        } catch (Exception e) {
+            GenUtils.logError(e, "Failed to load properties file.");
+        }
+        File input = new File(args[0]);
+        if(!input.exists()){
+            IJ.log(String.format("%s is not a valid input - skipping.", args[0]));
+        }
+        props.setProperty(GianiDefaultParams.INPUT_DIR_LABEL, args[0]);
+        String label = input.getName();
+        if (args.length > 2) {
+            props.setProperty(GianiDefaultParams.SPECIFIC_SERIES, args[2]);
+            label = String.format("%s_S%s", label, args[2]);
+        }
+        GianiDefaultParams.setOutputDirectory(props, label);
+        ProcessPipeline pipeline = PipelineBuilder.buildFullPipeline(props, new Objects3DPopulation());
+        PipelineExecutor exec = new PipelineExecutor(pipeline, props);
+        exec.run();
         System.exit(0);
     }
 }
