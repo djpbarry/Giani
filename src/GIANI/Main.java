@@ -31,6 +31,10 @@ import mcib3d.geom.Objects3DPopulation;
 public class Main {
 
     public static void main(String[] args) {
+        if (args.length < 2) {
+            System.out.println("An input and output directory must be specified.");
+            System.exit(0);
+        }
         System.setProperty("java.awt.headless", "true");
         Properties props = new GianiDefaultParams();
         try {
@@ -40,6 +44,9 @@ public class Main {
         }
         props.setProperty(GianiDefaultParams.INPUT_DIR_LABEL, args[0]);
         GianiDefaultParams.setOutputDirectory(props);
+        if (args.length > 2) {
+            props.setProperty(GianiDefaultParams.SPECIFIC_SERIES, args[2]);
+        }
         ProcessPipeline pipeline = PipelineBuilder.buildFullPipeline(props, new Objects3DPopulation());
         PipelineExecutor exec = new PipelineExecutor(pipeline, props);
         exec.run();

@@ -62,23 +62,42 @@ public class PipelineExecutor extends Thread {
         if (rt != null) {
             rt.reset();
         }
-        File inputDir = new File(props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL));
-        IJ.log(String.format("Input: %s", inputDir.getAbsolutePath()));
+        File input = new File(props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL));
+        IJ.log(String.format("Input: %s", input.getAbsolutePath()));
         File outputDir = new File(props.getProperty(GianiDefaultParams.OUTPUT_DIR_LABEL));
         IJ.log(String.format("Output: %s", outputDir.getAbsolutePath()));
-        ArrayList<String> files = BioFormatsFileLister.obtainValidFileList(inputDir);
+        ArrayList<String> files;
+        if (input.isDirectory()) {
+            files = BioFormatsFileLister.obtainValidFileList(input);
+        } else {
+            files = new ArrayList();
+            files.add(input.getName());
+            input = new File(input.getParent());
+        }
         ExecutorService exec = Executors.newSingleThreadExecutor();
         for (String file : files) {
             BioFormatsImg img = new BioFormatsImg();
             try {
-                img.setId(String.format("%s%s%s", inputDir, File.separator, file));
+                img.setId(String.format("%s%s%s", input, File.separator, file));
             } catch (IOException | FormatException e) {
                 GenUtils.logError(e, String.format("Failed to initialise %s", file));
             }
             props.put(img.reformatFileName(), file);
             IJ.log(String.format("Analysing file %s", FilenameUtils.getName(file)));
             int nSeries = img.getSeriesCount();
-            for (int s = 0; s < nSeries; s++) {
+            int s0 = 0;
+            try {
+                int specificSeries = Integer.parseInt(props.getProperty(GianiDefaultParams.SPECIFIC_SERIES));
+                if (specificSeries > -1 && specificSeries < nSeries) {
+                    s0 = specificSeries;
+                    nSeries = specificSeries + 1;
+                } else {
+                    IJ.log(String.format("Specific series is outside range 0 - %d.", nSeries - 1));
+                }
+            } catch (NumberFormatException e) {
+                IJ.log("Specific series not a parsable integer - ignoring.");
+            }
+            for (int s = s0; s < nSeries; s++) {
                 IJ.log(String.format("Analysing series %d", s));
                 if (img.getZSpatialRes(s) == null) {
                     IJ.log("Only 2 dimensions - skipping.");
