@@ -1,4 +1,4 @@
-# GIANI
+![GIANI Icon](https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/Banner.png)
 
 GIANI is a FIJI plugin designed to facilitate routine analysis of 3D cell biology image data.
 
