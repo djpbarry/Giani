@@ -21,9 +21,15 @@ import Process.ProcessPipeline;
 import UtilClasses.GenUtils;
 import gianiparams.GianiDefaultParams;
 import ij.IJ;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Properties;
+import java.util.Scanner;
 import mcib3d.geom.Objects3DPopulation;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -32,8 +38,8 @@ import mcib3d.geom.Objects3DPopulation;
 public class Main {
 
     public static void main(String[] args) {
-        if (args.length < 2) {
-            System.out.println("An input and output directory must be specified.");
+        if (args.length < 3) {
+            System.out.println("Insufficient arguments specified.");
             System.exit(0);
         }
         System.setProperty("java.awt.headless", "true");
@@ -43,20 +49,40 @@ public class Main {
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to load properties file.");
         }
-        File input = new File(args[0]);
-        if(!input.exists()){
-            IJ.log(String.format("%s is not a valid input - skipping.", args[0]));
+        File jobListFile = new File(args[0]);
+        if (!jobListFile.exists()) {
+            IJ.log(String.format("%s is not a valid job list file - skipping.", args[0]));
         }
-        props.setProperty(GianiDefaultParams.INPUT_DIR_LABEL, args[0]);
-        String label = input.getName();
-        if (args.length > 2) {
-            props.setProperty(GianiDefaultParams.SPECIFIC_SERIES, args[2]);
-            label = String.format("%s_S%s", label, args[2]);
+        String[] jobDetails;
+        try {
+            jobDetails = getJobDetails(jobListFile, Integer.parseInt(args[2]));
+        } catch (FileNotFoundException e) {
+            GenUtils.logError(e, "Job list file not found - aborting.");
+            return;
+        } catch (IOException e) {
+            GenUtils.logError(e, "Could not read job list file - aborting.");
+            return;
         }
+        props.setProperty(GianiDefaultParams.INPUT_DIR_LABEL, jobDetails[0]);
+        props.setProperty(GianiDefaultParams.SPECIFIC_SERIES, jobDetails[1]);
+        String label = String.format("%s_S%s", FilenameUtils.getName(jobDetails[0]), jobDetails[1]);
         GianiDefaultParams.setOutputDirectory(props, label);
         ProcessPipeline pipeline = PipelineBuilder.buildFullPipeline(props, new Objects3DPopulation());
         PipelineExecutor exec = new PipelineExecutor(pipeline, props);
         exec.run();
         System.exit(0);
+    }
+
+    public static String[] getJobDetails(File jobList, int jobNumber) throws FileNotFoundException, IOException {
+        BufferedReader fileListReader = new BufferedReader(new FileReader(jobList));
+        while (fileListReader.ready()) {
+            String line = fileListReader.readLine();
+            Scanner scanner = new Scanner(line);
+            scanner.useDelimiter(",");
+            if (jobNumber == Integer.parseInt(scanner.next())) {
+                return new String[]{scanner.next().trim(), scanner.next().trim()};
+            }
+        }
+        return null;
     }
 }
