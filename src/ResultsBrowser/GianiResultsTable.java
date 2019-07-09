@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import org.apache.commons.csv.CSVFormat;
 
 /**
@@ -33,13 +32,15 @@ import org.apache.commons.csv.CSVFormat;
 public class GianiResultsTable extends javax.swing.JFrame {
 
     private final File inputFile;
-    private TableModel resultsTableModel;
+    private final String objectLabel;
+    private DefaultTableModel resultsTableModel;
 
     /**
      * Creates new form TextResultsFrame
      */
-    public GianiResultsTable(File inputFile) {
+    public GianiResultsTable(File inputFile, String objectLabel) {
         this.inputFile = inputFile;
+        this.objectLabel = objectLabel;
         try {
             loadResults();
         } catch (IOException e) {
@@ -85,11 +86,16 @@ public class GianiResultsTable extends javax.swing.JFrame {
         for (int i = 0; i < fileHeadings.size(); i++) {
             tableHeadings[i + 1] = fileHeadings.get(i);
         }
-        resultsTableModel = new DefaultTableModel(tableHeadings, labels.size());
+        resultsTableModel = new DefaultTableModel(tableHeadings, 0);
         for (int j = 0; j < data.length; j++) {
-            resultsTableModel.setValueAt(labels.get(j), j, 0);
-            for (int i = 0; i < data[j].length; i++) {
-                resultsTableModel.setValueAt(data[j][i], j, i + 1);
+            String label = labels.get(j);
+            if (label.contains(objectLabel)) {
+                Object[] rowContents = new Object[data[j].length + 1];
+                rowContents[0] = label;
+                for (int i = 0; i < data[j].length; i++) {
+                    rowContents[i + 1] = data[j][i];
+                }
+                resultsTableModel.addRow(rowContents);
             }
         }
     }
@@ -97,7 +103,7 @@ public class GianiResultsTable extends javax.swing.JFrame {
     public JTable getResultsTable() {
         return resultsTable;
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable resultsTable;

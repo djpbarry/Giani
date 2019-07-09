@@ -45,6 +45,7 @@ import loci.formats.FormatException;
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Objects3DPopulation;
 import mcib_plugins.tools.RoiManager3D_2;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 
 /**
@@ -198,11 +199,10 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
             loadObjectsButton.setEnabled(false);
             objectList.setEnabled(false);
         }
-        if(!updateObjectList()){
+        if (!updateObjectList()) {
             GenUtils.error("GIANI output data not found");
             return;
         }
-        openResultsTable();
         loadObjectsButton.setEnabled(true);
         objectList.setEnabled(true);
     }//GEN-LAST:event_setDirectoryButtonActionPerformed
@@ -228,6 +228,7 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
         roiManager.addObjects3DPopulation(popImp);
         addListenerToRoiManager3DObjectList(roiManager.getComponents());
         enableRoiManagerLiveMode(roiManager.getComponents());
+        openResultsTable(FilenameUtils.getBaseName(selectedObjects));
     }//GEN-LAST:event_loadObjectsButtonActionPerformed
 
     void addListenerToRoiManager3DObjectList(Component[] components) {
@@ -267,10 +268,10 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
         return true;
     }
 
-    void openResultsTable() {
+    void openResultsTable(String objectLabel) {
         String[] files = inputDirectory.list(new SuffixFileFilter(".csv"));
         File inputFile = new File(String.format("%s%s%s", inputDirectory.getAbsolutePath(), File.separator, files[0]));
-        tableWrapper = new GianiResultsTable(inputFile);
+        tableWrapper = new GianiResultsTable(inputFile, objectLabel);
         resultsTable = tableWrapper.getResultsTable();
         resultsTable.addMouseListener(this);
         tableWrapper.setVisible(true);
