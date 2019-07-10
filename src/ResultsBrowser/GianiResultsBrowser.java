@@ -18,13 +18,17 @@ package ResultsBrowser;
 
 import IO.BioFormats.BioFormatsFileLister;
 import IO.BioFormats.BioFormatsImg;
+import IO.DataReader;
 import IO.PropertyWriter;
 import Revision.Revision;
 import UtilClasses.GenUtils;
 import UtilClasses.Utilities;
+import fiji.plugin.trackmate.Spot;
 import gianiparams.GianiDefaultParams;
+import graphics.OverlayDrawer;
 import ij.CompositeImage;
 import ij.IJ;
+import ij.ImagePlus;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.MouseEvent;
@@ -35,6 +39,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Properties;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -45,6 +51,7 @@ import loci.formats.FormatException;
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Objects3DPopulation;
 import mcib_plugins.tools.RoiManager3D_2;
+import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 
@@ -61,6 +68,12 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
     private final Objects3DPopulation popImp;
     private static File inputDirectory;
     private CompositeImage imp;
+    private BioFormatsImg img;
+    private Properties props;
+//    private boolean spotData;
+    private ArrayList<ArrayList<Spot>> spots;
+    private LinkedHashMap<Integer, Integer> cellIndexSpotMap;
+    private int currentSeries;
     public static final String TITLE = String.format("GIANI Results Browser v%d.%s", Revision.VERSION, new DecimalFormat("000").format(Revision.revisionNumber));
 
     /**
@@ -95,20 +108,39 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
     }
 
     public void mouseClicked(MouseEvent e) {
-        if (e.getSource() instanceof JList) {
+        Object o = e.getSource();
+        if (!(o instanceof JList || o instanceof JTable)) {
+            return;
+        }
+        if (o instanceof JList) {
             String label = (String) roiManagerObjectList.getSelectedValue();
             for (int r = 0; r < resultsTable.getRowCount(); r++) {
                 if (label.contentEquals((String) resultsTable.getValueAt(r, 0))) {
                     resultsTable.setRowSelectionInterval(r, r);
-                    setStackPosition();
+                    break;
                 }
             }
-        } else if (e.getSource() instanceof JTable) {
+        } else if (o instanceof JTable) {
             int row = resultsTable.getSelectedRow();
             String label = (String) resultsTable.getValueAt(row, 0);
             roiManagerObjectList.setSelectedValue(label, true);
-            setStackPosition();
         }
+        setStackPosition();
+//        if (this.spotData) {
+//            int row = resultsTable.getSelectedRow();
+//            String[] colHeadings = tableWrapper.getTableHeadings();
+//            int col = 0;
+//            while (!colHeadings[col].equalsIgnoreCase("Index")) {
+//                col++;
+//            }
+//            int id = (int) Math.round((double) resultsTable.getValueAt(row, col));
+//            ArrayList<Spot> spotSelection = spots.get(cellIndexSpotMap.get(id));
+//            if (spotSelection.size() < 1) {
+//                return;
+//            }
+//            ArrayList<int[]> maxima = OverlayDrawer.convertSpotsToMaximas(spotSelection, img.getCalibration(currentSeries));
+//            double maxRadius = spotSelection.get(0).getFeature("RADIUS");
+//        }
     }
 
     void setStackPosition() {
@@ -209,14 +241,15 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
 
     private void loadObjectsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadObjectsButtonActionPerformed
         String selectedObjects = objectList.getSelectedValue();
-        GianiDefaultParams props = new GianiDefaultParams();
+        props = new GianiDefaultParams();
         try {
             PropertyWriter.loadProperties(props, TITLE, new File(String.format("%s%s%s.xml", inputDirectory.getAbsolutePath(), File.separator, PropertyWriter.FILENAME)));
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to load property file.");
         }
+        this.currentSeries = getSeries(selectedObjects);
         try {
-            openImage(inputDirectory.getParentFile(), props.getProperty(getOriginalFileName(selectedObjects)), getSeries(selectedObjects));
+            openImage(inputDirectory.getParentFile(), props.getProperty(getOriginalFileName(selectedObjects)), currentSeries);
         } catch (Exception e) {
             GenUtils.logError(e, String.format("Failed to open original image file for %s", selectedObjects));
         }
@@ -229,7 +262,48 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
         addListenerToRoiManager3DObjectList(roiManager.getComponents());
         enableRoiManagerLiveMode(roiManager.getComponents());
         openResultsTable(FilenameUtils.getBaseName(selectedObjects));
+//        if (Boolean.parseBoolean(props.getProperty(GianiDefaultParams.LOCALISE_SPOTS))) {
+//            try {
+//                loadSpotData();
+//                this.spotData = true;
+//            } catch (IOException e) {
+//                GenUtils.logError(e, "Failed to load spot data.");
+//            }
+//        }
     }//GEN-LAST:event_loadObjectsButtonActionPerformed
+
+    void loadSpotData() throws IOException {
+        ArrayList<String> fileHeadings = new ArrayList();
+        spots = new ArrayList();
+        cellIndexSpotMap = new LinkedHashMap();
+        double[][] data = DataReader.readCSVFile(new File(String.format("%s%sSpot_Data.csv", inputDirectory.getAbsolutePath(), File.separator)), CSVFormat.EXCEL, fileHeadings, null);
+        LinkedHashMap<String, Integer> colIndexMap = new LinkedHashMap();
+        for (int h = 0; h < fileHeadings.size(); h++) {
+            colIndexMap.put(fileHeadings.get(h), h);
+        }
+        for (double[] d : data) {
+            int cellID = (int) Math.round(d[colIndexMap.get("Cell ID")]);
+            Integer spotsIndex = cellIndexSpotMap.get(cellID);
+            if (spotsIndex == null) {
+                cellIndexSpotMap.put(cellID, spots.size());
+                spots.add(new ArrayList());
+                spotsIndex = cellIndexSpotMap.get(cellID);
+            }
+            double distToNuc = d[colIndexMap.get("DISTANCE_TO_NUCLEUS")];
+            double radius = d[colIndexMap.get("RADIUS")];
+            double quality = d[colIndexMap.get("QUALITY")];
+            double nuclear = d[colIndexMap.get("NUCLEAR")];
+            double channel = d[colIndexMap.get("CHANNEL")];
+            double x = d[colIndexMap.get("POSITION_X")];
+            double y = d[colIndexMap.get("POSITION_Y")];
+            double z = d[colIndexMap.get("POSITION_Z")];
+            Spot s = new Spot(x, y, z, radius, quality);
+            s.putFeature("DISTANCE_TO_NUCLEUS", distToNuc);
+            s.putFeature("NUCLEAR", nuclear);
+            s.putFeature("CHANNEL", channel);
+            spots.get(spotsIndex).add(s);
+        }
+    }
 
     void addListenerToRoiManager3DObjectList(Component[] components) {
         for (Component c : components) {
@@ -279,7 +353,7 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
 
     void openImage(File directory, String name, int series) throws IOException, FormatException {
         ArrayList<String> files = BioFormatsFileLister.obtainValidFileList(directory);
-        BioFormatsImg img = new BioFormatsImg();
+        img = new BioFormatsImg();
         for (String f : files) {
             if (f.contains(name)) {
                 img.setId(String.format("%s%s%s", directory, File.separator, f));

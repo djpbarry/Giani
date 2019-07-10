@@ -34,6 +34,7 @@ public class GianiResultsTable extends javax.swing.JFrame {
     private final File inputFile;
     private final String objectLabel;
     private DefaultTableModel resultsTableModel;
+    private String[] tableHeadings;
 
     /**
      * Creates new form TextResultsFrame
@@ -81,7 +82,7 @@ public class GianiResultsTable extends javax.swing.JFrame {
         ArrayList<String> fileHeadings = new ArrayList();
         ArrayList<String> labels = new ArrayList();
         double[][] data = DataReader.readCSVFile(inputFile, CSVFormat.EXCEL, fileHeadings, labels);
-        String[] tableHeadings = new String[fileHeadings.size() + 1];
+        tableHeadings = new String[fileHeadings.size() + 1];
         tableHeadings[0] = "Image";
         for (int i = 0; i < fileHeadings.size(); i++) {
             tableHeadings[i + 1] = fileHeadings.get(i);
@@ -102,6 +103,10 @@ public class GianiResultsTable extends javax.swing.JFrame {
 
     public JTable getResultsTable() {
         return resultsTable;
+    }
+
+    public String[] getTableHeadings() {
+        return tableHeadings;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
