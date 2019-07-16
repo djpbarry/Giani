@@ -94,7 +94,7 @@ public class PipelineExecutor extends Thread {
                     s0 = specificSeries;
                     nSeries = specificSeries + 1;
                 } else {
-                    IJ.log(String.format("Specific series is outside range 0 - %d.", nSeries - 1));
+//                    IJ.log(String.format("Specific series is outside range 0 - %d.", nSeries - 1));
                 }
             } catch (NumberFormatException e) {
                 IJ.log("Specific series not a parsable integer - ignoring.");
