@@ -341,8 +341,10 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }//GEN-LAST:event_loadParametersButtonActionPerformed
 
     public void loadParameters(String location) {
+        String inputDirectory = props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL);
         try {
             PropertyWriter.loadProperties(props, GianiDefaultParams.TITLE, new File(location));
+            props.setProperty(GianiDefaultParams.INPUT_DIR_LABEL, inputDirectory);
             updateProperties(props, this);
             measurementPanelMouseClicked(null);
             runButton.setEnabled(true);
@@ -354,7 +356,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
         setVariables();
         GianiDefaultParams.setOutputDirectory(props, null);
-        while(nextButton.isEnabled())nextButtonActionPerformed(null);
+        while (nextButton.isEnabled()) {
+            nextButtonActionPerformed(null);
+        }
         addProcess();
         PipelineExecutor exec = new PipelineExecutor(pipeline, props);
         exec.start();
@@ -529,7 +533,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         localisationPropLabels[MultiThreadedColocalise.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
         localisationPropLabels[MultiThreadedColocalise.CHANNELS_LABEL] = GianiDefaultParams.CHAN_FOR_MEASURE;
         localisationPropLabels[MultiThreadedColocalise.OUTPUT_LABEL] = GianiDefaultParams.OUTPUT_DIR_LABEL;
-        
+
         localisationPanel = new ui.LocalisationPanel(props, img, new MultiThreadedColocalise(localisationInputs, cells), localisationPropLabels);
         addPanel(localisationPanel);
         updateUI();

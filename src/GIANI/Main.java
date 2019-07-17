@@ -42,6 +42,9 @@ public class Main {
             System.out.println("Insufficient arguments specified.");
             System.exit(0);
         }
+        IJ.log(String.format("Job List: %s", args[0]));
+        IJ.log(String.format("Properties File: %s", args[1]));
+        IJ.log(String.format("Job Number: %s", args[2]));
         System.setProperty("java.awt.headless", "true");
         Properties props = new GianiDefaultParams();
         try {

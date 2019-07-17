@@ -25,10 +25,8 @@ import UtilClasses.GenUtils;
 import UtilClasses.Utilities;
 import fiji.plugin.trackmate.Spot;
 import gianiparams.GianiDefaultParams;
-import Process.ROI.OverlayDrawer;
 import ij.CompositeImage;
 import ij.IJ;
-import ij.ImagePlus;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.MouseEvent;
@@ -65,7 +63,7 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
     private JList roiManagerObjectList;
     private GianiResultsTable tableWrapper;
     private JTable resultsTable;
-    private final Objects3DPopulation popImp;
+    private Objects3DPopulation popImp;
     private static File inputDirectory;
     private CompositeImage imp;
     private BioFormatsImg img;
@@ -80,7 +78,6 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
      * Creates new form GianiResultsBrowser
      */
     public GianiResultsBrowser() {
-        popImp = new Objects3DPopulation();
         initComponents();
         setIcon();
     }
@@ -253,6 +250,7 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
         } catch (Exception e) {
             GenUtils.logError(e, String.format("Failed to open original image file for %s", selectedObjects));
         }
+        popImp = new Objects3DPopulation();
         popImp.loadObjects(String.format("%s%s%s", inputDirectory, File.separator, selectedObjects));
         if (roiManager == null) {
             roiManager = new RoiManager3D_2();
