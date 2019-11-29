@@ -76,10 +76,8 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         channelSelectComboBox = new javax.swing.JComboBox<>();
         blobDetectToggleButton = new javax.swing.JToggleButton();
         edmDetectToggleButton = new javax.swing.JToggleButton();
-        edmThreshLabel = new javax.swing.JLabel();
         edmMinSizeLabel = new javax.swing.JLabel();
         edmMaxSizeLabel = new javax.swing.JLabel();
-        edmThreshComboBox = new javax.swing.JComboBox<>();
         edmMinSizeTextField = new javax.swing.JTextField();
         edmMaxSizeTextField = new javax.swing.JTextField();
         helpButton = new javax.swing.JButton();
@@ -186,7 +184,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(blobDetectToggleButton, gridBagConstraints);
 
-        edmDetectToggleButton.setText(propLabels[MultiThreadedMaximaFinder.EDM_DETECT]);
+        edmDetectToggleButton.setText(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT]);
         edmDetectToggleButton.setSelected(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         edmDetectToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -201,19 +199,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(edmDetectToggleButton, gridBagConstraints);
 
-        edmThreshLabel.setText(propLabels[MultiThreadedMaximaFinder.EDM_THRESH]);
-        edmThreshLabel.setLabelFor(edmThreshComboBox);
-        edmThreshLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(edmThreshLabel, gridBagConstraints);
-
-        edmMinSizeLabel.setText(propLabels[MultiThreadedMaximaFinder.EDM_MIN_SIZE]);
+        edmMinSizeLabel.setText(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE]);
         edmMinSizeLabel.setLabelFor(edmMinSizeTextField);
         edmMinSizeLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -225,7 +211,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(edmMinSizeLabel, gridBagConstraints);
 
-        edmMaxSizeLabel.setText(propLabels[MultiThreadedMaximaFinder.EDM_MAX_SIZE]);
+        edmMaxSizeLabel.setText(propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE]);
         edmMaxSizeLabel.setLabelFor(edmMaxSizeTextField);
         edmMaxSizeLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -237,18 +223,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(edmMaxSizeLabel, gridBagConstraints);
 
-        edmThreshComboBox.setModel(new DefaultComboBoxModel(AutoThresholder.getMethods()));
-        edmThreshComboBox.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(edmThreshComboBox, gridBagConstraints);
-
-        edmMinSizeTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.EDM_MIN_SIZE]));
+        edmMinSizeTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE]));
         edmMinSizeTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -259,7 +234,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(edmMinSizeTextField, gridBagConstraints);
 
-        edmMaxSizeTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.EDM_MAX_SIZE]));
+        edmMaxSizeTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE]));
         edmMaxSizeTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -284,7 +259,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(helpButton, gridBagConstraints);
 
-        edmFilterLabel.setText(propLabels[MultiThreadedMaximaFinder.EDM_FILTER]);
+        edmFilterLabel.setText(propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP]);
         edmFilterLabel.setLabelFor(edmFilterTextField);
         edmFilterLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -296,7 +271,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(edmFilterLabel, gridBagConstraints);
 
-        edmFilterTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.EDM_FILTER]));
+        edmFilterTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP]));
         edmFilterTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -331,8 +306,6 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         blobRadTextField.setEnabled(blobDetectToggleButton.isSelected());
         noiseTolLabel.setEnabled(blobDetectToggleButton.isSelected());
         noiseTolTextField.setEnabled(blobDetectToggleButton.isSelected());
-        edmThreshLabel.setEnabled(edmDetectToggleButton.isSelected());
-        edmThreshComboBox.setEnabled(edmDetectToggleButton.isSelected());
         edmMinSizeLabel.setEnabled(edmDetectToggleButton.isSelected());
         edmMinSizeTextField.setEnabled(edmDetectToggleButton.isSelected());
         edmMaxSizeLabel.setEnabled(edmDetectToggleButton.isSelected());
@@ -365,8 +338,8 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         double maxXYRadiusMic = Double.parseDouble(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_SIZE]));
         double maxZRadiusMic = Double.parseDouble(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_SIZE]));
         if (!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT]))) {
-            maxXYRadiusMic = Double.parseDouble(props.getProperty(propLabels[MultiThreadedMaximaFinder.EDM_MIN_SIZE]));
-            maxZRadiusMic = Double.parseDouble(props.getProperty(propLabels[MultiThreadedMaximaFinder.EDM_MIN_SIZE]));
+            maxXYRadiusMic = Double.parseDouble(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE]));
+            maxZRadiusMic = Double.parseDouble(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE]));
         }
         double maxZRadiusMic2 = Math.pow(maxZRadiusMic, 2.0);
         double maxXYRadiusMic2 = Math.pow(maxXYRadiusMic, 2.0);
@@ -431,8 +404,6 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     private javax.swing.JTextField edmMaxSizeTextField;
     private javax.swing.JLabel edmMinSizeLabel;
     private javax.swing.JTextField edmMinSizeTextField;
-    private javax.swing.JComboBox<String> edmThreshComboBox;
-    private javax.swing.JLabel edmThreshLabel;
     private javax.swing.JButton helpButton;
     private javax.swing.JLabel noiseTolLabel;
     private javax.swing.JTextField noiseTolTextField;

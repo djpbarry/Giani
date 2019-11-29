@@ -59,10 +59,12 @@ public class GianiDefaultParams extends Properties {
     public static final String LOCALISE_SPOTS = "Localise Spots";
     public static final String NUC_MAXIMA_DETECT_BLOBS = "Nuclear Blob Detector";
     public static final String NUC_MAXIMA_DETECT_FILTER_RAD = String.format("Filter Radius (%cm) for EDM Detector", IJ.micronSymbol);
-    public static final String NUC_MAXIMA_DETECT_EDM_MAXIMA = "Nuclear EDM Maxima Detector";
+    public static final String NUC_MAXIMA_DETECT_HESSIAN = "Nuclear Hessian Maxima Detector";
     public static final String NUC_MAXIMA_DETECT_EDM_THRESH = "Nuclear Threshold for EDM Detection";
-    public static final String NUC_MAXIMA_DETECT_EDM_MIN_SIZE = String.format("Min Nuclear Radius for EDM Detection (%cm)", IJ.micronSymbol);
-    public static final String NUC_MAXIMA_DETECT_EDM_MAX_SIZE = String.format("Max Nuclear Radius for EDM Detection (%cm)", IJ.micronSymbol);
+    public static final String NUC_MAXIMA_DETECT_HESSIAN_START_SCALE = String.format("Min Nuclear Radius for Hessian Detection (%cm)", IJ.micronSymbol);
+    public static final String NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE = String.format("Max Nuclear Radius for Hessian Detection (%cm)", IJ.micronSymbol);
+    public static final String NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP = String.format("Scale Step for Hessian Detection (%cm)", IJ.micronSymbol);
+    public static final String NUC_MAXIMA_DETECT_HESSIAN_ABS = "Absolute Hessian Detection";
     public static final String FOCI_MAXIMA_DETECT_BLOBS = "Blob Detector for Channel ";
     public static final String FOCI_MAXIMA_DETECT_FILTER_RAD = String.format("Filter Radius (%cm) for EDM Detector for Channel ", IJ.micronSymbol);
     public static final String FOCI_MAXIMA_DETECT_EDM_MAXIMA = "EDM Maxima Detector for Channel ";
@@ -107,10 +109,12 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(LOCALISE_SPOTS, "false");
         this.setProperty(NUC_MAXIMA_DETECT_FILTER_RAD, "0.0");
         this.setProperty(NUC_MAXIMA_DETECT_BLOBS, "true");
-        this.setProperty(NUC_MAXIMA_DETECT_EDM_MAXIMA, "false");
+        this.setProperty(NUC_MAXIMA_DETECT_HESSIAN, "false");
         this.setProperty(NUC_MAXIMA_DETECT_EDM_THRESH, "Default");
-        this.setProperty(NUC_MAXIMA_DETECT_EDM_MIN_SIZE, "0.0");
-        this.setProperty(NUC_MAXIMA_DETECT_EDM_MAX_SIZE, "0.0");
+        this.setProperty(NUC_MAXIMA_DETECT_HESSIAN_START_SCALE, "0.0");
+        this.setProperty(NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE, "0.0");
+        this.setProperty(NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP, "0.0");
+        this.setProperty(NUC_MAXIMA_DETECT_HESSIAN_ABS, "false");
         this.setProperty(SPECIFIC_SERIES, "-1");
     }
 
