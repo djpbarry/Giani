@@ -56,8 +56,7 @@ public class PipelineBuilder {
         String[] propLabels = new String[MultiThreadedGaussianFilter.N_PROP_LABELS];
         propLabels[MultiThreadedGaussianFilter.CHANNEL_LABEL] = GianiDefaultParams.NUC_SEG_CHAN_SELECT_LABEL;
         propLabels[MultiThreadedGaussianFilter.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
-        propLabels[MultiThreadedGaussianFilter.XY_FILT_LABEL] = GianiDefaultParams.NUC_FILT_RAD_XY_LABEL;
-        propLabels[MultiThreadedGaussianFilter.Z_FILT_LABEL] = GianiDefaultParams.NUC_FILT_RAD_Z_LABEL;
+        propLabels[MultiThreadedGaussianFilter.FILT_RAD_LABEL] = GianiDefaultParams.NUC_FILT_RAD_LABEL;
         MultiThreadedGaussianFilter process = new MultiThreadedGaussianFilter(null);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
@@ -86,8 +85,7 @@ public class PipelineBuilder {
         String[] propLabels = new String[MultiThreadedGaussianFilter.N_PROP_LABELS];
         propLabels[MultiThreadedGaussianFilter.CHANNEL_LABEL] = GianiDefaultParams.CELL_SEG_CHAN_SELECT_LABEL;
         propLabels[MultiThreadedGaussianFilter.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
-        propLabels[MultiThreadedGaussianFilter.XY_FILT_LABEL] = GianiDefaultParams.CELL_FILT_RAD_XY_LABEL;
-        propLabels[MultiThreadedGaussianFilter.Z_FILT_LABEL] = GianiDefaultParams.CELL_FILT_RAD_Z_LABEL;
+        propLabels[MultiThreadedGaussianFilter.FILT_RAD_LABEL] = GianiDefaultParams.CELL_FILT_RAD_LABEL;
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
     }
