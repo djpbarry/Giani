@@ -43,9 +43,9 @@ public class PipelineBuilder {
         propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE;
         propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_START_SCALE;
         propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP;
-        propLabels[MultiThreadedMaximaFinder.EDM_THRESH] = GianiDefaultParams.NUC_MAXIMA_DETECT_EDM_THRESH;
+        propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_THRESH;
         propLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
-        propLabels[MultiThreadedMaximaFinder.EDM_FILTER] = GianiDefaultParams.NUC_MAXIMA_DETECT_FILTER_RAD;
+        propLabels[MultiThreadedMaximaFinder.EDM_FILTER] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_THRESH;
         propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_ABS;
         MultiThreadedMaximaFinder process = new MultiThreadedMaximaFinder(null);
         process.setup(new BioFormatsImg(), props, propLabels);

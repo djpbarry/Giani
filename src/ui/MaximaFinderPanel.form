@@ -66,7 +66,7 @@
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-          <GridBagConstraints gridX="0" gridY="8" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="10" insetsLeft="10" insetsBottom="10" insetsRight="10" anchor="10" weightX="1.0" weightY="1.0"/>
+          <GridBagConstraints gridX="0" gridY="10" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="10" insetsLeft="10" insetsBottom="10" insetsRight="10" anchor="10" weightX="1.0" weightY="1.0"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -131,17 +131,17 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JToggleButton" name="blobDetectToggleButton">
+    <Component class="javax.swing.JToggleButton" name="simpleDetectToggleButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="propLabels[MultiThreadedMaximaFinder.BLOB_DETECT]" type="code"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="blobDetectToggleButtonActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="simpleDetectToggleButtonActionPerformed"/>
       </Events>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="blobDetectToggleButton.setSelected(Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="simpleDetectToggleButton.setSelected(Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -149,17 +149,17 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JToggleButton" name="edmDetectToggleButton">
+    <Component class="javax.swing.JToggleButton" name="advancedDetectToggleButton">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT]" type="code"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="edmDetectToggleButtonActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="advancedDetectToggleButtonActionPerformed"/>
       </Events>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="edmDetectToggleButton.setSelected(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="advancedDetectToggleButton.setSelected(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -167,14 +167,14 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="edmMinSizeLabel">
+    <Component class="javax.swing.JLabel" name="hessianMinSizeLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE]" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="edmMinSizeLabel.setLabelFor(edmMinSizeTextField);&#xa;edmMinSizeLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="hessianMinSizeLabel.setLabelFor(hessianMinSizeTextField);&#xa;hessianMinSizeLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -182,14 +182,14 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="edmMaxSizeLabel">
+    <Component class="javax.swing.JLabel" name="hessianMaxSizeLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE]" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="edmMaxSizeLabel.setLabelFor(edmMaxSizeTextField);&#xa;edmMaxSizeLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="hessianMaxSizeLabel.setLabelFor(hessianMaxSizeTextField);&#xa;hessianMaxSizeLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -197,14 +197,14 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JTextField" name="edmMinSizeTextField">
+    <Component class="javax.swing.JTextField" name="hessianMinSizeTextField">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE])" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="edmMinSizeTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="hessianMinSizeTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -212,18 +212,18 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JTextField" name="edmMaxSizeTextField">
+    <Component class="javax.swing.JTextField" name="hessianThreshTextField">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE])" type="code"/>
+          <Connection code="props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH])" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="edmMaxSizeTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="hessianThreshTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-          <GridBagConstraints gridX="1" gridY="7" gridWidth="1" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="10" insetsLeft="10" insetsBottom="10" insetsRight="10" anchor="10" weightX="1.0" weightY="1.0"/>
+          <GridBagConstraints gridX="1" gridY="8" gridWidth="1" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="10" insetsLeft="10" insetsBottom="10" insetsRight="10" anchor="10" weightX="1.0" weightY="1.0"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -236,18 +236,18 @@
       </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-          <GridBagConstraints gridX="1" gridY="8" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="10" insetsLeft="10" insetsBottom="10" insetsRight="10" anchor="10" weightX="1.0" weightY="1.0"/>
+          <GridBagConstraints gridX="1" gridY="10" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="10" insetsLeft="10" insetsBottom="10" insetsRight="10" anchor="10" weightX="1.0" weightY="1.0"/>
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="edmFilterLabel">
+    <Component class="javax.swing.JLabel" name="hessianStepSizeLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP]" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="edmFilterLabel.setLabelFor(edmFilterTextField);&#xa;edmFilterLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="hessianStepSizeLabel.setLabelFor(hessianStepSizeTextField);&#xa;hessianStepSizeLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -255,18 +255,48 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JTextField" name="edmFilterTextField">
+    <Component class="javax.swing.JTextField" name="hessianStepSizeTextField">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP])" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="edmFilterTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="hessianStepSizeTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
           <GridBagConstraints gridX="1" gridY="5" gridWidth="1" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="10" insetsLeft="10" insetsBottom="10" insetsRight="10" anchor="10" weightX="1.0" weightY="1.0"/>
+        </Constraint>
+      </Constraints>
+    </Component>
+    <Component class="javax.swing.JLabel" name="hessianThreshLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH]" type="code"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="hessianThreshLabel.setLabelFor(hessianThreshTextField);&#xa;hessianThreshLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
+      </AuxValues>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+          <GridBagConstraints gridX="0" gridY="8" gridWidth="1" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="10" insetsLeft="10" insetsBottom="10" insetsRight="10" anchor="10" weightX="1.0" weightY="1.0"/>
+        </Constraint>
+      </Constraints>
+    </Component>
+    <Component class="javax.swing.JTextField" name="hessianMaxSizeTextField">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE])" type="code"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="hessianMaxSizeTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));"/>
+      </AuxValues>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+          <GridBagConstraints gridX="1" gridY="7" gridWidth="1" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="10" insetsLeft="10" insetsBottom="10" insetsRight="10" anchor="10" weightX="1.0" weightY="1.0"/>
         </Constraint>
       </Constraints>
     </Component>

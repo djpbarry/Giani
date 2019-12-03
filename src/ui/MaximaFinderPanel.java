@@ -28,7 +28,6 @@ import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
 import gianiparams.GianiDefaultParams;
 import ij.gui.Roi;
-import ij.process.AutoThresholder;
 import java.awt.Color;
 import java.net.URI;
 import ome.units.quantity.Length;
@@ -74,15 +73,17 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         noiseTolTextField = new javax.swing.JTextField();
         channelSelectLabel = new javax.swing.JLabel();
         channelSelectComboBox = new javax.swing.JComboBox<>();
-        blobDetectToggleButton = new javax.swing.JToggleButton();
-        edmDetectToggleButton = new javax.swing.JToggleButton();
-        edmMinSizeLabel = new javax.swing.JLabel();
-        edmMaxSizeLabel = new javax.swing.JLabel();
-        edmMinSizeTextField = new javax.swing.JTextField();
-        edmMaxSizeTextField = new javax.swing.JTextField();
+        simpleDetectToggleButton = new javax.swing.JToggleButton();
+        advancedDetectToggleButton = new javax.swing.JToggleButton();
+        hessianMinSizeLabel = new javax.swing.JLabel();
+        hessianMaxSizeLabel = new javax.swing.JLabel();
+        hessianMinSizeTextField = new javax.swing.JTextField();
+        hessianThreshTextField = new javax.swing.JTextField();
         helpButton = new javax.swing.JButton();
-        edmFilterLabel = new javax.swing.JLabel();
-        edmFilterTextField = new javax.swing.JTextField();
+        hessianStepSizeLabel = new javax.swing.JLabel();
+        hessianStepSizeTextField = new javax.swing.JTextField();
+        hessianThreshLabel = new javax.swing.JLabel();
+        hessianMaxSizeTextField = new javax.swing.JTextField();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -118,7 +119,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -169,11 +170,11 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(channelSelectComboBox, gridBagConstraints);
 
-        blobDetectToggleButton.setText(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT]);
-        blobDetectToggleButton.setSelected(Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
-        blobDetectToggleButton.addActionListener(new java.awt.event.ActionListener() {
+        simpleDetectToggleButton.setText(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT]);
+        simpleDetectToggleButton.setSelected(Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
+        simpleDetectToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                blobDetectToggleButtonActionPerformed(evt);
+                simpleDetectToggleButtonActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -182,13 +183,13 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(blobDetectToggleButton, gridBagConstraints);
+        add(simpleDetectToggleButton, gridBagConstraints);
 
-        edmDetectToggleButton.setText(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT]);
-        edmDetectToggleButton.setSelected(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
-        edmDetectToggleButton.addActionListener(new java.awt.event.ActionListener() {
+        advancedDetectToggleButton.setText(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT]);
+        advancedDetectToggleButton.setSelected(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
+        advancedDetectToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                edmDetectToggleButtonActionPerformed(evt);
+                advancedDetectToggleButtonActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -197,11 +198,11 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(edmDetectToggleButton, gridBagConstraints);
+        add(advancedDetectToggleButton, gridBagConstraints);
 
-        edmMinSizeLabel.setText(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE]);
-        edmMinSizeLabel.setLabelFor(edmMinSizeTextField);
-        edmMinSizeLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
+        hessianMinSizeLabel.setText(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE]);
+        hessianMinSizeLabel.setLabelFor(hessianMinSizeTextField);
+        hessianMinSizeLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
@@ -209,11 +210,11 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(edmMinSizeLabel, gridBagConstraints);
+        add(hessianMinSizeLabel, gridBagConstraints);
 
-        edmMaxSizeLabel.setText(propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE]);
-        edmMaxSizeLabel.setLabelFor(edmMaxSizeTextField);
-        edmMaxSizeLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
+        hessianMaxSizeLabel.setText(propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE]);
+        hessianMaxSizeLabel.setLabelFor(hessianMaxSizeTextField);
+        hessianMaxSizeLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 7;
@@ -221,10 +222,10 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(edmMaxSizeLabel, gridBagConstraints);
+        add(hessianMaxSizeLabel, gridBagConstraints);
 
-        edmMinSizeTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE]));
-        edmMinSizeTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
+        hessianMinSizeTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE]));
+        hessianMinSizeTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 6;
@@ -232,18 +233,18 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(edmMinSizeTextField, gridBagConstraints);
+        add(hessianMinSizeTextField, gridBagConstraints);
 
-        edmMaxSizeTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE]));
-        edmMaxSizeTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
+        hessianThreshTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH]));
+        hessianThreshTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(edmMaxSizeTextField, gridBagConstraints);
+        add(hessianThreshTextField, gridBagConstraints);
 
         helpButton.setText("Help");
         helpButton.addActionListener(new java.awt.event.ActionListener() {
@@ -253,15 +254,15 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(helpButton, gridBagConstraints);
 
-        edmFilterLabel.setText(propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP]);
-        edmFilterLabel.setLabelFor(edmFilterTextField);
-        edmFilterLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
+        hessianStepSizeLabel.setText(propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP]);
+        hessianStepSizeLabel.setLabelFor(hessianStepSizeTextField);
+        hessianStepSizeLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
@@ -269,10 +270,10 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(edmFilterLabel, gridBagConstraints);
+        add(hessianStepSizeLabel, gridBagConstraints);
 
-        edmFilterTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP]));
-        edmFilterTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
+        hessianStepSizeTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP]));
+        hessianStepSizeTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
@@ -280,7 +281,30 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(edmFilterTextField, gridBagConstraints);
+        add(hessianStepSizeTextField, gridBagConstraints);
+
+        hessianThreshLabel.setText(propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH]);
+        hessianThreshLabel.setLabelFor(hessianThreshTextField);
+        hessianThreshLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(hessianThreshLabel, gridBagConstraints);
+
+        hessianMaxSizeTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE]));
+        hessianMaxSizeTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(hessianMaxSizeTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -295,24 +319,26 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         showOutput(((MultiThreadedMaximaFinder) process).getMaxima(), process.getOutput().getTitle(), ((MultiThreadedMaximaFinder) process).getEdmThresholdOutline());
     }//GEN-LAST:event_previewButtonActionPerformed
 
-    private void blobDetectToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blobDetectToggleButtonActionPerformed
-        edmDetectToggleButton.setSelected(!blobDetectToggleButton.isSelected());
-        edmDetectToggleButtonActionPerformed(evt);
-    }//GEN-LAST:event_blobDetectToggleButtonActionPerformed
+    private void simpleDetectToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpleDetectToggleButtonActionPerformed
+        advancedDetectToggleButton.setSelected(!simpleDetectToggleButton.isSelected());
+        advancedDetectToggleButtonActionPerformed(evt);
+    }//GEN-LAST:event_simpleDetectToggleButtonActionPerformed
 
-    private void edmDetectToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edmDetectToggleButtonActionPerformed
-        blobDetectToggleButton.setSelected(!edmDetectToggleButton.isSelected());
-        blobRadLabel.setEnabled(blobDetectToggleButton.isSelected());
-        blobRadTextField.setEnabled(blobDetectToggleButton.isSelected());
-        noiseTolLabel.setEnabled(blobDetectToggleButton.isSelected());
-        noiseTolTextField.setEnabled(blobDetectToggleButton.isSelected());
-        edmMinSizeLabel.setEnabled(edmDetectToggleButton.isSelected());
-        edmMinSizeTextField.setEnabled(edmDetectToggleButton.isSelected());
-        edmMaxSizeLabel.setEnabled(edmDetectToggleButton.isSelected());
-        edmMaxSizeTextField.setEnabled(edmDetectToggleButton.isSelected());
-        edmFilterLabel.setEnabled(edmDetectToggleButton.isSelected());
-        edmFilterTextField.setEnabled(edmDetectToggleButton.isSelected());
-    }//GEN-LAST:event_edmDetectToggleButtonActionPerformed
+    private void advancedDetectToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_advancedDetectToggleButtonActionPerformed
+        simpleDetectToggleButton.setSelected(!advancedDetectToggleButton.isSelected());
+        blobRadLabel.setEnabled(simpleDetectToggleButton.isSelected());
+        blobRadTextField.setEnabled(simpleDetectToggleButton.isSelected());
+        noiseTolLabel.setEnabled(simpleDetectToggleButton.isSelected());
+        noiseTolTextField.setEnabled(simpleDetectToggleButton.isSelected());
+        hessianMinSizeLabel.setEnabled(advancedDetectToggleButton.isSelected());
+        hessianMinSizeTextField.setEnabled(advancedDetectToggleButton.isSelected());
+        hessianMaxSizeLabel.setEnabled(advancedDetectToggleButton.isSelected());
+        hessianMaxSizeTextField.setEnabled(advancedDetectToggleButton.isSelected());
+        hessianThreshLabel.setEnabled(advancedDetectToggleButton.isSelected());
+        hessianThreshTextField.setEnabled(advancedDetectToggleButton.isSelected());
+        hessianStepSizeLabel.setEnabled(advancedDetectToggleButton.isSelected());
+        hessianStepSizeTextField.setEnabled(advancedDetectToggleButton.isSelected());
+    }//GEN-LAST:event_advancedDetectToggleButtonActionPerformed
 
     private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed
         openHelpPage(GianiDefaultParams.HELP_ERROR_MESSAGE);
@@ -358,7 +384,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
                 o.add(roi);
             }
         }
-        if (edmDetectToggleButton.isSelected()) {
+        if (advancedDetectToggleButton.isSelected()) {
             for (int i = 0; i < imp.getNSlices(); i++) {
                 if (binaryOutline[i] == null) {
                     continue;
@@ -388,25 +414,27 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         if (defaultChannel > -1) {
             channelSelectComboBox.setSelectedIndex(defaultChannel);
         }
-        blobDetectToggleButtonActionPerformed(null);
+        simpleDetectToggleButtonActionPerformed(null);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToggleButton blobDetectToggleButton;
+    private javax.swing.JToggleButton advancedDetectToggleButton;
     private javax.swing.JLabel blobRadLabel;
     private javax.swing.JTextField blobRadTextField;
     private javax.swing.JComboBox<String> channelSelectComboBox;
     private javax.swing.JLabel channelSelectLabel;
-    private javax.swing.JToggleButton edmDetectToggleButton;
-    private javax.swing.JLabel edmFilterLabel;
-    private javax.swing.JTextField edmFilterTextField;
-    private javax.swing.JLabel edmMaxSizeLabel;
-    private javax.swing.JTextField edmMaxSizeTextField;
-    private javax.swing.JLabel edmMinSizeLabel;
-    private javax.swing.JTextField edmMinSizeTextField;
     private javax.swing.JButton helpButton;
+    private javax.swing.JLabel hessianMaxSizeLabel;
+    private javax.swing.JTextField hessianMaxSizeTextField;
+    private javax.swing.JLabel hessianMinSizeLabel;
+    private javax.swing.JTextField hessianMinSizeTextField;
+    private javax.swing.JLabel hessianStepSizeLabel;
+    private javax.swing.JTextField hessianStepSizeTextField;
+    private javax.swing.JLabel hessianThreshLabel;
+    private javax.swing.JTextField hessianThreshTextField;
     private javax.swing.JLabel noiseTolLabel;
     private javax.swing.JTextField noiseTolTextField;
     protected javax.swing.JButton previewButton;
+    private javax.swing.JToggleButton simpleDetectToggleButton;
     // End of variables declaration//GEN-END:variables
 }

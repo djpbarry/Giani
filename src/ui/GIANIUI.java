@@ -510,10 +510,10 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 props.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_BLOBS, i), "true");
                 propLabels[MultiThreadedMaximaFinder.BLOB_SIZE] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_RAD_LABEL, i);
                 propLabels[MultiThreadedMaximaFinder.BLOB_THRESH] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_NOISE_TOL_LABEL, i);
-                propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_EDM_MAXIMA, i);
-                propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_EDM_MAX_SIZE, i);
-                propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_EDM_MIN_SIZE, i);
-                propLabels[MultiThreadedMaximaFinder.EDM_THRESH] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_EDM_THRESH, i);
+                propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAXIMA, i);
+                propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE, i);
+                propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MIN_SIZE, i);
+                propLabels[MultiThreadedMaximaFinder.EDM_THRESH] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_THRESH, i);
                 propLabels[MultiThreadedMaximaFinder.EDM_FILTER] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_FILTER_RAD, i);
                 propLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
                 MaximaFinderPanel mFP = new ui.MaximaFinderPanel(props, img, new MultiThreadedMaximaFinder(null),
