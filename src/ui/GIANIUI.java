@@ -506,15 +506,25 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
             if ((channels & (int) Math.pow(2.0, i)) != 0) {
                 String[] propLabels = new String[MultiThreadedMaximaFinder.N_PROP_LABELS];
                 propLabels[MultiThreadedMaximaFinder.CHANNEL_SELECT] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_SELECT_LABEL, i);
+                props.setProperty(propLabels[MultiThreadedMaximaFinder.CHANNEL_SELECT], "0");
                 propLabels[MultiThreadedMaximaFinder.BLOB_DETECT] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_BLOBS, i);
-                props.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_BLOBS, i), "true");
+                props.setProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT], "true");
                 propLabels[MultiThreadedMaximaFinder.BLOB_SIZE] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_RAD_LABEL, i);
+                props.setProperty(propLabels[MultiThreadedMaximaFinder.BLOB_SIZE], "0.0");
                 propLabels[MultiThreadedMaximaFinder.BLOB_THRESH] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_NOISE_TOL_LABEL, i);
+                props.setProperty(propLabels[MultiThreadedMaximaFinder.BLOB_THRESH], "0.0");
                 propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAXIMA, i);
+                props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT], "false");
                 propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE, i);
+                props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE], "0.0");
                 propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MIN_SIZE, i);
-                propLabels[MultiThreadedMaximaFinder.EDM_THRESH] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_THRESH, i);
-                propLabels[MultiThreadedMaximaFinder.EDM_FILTER] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_FILTER_RAD, i);
+                props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE], "0.0");
+                propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_THRESH, i);
+                props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH], "0.0");
+                propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP, i);
+                props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP], "0.0");
+                propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_ABS, i);
+                props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS], "true");
                 propLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
                 MaximaFinderPanel mFP = new ui.MaximaFinderPanel(props, img, new MultiThreadedMaximaFinder(null),
                         propLabels, false, i, null);
