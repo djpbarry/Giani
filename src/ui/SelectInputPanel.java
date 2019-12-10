@@ -265,8 +265,8 @@ public class SelectInputPanel extends LayerPanel {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
-        int series = seriesComboBox.getSelectedIndex();
-        int channel = channelComboBox.getSelectedIndex();
+        int series = Integer.parseInt((String) seriesComboBox.getSelectedItem());
+        int channel = Integer.parseInt((String) channelComboBox.getSelectedItem());
         try {
             img.loadPixelData(series, channel, channel + 1, null);
             ImagePlus imp = img.getLoadedImage();
@@ -296,7 +296,9 @@ public class SelectInputPanel extends LayerPanel {
                 int series = img.getSeriesCount();
                 ArrayList<String> seriesLabels = new ArrayList();
                 for (int s = 0; s < series; s++) {
-                    seriesLabels.add(String.valueOf(s));
+                    if (img.getSizeZ(s) > 1) {
+                        seriesLabels.add(String.valueOf(s));
+                    }
                 }
                 seriesComboBox.setModel(new DefaultComboBoxModel(seriesLabels.toArray()));
                 seriesComboBox.setEnabled(true);
