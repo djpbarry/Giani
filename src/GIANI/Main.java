@@ -69,7 +69,9 @@ public class Main {
         props.setProperty(GianiDefaultParams.INPUT_DIR_LABEL, jobDetails[0]);
         props.setProperty(GianiDefaultParams.SPECIFIC_SERIES, jobDetails[1]);
         String label = String.format("%s_S%s", FilenameUtils.getName(jobDetails[0]), jobDetails[1]);
-        GianiDefaultParams.setOutputDirectory(props, label);
+        if (!GianiDefaultParams.setOutputDirectory(props, label)) {
+            System.exit(0);
+        }
         ProcessPipeline pipeline = PipelineBuilder.buildFullPipeline(props, new Objects3DPopulation());
         PipelineExecutor exec = new PipelineExecutor(pipeline, props);
         exec.run();
