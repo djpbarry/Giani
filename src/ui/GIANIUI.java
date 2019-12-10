@@ -503,7 +503,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
             return false;
         }
         int channels = Integer.parseInt(selectedChannels);
-        int n = img.getSizeC();
+        int n = img.getSizeC(Integer.parseInt(props.getProperty(GianiDefaultParams.SERIES_SELECT_LABEL)));
         for (int i = 0; i < n; i++) {
             if ((channels & (int) Math.pow(2.0, i)) != 0) {
                 String[] propLabels = new String[MultiThreadedMaximaFinder.N_PROP_LABELS];

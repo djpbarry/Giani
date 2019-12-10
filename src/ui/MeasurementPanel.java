@@ -175,7 +175,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         if (img.getId() == null) {
             return;
         }
-        int channels = img.getSizeC();
+        int channels = img.getSizeC(img.getCurrentSeries());
         DefaultListModel model = new DefaultListModel();
         for (int c = 0; c < channels; c++) {
             model.addElement(String.format("Channel %d", c));
