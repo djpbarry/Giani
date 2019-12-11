@@ -228,6 +228,9 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
             loadObjectsButton.setEnabled(false);
             objectList.setEnabled(false);
         }
+        if (!inputDirectory.canWrite()) {
+            GenUtils.logError(null, String.format("Cannot write to %s - need write access to unpack zip files.", inputDirectory.getAbsolutePath()));
+        }
         if (!updateObjectList()) {
             GenUtils.error("GIANI output data not found");
             return;
