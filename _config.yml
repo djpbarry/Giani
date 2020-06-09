@@ -1,5 +1,6 @@
 theme: jekyll-theme-minimal
 
 title: GIANI
-description: 
+description: 3D Analyis of Cells
 logo: https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GianiIcon.png
+show_downloads: true
