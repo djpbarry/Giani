@@ -31,6 +31,6 @@ Nuclei locations are estimated using blob detection...
 ![Cell Segmentation Preview](
 https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GIANI_Segment_Cells_Preview.PNG)
 
-## Documentation
+## Want To Learn More?
 
-See [the Wiki](https://github.com/djpbarry/Giani/wiki) for full instructions.
+See [the Wiki](https://github.com/djpbarry/Giani/wiki) for installation instructions and full documentation.
