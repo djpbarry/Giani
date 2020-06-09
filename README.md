@@ -1,6 +1,6 @@
 ![GIANI Icon](https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GianiIcon.png)
 
-## Introduction
+## Overview
 
 GIANI is a FIJI plugin designed to facilitate routine analysis of 3D cell biology image data. Implemented specifically with batch-processing in mind, GIANI is designed to:
 
@@ -36,6 +36,13 @@ A complete set of morpholical and intesnity descriptiors, across an unlimited nu
 If you wish, you can segment smaller, sub-cellular structures using additional blob detection:
 
 ![GIANI Detect Spots Preview](https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GIANI_Detect_Spots_Preview.PNG)
+
+## Explore Results
+
+Examine your results using the included results browser:
+
+![GIANI Results Browser Post Directory Selection](
+https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GIANI_Results_Browser_Final.PNG)
 
 ## Want To Learn More?
 
