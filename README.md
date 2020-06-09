@@ -27,9 +27,15 @@ https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GIANI_Segment_Cells
 
 ## Obtain Measurements
 
-A complete set of intensity and morpholical descriptiors can then be obtained from the above segmentations.
+A complete set of morpholical and intesnity descriptiors, across an unlimited number of channels, can then be obtained from the above segmentations.
 
 ![GIANI Measurement Preview](https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GIANI_Measurement_Preview.PNG)
+
+## Further Segmentation
+
+If you wish, you can segment smaller, sub-cellular structures using additional blob detection:
+
+![GIANI Detect Spots Preview](https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GIANI_Detect_Spots_Preview.PNG)
 
 ## Want To Learn More?
 
