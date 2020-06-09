@@ -15,15 +15,21 @@ GIANI has been designed to batch analyse 3D datasets with minimal user interacti
 
 ![](https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GIANIPhilosophy.PNG)
 
-## Segment Nuclei
+## Segment Nuclei & Cells
 
 Nuclei locations are estimated using blob detection...
 
 ![GIANI Detect Nuclei Centres Preview](https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GIANI_Detect_Nuclei_Centres_Preview.PNG)
 
-...before full segmentation is achieved using a watershed operation:
+...before full segmentation is achieved using a watershed operation...
 
 ![Nuclear Segmentation Preview](https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GIANI_Segment_Nuclei_Preview.PNG)
+
+
+...and then cells are similarly segmented:
+
+![Cell Segmentation Preview](
+https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GIANI_Segment_Cells_Preview.PNG)
 
 ## Documentation
 
