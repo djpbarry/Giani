@@ -25,7 +25,7 @@ https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GIANI_Segment_Cells
 
 # Obtain Measurements
 
-A complete set of morpholical and intesnity descriptiors, across an unlimited number of channels, can then be obtained from the above segmentations.
+A complete set of morphological and intensity descriptors, across an unlimited number of channels, can then be obtained from the above segmentations.
 
 ![GIANI Measurement Preview](https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GIANI_Measurement_Preview.PNG)
 
