@@ -16,7 +16,6 @@
  */
 package net.calm.giani.gianiparams;
 
-import Revision.Revision;
 import ij.IJ;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
 
@@ -73,7 +72,7 @@ public class GianiDefaultParams extends Properties {
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_ABS = "Absolute Hessian Detection for Channel ";
     public static final String HELP_ERROR_MESSAGE = "Error: Can't open online help docs.";
     public static final String SPECIFIC_SERIES = "Specific Series";
-    public static final String TITLE = String.format("GIANI v%d.%s", Revision.VERSION, new DecimalFormat("000").format(Revision.revisionNumber));
+    public static final String TITLE = "GIANI";
 
     public GianiDefaultParams() {
         initialise();
