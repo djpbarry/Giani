@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ui;
+package net.calm.giani.ui;
 
-import IO.BioFormats.BioFormatsImg;
 import Revision.Revision;
+import net.calm.giani.gianiparams.GianiDefaultParams;
+import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+
 import java.text.DecimalFormat;
-import gianiparams.GianiDefaultParams;
 
 /**
  *
@@ -36,7 +37,7 @@ public class BioFormatsBrowserFrame extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        selectInputPanel1 = new ui.SelectInputPanel(new GianiDefaultParams(),
+        selectInputPanel1 = new SelectInputPanel(new GianiDefaultParams(),
             new BioFormatsImg(),
             new String[]{
                 GianiDefaultParams.INPUT_DIR_LABEL,
@@ -66,6 +67,6 @@ public class BioFormatsBrowserFrame extends javax.swing.JFrame {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private ui.SelectInputPanel selectInputPanel1;
+    private SelectInputPanel selectInputPanel1;
     // End of variables declaration//GEN-END:variables
 }

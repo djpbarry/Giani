@@ -3,17 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ui;
+package net.calm.giani.ui;
 
-import IO.BioFormats.BioFormatsImg;
-import Process.Segmentation.MultiThreadedWatershed;
-import UIClasses.LayerPanel;
-import UIClasses.Updateable;
-import gianiparams.GianiDefaultParams;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.LutLoader;
 import ij.process.AutoThresholder;
+import net.calm.giani.gianiparams.GianiDefaultParams;
+import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedWatershed;
+import net.calm.iaclasslibrary.UIClasses.LayerPanel;
+import net.calm.iaclasslibrary.UIClasses.Updateable;
+
 import java.io.File;
 import java.net.URI;
 import java.util.Properties;

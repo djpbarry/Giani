@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ui;
+package net.calm.giani.ui;
 
-import IO.BioFormats.BioFormatsImg;
-import Process.Colocalise.MultiThreadedColocalise;
-import UIClasses.LayerPanel;
+import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.Process.Colocalise.MultiThreadedColocalise;
+import net.calm.iaclasslibrary.UIClasses.LayerPanel;
+
 import java.util.Properties;
 
 /**

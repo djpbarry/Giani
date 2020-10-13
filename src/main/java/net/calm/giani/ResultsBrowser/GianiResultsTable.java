@@ -14,15 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ResultsBrowser;
+package net.calm.giani.ResultsBrowser;
 
-import IO.DataReader;
-import UtilClasses.GenUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import net.calm.iaclasslibrary.IO.DataReader;
+import net.calm.iaclasslibrary.UtilClasses.GenUtils;
 import org.apache.commons.csv.CSVFormat;
 
 /**

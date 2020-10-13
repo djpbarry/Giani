@@ -14,17 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ResultsBrowser;
+package net.calm.giani.ResultsBrowser;
 
-import IO.BioFormats.BioFormatsFileLister;
-import IO.BioFormats.BioFormatsImg;
-import IO.DataReader;
-import IO.PropertyWriter;
 import Revision.Revision;
-import UtilClasses.GenUtils;
-import UtilClasses.Utilities;
 import fiji.plugin.trackmate.Spot;
-import gianiparams.GianiDefaultParams;
 import ij.CompositeImage;
 import ij.IJ;
 import java.awt.Component;
@@ -49,6 +42,13 @@ import loci.formats.FormatException;
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Objects3DPopulation;
 import mcib_plugins.tools.RoiManager3D_2;
+import net.calm.giani.gianiparams.GianiDefaultParams;
+import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsFileLister;
+import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.IO.DataReader;
+import net.calm.iaclasslibrary.IO.PropertyWriter;
+import net.calm.iaclasslibrary.UtilClasses.GenUtils;
+import net.calm.iaclasslibrary.UtilClasses.Utilities;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
