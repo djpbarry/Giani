@@ -16,7 +16,6 @@
  */
 package net.calm.giani.ResultsBrowser;
 
-import Revision.Revision;
 import fiji.plugin.trackmate.Spot;
 import ij.CompositeImage;
 import ij.IJ;
@@ -72,7 +71,7 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
     private ArrayList<ArrayList<Spot>> spots;
     private LinkedHashMap<Integer, Integer> cellIndexSpotMap;
     private int currentSeries;
-    public static final String TITLE = String.format("GIANI Results Browser v%d.%s", Revision.VERSION, new DecimalFormat("000").format(Revision.revisionNumber));
+    public static final String TITLE = "GIANI Results Browser";
 
     /**
      * Creates new form GianiResultsBrowser

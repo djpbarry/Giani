@@ -5,7 +5,6 @@
  */
 package net.calm.giani.ui;
 
-import Revision.Revision;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
 
@@ -18,7 +17,7 @@ import java.text.DecimalFormat;
 public class BioFormatsBrowserFrame extends javax.swing.JFrame {
 
     private final int VERSION = 1;
-    private final String TITLE = String.format("BioFormats Browser v%d.%s", VERSION, new DecimalFormat("000").format(Revision.revisionNumber));
+    private final String TITLE = "BioFormats Browser";
 
     /**
      * Creates new form BioFormatsBrowserFrame
