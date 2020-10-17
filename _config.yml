@@ -1,7 +1,7 @@
 theme: jekyll-theme-minimal
 
 title: GIANI
-description: User-Friendly 3D Analysis of Cells in FIJI
+description: General Image Analysis of Nuclei-containing Images
 logo: https://raw.githubusercontent.com/djpbarry/Giani/master/assets/GianiSmallIcon.png
 show_downloads: false
 google_analytics: UA-49987670-4
