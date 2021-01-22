@@ -26,6 +26,7 @@ import java.util.Properties;
 import java.util.Scanner;
 import mcib3d.geom.Objects3DPopulation;
 import net.calm.giani.gianiparams.GianiDefaultParams;
+import net.calm.giani.ui.GIANIUI;
 import net.calm.iaclasslibrary.IO.PropertyWriter;
 import net.calm.iaclasslibrary.Process.ProcessPipeline;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
@@ -38,6 +39,11 @@ import org.apache.commons.io.FilenameUtils;
 public class Main {
 
     public static void main(String[] args) {
+        GIANIUI ui = new  GIANIUI();
+        ui.setVisible(true);
+    }
+    
+    public static void run(String[] args) {
         if (args.length < 3) {
             System.out.println("Insufficient arguments specified.");
             System.exit(0);

@@ -7,6 +7,7 @@ package net.calm.giani.ui;
 
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
 
@@ -14,28 +15,27 @@ import java.util.ArrayList;
 import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
 import java.net.URI;
-import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
 
 /**
  *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
-public class FilteringPanel extends LayerPanel implements Updateable {
+public class TopHatFilterPanel extends LayerPanel implements Updateable {
 
     private ArrayList<String> channelLabels;
 
     /**
      * Creates new form FilteringPanel
      */
-    public FilteringPanel() {
+    public TopHatFilterPanel() {
         this(null, null, null, null);
     }
 
-    public FilteringPanel(Properties props, BioFormatsImg img, MultiThreadedGaussianFilter process, String[] propLabels) {
+    public TopHatFilterPanel(Properties props, BioFormatsImg img, MultiThreadedTopHatFilter process, String[] propLabels) {
         this(props, img, process, propLabels, null);
     }
 
-    public FilteringPanel(Properties props, BioFormatsImg img, MultiThreadedGaussianFilter process, String[] propLabels, URI helpURI) {
+    public TopHatFilterPanel(Properties props, BioFormatsImg img, MultiThreadedTopHatFilter process, String[] propLabels, URI helpURI) {
         super(props, img, process, propLabels, helpURI);
         initComponents();
     }
@@ -74,7 +74,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(previewButton, gridBagConstraints);
 
-        filterRadiusXYLabel.setText(propLabels[net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter.FILT_RAD_LABEL]);
+        filterRadiusXYLabel.setText(propLabels[MultiThreadedTopHatFilter.FILT_RAD_LABEL]);
         filterRadiusXYLabel.setLabelFor(filterRadiusXYTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -95,7 +95,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(filterRadiusXYTextField, gridBagConstraints);
 
-        channelSelectLabel.setText(propLabels[net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter.CHANNEL_LABEL]);
+        channelSelectLabel.setText(propLabels[MultiThreadedTopHatFilter.CHANNEL_LABEL]);
         channelSelectLabel.setLabelFor(channelSelectComboBox);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -161,7 +161,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
             channelLabels.add(String.valueOf(c));
         }
         channelSelectComboBox.setModel(new DefaultComboBoxModel(channelLabels.toArray()));
-        channelSelectComboBox.setSelectedItem(props.get(propLabels[MultiThreadedGaussianFilter.CHANNEL_LABEL]));
+        channelSelectComboBox.setSelectedItem(props.get(propLabels[MultiThreadedTopHatFilter.CHANNEL_LABEL]));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

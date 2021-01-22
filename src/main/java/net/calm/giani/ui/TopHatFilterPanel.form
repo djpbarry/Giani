@@ -39,7 +39,7 @@
     <Component class="javax.swing.JLabel" name="filterRadiusXYLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="propLabels[net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter.FILT_RAD_LABEL]" type="code"/>
+          <Connection code="propLabels[net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter.FILT_RAD_LABEL]" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
@@ -66,7 +66,7 @@
     <Component class="javax.swing.JLabel" name="channelSelectLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="propLabels[net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter.CHANNEL_LABEL]" type="code"/>
+          <Connection code="propLabels[net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter.CHANNEL_LABEL]" type="code"/>
         </Property>
       </Properties>
       <AuxValues>

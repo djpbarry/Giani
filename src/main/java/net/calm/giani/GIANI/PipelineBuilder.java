@@ -20,13 +20,14 @@ import mcib3d.geom.Objects3DPopulation;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
-import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
 import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
 import net.calm.iaclasslibrary.Process.ProcessPipeline;
 import net.calm.iaclasslibrary.Process.ROI.MultiThreadedROIConstructor;
 import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedWatershed;
 
 import java.util.Properties;
+import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
+import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 
 /**
  *
@@ -53,12 +54,22 @@ public class PipelineBuilder {
         return process;
     }
 
-    public static MultiThreadedGaussianFilter getDefaultNucFilteringProcess(Properties props) {
+    public static MultiThreadedTopHatFilter getDefaultNucTopHatFilteringProcess(Properties props) {
+        String[] propLabels = new String[MultiThreadedTopHatFilter.N_PROP_LABELS];
+        propLabels[MultiThreadedTopHatFilter.CHANNEL_LABEL] = GianiDefaultParams.NUC_SEG_CHAN_SELECT_LABEL;
+        propLabels[MultiThreadedTopHatFilter.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
+        propLabels[MultiThreadedTopHatFilter.FILT_RAD_LABEL] = GianiDefaultParams.NUC_TOP_HAT_FILT_RAD_LABEL;
+        MultiThreadedTopHatFilter process = new MultiThreadedTopHatFilter(null);
+        process.setup(new BioFormatsImg(), props, propLabels);
+        return process;
+    }
+    
+    public static MultiThreadedGaussianFilter getDefaultNucFilteringProcess(Properties props, MultiThreadedProcess[] inputs) {
         String[] propLabels = new String[MultiThreadedGaussianFilter.N_PROP_LABELS];
         propLabels[MultiThreadedGaussianFilter.CHANNEL_LABEL] = GianiDefaultParams.NUC_SEG_CHAN_SELECT_LABEL;
         propLabels[MultiThreadedGaussianFilter.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
         propLabels[MultiThreadedGaussianFilter.FILT_RAD_LABEL] = GianiDefaultParams.NUC_FILT_RAD_LABEL;
-        MultiThreadedGaussianFilter process = new MultiThreadedGaussianFilter(null);
+        MultiThreadedGaussianFilter process = new MultiThreadedGaussianFilter(inputs);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
     }
@@ -129,19 +140,21 @@ public class PipelineBuilder {
         ProcessPipeline pipeline = new ProcessPipeline();
 
         pipeline.addProcess(PipelineBuilder.getDefaultMaximaFinder(props));
-        pipeline.addProcess(PipelineBuilder.getDefaultNucFilteringProcess(props));
+        pipeline.addProcess(PipelineBuilder.getDefaultNucTopHatFilteringProcess(props));
+        pipeline.addProcess(PipelineBuilder.getDefaultNucFilteringProcess(props,
+                new MultiThreadedProcess[]{pipeline.getProcess(1)}));
         pipeline.addProcess(PipelineBuilder.getDefaultNucSegmenter(props,
                 new MultiThreadedProcess[]{
-                    pipeline.getProcess(0), pipeline.getProcess(1)
+                    pipeline.getProcess(0), pipeline.getProcess(2)
                 }, cells));
         pipeline.addProcess(PipelineBuilder.getDefaultCellFilteringProcess(props));
         pipeline.addProcess(PipelineBuilder.getDefaultCellSegmenter(props,
                 new MultiThreadedProcess[]{
-                    pipeline.getProcess(2), pipeline.getProcess(3)
+                    pipeline.getProcess(3), pipeline.getProcess(4)
                 }, cells));
         pipeline.addProcess(PipelineBuilder.getDefaultMeasure(props,
                 new MultiThreadedProcess[]{
-                    pipeline.getProcess(2), pipeline.getProcess(4)
+                    pipeline.getProcess(3), pipeline.getProcess(5)
                 }, cells));
         return pipeline;
     }

@@ -13,7 +13,6 @@ import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
 import net.calm.iaclasslibrary.IO.PropertyWriter;
 import net.calm.iaclasslibrary.Process.Colocalise.MultiThreadedColocalise;
-import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
 import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
 import net.calm.iaclasslibrary.Process.ProcessPipeline;
 import net.calm.iaclasslibrary.Process.ROI.MultiThreadedROIConstructor;
@@ -27,6 +26,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -88,34 +88,55 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         nextButton = new javax.swing.JButton();
         loadParametersButton = new javax.swing.JButton();
         runButton = new javax.swing.JButton();
-        selectInputPanel = new SelectInputPanel(props,img,
+        selectInputPanel = new net.calm.giani.ui.SelectInputPanel(props,img,
             new String[]{
                 GianiDefaultParams.INPUT_DIR_LABEL,
                 GianiDefaultParams.INPUT_FILE_LABEL,
                 GianiDefaultParams.SERIES_SELECT_LABEL,
                 GianiDefaultParams.PREVIEW_CHAN_SELECT_LABEL},
             getHelpURI("https://github.com/djpbarry/Giani/wiki/Selecting-the-Input-Files"));
+        componentList.add(selectInputPanel);
         MultiThreadedMaximaFinder maximaFinder = PipelineBuilder.getDefaultMaximaFinder(props);
-        nuclearCentreFinderPanel = new MaximaFinderPanel(props,img,maximaFinder,
+        nuclearCentreFinderPanel = new net.calm.giani.ui.MaximaFinderPanel(props,img,maximaFinder,
             maximaFinder.getPropLabels(), true, -1,
             getHelpURI("https://github.com/djpbarry/Giani/wiki/Estimating-the-centres-of-nuclei"));
-        MultiThreadedGaussianFilter nucGaussFilter = PipelineBuilder.getDefaultNucFilteringProcess(props);
-        nuclearFilteringPanel = new FilteringPanel(props,img, nucGaussFilter,
+        nuclearCentreFinderPanel.setVisible(false);
+        componentList.add(nuclearCentreFinderPanel);
+        net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter nucTopHatFilter = PipelineBuilder.getDefaultNucTopHatFilteringProcess(props);
+        nuclearTopHatFilterPanel = new net.calm.giani.ui.TopHatFilterPanel(props,img, nucTopHatFilter,
+            nucTopHatFilter.getPropLabels(),
+            getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation"));
+        nuclearTopHatFilterPanel .setVisible(false);
+        componentList.add(nuclearTopHatFilterPanel);
+        MultiThreadedGaussianFilter nucGaussFilter = PipelineBuilder.getDefaultNucFilteringProcess(
+            props,
+            new MultiThreadedProcess[]{
+                nuclearTopHatFilterPanel.getProcess()
+            }
+        );
+        nuclearFilteringPanel = new net.calm.giani.ui.FilteringPanel(props,img,
+            nucGaussFilter,
             nucGaussFilter.getPropLabels(),
             getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation"));
+        nuclearFilteringPanel.setVisible(false);
+        componentList.add(nuclearFilteringPanel);
         MultiThreadedWatershed nucSeg = PipelineBuilder.getDefaultNucSegmenter(props, new MultiThreadedProcess[]{
             nuclearCentreFinderPanel.getProcess(),            nuclearFilteringPanel.getProcess()        }, cells);
-    nuclearSegmentationPanel = new SegmentationPanel(
+    nuclearSegmentationPanel = new net.calm.giani.ui.SegmentationPanel(
         props,
         img,
         nucSeg,
         nucSeg.getPropLabels(),
         getHelpURI("https://github.com/djpbarry/Giani/wiki/Segmenting-Nuclei")
     );
-    MultiThreadedGaussianFilter cellGaussFilter = PipelineBuilder.getDefaultCellFilteringProcess(props);
-    cellFilteringPanel = new FilteringPanel(props,img, cellGaussFilter,
+    nuclearSegmentationPanel.setVisible(false);
+    componentList.add(nuclearSegmentationPanel);
+    net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter cellGaussFilter = PipelineBuilder.getDefaultCellFilteringProcess(props);
+    cellFilteringPanel = new net.calm.giani.ui.FilteringPanel(props,img, cellGaussFilter,
         cellGaussFilter.getPropLabels(),
         getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Cell-Segmentation"));
+    cellFilteringPanel.setVisible(false);
+    componentList.add(cellFilteringPanel);
     MultiThreadedWatershed cellSeg = PipelineBuilder.getDefaultCellSegmenter(
         props,
         new MultiThreadedProcess[]{
@@ -124,26 +145,30 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         },
         cells
     );
-    cellSegmentationPanel = new SegmentationPanel(
+    cellSegmentationPanel = new net.calm.giani.ui.SegmentationPanel(
         props,
         img,
         cellSeg,
         cellSeg.getPropLabels(),
         getHelpURI("https://github.com/djpbarry/Giani/wiki/Complete-Segmentation-of-Cells")
     );
+    cellSegmentationPanel.setVisible(false);
+    componentList.add(cellSegmentationPanel);
     MultiThreadedROIConstructor process = PipelineBuilder.getDefaultMeasure(props,
         new MultiThreadedProcess[]{
             nuclearSegmentationPanel.getProcess(),
             cellSegmentationPanel.getProcess()
         },
         cells);
-    measurementPanel = new MeasurementPanel(
+    measurementPanel = new net.calm.giani.ui.MeasurementPanel(
         props,
         img,
         process,
         process.getPropLabels(),
         getHelpURI("https://github.com/djpbarry/Giani/wiki/Specifying-Channels-to-Measure")
     );
+    measurementPanel.setVisible(false);
+    componentList.add(measurementPanel);
 
     setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     setTitle(GianiDefaultParams.TITLE);
@@ -229,7 +254,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
     getContentPane().add(buttonPanel, gridBagConstraints);
 
-    componentList.add(selectInputPanel);
     selectInputPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
         public void componentHidden(java.awt.event.ComponentEvent evt) {
             selectInputPanelComponentHidden(evt);
@@ -246,9 +270,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     gridBagConstraints.weighty = 0.8;
     gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
     getContentPane().add(selectInputPanel, gridBagConstraints);
-
-    nuclearCentreFinderPanel.setVisible(false);
-    componentList.add(nuclearCentreFinderPanel);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
@@ -257,9 +278,14 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     gridBagConstraints.weighty = 0.8;
     gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
     getContentPane().add(nuclearCentreFinderPanel, gridBagConstraints);
-
-    nuclearFilteringPanel.setVisible(false);
-    componentList.add(nuclearFilteringPanel);
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 0.8;
+    gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+    getContentPane().add(nuclearTopHatFilterPanel, gridBagConstraints);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
@@ -268,9 +294,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     gridBagConstraints.weighty = 0.8;
     gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
     getContentPane().add(nuclearFilteringPanel, gridBagConstraints);
-
-    nuclearSegmentationPanel.setVisible(false);
-    componentList.add(nuclearSegmentationPanel);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
@@ -279,9 +302,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     gridBagConstraints.weighty = 0.8;
     gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
     getContentPane().add(nuclearSegmentationPanel, gridBagConstraints);
-
-    cellFilteringPanel.setVisible(false);
-    componentList.add(cellFilteringPanel);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
@@ -290,9 +310,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     gridBagConstraints.weighty = 0.8;
     gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
     getContentPane().add(cellFilteringPanel, gridBagConstraints);
-
-    cellSegmentationPanel.setVisible(false);
-    componentList.add(cellSegmentationPanel);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
@@ -302,8 +319,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
     getContentPane().add(cellSegmentationPanel, gridBagConstraints);
 
-    measurementPanel.setVisible(false);
-    componentList.add(measurementPanel);
     measurementPanel.addMouseListener(new java.awt.event.MouseAdapter() {
         public void mouseClicked(java.awt.event.MouseEvent evt) {
             measurementPanelMouseClicked(evt);
@@ -597,16 +612,17 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonPanel;
-    private FilteringPanel cellFilteringPanel;
-    private SegmentationPanel cellSegmentationPanel;
+    private net.calm.giani.ui.FilteringPanel cellFilteringPanel;
+    private net.calm.giani.ui.SegmentationPanel cellSegmentationPanel;
     private javax.swing.JButton loadParametersButton;
-    private MeasurementPanel measurementPanel;
+    private net.calm.giani.ui.MeasurementPanel measurementPanel;
     private javax.swing.JButton nextButton;
-    private MaximaFinderPanel nuclearCentreFinderPanel;
-    private FilteringPanel nuclearFilteringPanel;
-    private SegmentationPanel nuclearSegmentationPanel;
+    private net.calm.giani.ui.MaximaFinderPanel nuclearCentreFinderPanel;
+    private net.calm.giani.ui.FilteringPanel nuclearFilteringPanel;
+    private net.calm.giani.ui.SegmentationPanel nuclearSegmentationPanel;
+    private net.calm.giani.ui.TopHatFilterPanel nuclearTopHatFilterPanel;
     private javax.swing.JButton previousButton;
     private javax.swing.JButton runButton;
-    private SelectInputPanel selectInputPanel;
+    private net.calm.giani.ui.SelectInputPanel selectInputPanel;
     // End of variables declaration//GEN-END:variables
 }
