@@ -141,11 +141,11 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="net.calm.giani.ui.TopHatFilterPanel" name="nuclearTopHatFilterPanel">
+    <Component class="net.calm.giani.ui.FilteringPanel" name="nuclearFilteringPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new net.calm.giani.ui.TopHatFilterPanel(props,img, nucTopHatFilter,&#xa;    nucTopHatFilter.getPropLabels(),&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation&quot;))"/>
-        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="nuclearTopHatFilterPanel .setVisible(false);&#xa;componentList.add(nuclearTopHatFilterPanel);"/>
-        <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter nucTopHatFilter = PipelineBuilder.getDefaultNucTopHatFilteringProcess(props);"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new net.calm.giani.ui.FilteringPanel(props,img,&#xa;    nucGaussFilter,&#xa;    nucGaussFilter.getPropLabels(),&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation&quot;))"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="nuclearFilteringPanel.setVisible(false);&#xa;componentList.add(nuclearFilteringPanel);"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="MultiThreadedGaussianFilter nucGaussFilter = PipelineBuilder.getDefaultNucFilteringProcess(props);"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -153,11 +153,11 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="net.calm.giani.ui.FilteringPanel" name="nuclearFilteringPanel">
+    <Component class="net.calm.giani.ui.TopHatFilterPanel" name="nuclearTopHatFilterPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new net.calm.giani.ui.FilteringPanel(props,img,&#xa;    nucGaussFilter,&#xa;    nucGaussFilter.getPropLabels(),&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation&quot;))"/>
-        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="nuclearFilteringPanel.setVisible(false);&#xa;componentList.add(nuclearFilteringPanel);"/>
-        <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="MultiThreadedGaussianFilter nucGaussFilter = PipelineBuilder.getDefaultNucFilteringProcess(&#xa;        props,&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearTopHatFilterPanel.getProcess()&#xa;        }&#xa;    );"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new TopHatFilterPanel(props,img, nucTopHatFilter,&#xa;    nucTopHatFilter.getPropLabels(),&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation&quot;))"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="nuclearTopHatFilterPanel .setVisible(false);&#xa;componentList.add(nuclearTopHatFilterPanel);"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="MultiThreadedTopHatFilter nucTopHatFilter = PipelineBuilder.getDefaultNucTopHatFilteringProcess(&#xa;        props,&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearFilteringPanel.getProcess()&#xa;        }&#xa;    );"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -169,7 +169,7 @@
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new net.calm.giani.ui.SegmentationPanel(&#xa;    props,&#xa;    img,&#xa;    nucSeg,&#xa;    nucSeg.getPropLabels(),&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Segmenting-Nuclei&quot;)&#xa;)"/>
         <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="nuclearSegmentationPanel.setVisible(false);&#xa;componentList.add(nuclearSegmentationPanel);"/>
-        <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="MultiThreadedWatershed nucSeg = PipelineBuilder.getDefaultNucSegmenter(props, new MultiThreadedProcess[]{&#xa;            nuclearCentreFinderPanel.getProcess(),            nuclearFilteringPanel.getProcess()        }, cells);"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="MultiThreadedWatershed nucSeg = PipelineBuilder.getDefaultNucSegmenter(props, new MultiThreadedProcess[]{&#xa;            nuclearCentreFinderPanel.getProcess(),            nuclearTopHatFilterPanel.getProcess()        }, cells);"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

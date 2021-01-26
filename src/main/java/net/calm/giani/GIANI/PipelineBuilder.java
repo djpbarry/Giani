@@ -54,22 +54,23 @@ public class PipelineBuilder {
         return process;
     }
 
-    public static MultiThreadedTopHatFilter getDefaultNucTopHatFilteringProcess(Properties props) {
+    public static MultiThreadedTopHatFilter getDefaultNucTopHatFilteringProcess(Properties props, MultiThreadedProcess[] inputs) {
         String[] propLabels = new String[MultiThreadedTopHatFilter.N_PROP_LABELS];
         propLabels[MultiThreadedTopHatFilter.CHANNEL_LABEL] = GianiDefaultParams.NUC_SEG_CHAN_SELECT_LABEL;
         propLabels[MultiThreadedTopHatFilter.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
         propLabels[MultiThreadedTopHatFilter.FILT_RAD_LABEL] = GianiDefaultParams.NUC_TOP_HAT_FILT_RAD_LABEL;
-        MultiThreadedTopHatFilter process = new MultiThreadedTopHatFilter(null);
+        propLabels[MultiThreadedTopHatFilter.RESIZE_FACTOR_LABEL] = GianiDefaultParams.NUC_TOP_HAT_DOWNSIZE_FACTOR_LABEL;
+        MultiThreadedTopHatFilter process = new MultiThreadedTopHatFilter(inputs);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
     }
     
-    public static MultiThreadedGaussianFilter getDefaultNucFilteringProcess(Properties props, MultiThreadedProcess[] inputs) {
+    public static MultiThreadedGaussianFilter getDefaultNucFilteringProcess(Properties props) {
         String[] propLabels = new String[MultiThreadedGaussianFilter.N_PROP_LABELS];
         propLabels[MultiThreadedGaussianFilter.CHANNEL_LABEL] = GianiDefaultParams.NUC_SEG_CHAN_SELECT_LABEL;
         propLabels[MultiThreadedGaussianFilter.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
         propLabels[MultiThreadedGaussianFilter.FILT_RAD_LABEL] = GianiDefaultParams.NUC_FILT_RAD_LABEL;
-        MultiThreadedGaussianFilter process = new MultiThreadedGaussianFilter(inputs);
+        MultiThreadedGaussianFilter process = new MultiThreadedGaussianFilter(null);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
     }
@@ -140,9 +141,8 @@ public class PipelineBuilder {
         ProcessPipeline pipeline = new ProcessPipeline();
 
         pipeline.addProcess(PipelineBuilder.getDefaultMaximaFinder(props));
-        pipeline.addProcess(PipelineBuilder.getDefaultNucTopHatFilteringProcess(props));
-        pipeline.addProcess(PipelineBuilder.getDefaultNucFilteringProcess(props,
-                new MultiThreadedProcess[]{pipeline.getProcess(1)}));
+        pipeline.addProcess(PipelineBuilder.getDefaultNucTopHatFilteringProcess(props, null));
+        pipeline.addProcess(PipelineBuilder.getDefaultNucFilteringProcess(props));
         pipeline.addProcess(PipelineBuilder.getDefaultNucSegmenter(props,
                 new MultiThreadedProcess[]{
                     pipeline.getProcess(0), pipeline.getProcess(2)

@@ -74,7 +74,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(previewButton, gridBagConstraints);
 
-        filterRadiusXYLabel.setText(propLabels[net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter.FILT_RAD_LABEL]);
+        filterRadiusXYLabel.setText(propLabels[MultiThreadedGaussianFilter.FILT_RAD_LABEL]);
         filterRadiusXYLabel.setLabelFor(filterRadiusXYTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -85,7 +85,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(filterRadiusXYLabel, gridBagConstraints);
 
-        filterRadiusXYTextField.setText(props.getProperty(propLabels[1]));
+        filterRadiusXYTextField.setText(props.getProperty(propLabels[MultiThreadedGaussianFilter.FILT_RAD_LABEL]));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;

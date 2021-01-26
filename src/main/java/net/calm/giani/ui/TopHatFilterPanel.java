@@ -20,7 +20,7 @@ import java.net.URI;
  *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
-public class TopHatFilterPanel extends LayerPanel implements Updateable {
+public class TopHatFilterPanel extends LayerPanel {
 
     private ArrayList<String> channelLabels;
 
@@ -53,9 +53,9 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
         previewButton = new javax.swing.JButton();
         filterRadiusXYLabel = new javax.swing.JLabel();
         filterRadiusXYTextField = new javax.swing.JTextField();
-        channelSelectLabel = new javax.swing.JLabel();
-        channelSelectComboBox = new javax.swing.JComboBox<>();
         helpButton = new javax.swing.JButton();
+        downsizeFactorLabel = new javax.swing.JLabel();
+        downSizeFactorTextField = new javax.swing.JTextField();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -68,7 +68,7 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -78,43 +78,22 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
         filterRadiusXYLabel.setLabelFor(filterRadiusXYTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(filterRadiusXYLabel, gridBagConstraints);
 
-        filterRadiusXYTextField.setText(props.getProperty(propLabels[1]));
+        filterRadiusXYTextField.setText(props.getProperty(propLabels[MultiThreadedTopHatFilter.FILT_RAD_LABEL]));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(filterRadiusXYTextField, gridBagConstraints);
-
-        channelSelectLabel.setText(propLabels[MultiThreadedTopHatFilter.CHANNEL_LABEL]);
-        channelSelectLabel.setLabelFor(channelSelectComboBox);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(channelSelectLabel, gridBagConstraints);
-
-        channelSelectComboBox.setModel(new DefaultComboBoxModel(new String[]{}));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(channelSelectComboBox, gridBagConstraints);
 
         helpButton.setText("Help");
         helpButton.addActionListener(new java.awt.event.ActionListener() {
@@ -124,11 +103,32 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(helpButton, gridBagConstraints);
+
+        downsizeFactorLabel.setText(propLabels[MultiThreadedTopHatFilter.RESIZE_FACTOR_LABEL]);
+        downsizeFactorLabel.setLabelFor(downSizeFactorTextField);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(downsizeFactorLabel, gridBagConstraints);
+
+        downSizeFactorTextField.setText(props.getProperty(propLabels[MultiThreadedTopHatFilter.RESIZE_FACTOR_LABEL]));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(downSizeFactorTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -151,22 +151,9 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
         process.setup(img, props, propLabels);
     }
 
-    public void update() {
-        if (img.getId() == null) {
-            return;
-        }
-        int channels = img.getSizeC(img.getCurrentSeries());
-        channelLabels = new ArrayList();
-        for (int c = 0; c < channels; c++) {
-            channelLabels.add(String.valueOf(c));
-        }
-        channelSelectComboBox.setModel(new DefaultComboBoxModel(channelLabels.toArray()));
-        channelSelectComboBox.setSelectedItem(props.get(propLabels[MultiThreadedTopHatFilter.CHANNEL_LABEL]));
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> channelSelectComboBox;
-    private javax.swing.JLabel channelSelectLabel;
+    private javax.swing.JTextField downSizeFactorTextField;
+    private javax.swing.JLabel downsizeFactorLabel;
     private javax.swing.JLabel filterRadiusXYLabel;
     private javax.swing.JTextField filterRadiusXYTextField;
     private javax.swing.JButton helpButton;

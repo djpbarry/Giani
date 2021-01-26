@@ -38,6 +38,7 @@ public class GianiDefaultParams extends Properties {
     public static final String BLOB_CHAN_SELECT_LABEL = "Detect Spots in Channel ";
     public static final String NUC_FILT_RAD_LABEL = String.format("Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
     public static final String NUC_TOP_HAT_FILT_RAD_LABEL = String.format("Top Hat Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
+    public static final String NUC_TOP_HAT_DOWNSIZE_FACTOR_LABEL = "Downsize Factor for Top Hat Filter for Nuclear Channel";
     public static final String BLOB_NUC_NOISE_TOL_LABEL = " Threshold for Simple Nuclear Detection";
     public static final String BLOB_NUC_RAD_LABEL = String.format("Nuclear Radius for Simple Detection (%cm)", IJ.micronSymbol);
     public static final String BLOB_CHAN_NOISE_TOL_LABEL = "Simple Blob Detection Threshold for Channel ";
@@ -89,6 +90,7 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(BLOB_CHAN_SELECT_LABEL, "0");
         this.setProperty(NUC_FILT_RAD_LABEL, "0.0");
         this.setProperty(NUC_TOP_HAT_FILT_RAD_LABEL, "0.0");
+        this.setProperty(NUC_TOP_HAT_DOWNSIZE_FACTOR_LABEL, "0.0");
         this.setProperty(BLOB_NUC_NOISE_TOL_LABEL, "0.0");
         this.setProperty(BLOB_NUC_RAD_LABEL, "0.0");
         this.setProperty(BLOB_CHAN_NOISE_TOL_LABEL, "0.0");

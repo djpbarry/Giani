@@ -27,6 +27,7 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
+import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -102,26 +103,26 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
             getHelpURI("https://github.com/djpbarry/Giani/wiki/Estimating-the-centres-of-nuclei"));
         nuclearCentreFinderPanel.setVisible(false);
         componentList.add(nuclearCentreFinderPanel);
-        net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter nucTopHatFilter = PipelineBuilder.getDefaultNucTopHatFilteringProcess(props);
-        nuclearTopHatFilterPanel = new net.calm.giani.ui.TopHatFilterPanel(props,img, nucTopHatFilter,
-            nucTopHatFilter.getPropLabels(),
-            getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation"));
-        nuclearTopHatFilterPanel .setVisible(false);
-        componentList.add(nuclearTopHatFilterPanel);
-        MultiThreadedGaussianFilter nucGaussFilter = PipelineBuilder.getDefaultNucFilteringProcess(
-            props,
-            new MultiThreadedProcess[]{
-                nuclearTopHatFilterPanel.getProcess()
-            }
-        );
+        MultiThreadedGaussianFilter nucGaussFilter = PipelineBuilder.getDefaultNucFilteringProcess(props);
         nuclearFilteringPanel = new net.calm.giani.ui.FilteringPanel(props,img,
             nucGaussFilter,
             nucGaussFilter.getPropLabels(),
             getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation"));
         nuclearFilteringPanel.setVisible(false);
         componentList.add(nuclearFilteringPanel);
+        MultiThreadedTopHatFilter nucTopHatFilter = PipelineBuilder.getDefaultNucTopHatFilteringProcess(
+            props,
+            new MultiThreadedProcess[]{
+                nuclearFilteringPanel.getProcess()
+            }
+        );
+        nuclearTopHatFilterPanel = new TopHatFilterPanel(props,img, nucTopHatFilter,
+            nucTopHatFilter.getPropLabels(),
+            getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation"));
+        nuclearTopHatFilterPanel .setVisible(false);
+        componentList.add(nuclearTopHatFilterPanel);
         MultiThreadedWatershed nucSeg = PipelineBuilder.getDefaultNucSegmenter(props, new MultiThreadedProcess[]{
-            nuclearCentreFinderPanel.getProcess(),            nuclearFilteringPanel.getProcess()        }, cells);
+            nuclearCentreFinderPanel.getProcess(),            nuclearTopHatFilterPanel.getProcess()        }, cells);
     nuclearSegmentationPanel = new net.calm.giani.ui.SegmentationPanel(
         props,
         img,
@@ -285,7 +286,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     gridBagConstraints.weightx = 1.0;
     gridBagConstraints.weighty = 0.8;
     gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-    getContentPane().add(nuclearTopHatFilterPanel, gridBagConstraints);
+    getContentPane().add(nuclearFilteringPanel, gridBagConstraints);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
@@ -293,7 +294,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     gridBagConstraints.weightx = 1.0;
     gridBagConstraints.weighty = 0.8;
     gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-    getContentPane().add(nuclearFilteringPanel, gridBagConstraints);
+    getContentPane().add(nuclearTopHatFilterPanel, gridBagConstraints);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
