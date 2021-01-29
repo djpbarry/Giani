@@ -301,6 +301,10 @@ public class SelectInputPanel extends LayerPanel {
                         seriesLabels.add(String.valueOf(s));
                     }
                 }
+                if(seriesLabels.size() < 1){
+                    IJ.log(String.format("No valid image series found in %s\n", fileName));
+                    return;
+                }
                 seriesComboBox.setModel(new DefaultComboBoxModel(seriesLabels.toArray()));
                 seriesComboBox.setEnabled(true);
                 seriesSelectLabel.setEnabled(true);

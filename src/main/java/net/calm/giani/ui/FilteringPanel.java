@@ -23,6 +23,7 @@ import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
 public class FilteringPanel extends LayerPanel implements Updateable {
 
     private ArrayList<String> channelLabels;
+    private final String title;
 
     /**
      * Creates new form FilteringPanel
@@ -32,11 +33,12 @@ public class FilteringPanel extends LayerPanel implements Updateable {
     }
 
     public FilteringPanel(Properties props, BioFormatsImg img, MultiThreadedGaussianFilter process, String[] propLabels) {
-        this(props, img, process, propLabels, null);
+        this(props, img, process, propLabels, null, null);
     }
 
-    public FilteringPanel(Properties props, BioFormatsImg img, MultiThreadedGaussianFilter process, String[] propLabels, URI helpURI) {
+    public FilteringPanel(Properties props, BioFormatsImg img, MultiThreadedGaussianFilter process, String[] propLabels, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
+        this.title = title;
         initComponents();
     }
 
@@ -56,6 +58,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         channelSelectLabel = new javax.swing.JLabel();
         channelSelectComboBox = new javax.swing.JComboBox<>();
         helpButton = new javax.swing.JButton();
+        titleLabel = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -68,7 +71,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -78,7 +81,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         filterRadiusXYLabel.setLabelFor(filterRadiusXYTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -88,7 +91,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         filterRadiusXYTextField.setText(props.getProperty(propLabels[MultiThreadedGaussianFilter.FILT_RAD_LABEL]));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -99,7 +102,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         channelSelectLabel.setLabelFor(channelSelectComboBox);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -109,7 +112,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         channelSelectComboBox.setModel(new DefaultComboBoxModel(new String[]{}));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -124,11 +127,24 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(helpButton, gridBagConstraints);
+
+        titleLabel.setFont(GianiDefaultParams.TITLE_FONT);
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setText(title);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(titleLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -171,5 +187,6 @@ public class FilteringPanel extends LayerPanel implements Updateable {
     private javax.swing.JTextField filterRadiusXYTextField;
     private javax.swing.JButton helpButton;
     private javax.swing.JButton previewButton;
+    private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
 }

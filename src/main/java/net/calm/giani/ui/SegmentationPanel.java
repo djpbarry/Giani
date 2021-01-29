@@ -26,15 +26,18 @@ import javax.swing.DefaultComboBoxModel;
  */
 public class SegmentationPanel extends LayerPanel implements Updateable {
 
+    private final String title;
+    
     /**
      * Creates new form SegmentationPanel
      */
     public SegmentationPanel() {
-        this(null, null, null, null, null);
+        this(null, null, null, null, null, null);
     }
 
-    public SegmentationPanel(Properties props, BioFormatsImg img, MultiThreadedWatershed process, String[] propLabels, URI helpURI) {
+    public SegmentationPanel(Properties props, BioFormatsImg img, MultiThreadedWatershed process, String[] propLabels, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
+        this.title = title;
         initComponents();
     }
 
@@ -56,6 +59,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         distWeightingLabel = new javax.swing.JLabel();
         distWeightingTextField = new javax.swing.JTextField();
         helpButton = new javax.swing.JButton();
+        titleLabel = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -68,7 +72,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -78,7 +82,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         thresholdLabel.setLabelFor(thresholdComboBox);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -89,7 +93,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         thresholdComboBox.setSelectedItem("Default");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -105,7 +109,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -121,7 +125,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -133,7 +137,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         distWeightingLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[2])));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -144,7 +148,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         distWeightingTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[2])));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -159,11 +163,24 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(helpButton, gridBagConstraints);
+
+        titleLabel.setFont(GianiDefaultParams.TITLE_FONT);
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setText(title);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(titleLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -220,6 +237,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
     private javax.swing.JButton previewButton;
     private javax.swing.JComboBox<String> thresholdComboBox;
     private javax.swing.JLabel thresholdLabel;
+    private javax.swing.JLabel titleLabel;
     private javax.swing.JToggleButton volumeToggleButton;
     // End of variables declaration//GEN-END:variables
 }

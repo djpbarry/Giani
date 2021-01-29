@@ -131,7 +131,7 @@
     </Component>
     <Component class="net.calm.giani.ui.MaximaFinderPanel" name="nuclearCentreFinderPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new net.calm.giani.ui.MaximaFinderPanel(props,img,maximaFinder,&#xa;    maximaFinder.getPropLabels(), true, -1,&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Estimating-the-centres-of-nuclei&quot;))"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new net.calm.giani.ui.MaximaFinderPanel(props,img,maximaFinder,&#xa;    maximaFinder.getPropLabels(), true, -1,&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Estimating-the-centres-of-nuclei&quot;),&#xa;    GianiDefaultParams.NUC_CENTROID_LOCALISATION_TITLE)"/>
         <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="nuclearCentreFinderPanel.setVisible(false);&#xa;componentList.add(nuclearCentreFinderPanel);"/>
         <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="MultiThreadedMaximaFinder maximaFinder = PipelineBuilder.getDefaultMaximaFinder(props);"/>
       </AuxValues>
@@ -143,7 +143,7 @@
     </Component>
     <Component class="net.calm.giani.ui.FilteringPanel" name="nuclearFilteringPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new net.calm.giani.ui.FilteringPanel(props,img,&#xa;    nucGaussFilter,&#xa;    nucGaussFilter.getPropLabels(),&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation&quot;))"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new net.calm.giani.ui.FilteringPanel(props,img,&#xa;    nucGaussFilter,&#xa;    nucGaussFilter.getPropLabels(),&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation&quot;),&#xa;    GianiDefaultParams.NUC_GAUSS_FILTER_TITLE)"/>
         <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="nuclearFilteringPanel.setVisible(false);&#xa;componentList.add(nuclearFilteringPanel);"/>
         <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="MultiThreadedGaussianFilter nucGaussFilter = PipelineBuilder.getDefaultNucFilteringProcess(props);"/>
       </AuxValues>
@@ -155,7 +155,7 @@
     </Component>
     <Component class="net.calm.giani.ui.TopHatFilterPanel" name="nuclearTopHatFilterPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new TopHatFilterPanel(props,img, nucTopHatFilter,&#xa;    nucTopHatFilter.getPropLabels(),&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation&quot;))"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new TopHatFilterPanel(props,img, nucTopHatFilter,&#xa;    nucTopHatFilter.getPropLabels(),&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Background-Subrtraction-Prior-to-Nuclear-Segmentation&quot;),&#xa;    GianiDefaultParams.NUC_TOP_HAT_TITLE)"/>
         <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="nuclearTopHatFilterPanel .setVisible(false);&#xa;componentList.add(nuclearTopHatFilterPanel);"/>
         <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="MultiThreadedTopHatFilter nucTopHatFilter = PipelineBuilder.getDefaultNucTopHatFilteringProcess(&#xa;        props,&#xa;        new MultiThreadedProcess[]{&#xa;            nuclearFilteringPanel.getProcess()&#xa;        }&#xa;    );"/>
       </AuxValues>
@@ -167,7 +167,7 @@
     </Component>
     <Component class="net.calm.giani.ui.SegmentationPanel" name="nuclearSegmentationPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new net.calm.giani.ui.SegmentationPanel(&#xa;    props,&#xa;    img,&#xa;    nucSeg,&#xa;    nucSeg.getPropLabels(),&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Segmenting-Nuclei&quot;)&#xa;)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new net.calm.giani.ui.SegmentationPanel(&#xa;    props,&#xa;    img,&#xa;    nucSeg,&#xa;    nucSeg.getPropLabels(),&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Segmenting-Nuclei&quot;),&#xa;    GianiDefaultParams.NUC_SEG_TITLE&#xa;)"/>
         <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="nuclearSegmentationPanel.setVisible(false);&#xa;componentList.add(nuclearSegmentationPanel);"/>
         <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="MultiThreadedWatershed nucSeg = PipelineBuilder.getDefaultNucSegmenter(props, new MultiThreadedProcess[]{&#xa;            nuclearCentreFinderPanel.getProcess(),            nuclearTopHatFilterPanel.getProcess()        }, cells);"/>
       </AuxValues>
@@ -179,7 +179,7 @@
     </Component>
     <Component class="net.calm.giani.ui.FilteringPanel" name="cellFilteringPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new net.calm.giani.ui.FilteringPanel(props,img, cellGaussFilter,&#xa;    cellGaussFilter.getPropLabels(),&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Cell-Segmentation&quot;))"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new net.calm.giani.ui.FilteringPanel(props,img, cellGaussFilter,&#xa;    cellGaussFilter.getPropLabels(),&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Cell-Segmentation&quot;),&#xa;    GianiDefaultParams.CELL_GAUSS_FILTER_TITLE)"/>
         <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="cellFilteringPanel.setVisible(false);&#xa;componentList.add(cellFilteringPanel);"/>
         <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter cellGaussFilter = PipelineBuilder.getDefaultCellFilteringProcess(props);"/>
       </AuxValues>
@@ -191,7 +191,7 @@
     </Component>
     <Component class="net.calm.giani.ui.SegmentationPanel" name="cellSegmentationPanel">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new net.calm.giani.ui.SegmentationPanel(&#xa;    props,&#xa;    img,&#xa;    cellSeg,&#xa;    cellSeg.getPropLabels(),&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Complete-Segmentation-of-Cells&quot;)&#xa;)"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new net.calm.giani.ui.SegmentationPanel(&#xa;    props,&#xa;    img,&#xa;    cellSeg,&#xa;    cellSeg.getPropLabels(),&#xa;    getHelpURI(&quot;https://github.com/djpbarry/Giani/wiki/Complete-Segmentation-of-Cells&quot;),&#xa;    GianiDefaultParams.CELL_SEG_TITLE&#xa;)"/>
         <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="cellSegmentationPanel.setVisible(false);&#xa;componentList.add(cellSegmentationPanel);"/>
         <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="MultiThreadedWatershed cellSeg = PipelineBuilder.getDefaultCellSegmenter(&#xa;    props,&#xa;    new MultiThreadedProcess[]{&#xa;        nuclearSegmentationPanel.getProcess(),&#xa;        cellFilteringPanel.getProcess()&#xa;    },&#xa;    cells&#xa;);"/>
       </AuxValues>

@@ -9,11 +9,9 @@ import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
 import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
-import net.calm.iaclasslibrary.UIClasses.Updateable;
 
 import java.util.ArrayList;
 import java.util.Properties;
-import javax.swing.DefaultComboBoxModel;
 import java.net.URI;
 
 /**
@@ -23,6 +21,7 @@ import java.net.URI;
 public class TopHatFilterPanel extends LayerPanel {
 
     private ArrayList<String> channelLabels;
+    private final String title;
 
     /**
      * Creates new form FilteringPanel
@@ -32,11 +31,12 @@ public class TopHatFilterPanel extends LayerPanel {
     }
 
     public TopHatFilterPanel(Properties props, BioFormatsImg img, MultiThreadedTopHatFilter process, String[] propLabels) {
-        this(props, img, process, propLabels, null);
+        this(props, img, process, propLabels, null, null);
     }
 
-    public TopHatFilterPanel(Properties props, BioFormatsImg img, MultiThreadedTopHatFilter process, String[] propLabels, URI helpURI) {
+    public TopHatFilterPanel(Properties props, BioFormatsImg img, MultiThreadedTopHatFilter process, String[] propLabels, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
+        this.title = title;
         initComponents();
     }
 
@@ -56,6 +56,7 @@ public class TopHatFilterPanel extends LayerPanel {
         helpButton = new javax.swing.JButton();
         downsizeFactorLabel = new javax.swing.JLabel();
         downSizeFactorTextField = new javax.swing.JTextField();
+        titleLabel = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -68,7 +69,7 @@ public class TopHatFilterPanel extends LayerPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -78,7 +79,7 @@ public class TopHatFilterPanel extends LayerPanel {
         filterRadiusXYLabel.setLabelFor(filterRadiusXYTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -88,7 +89,7 @@ public class TopHatFilterPanel extends LayerPanel {
         filterRadiusXYTextField.setText(props.getProperty(propLabels[MultiThreadedTopHatFilter.FILT_RAD_LABEL]));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -103,7 +104,7 @@ public class TopHatFilterPanel extends LayerPanel {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -113,7 +114,7 @@ public class TopHatFilterPanel extends LayerPanel {
         downsizeFactorLabel.setLabelFor(downSizeFactorTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -123,12 +124,25 @@ public class TopHatFilterPanel extends LayerPanel {
         downSizeFactorTextField.setText(props.getProperty(propLabels[MultiThreadedTopHatFilter.RESIZE_FACTOR_LABEL]));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(downSizeFactorTextField, gridBagConstraints);
+
+        titleLabel.setFont(GianiDefaultParams.TITLE_FONT);
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setText(title);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(titleLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -158,5 +172,6 @@ public class TopHatFilterPanel extends LayerPanel {
     private javax.swing.JTextField filterRadiusXYTextField;
     private javax.swing.JButton helpButton;
     private javax.swing.JButton previewButton;
+    private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
 }
