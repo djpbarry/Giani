@@ -21,7 +21,11 @@ import java.awt.Font;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Properties;
+import net.calm.giani.ui.GIANIUI;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -74,7 +78,8 @@ public class GianiDefaultParams extends Properties {
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_ABS = "Absolute Hessian Detection for Channel ";
     public static final String HELP_ERROR_MESSAGE = "Error: Can't open online help docs.";
     public static final String SPECIFIC_SERIES = "Specific Series";
-    public static final String TITLE = "GIANI";
+    public static final String APP_TITLE = "GIANI";
+    public static final String TITLE = getTitleWithVersion();
     public static final String NUC_GAUSS_FILTER_TITLE = "Gaussian Filtering to Suppress Noise in Nuclear Channel Prior to Segmentation";
     public static final String NUC_CENTROID_LOCALISATION_TITLE = "Blob Detection to Approximate Locations of Nuclear Centroids";
     public static final String NUC_TOP_HAT_TITLE = "Top Hat Filtering to Homogenise Background in Nuclear Channel Prior to Segmentation";
@@ -145,5 +150,18 @@ public class GianiDefaultParams extends Properties {
         }
         props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, outputDirectoryName);
         return true;
+    }
+
+    public static String getTitleWithVersion() {
+        try {
+            File gianiJar = new File(GIANIUI.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+            String filename = FilenameUtils.getBaseName(gianiJar.getAbsolutePath());
+            if (!filename.toUpperCase().startsWith(APP_TITLE.toUpperCase())) {
+                throw new IOException();
+            }
+            return filename.toUpperCase();
+        } catch (IOException | URISyntaxException e) {
+            return APP_TITLE;
+        }
     }
 }
