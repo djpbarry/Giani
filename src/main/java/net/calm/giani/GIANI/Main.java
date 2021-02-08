@@ -17,6 +17,7 @@
 package net.calm.giani.GIANI;
 
 import ij.IJ;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,6 +25,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.Scanner;
+
 import mcib3d.geom.Objects3DPopulation;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.giani.ui.GIANIUI;
@@ -33,16 +35,17 @@ import net.calm.iaclasslibrary.UtilClasses.GenUtils;
 import org.apache.commons.io.FilenameUtils;
 
 /**
- *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
 public class Main {
 
     public static void main(String[] args) {
-        GIANIUI ui = new  GIANIUI();
-        ui.setVisible(true);
+        if (args == null) {
+            GIANIUI ui = new GIANIUI();
+            ui.setVisible(true);
+        } else Main.run(args);
     }
-    
+
     public static void run(String[] args) {
         if (args.length < 3) {
             System.out.println("Insufficient arguments specified.");

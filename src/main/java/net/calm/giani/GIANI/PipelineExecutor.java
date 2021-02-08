@@ -20,6 +20,7 @@ import ij.IJ;
 import ij.measure.ResultsTable;
 import ij.plugin.filter.Analyzer;
 import ij.plugin.frame.RoiManager;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
 import loci.formats.FormatException;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsFileLister;
@@ -41,7 +43,6 @@ import net.calm.iaclasslibrary.UtilClasses.GenUtils;
 import org.apache.commons.io.FilenameUtils;
 
 /**
- *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
 public class PipelineExecutor extends Thread {
@@ -101,7 +102,7 @@ public class PipelineExecutor extends Thread {
             }
             for (int s = s0; s < nSeries; s++) {
                 IJ.log(String.format("Analysing series %d", s));
-                if (img.getZSpatialRes(s) == null) {
+                if (img.getSizeZ(s) < 2) {
                     IJ.log("Only 2 dimensions - skipping.");
                     continue;
                 }

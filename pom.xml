@@ -134,7 +134,7 @@
 
     <properties>
         <package-name>net.calm.giani</package-name>
-        <main-class>net.calm.giani.Main</main-class>
+        <main-class>net.calm.giani.GIANI.Main</main-class>
         <license.licenseName>bsd_2</license.licenseName>
         <license.copyrightOwners>Francis Crick Institute</license.copyrightOwners>
     </properties>
@@ -151,7 +151,7 @@
         <dependency>
             <groupId>net.calm</groupId>
             <artifactId>iaclasslibrary</artifactId>
-            <version>1.0.4</version>
+            <version>1.0.5</version>
         </dependency>
         <dependency>
             <groupId>com.github.mcib3d</groupId>
