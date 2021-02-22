@@ -141,8 +141,8 @@ public class PipelineBuilder {
         ProcessPipeline pipeline = new ProcessPipeline();
 
         pipeline.addProcess(PipelineBuilder.getDefaultMaximaFinder(props));
-        pipeline.addProcess(PipelineBuilder.getDefaultNucTopHatFilteringProcess(props, null));
         pipeline.addProcess(PipelineBuilder.getDefaultNucFilteringProcess(props));
+        pipeline.addProcess(PipelineBuilder.getDefaultNucTopHatFilteringProcess(props, null));
         pipeline.addProcess(PipelineBuilder.getDefaultNucSegmenter(props,
                 new MultiThreadedProcess[]{
                     pipeline.getProcess(0), pipeline.getProcess(2)

@@ -109,7 +109,7 @@ public class PipelineExecutor extends Thread {
                 props.setProperty(GianiDefaultParams.SERIES_SELECT_LABEL, String.valueOf(s));
                 for (MultiThreadedProcess process : pipeline) {
                     if (process != null) {
-                        IJ.log(String.format("Process %s", process.getClass().toString()));
+                        IJ.log(String.format("%s Process %s", TimeAndDate.getCurrentTimeAndDate(), process.getClass().toString()));
                         try {
                             process.setup(img, props, process.getPropLabels());
                             Future f = exec.submit(process, img);

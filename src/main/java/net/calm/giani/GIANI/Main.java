@@ -40,7 +40,7 @@ import org.apache.commons.io.FilenameUtils;
 public class Main {
 
     public static void main(String[] args) {
-        if (args == null) {
+        if (args == null || args.length < 1) {
             GIANIUI ui = new GIANIUI();
             ui.setVisible(true);
         } else Main.run(args);
