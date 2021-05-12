@@ -39,7 +39,6 @@ public class Main {
             GIANIUI ui = new GIANIUI();
             ui.setVisible(true);
         } else Main.run(args);
-        System.exit(0);
     }
 
     public static void run(String[] args) {
@@ -75,7 +74,7 @@ public class Main {
         props.setProperty(GianiDefaultParams.SPECIFIC_SERIES, jobDetails[1]);
         String label = String.format("%s_S%s", FilenameUtils.getName(jobDetails[0]), jobDetails[1]);
         if (!GianiDefaultParams.setOutputDirectory(props, label)) {
-            return;
+            System.exit(0);
         }
         ProcessPipeline pipeline = PipelineBuilder.buildFullPipeline(props, new Objects3DPopulation());
         PipelineExecutor exec = new PipelineExecutor(pipeline, props);
@@ -84,6 +83,7 @@ public class Main {
         } catch (InterruptedException e) {
             GenUtils.logError(e, "Pipeline execution interrupted - aborting.");
         }
+        System.exit(0);
     }
 
     public static String[] getJobDetails(File jobList, int jobNumber) throws FileNotFoundException, IOException {
