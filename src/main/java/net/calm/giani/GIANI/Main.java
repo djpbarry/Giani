@@ -17,15 +17,6 @@
 package net.calm.giani.GIANI;
 
 import ij.IJ;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Properties;
-import java.util.Scanner;
-
 import mcib3d.geom.Objects3DPopulation;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.giani.ui.GIANIUI;
@@ -33,6 +24,10 @@ import net.calm.iaclasslibrary.IO.PropertyWriter;
 import net.calm.iaclasslibrary.Process.ProcessPipeline;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
 import org.apache.commons.io.FilenameUtils;
+
+import java.io.*;
+import java.util.Properties;
+import java.util.Scanner;
 
 /**
  * @author David Barry <david.barry at crick dot ac dot uk>
@@ -44,6 +39,7 @@ public class Main {
             GIANIUI ui = new GIANIUI();
             ui.setVisible(true);
         } else Main.run(args);
+        //System.exit(0);
     }
 
     public static void run(String[] args) {
@@ -79,12 +75,11 @@ public class Main {
         props.setProperty(GianiDefaultParams.SPECIFIC_SERIES, jobDetails[1]);
         String label = String.format("%s_S%s", FilenameUtils.getName(jobDetails[0]), jobDetails[1]);
         if (!GianiDefaultParams.setOutputDirectory(props, label)) {
-            System.exit(0);
+            return;
         }
         ProcessPipeline pipeline = PipelineBuilder.buildFullPipeline(props, new Objects3DPopulation());
         PipelineExecutor exec = new PipelineExecutor(pipeline, props);
         exec.run();
-        System.exit(0);
     }
 
     public static String[] getJobDetails(File jobList, int jobNumber) throws FileNotFoundException, IOException {

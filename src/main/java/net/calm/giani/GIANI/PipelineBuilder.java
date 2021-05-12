@@ -20,17 +20,16 @@ import mcib3d.geom.Objects3DPopulation;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
+import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
 import net.calm.iaclasslibrary.Process.ProcessPipeline;
 import net.calm.iaclasslibrary.Process.ROI.MultiThreadedROIConstructor;
 import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedWatershed;
 
 import java.util.Properties;
-import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
-import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 
 /**
- *
  * @author David Barry <david.barry at crick dot ac dot uk>
  */
 public class PipelineBuilder {
@@ -64,7 +63,7 @@ public class PipelineBuilder {
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
     }
-    
+
     public static MultiThreadedGaussianFilter getDefaultNucFilteringProcess(Properties props) {
         String[] propLabels = new String[MultiThreadedGaussianFilter.N_PROP_LABELS];
         propLabels[MultiThreadedGaussianFilter.CHANNEL_LABEL] = GianiDefaultParams.NUC_SEG_CHAN_SELECT_LABEL;
@@ -142,19 +141,20 @@ public class PipelineBuilder {
 
         pipeline.addProcess(PipelineBuilder.getDefaultMaximaFinder(props));
         pipeline.addProcess(PipelineBuilder.getDefaultNucFilteringProcess(props));
-        pipeline.addProcess(PipelineBuilder.getDefaultNucTopHatFilteringProcess(props, null));
+        pipeline.addProcess(PipelineBuilder.getDefaultNucTopHatFilteringProcess(props, new MultiThreadedProcess[]{
+                pipeline.getProcess(1)}));
         pipeline.addProcess(PipelineBuilder.getDefaultNucSegmenter(props,
                 new MultiThreadedProcess[]{
-                    pipeline.getProcess(0), pipeline.getProcess(2)
+                        pipeline.getProcess(0), pipeline.getProcess(2)
                 }, cells));
         pipeline.addProcess(PipelineBuilder.getDefaultCellFilteringProcess(props));
         pipeline.addProcess(PipelineBuilder.getDefaultCellSegmenter(props,
                 new MultiThreadedProcess[]{
-                    pipeline.getProcess(3), pipeline.getProcess(4)
+                        pipeline.getProcess(3), pipeline.getProcess(4)
                 }, cells));
         pipeline.addProcess(PipelineBuilder.getDefaultMeasure(props,
                 new MultiThreadedProcess[]{
-                    pipeline.getProcess(3), pipeline.getProcess(5)
+                        pipeline.getProcess(3), pipeline.getProcess(5)
                 }, cells));
         return pipeline;
     }

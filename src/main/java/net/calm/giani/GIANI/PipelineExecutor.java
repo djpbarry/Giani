@@ -20,16 +20,6 @@ import ij.IJ;
 import ij.measure.ResultsTable;
 import ij.plugin.filter.Analyzer;
 import ij.plugin.frame.RoiManager;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Properties;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 import loci.formats.FormatException;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsFileLister;
@@ -41,6 +31,15 @@ import net.calm.iaclasslibrary.Process.ProcessPipeline;
 import net.calm.iaclasslibrary.TimeAndDate.TimeAndDate;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
 import org.apache.commons.io.FilenameUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * @author David Barry <david.barry at crick dot ac dot uk>
@@ -56,6 +55,7 @@ public class PipelineExecutor extends Thread {
     }
 
     public void run() {
+        IJ.log(String.format("Start %s", TimeAndDate.getCurrentTimeAndDate()));
         IJ.log(String.format("%s %s", GianiDefaultParams.TITLE, TimeAndDate.getCurrentTimeAndDate()));
         RoiManager rm = RoiManager.getInstance();
         if (rm != null) {
@@ -107,6 +107,7 @@ public class PipelineExecutor extends Thread {
                     continue;
                 }
                 props.setProperty(GianiDefaultParams.SERIES_SELECT_LABEL, String.valueOf(s));
+//                int imageIndex = 0;
                 for (MultiThreadedProcess process : pipeline) {
                     if (process != null) {
                         IJ.log(String.format("%s Process %s", TimeAndDate.getCurrentTimeAndDate(), process.getClass().toString()));
@@ -114,6 +115,10 @@ public class PipelineExecutor extends Thread {
                             process.setup(img, props, process.getPropLabels());
                             Future f = exec.submit(process, img);
                             f.get();
+//                            if (!(process instanceof MultiThreadedROIConstructor)) {
+//                                IJ.saveAs(process.getOutput(), "TIF", String.format("%s/%s_%d.tiff", outputDir.getAbsolutePath(), process.getClass().getName(), imageIndex));
+//                                imageIndex++;
+//                            }
                         } catch (InterruptedException | ExecutionException e) {
                             GenUtils.logError(e, String.format("Failed to execute process %s", process.getClass().toString()));
                         }
@@ -122,7 +127,7 @@ public class PipelineExecutor extends Thread {
             }
         }
         try {
-            DataWriter.saveResultsTable(Analyzer.getResultsTable(), new File(String.format("%s%s%s_Output.csv", outputDir, File.separator, GianiDefaultParams.TITLE)));
+            DataWriter.saveResultsTable(Analyzer.getResultsTable(), new File(String.format("%s%s%s_Output.csv", outputDir, File.separator, GianiDefaultParams.TITLE)), false, true);
         } catch (IOException e) {
             GenUtils.logError(e, "Failed to save results file.");
         }
