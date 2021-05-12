@@ -39,7 +39,7 @@ public class Main {
             GIANIUI ui = new GIANIUI();
             ui.setVisible(true);
         } else Main.run(args);
-        //System.exit(0);
+        System.exit(0);
     }
 
     public static void run(String[] args) {
@@ -79,7 +79,11 @@ public class Main {
         }
         ProcessPipeline pipeline = PipelineBuilder.buildFullPipeline(props, new Objects3DPopulation());
         PipelineExecutor exec = new PipelineExecutor(pipeline, props);
-        exec.run();
+        try {
+            exec.join();
+        } catch (InterruptedException e) {
+            GenUtils.logError(e, "Pipeline execution interrupted - aborting.");
+        }
     }
 
     public static String[] getJobDetails(File jobList, int jobNumber) throws FileNotFoundException, IOException {
