@@ -78,6 +78,7 @@ public class Main {
         }
         ProcessPipeline pipeline = PipelineBuilder.buildFullPipeline(props, new Objects3DPopulation());
         PipelineExecutor exec = new PipelineExecutor(pipeline, props);
+        exec.start();
         try {
             exec.join();
         } catch (InterruptedException e) {
