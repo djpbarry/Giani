@@ -145,6 +145,10 @@
             <id>scijava.public</id>
             <url>https://maven.scijava.org/content/groups/public</url>
         </repository>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/djpbarry/*</url>
+        </repository>
     </repositories>
 
     <dependencies>
