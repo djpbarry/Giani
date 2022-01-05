@@ -175,4 +175,12 @@
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub djpbarry Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/djpbarry/giani</url>
+        </repository>
+    </distributionManagement>
+
 </project>

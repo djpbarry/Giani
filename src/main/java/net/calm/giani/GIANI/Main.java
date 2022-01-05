@@ -76,7 +76,7 @@ public class Main {
         if (!GianiDefaultParams.setOutputDirectory(props, label)) {
             System.exit(0);
         }
-        ProcessPipeline pipeline = PipelineBuilder.buildFullPipeline(props, new Objects3DPopulation());
+        ProcessPipeline pipeline = (new PipelineBuilder()).buildFullPipeline(props, new Objects3DPopulation());
         PipelineExecutor exec = new PipelineExecutor(pipeline, props);
         exec.start();
         try {

@@ -133,7 +133,7 @@ public class PipelineBuilder {
         return process;
     }
 
-    public static ProcessPipeline buildFullPipeline(Properties props, Objects3DPopulation cells) {
+    public ProcessPipeline buildFullPipeline(Properties props, Objects3DPopulation cells) {
         ProcessPipeline pipeline = new ProcessPipeline();
 
         pipeline.addProcess(PipelineBuilder.getDefaultMaximaFinder(props));
