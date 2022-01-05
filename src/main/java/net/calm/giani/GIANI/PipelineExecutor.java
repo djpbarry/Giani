@@ -41,9 +41,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-/**
- * @author David Barry <david.barry at crick dot ac dot uk>
- */
 public class PipelineExecutor extends Thread {
 
     private final ProcessPipeline pipeline;
@@ -56,6 +53,7 @@ public class PipelineExecutor extends Thread {
 
     public void run() {
         IJ.log(String.format("Start %s", TimeAndDate.getCurrentTimeAndDate()));
+        IJ.log(String.format("Number of Processors: %s", Runtime.getRuntime().availableProcessors()));
         IJ.log(String.format("%s %s", GianiDefaultParams.TITLE, TimeAndDate.getCurrentTimeAndDate()));
         RoiManager rm = RoiManager.getInstance();
         if (rm != null) {

@@ -52,10 +52,6 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 
-/**
- *
- * @author David Barry <david.barry at crick dot ac dot uk>
- */
 public class GianiResultsBrowser extends javax.swing.JFrame implements MouseListener {
 
     private RoiManager3D_2 roiManager;

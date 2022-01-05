@@ -27,10 +27,6 @@ import java.util.Properties;
 import net.calm.giani.ui.GIANIUI;
 import org.apache.commons.io.FilenameUtils;
 
-/**
- *
- * @author David Barry <david.barry at crick dot ac dot uk>
- */
 public class GianiDefaultParams extends Properties {
 
     public static final String INPUT_DIR_LABEL = "Input Directory";

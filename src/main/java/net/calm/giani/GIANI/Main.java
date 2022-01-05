@@ -29,16 +29,16 @@ import java.io.*;
 import java.util.Properties;
 import java.util.Scanner;
 
-/**
- * @author David Barry <david.barry at crick dot ac dot uk>
- */
 public class Main {
 
     public static void main(String[] args) {
         if (args == null || args.length < 1) {
             GIANIUI ui = new GIANIUI();
             ui.setVisible(true);
-        } else Main.run(args);
+        } else{
+            Main.run(args);
+            System.exit(0);
+        }
     }
 
     public static void run(String[] args) {
@@ -84,7 +84,6 @@ public class Main {
         } catch (InterruptedException e) {
             GenUtils.logError(e, "Pipeline execution interrupted - aborting.");
         }
-        System.exit(0);
     }
 
     public static String[] getJobDetails(File jobList, int jobNumber) throws FileNotFoundException, IOException {

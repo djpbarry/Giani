@@ -20,10 +20,6 @@ import java.net.URI;
 import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
 
-/**
- *
- * @author David Barry <david.barry at crick dot ac dot uk>
- */
 public class SegmentationPanel extends LayerPanel implements Updateable {
 
     private final String title;

@@ -34,10 +34,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.net.URI;
 
-/**
- *
- * @author David Barry <david.barry at crick dot ac dot uk>
- */
 public class SelectInputPanel extends LayerPanel {
 
     private static File inputDirectory;

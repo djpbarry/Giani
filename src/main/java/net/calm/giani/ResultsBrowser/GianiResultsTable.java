@@ -26,10 +26,6 @@ import net.calm.iaclasslibrary.IO.DataReader;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
 import org.apache.commons.csv.CSVFormat;
 
-/**
- *
- * @author David Barry <david.barry at crick dot ac dot uk>
- */
 public class GianiResultsTable extends javax.swing.JFrame {
 
     private final File inputFile;

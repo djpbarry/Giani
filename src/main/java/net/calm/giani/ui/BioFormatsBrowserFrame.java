@@ -10,10 +10,6 @@ import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
 
 import java.text.DecimalFormat;
 
-/**
- *
- * @author David Barry <david.barry at crick dot ac dot uk>
- */
 public class BioFormatsBrowserFrame extends javax.swing.JFrame {
 
     private final int VERSION = 1;
@@ -60,10 +56,6 @@ public class BioFormatsBrowserFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * @param args the command line arguments
-     */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private SelectInputPanel selectInputPanel1;

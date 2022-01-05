@@ -16,10 +16,6 @@ import javax.swing.DefaultComboBoxModel;
 import java.net.URI;
 import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
 
-/**
- *
- * @author David Barry <david.barry at crick dot ac dot uk>
- */
 public class FilteringPanel extends LayerPanel implements Updateable {
 
     private ArrayList<String> channelLabels;

@@ -33,10 +33,6 @@ import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
 import ome.units.quantity.Length;
 
-/**
- *
- * @author David Barry <david.barry at crick dot ac dot uk>
- */
 public class MaximaFinderPanel extends LayerPanel implements Updateable {
 
     private ArrayList<String> channelLabels;

@@ -22,10 +22,6 @@ import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 
 import java.util.Properties;
 
-/**
- *
- * @author David Barry <david.barry at crick dot ac dot uk>
- */
 public class LocalisationPanel extends LayerPanel {
 
     /**

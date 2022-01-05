@@ -28,10 +28,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.ListSelectionModel;
 import java.net.URI;
 
-/**
- *
- * @author David Barry <david.barry at crick dot ac dot uk>
- */
 public class MeasurementPanel extends LayerPanel implements Updateable {
 
     /**

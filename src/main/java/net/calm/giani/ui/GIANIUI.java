@@ -34,10 +34,6 @@ import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-/**
- *
- * @author David Barry <david.barry at crick dot ac dot uk>
- */
 public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
     private final BioFormatsImg img;

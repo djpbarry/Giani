@@ -14,10 +14,6 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.net.URI;
 
-/**
- *
- * @author David Barry <david.barry at crick dot ac dot uk>
- */
 public class TopHatFilterPanel extends LayerPanel {
 
     private ArrayList<String> channelLabels;

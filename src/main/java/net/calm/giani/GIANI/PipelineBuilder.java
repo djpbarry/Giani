@@ -29,9 +29,6 @@ import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedWatershed;
 
 import java.util.Properties;
 
-/**
- * @author David Barry <david.barry at crick dot ac dot uk>
- */
 public class PipelineBuilder {
 
     public static MultiThreadedMaximaFinder getDefaultMaximaFinder(Properties props) {
