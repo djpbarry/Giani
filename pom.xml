@@ -168,11 +168,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>com.github.mcib3d</groupId>
-            <artifactId>mcib3d-core</artifactId>
-            <version>3.96.3</version>
-        </dependency>
     </dependencies>
 
     <distributionManagement>
