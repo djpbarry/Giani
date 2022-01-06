@@ -6,8 +6,8 @@ import java.util.Properties;
 import java.awt.GridBagConstraints;
 import java.util.ArrayList;
 import mcib3d.geom.Objects3DPopulation;
-import net.calm.giani.GIANI.PipelineBuilder;
-import net.calm.giani.GIANI.PipelineExecutor;
+import net.calm.giani.exec.PipelineBuilder;
+import net.calm.giani.exec.PipelineExecutor;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
@@ -448,9 +448,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         PropertyExtractor.setProperties(p, c, PropertyExtractor.READ);
     }
 
-    /**
-     * @param args the command line arguments //
-     */
 //    public static void main(String args[]) {
 //        /* Set the Nimbus look and feel */
 //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
