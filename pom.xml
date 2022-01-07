@@ -166,6 +166,10 @@
                     <groupId>sc.fiji</groupId>
                     <artifactId>imageware</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.github.mcib3d</groupId>
+                    <artifactId>mcib3d-core</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
     </dependencies>
