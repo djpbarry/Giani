@@ -30,6 +30,7 @@ import org.apache.commons.io.FilenameUtils;
 public class GianiDefaultParams extends Properties {
 
     public static final String PREVIEW = "Preview";
+    public static final String PREVIEW_MEASURE = "Preview Measures";
     public static final String HELP = "Help";
     public static final String INPUT_DIR_LABEL = "Input Directory";
     public static final String OUTPUT_DIR_LABEL = "Output Directory";

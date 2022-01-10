@@ -54,6 +54,11 @@ public class GIANIParamInfos extends Properties {
         this.setProperty(GianiDefaultParams.CELL_DIST_WEIGHTING, "Increase this value to make the segmentation less sensitive " +
                 "to local changes in fluorescence intensity.");
         this.setProperty(GianiDefaultParams.PREVIEW, "Click to preview the effect of the above parameters.");
+        this.setProperty(GianiDefaultParams.PREVIEW_MEASURE, "Click to view measurements in the above channels for the preview dataset.");
+        this.setProperty(GianiDefaultParams.CHAN_FOR_MEASURE, "Select which channels you wish to extract fluorescence intensity " +
+                "measures from.");
+        this.setProperty(GianiDefaultParams.LOCALISE_SPOTS, "Select to detect spots in the above-selected channels - click \"Next\" below " +
+                "to set parameters for each channel.");
         this.setProperty(GianiDefaultParams.HELP, "Click to read the online documentation.");
     }
 }

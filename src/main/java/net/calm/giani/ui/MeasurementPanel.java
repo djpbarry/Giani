@@ -17,9 +17,11 @@
 package net.calm.giani.ui;
 
 import ij.plugin.filter.Analyzer;
+import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
 import net.calm.iaclasslibrary.Process.ROI.MultiThreadedROIConstructor;
+import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedWatershed;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
 
@@ -29,7 +31,7 @@ import javax.swing.ListSelectionModel;
 import java.net.URI;
 
 public class MeasurementPanel extends LayerPanel implements Updateable {
-
+    private final GIANIParamInfos info;
     /**
      * Creates new form MeasurementPanel
      */
@@ -39,7 +41,9 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
 
     public MeasurementPanel(Properties props, BioFormatsImg img, MultiThreadedROIConstructor process, String[] propLabels, URI helpURI) {
         super(props, img, process, propLabels, helpURI);
+        this.info = new GIANIParamInfos();
         initComponents();
+        setToolTips();
     }
 
     /**
@@ -141,7 +145,13 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         add(helpButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-    protected void setToolTips() {}
+    protected void setToolTips() {
+        channelScrollPane.setToolTipText(info.getProperty(propLabels[MultiThreadedROIConstructor.CHANNELS_LABEL]));
+        channelList.setToolTipText(info.getProperty(propLabels[MultiThreadedROIConstructor.CHANNELS_LABEL]));
+        localiseSpotsToggleButton.setToolTipText(info.getProperty(propLabels[MultiThreadedROIConstructor.LOCALISE_LABEL]));
+        measurePreviewButton.setToolTipText(info.getProperty(GianiDefaultParams.PREVIEW_MEASURE));
+        helpButton.setToolTipText(info.getProperty(GianiDefaultParams.HELP));
+    }
 
     private void measurePreviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_measurePreviewButtonActionPerformed
         restartProcess();
