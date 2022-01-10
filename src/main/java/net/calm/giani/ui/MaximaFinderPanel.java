@@ -333,7 +333,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         hessianMinSizeTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE]));
         hessianMaxSizeTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE]));
         hessianStepSizeTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP]));
-        hessianThreshTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.EDM_FILTER]));
+        hessianThreshTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH]));
         previewButton.setToolTipText(info.getProperty(GianiDefaultParams.PREVIEW));
         helpButton.setToolTipText(info.getProperty(GianiDefaultParams.HELP));
     }
