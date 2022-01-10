@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import mcib3d.geom.Objects3DPopulation;
 import net.calm.giani.exec.PipelineBuilder;
 import net.calm.giani.exec.PipelineExecutor;
+import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
@@ -44,6 +45,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     private ArrayList<MaximaFinderPanel> maximaFinderPanels;
     private LocalisationPanel localisationPanel;
     private final Objects3DPopulation cells;
+    private final GIANIParamInfos info;
 
     static {
         if (props == null) {
@@ -59,7 +61,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         img = new BioFormatsImg();
         pipeline = new ProcessPipeline();
         cells = new Objects3DPopulation();
+        this.info = new GIANIParamInfos();
         initComponents();
+        setToolTips();
         UIMethods.centreContainer(this);
         setIcon();
     }
@@ -214,7 +218,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
     buttonPanel.add(nextButton, gridBagConstraints);
 
-    loadParametersButton.setText("Load Parameters");
+    loadParametersButton.setText(GianiDefaultParams.LOAD_PARAMETERS);
     loadParametersButton.setEnabled(false);
     loadParametersButton.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -338,6 +342,10 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
     pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    protected void setToolTips() {
+        loadParametersButton.setToolTipText(info.getProperty(GianiDefaultParams.LOAD_PARAMETERS));
+    }
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         addProcess();

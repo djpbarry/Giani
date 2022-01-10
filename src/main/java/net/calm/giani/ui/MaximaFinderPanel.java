@@ -26,6 +26,7 @@ import ij.gui.Roi;
 import java.awt.Color;
 import java.net.URI;
 
+import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
@@ -39,6 +40,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     boolean allowChannelSelect;
     int defaultChannel;
     private final String title;
+    private final GIANIParamInfos info;
 
     /**
      * Creates new form MaximaFinderPanel
@@ -52,7 +54,9 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         this.allowChannelSelect = allowChannelSelect;
         this.defaultChannel = defaultChannel;
         this.title = title;
+        this.info = new GIANIParamInfos();
         initComponents();
+        setToolTips();
     }
 
     /**
@@ -319,6 +323,20 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(titleLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+    protected void setToolTips() {
+        channelSelectComboBox.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.CHANNEL_SELECT]));
+        simpleDetectToggleButton.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT]));
+        advancedDetectToggleButton.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT]));
+        blobRadTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_SIZE]));
+        noiseTolTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_THRESH]));
+        hessianMinSizeTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE]));
+        hessianMaxSizeTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE]));
+        hessianStepSizeTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP]));
+        hessianThreshTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.EDM_FILTER]));
+        previewButton.setToolTipText(info.getProperty(GianiDefaultParams.PREVIEW));
+        helpButton.setToolTipText(info.getProperty(GianiDefaultParams.HELP));
+    }
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         restartProcess();

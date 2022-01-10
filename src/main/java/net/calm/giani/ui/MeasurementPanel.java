@@ -141,6 +141,8 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         add(helpButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
+    protected void setToolTips() {}
+
     private void measurePreviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_measurePreviewButtonActionPerformed
         restartProcess();
         setVariables();

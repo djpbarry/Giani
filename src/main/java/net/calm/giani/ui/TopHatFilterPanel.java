@@ -141,6 +141,8 @@ public class TopHatFilterPanel extends LayerPanel {
         add(titleLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
+    protected void setToolTips() {}
+
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         restartProcess();
         setVariables();

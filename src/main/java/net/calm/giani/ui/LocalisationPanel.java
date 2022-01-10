@@ -67,6 +67,7 @@ public class LocalisationPanel extends LayerPanel {
         add(jLabel1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
+    protected void setToolTips() {}
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

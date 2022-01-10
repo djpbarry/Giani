@@ -7,14 +7,14 @@ package net.calm.giani.ui;
 
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
 
+import javax.swing.*;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Properties;
-import javax.swing.DefaultComboBoxModel;
-import java.net.URI;
-import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
 
 public class FilteringPanel extends LayerPanel implements Updateable {
 
@@ -36,6 +36,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         super(props, img, process, propLabels, helpURI);
         this.title = title;
         initComponents();
+        setToolTips();
     }
 
     /**
@@ -142,6 +143,13 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(titleLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+    protected void setToolTips() {
+        filterRadiusXYLabel.setToolTipText("The radius, in microns, of the Gaussian filter that will be used to smooth\n" +
+                " the image.");
+        filterRadiusXYTextField.setToolTipText("The radius, in microns, of the Gaussian filter that will be used to smooth\n" +
+                " the image.");
+    }
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         restartProcess();

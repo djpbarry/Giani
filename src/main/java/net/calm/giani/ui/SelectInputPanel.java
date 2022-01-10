@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import ij.IJ;
 import ij.ImagePlus;
+import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsFileLister;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
@@ -37,6 +38,7 @@ import java.net.URI;
 public class SelectInputPanel extends LayerPanel {
 
     private static File inputDirectory;
+    private final GIANIParamInfos info;
 //    private BioFormatsImg img;
 
     /**
@@ -53,6 +55,8 @@ public class SelectInputPanel extends LayerPanel {
     public SelectInputPanel(Properties props, BioFormatsImg img, String[] propLabels, URI helpURI) {
         super(props, img, null, propLabels, helpURI);
         initComponents();
+        this.info = new GIANIParamInfos();
+        setToolTips();
     }
 
     /**
@@ -250,6 +254,16 @@ public class SelectInputPanel extends LayerPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(helpButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+    protected void setToolTips() {
+        //inputDirLabel.setToolTipText(info.getProperty(propLabels[0]));
+        inputDirTextField.setToolTipText(info.getProperty(propLabels[0]));
+        chooseInputDirButton.setToolTipText(info.getProperty(propLabels[0]));
+        fileNameComboBox.setToolTipText(info.getProperty(propLabels[1]));
+        seriesComboBox.setToolTipText(info.getProperty(propLabels[2]));
+        channelComboBox.setToolTipText(info.getProperty(propLabels[3]));
+        previewButton.setToolTipText("Load and display the above selected channel for preview purposes.");
+    }
 
     private void chooseInputDirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseInputDirButtonActionPerformed
         try {

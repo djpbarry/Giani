@@ -29,6 +29,8 @@ import org.apache.commons.io.FilenameUtils;
 
 public class GianiDefaultParams extends Properties {
 
+    public static final String PREVIEW = "Preview";
+    public static final String HELP = "Help";
     public static final String INPUT_DIR_LABEL = "Input Directory";
     public static final String OUTPUT_DIR_LABEL = "Output Directory";
     public static final String SERIES_SELECT_LABEL = "Preview Series";
@@ -83,6 +85,7 @@ public class GianiDefaultParams extends Properties {
     public static final String CELL_GAUSS_FILTER_TITLE = "Gaussian Filtering to Suppress Noise in Cell Channel Prior to Segmentation";
     public static final String CELL_SEG_TITLE = "Segmentation of Cells Using Nuclei as Seeds";
     public static final String FOCI_CENTROID_LOCALISATION_TITLE = "Blob Detection to Approximate Locations of Foci in Channel ";
+    public static final String LOAD_PARAMETERS = "Load Parameters";
     public static final Font TITLE_FONT = new java.awt.Font("Segoe UI Semibold", 1, 14);
 
     public GianiDefaultParams() {
