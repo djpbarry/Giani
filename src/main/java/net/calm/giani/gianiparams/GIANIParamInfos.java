@@ -31,6 +31,10 @@ public class GIANIParamInfos extends Properties {
                 "the minimum and maximum radius, specify how much the detection radius should increase by at each stage.");
         this.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_THRESH, "Sensitivity of blob detector - increase this value if " +
                 "non-nuclear artefacts are detected.");
+        this.setProperty(GianiDefaultParams.NUC_SEG_CHAN_SELECT_LABEL, "Select the channel that will be used to segment " +
+                "the nuclei.");
+        this.setProperty(GianiDefaultParams.NUC_FILT_RAD_LABEL, "Specify the radius (in microns) of the Gaussian filter " +
+                "that will be used to smooth the nuclear image prior to segmentation.");
         this.setProperty(GianiDefaultParams.PREVIEW, "Click to preview the effect of the above parameters.");
         this.setProperty(GianiDefaultParams.HELP, "Click to read the online documentation.");
     }
