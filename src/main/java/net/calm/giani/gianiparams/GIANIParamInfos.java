@@ -3,6 +3,7 @@ package net.calm.giani.gianiparams;
 import java.util.Properties;
 
 public class GIANIParamInfos extends Properties {
+    private final int MAX_CHAN = 10;
 
     public GIANIParamInfos() {
         super();
@@ -60,5 +61,23 @@ public class GIANIParamInfos extends Properties {
         this.setProperty(GianiDefaultParams.LOCALISE_SPOTS, "Select to detect spots in the above-selected channels - click \"Next\" below " +
                 "to set parameters for each channel.");
         this.setProperty(GianiDefaultParams.HELP, "Click to read the online documentation.");
+        for (int i = 0; i < MAX_CHAN; i++) {
+            this.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_BLOBS, i), "Simple detection works " +
+                    "well for regularly-shaped spots.");
+            this.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAXIMA, i), "Advanced detection " +
+                    "is better for more irregularly-shaped spots, but may take longer.");
+            this.setProperty(String.format("%s%d", GianiDefaultParams.BLOB_CHAN_RAD_LABEL, i), "Approximate radius of spots in microns.");
+            this.setProperty(String.format("%s%d", GianiDefaultParams.BLOB_CHAN_NOISE_TOL_LABEL, i), "Sensitivity of blob detector " +
+                    "- increase this value if artefacts are detected.");
+            this.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE, i), "Approximate " +
+                    "maximum radius of spots in microns - set equal to the minimum radius to search for only one spot radius.");
+            this.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MIN_SIZE, i), "Approximate " +
+                    "minimum radius of spots in microns.");
+            this.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_THRESH, i), "Sensitivity " +
+                    "of blob detector - increase this value if artefacts are detected.");
+            this.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP, i), "When attempting " +
+                    "detection of spots between the minimum and maximum radii, specify how much the detection radius should " +
+                    "increase by at each stage.");
+        }
     }
 }
