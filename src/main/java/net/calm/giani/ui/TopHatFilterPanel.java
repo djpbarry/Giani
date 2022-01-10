@@ -5,8 +5,10 @@
  */
 package net.calm.giani.ui;
 
+import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
 import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 
@@ -18,6 +20,7 @@ public class TopHatFilterPanel extends LayerPanel {
 
     private ArrayList<String> channelLabels;
     private final String title;
+    private final GIANIParamInfos info;
 
     /**
      * Creates new form FilteringPanel
@@ -33,7 +36,9 @@ public class TopHatFilterPanel extends LayerPanel {
     public TopHatFilterPanel(Properties props, BioFormatsImg img, MultiThreadedTopHatFilter process, String[] propLabels, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
         this.title = title;
+        this.info = new GIANIParamInfos();
         initComponents();
+        setToolTips();
     }
 
     /**
@@ -141,7 +146,12 @@ public class TopHatFilterPanel extends LayerPanel {
         add(titleLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-    protected void setToolTips() {}
+    protected void setToolTips() {
+        filterRadiusXYTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedTopHatFilter.FILT_RAD_LABEL]));
+        downSizeFactorTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedTopHatFilter.RESIZE_FACTOR_LABEL]));
+        previewButton.setToolTipText(info.getProperty(GianiDefaultParams.PREVIEW));
+        helpButton.setToolTipText(info.getProperty(GianiDefaultParams.HELP));
+    }
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         restartProcess();

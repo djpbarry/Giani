@@ -35,6 +35,10 @@ public class GIANIParamInfos extends Properties {
                 "the nuclei.");
         this.setProperty(GianiDefaultParams.NUC_FILT_RAD_LABEL, "Specify the radius (in microns) of the Gaussian filter " +
                 "that will be used to smooth the nuclear image prior to segmentation.");
+        this.setProperty(GianiDefaultParams.NUC_TOP_HAT_FILT_RAD_LABEL, "Specify the radius (in microns) of the filter " +
+                "that will be used for background subtraction in the nuclear channel.");
+        this.setProperty(GianiDefaultParams.NUC_TOP_HAT_DOWNSIZE_FACTOR_LABEL, "Background subtraction can take a long time " +
+                "for large images - increase the downsizing factor to speed up the process.");
         this.setProperty(GianiDefaultParams.PREVIEW, "Click to preview the effect of the above parameters.");
         this.setProperty(GianiDefaultParams.HELP, "Click to read the online documentation.");
     }
