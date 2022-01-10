@@ -9,8 +9,10 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.LutLoader;
 import ij.process.AutoThresholder;
+import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedWatershed;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
@@ -23,6 +25,7 @@ import javax.swing.DefaultComboBoxModel;
 public class SegmentationPanel extends LayerPanel implements Updateable {
 
     private final String title;
+    private final GIANIParamInfos info;
     
     /**
      * Creates new form SegmentationPanel
@@ -34,7 +37,9 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
     public SegmentationPanel(Properties props, BioFormatsImg img, MultiThreadedWatershed process, String[] propLabels, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
         this.title = title;
+        this.info = new GIANIParamInfos();
         initComponents();
+        setToolTips();
     }
 
     /**
@@ -179,7 +184,14 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
         add(titleLabel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-    protected void setToolTips() {}
+    protected void setToolTips() {
+        thresholdComboBox.setToolTipText(info.getProperty(propLabels[MultiThreadedWatershed.THRESHOLD_LABEL]));
+        volumeToggleButton.setToolTipText(info.getProperty(propLabels[MultiThreadedWatershed.VOL_MARKER_LABEL]));
+        membraneToggleButton.setToolTipText(info.getProperty(propLabels[MultiThreadedWatershed.MEMB_MARKER_LABEL]));
+        distWeightingTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedWatershed.LAMBDA_LABEL]));
+        previewButton.setToolTipText(info.getProperty(GianiDefaultParams.PREVIEW));
+        helpButton.setToolTipText(info.getProperty(GianiDefaultParams.HELP));
+    }
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         restartProcess();
