@@ -549,7 +549,8 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS], "true");
                 propLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
                 MaximaFinderPanel mFP = new MaximaFinderPanel(props, img, new MultiThreadedMaximaFinder(null),
-                        propLabels, false, i, null, String.format("%s%d", GianiDefaultParams.FOCI_CENTROID_LOCALISATION_TITLE, i));
+                        propLabels, false, i, getHelpURI("https://github.com/djpbarry/Giani/wiki/Localising-Spots"),
+                        String.format("%s%d", GianiDefaultParams.FOCI_CENTROID_LOCALISATION_TITLE, i));
                 maximaFinderPanels.add(mFP);
                 addPanel(mFP);
             }
