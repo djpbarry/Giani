@@ -1,10 +1,5 @@
 package net.calm.giani.ui;
 
-import java.awt.Container;
-import java.util.LinkedList;
-import java.util.Properties;
-import java.awt.GridBagConstraints;
-import java.util.ArrayList;
 import mcib3d.geom.Objects3DPopulation;
 import net.calm.giani.exec.PipelineBuilder;
 import net.calm.giani.exec.PipelineExecutor;
@@ -14,6 +9,8 @@ import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
 import net.calm.iaclasslibrary.IO.PropertyWriter;
 import net.calm.iaclasslibrary.Process.Colocalise.MultiThreadedColocalise;
+import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
+import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
 import net.calm.iaclasslibrary.Process.ProcessPipeline;
 import net.calm.iaclasslibrary.Process.ROI.MultiThreadedROIConstructor;
@@ -21,14 +18,15 @@ import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedWatershed;
 import net.calm.iaclasslibrary.UIClasses.*;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
-import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
-import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Properties;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -54,6 +52,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }
 
 //    private final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
     /**
      * Creates new form LocalMapperUI
      */
@@ -89,258 +88,259 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         nextButton = new javax.swing.JButton();
         loadParametersButton = new javax.swing.JButton();
         runButton = new javax.swing.JButton();
-        selectInputPanel = new net.calm.giani.ui.SelectInputPanel(props,img,
-            new String[]{
-                GianiDefaultParams.INPUT_DIR_LABEL,
-                GianiDefaultParams.INPUT_FILE_LABEL,
-                GianiDefaultParams.SERIES_SELECT_LABEL,
-                GianiDefaultParams.PREVIEW_CHAN_SELECT_LABEL},
-            getHelpURI("https://github.com/djpbarry/Giani/wiki/Selecting-the-Input-Files"));
+        selectInputPanel = new net.calm.giani.ui.SelectInputPanel(props, img,
+                new String[]{
+                        GianiDefaultParams.INPUT_DIR_LABEL,
+                        GianiDefaultParams.INPUT_FILE_LABEL,
+                        GianiDefaultParams.SERIES_SELECT_LABEL,
+                        GianiDefaultParams.PREVIEW_CHAN_SELECT_LABEL},
+                getHelpURI("https://github.com/djpbarry/Giani/wiki/Selecting-the-Input-Files"));
         componentList.add(selectInputPanel);
         MultiThreadedMaximaFinder maximaFinder = PipelineBuilder.getDefaultMaximaFinder(props);
-        nuclearCentreFinderPanel = new net.calm.giani.ui.MaximaFinderPanel(props,img,maximaFinder,
-            maximaFinder.getPropLabels(), true, -1,
-            getHelpURI("https://github.com/djpbarry/Giani/wiki/Estimating-the-centres-of-nuclei"),
-            GianiDefaultParams.NUC_CENTROID_LOCALISATION_TITLE);
+        nuclearCentreFinderPanel = new net.calm.giani.ui.MaximaFinderPanel(props, img, maximaFinder,
+                maximaFinder.getPropLabels(), true, -1,
+                getHelpURI("https://github.com/djpbarry/Giani/wiki/Estimating-the-centres-of-nuclei"),
+                GianiDefaultParams.NUC_CENTROID_LOCALISATION_TITLE);
         nuclearCentreFinderPanel.setVisible(false);
         componentList.add(nuclearCentreFinderPanel);
         MultiThreadedGaussianFilter nucGaussFilter = PipelineBuilder.getDefaultNucFilteringProcess(props);
-        nuclearFilteringPanel = new net.calm.giani.ui.FilteringPanel(props,img,
-            nucGaussFilter,
-            nucGaussFilter.getPropLabels(),
-            getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation"),
-            GianiDefaultParams.NUC_GAUSS_FILTER_TITLE);
+        nuclearFilteringPanel = new net.calm.giani.ui.FilteringPanel(props, img,
+                nucGaussFilter,
+                nucGaussFilter.getPropLabels(),
+                getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation"),
+                GianiDefaultParams.NUC_GAUSS_FILTER_TITLE);
         nuclearFilteringPanel.setVisible(false);
         componentList.add(nuclearFilteringPanel);
         MultiThreadedTopHatFilter nucTopHatFilter = PipelineBuilder.getDefaultNucTopHatFilteringProcess(
-            props,
-            new MultiThreadedProcess[]{
-                nuclearFilteringPanel.getProcess()
-            }
+                props,
+                new MultiThreadedProcess[]{
+                        nuclearFilteringPanel.getProcess()
+                }
         );
-        nuclearTopHatFilterPanel = new TopHatFilterPanel(props,img, nucTopHatFilter,
-            nucTopHatFilter.getPropLabels(),
-            getHelpURI("https://github.com/djpbarry/Giani/wiki/Background-Subrtraction-Prior-to-Nuclear-Segmentation"),
-            GianiDefaultParams.NUC_TOP_HAT_TITLE);
-        nuclearTopHatFilterPanel .setVisible(false);
+        nuclearTopHatFilterPanel = new TopHatFilterPanel(props, img, nucTopHatFilter,
+                nucTopHatFilter.getPropLabels(),
+                getHelpURI("https://github.com/djpbarry/Giani/wiki/Background-Subrtraction-Prior-to-Nuclear-Segmentation"),
+                GianiDefaultParams.NUC_TOP_HAT_TITLE);
+        nuclearTopHatFilterPanel.setVisible(false);
         componentList.add(nuclearTopHatFilterPanel);
         MultiThreadedWatershed nucSeg = PipelineBuilder.getDefaultNucSegmenter(props, new MultiThreadedProcess[]{
-            nuclearCentreFinderPanel.getProcess(),            nuclearTopHatFilterPanel.getProcess()        }, cells);
-    nuclearSegmentationPanel = new net.calm.giani.ui.SegmentationPanel(
-        props,
-        img,
-        nucSeg,
-        nucSeg.getPropLabels(),
-        getHelpURI("https://github.com/djpbarry/Giani/wiki/Segmenting-Nuclei"),
-        GianiDefaultParams.NUC_SEG_TITLE
-    );
-    nuclearSegmentationPanel.setVisible(false);
-    componentList.add(nuclearSegmentationPanel);
-    net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter cellGaussFilter = PipelineBuilder.getDefaultCellFilteringProcess(props);
-    cellFilteringPanel = new net.calm.giani.ui.FilteringPanel(props,img, cellGaussFilter,
-        cellGaussFilter.getPropLabels(),
-        getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Cell-Segmentation"),
-        GianiDefaultParams.CELL_GAUSS_FILTER_TITLE);
-    cellFilteringPanel.setVisible(false);
-    componentList.add(cellFilteringPanel);
-    MultiThreadedWatershed cellSeg = PipelineBuilder.getDefaultCellSegmenter(
-        props,
-        new MultiThreadedProcess[]{
-            nuclearSegmentationPanel.getProcess(),
-            cellFilteringPanel.getProcess()
-        },
-        cells
-    );
-    cellSegmentationPanel = new net.calm.giani.ui.SegmentationPanel(
-        props,
-        img,
-        cellSeg,
-        cellSeg.getPropLabels(),
-        getHelpURI("https://github.com/djpbarry/Giani/wiki/Complete-Segmentation-of-Cells"),
-        GianiDefaultParams.CELL_SEG_TITLE
-    );
-    cellSegmentationPanel.setVisible(false);
-    componentList.add(cellSegmentationPanel);
-    MultiThreadedROIConstructor process = PipelineBuilder.getDefaultMeasure(props,
-        new MultiThreadedProcess[]{
-            nuclearSegmentationPanel.getProcess(),
-            cellSegmentationPanel.getProcess()
-        },
-        cells);
-    measurementPanel = new net.calm.giani.ui.MeasurementPanel(
-        props,
-        img,
-        process,
-        process.getPropLabels(),
-        getHelpURI("https://github.com/djpbarry/Giani/wiki/Specifying-Channels-to-Measure")
-    );
-    measurementPanel.setVisible(false);
-    componentList.add(measurementPanel);
+                nuclearCentreFinderPanel.getProcess(), nuclearTopHatFilterPanel.getProcess()}, cells);
+        nuclearSegmentationPanel = new net.calm.giani.ui.SegmentationPanel(
+                props,
+                img,
+                nucSeg,
+                nucSeg.getPropLabels(),
+                getHelpURI("https://github.com/djpbarry/Giani/wiki/Segmenting-Nuclei"),
+                GianiDefaultParams.NUC_SEG_TITLE
+        );
+        nuclearSegmentationPanel.setVisible(false);
+        componentList.add(nuclearSegmentationPanel);
+        net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter cellGaussFilter = PipelineBuilder.getDefaultCellFilteringProcess(props);
+        cellFilteringPanel = new net.calm.giani.ui.FilteringPanel(props, img, cellGaussFilter,
+                cellGaussFilter.getPropLabels(),
+                getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Cell-Segmentation"),
+                GianiDefaultParams.CELL_GAUSS_FILTER_TITLE);
+        cellFilteringPanel.setVisible(false);
+        componentList.add(cellFilteringPanel);
+        MultiThreadedWatershed cellSeg = PipelineBuilder.getDefaultCellSegmenter(
+                props,
+                new MultiThreadedProcess[]{
+                        nuclearSegmentationPanel.getProcess(),
+                        cellFilteringPanel.getProcess()
+                },
+                cells
+        );
+        cellSegmentationPanel = new net.calm.giani.ui.SegmentationPanel(
+                props,
+                img,
+                cellSeg,
+                cellSeg.getPropLabels(),
+                getHelpURI("https://github.com/djpbarry/Giani/wiki/Complete-Segmentation-of-Cells"),
+                GianiDefaultParams.CELL_SEG_TITLE
+        );
+        cellSegmentationPanel.setVisible(false);
+        componentList.add(cellSegmentationPanel);
+        MultiThreadedROIConstructor process = PipelineBuilder.getDefaultMeasure(props,
+                new MultiThreadedProcess[]{
+                        nuclearSegmentationPanel.getProcess(),
+                        cellSegmentationPanel.getProcess()
+                },
+                cells);
+        measurementPanel = new net.calm.giani.ui.MeasurementPanel(
+                props,
+                img,
+                process,
+                process.getPropLabels(),
+                getHelpURI("https://github.com/djpbarry/Giani/wiki/Specifying-Channels-to-Measure")
+        );
+        measurementPanel.setVisible(false);
+        componentList.add(measurementPanel);
 
-    setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-    setTitle(GianiDefaultParams.TITLE);
-    setIconImages(null);
-    setMinimumSize(new java.awt.Dimension(800, 800));
-    getContentPane().setLayout(new java.awt.GridBagLayout());
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle(GianiDefaultParams.TITLE);
+        setIconImages(null);
+        setMinimumSize(new java.awt.Dimension(800, 800));
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
-    buttonPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-    buttonPanel.setLayout(new java.awt.GridBagLayout());
+        buttonPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        buttonPanel.setLayout(new java.awt.GridBagLayout());
 
-    previousButton.setText("Previous");
-    previousButton.setEnabled(false);
-    previousButton.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            previousButtonActionPerformed(evt);
-        }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
-    buttonPanel.add(previousButton, gridBagConstraints);
+        previousButton.setText("Previous");
+        previousButton.setEnabled(false);
+        previousButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                previousButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
+        buttonPanel.add(previousButton, gridBagConstraints);
 
-    nextButton.setText("Next");
-    nextButton.setEnabled(false);
-    nextButton.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            nextButtonActionPerformed(evt);
-        }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 2;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
-    buttonPanel.add(nextButton, gridBagConstraints);
+        nextButton.setText("Next");
+        nextButton.setEnabled(false);
+        nextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
+        buttonPanel.add(nextButton, gridBagConstraints);
 
-    loadParametersButton.setText(GianiDefaultParams.LOAD_PARAMETERS);
-    loadParametersButton.setEnabled(false);
-    loadParametersButton.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            loadParametersButtonActionPerformed(evt);
-        }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
-    buttonPanel.add(loadParametersButton, gridBagConstraints);
+        loadParametersButton.setText(GianiDefaultParams.LOAD_PARAMETERS);
+        loadParametersButton.setEnabled(false);
+        loadParametersButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadParametersButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
+        buttonPanel.add(loadParametersButton, gridBagConstraints);
 
-    runButton.setText("Run");
-    runButton.setEnabled(false);
-    runButton.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            runButtonActionPerformed(evt);
-        }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.gridwidth = 3;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
-    buttonPanel.add(runButton, gridBagConstraints);
+        runButton.setText("Run");
+        runButton.setEnabled(false);
+        runButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                runButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
+        buttonPanel.add(runButton, gridBagConstraints);
 
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 0.2;
-    gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-    getContentPane().add(buttonPanel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.2;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        getContentPane().add(buttonPanel, gridBagConstraints);
 
-    selectInputPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
-        public void componentHidden(java.awt.event.ComponentEvent evt) {
-            selectInputPanelComponentHidden(evt);
-        }
-        public void componentShown(java.awt.event.ComponentEvent evt) {
-            selectInputPanelComponentShown(evt);
-        }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 0.8;
-    gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-    getContentPane().add(selectInputPanel, gridBagConstraints);
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 0.8;
-    gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-    getContentPane().add(nuclearCentreFinderPanel, gridBagConstraints);
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 0.8;
-    gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-    getContentPane().add(nuclearFilteringPanel, gridBagConstraints);
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 0.8;
-    gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-    getContentPane().add(nuclearTopHatFilterPanel, gridBagConstraints);
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 0.8;
-    gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-    getContentPane().add(nuclearSegmentationPanel, gridBagConstraints);
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 0.8;
-    gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-    getContentPane().add(cellFilteringPanel, gridBagConstraints);
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 0.8;
-    gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-    getContentPane().add(cellSegmentationPanel, gridBagConstraints);
+        selectInputPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
+                selectInputPanelComponentHidden(evt);
+            }
 
-    measurementPanel.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            measurementPanelMouseClicked(evt);
-        }
-    });
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weightx = 1.0;
-    gridBagConstraints.weighty = 0.8;
-    gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-    getContentPane().add(measurementPanel, gridBagConstraints);
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                selectInputPanelComponentShown(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        getContentPane().add(selectInputPanel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        getContentPane().add(nuclearCentreFinderPanel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        getContentPane().add(nuclearFilteringPanel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        getContentPane().add(nuclearTopHatFilterPanel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        getContentPane().add(nuclearSegmentationPanel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        getContentPane().add(cellFilteringPanel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        getContentPane().add(cellSegmentationPanel, gridBagConstraints);
 
-    pack();
+        measurementPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                measurementPanelMouseClicked(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        getContentPane().add(measurementPanel, gridBagConstraints);
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     protected void setToolTips() {
@@ -367,6 +367,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         String inputDirectory = props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL);
         try {
             PropertyWriter.loadProperties(props, GianiDefaultParams.TITLE, new File(location));
+            GianiDefaultParams.updateDeprecatedProps(props);
             props.setProperty(GianiDefaultParams.INPUT_DIR_LABEL, inputDirectory);
             updateProperties(props, this);
             measurementPanelMouseClicked(null);
@@ -456,7 +457,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         PropertyExtractor.setProperties(p, c, PropertyExtractor.READ);
     }
 
-//    public static void main(String args[]) {
+    //    public static void main(String args[]) {
 //        /* Set the Nimbus look and feel */
 //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
 //        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -603,7 +604,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         return helpURI;
     }
 
-//    public ProcessPipeline buildPipeline() {
+    //    public ProcessPipeline buildPipeline() {
 //        ProcessPipeline output = new ProcessPipeline();
 //        for (LayerPanel c : componentList) {
 //            c.setupProcess();

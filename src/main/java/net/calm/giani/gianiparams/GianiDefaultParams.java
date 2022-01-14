@@ -17,15 +17,17 @@
 package net.calm.giani.gianiparams;
 
 import ij.IJ;
-import java.awt.Font;
+import net.calm.giani.ui.GIANIUI;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
+import org.apache.commons.io.FilenameUtils;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
-import net.calm.giani.ui.GIANIUI;
-import org.apache.commons.io.FilenameUtils;
 
 public class GianiDefaultParams extends Properties {
 
@@ -42,7 +44,7 @@ public class GianiDefaultParams extends Properties {
     public static final String NUC_FILT_RAD_LABEL = String.format("Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
     public static final String NUC_TOP_HAT_FILT_RAD_LABEL = String.format("Top Hat Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
     public static final String NUC_TOP_HAT_DOWNSIZE_FACTOR_LABEL = "Downsizing Factor for Top Hat Filter for Nuclear Channel";
-    public static final String BLOB_NUC_NOISE_TOL_LABEL = "Threshold for Simple Nuclear Centroid Detection";
+    public static final String BLOB_NUC_NOISE_TOL_LABEL = "Sensitivity of Simple Nuclear Centroid Detection";
     public static final String BLOB_NUC_RAD_LABEL = String.format("Nuclear Radius for Simple Centroid Detection (%cm)", IJ.micronSymbol);
     public static final String BLOB_CHAN_NOISE_TOL_LABEL = "Threshold for Simple Foci Detection in Channel ";
     public static final String BLOB_CHAN_RAD_LABEL = String.format("Radius (%cm) for Simple Foci Detection in Channel ", IJ.micronSymbol);
@@ -162,6 +164,16 @@ public class GianiDefaultParams extends Properties {
             return filename.toUpperCase();
         } catch (IOException | URISyntaxException e) {
             return APP_TITLE;
+        }
+    }
+
+    public static void updateDeprecatedProps(Properties props) {
+        HashMap<String, String> map = DeprecatedProps.getDepMap();
+        for (Map.Entry<String, String> e : map.entrySet()) {
+            String val = props.getProperty(e.getKey());
+            if (val != null) {
+                props.setProperty(e.getValue(), val);
+            }
         }
     }
 }
