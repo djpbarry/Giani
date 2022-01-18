@@ -76,7 +76,8 @@ public class PipelineExecutor extends Thread {
             input = new File(input.getParent());
         }
         ExecutorService exec = Executors.newSingleThreadExecutor();
-        for (String file : files) {
+        while (files.size() > 0) {
+            String file = files.get(0);
             BioFormatsImg img = new BioFormatsImg();
             try {
                 img.setId(String.format("%s%s%s", input, File.separator, file));
@@ -113,16 +114,13 @@ public class PipelineExecutor extends Thread {
                             process.setup(img, props, process.getPropLabels());
                             Future f = exec.submit(process, img);
                             f.get();
-//                            if (!(process instanceof MultiThreadedROIConstructor)) {
-//                                IJ.saveAs(process.getOutput(), "TIF", String.format("%s/%s_%d.tiff", outputDir.getAbsolutePath(), process.getClass().getName(), imageIndex));
-//                                imageIndex++;
-//                            }
                         } catch (InterruptedException | ExecutionException e) {
                             GenUtils.logError(e, String.format("Failed to execute process %s", process.getClass().toString()));
                         }
                     }
                 }
             }
+            updateFileList(img, files);
         }
         try {
             DataWriter.saveResultsTable(Analyzer.getResultsTable(), new File(String.format("%s%s%s_Output.csv", outputDir, File.separator, GianiDefaultParams.TITLE)), false, true);
@@ -137,8 +135,16 @@ public class PipelineExecutor extends Thread {
         IJ.log(String.format("Done %s", TimeAndDate.getCurrentTimeAndDate()));
     }
 
-    boolean checkSeriesChannels(BioFormatsImg img) {
-        return true;
+    private void updateFileList(BioFormatsImg img, ArrayList<String> files) {
+        String[] relatedFiles = img.getFileList();
+        for (String rf : relatedFiles) {
+            for (String f : files) {
+                if (f.equalsIgnoreCase(FilenameUtils.getName(rf))) {
+                    files.remove(f);
+                    break;
+                }
+            }
+        }
     }
 
 }
