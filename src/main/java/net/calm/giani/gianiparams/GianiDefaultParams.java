@@ -28,6 +28,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 public class GianiDefaultParams extends Properties {
 
@@ -44,14 +45,14 @@ public class GianiDefaultParams extends Properties {
     public static final String NUC_FILT_RAD_LABEL = String.format("Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
     public static final String NUC_TOP_HAT_FILT_RAD_LABEL = String.format("Top Hat Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
     public static final String NUC_TOP_HAT_DOWNSIZE_FACTOR_LABEL = "Downsizing Factor for Top Hat Filter for Nuclear Channel";
-    public static final String BLOB_NUC_NOISE_TOL_LABEL = "Sensitivity of Simple Nuclear Centroid Detection";
+    public static final String BLOB_NUC_NOISE_TOL_LABEL = "Quality of Simple Nuclear Centroid Detections";
     public static final String BLOB_NUC_RAD_LABEL = String.format("Nuclear Radius for Simple Centroid Detection (%cm)", IJ.micronSymbol);
-    public static final String BLOB_CHAN_NOISE_TOL_LABEL = "Threshold for Simple Foci Detection in Channel ";
+    public static final String BLOB_CHAN_NOISE_TOL_LABEL = "Quality of Simple Foci Detections in Channel ";
     public static final String BLOB_CHAN_RAD_LABEL = String.format("Radius (%cm) for Simple Foci Detection in Channel ", IJ.micronSymbol);
-    public static final String NUC_SEG_THRESH_LABEL = "Threshold for Nuclear Segmentation";
+    public static final String NUC_SEG_THRESH_LABEL = "Threshold Method for Nuclear Segmentation";
     public static final String NUC_SEG_CHAN_SELECT_LABEL = "Channel for Nuclear Segmentation";
     public static final String CELL_FILT_RAD_LABEL = String.format("Filter Radius for Cell Channel (%cm)", IJ.micronSymbol);
-    public static final String CELL_SEG_THRESH_LABEL = "Threshold for Cell Segmentation";
+    public static final String CELL_SEG_THRESH_LABEL = "Threshold Method for Cell Segmentation";
     public static final String CELL_SEG_CHAN_SELECT_LABEL = "Channel for Cell Segmentation";
     public static final String CHAN_FOR_MEASURE = "Select Channels to Measure";
     public static final String NUC_VOL_MARKER = "Nuclear Volume Marker";
@@ -63,7 +64,7 @@ public class GianiDefaultParams extends Properties {
     public static final String FOCI_DIST_WEIGHTING = "Distance Weighting for Channel ";
     public static final String LOCALISE_SPOTS = "Localise Spots";
     public static final String NUC_MAXIMA_DETECT_BLOBS = "Simple Nuclear Centroid Detector";
-    public static final String NUC_MAXIMA_DETECT_HESSIAN_THRESH = "Threshold for Advanced Nuclear Centroid Detection";
+    public static final String NUC_MAXIMA_DETECT_HESSIAN_THRESH = "Quality of Advanced Nuclear Centroid Detections";
     public static final String NUC_MAXIMA_DETECT_HESSIAN = "Advanced Nuclear Centroid Detector";
     public static final String NUC_MAXIMA_DETECT_HESSIAN_START_SCALE = String.format("Minimum Nuclear Radius for Advanced Centroid Detection (%cm)", IJ.micronSymbol);
     public static final String NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE = String.format("Maximum Nuclear Radius for Advanced Centroid Detection (%cm)", IJ.micronSymbol);
@@ -72,7 +73,7 @@ public class GianiDefaultParams extends Properties {
     public static final String FOCI_MAXIMA_DETECT_BLOBS = "Simple Foci Detector for Channel ";
     public static final String FOCI_MAXIMA_DETECT_FILTER_RAD = String.format("Filter Radius (%cm) for EDM Detector for Channel ", IJ.micronSymbol);
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_MAXIMA = "Advanced Foci Detector for Channel ";
-    public static final String FOCI_MAXIMA_DETECT_HESSIAN_THRESH = "Threshold for Advanced Foci Detection in Channel ";
+    public static final String FOCI_MAXIMA_DETECT_HESSIAN_THRESH = "Quality of Advanced Foci Detections in Channel ";
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_MIN_SIZE = "Minimum Foci Radius for Advanced Detection in Channel ";
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE = "Maximum Foci Radius for Advanced Detection in Channel ";
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP = "Radius Step Size for Advanced Foci Detection in Channel ";
@@ -169,10 +170,15 @@ public class GianiDefaultParams extends Properties {
 
     public static void updateDeprecatedProps(Properties props) {
         HashMap<String, String> map = DeprecatedProps.getDepMap();
-        for (Map.Entry<String, String> e : map.entrySet()) {
-            String val = props.getProperty(e.getKey());
-            if (val != null) {
-                props.setProperty(e.getValue(), val);
+        Set<String> propNames = props.stringPropertyNames();
+        Set<String> deprecNames = map.keySet();
+        for (String propName : propNames) {
+            for (String deprecatedName : deprecNames) {
+                if (propName.startsWith(deprecatedName)) {
+                    String val = props.getProperty(propName);
+                    String updatedPropName = propName.replace(deprecatedName, map.get(deprecatedName));
+                    props.setProperty(updatedPropName, val);
+                }
             }
         }
     }

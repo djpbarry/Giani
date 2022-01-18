@@ -21,10 +21,20 @@ import java.util.HashMap;
 public class DeprecatedProps {
 
     public static final String BLOB_NUC_NOISE_TOL_LABEL = "Threshold for Simple Nuclear Centroid Detection";
+    public static final String BLOB_CHAN_NOISE_TOL_LABEL = "Threshold for Simple Foci Detection in Channel ";
+    public static final String NUC_SEG_THRESH_LABEL = "Threshold for Nuclear Segmentation";
+    public static final String CELL_SEG_THRESH_LABEL = "Threshold for Cell Segmentation";
+    public static final String NUC_MAXIMA_DETECT_HESSIAN_THRESH = "Threshold for Advanced Nuclear Centroid Detection";
+    public static final String FOCI_MAXIMA_DETECT_HESSIAN_THRESH = "Threshold for Advanced Foci Detection in Channel ";
 
     public static HashMap<String, String> getDepMap() {
         HashMap<String, String> map = new HashMap<>();
         map.put(DeprecatedProps.BLOB_NUC_NOISE_TOL_LABEL, GianiDefaultParams.BLOB_NUC_NOISE_TOL_LABEL);
+        map.put(DeprecatedProps.BLOB_CHAN_NOISE_TOL_LABEL, GianiDefaultParams.BLOB_CHAN_NOISE_TOL_LABEL);
+        map.put(DeprecatedProps.NUC_SEG_THRESH_LABEL, GianiDefaultParams.NUC_SEG_THRESH_LABEL);
+        map.put(DeprecatedProps.CELL_SEG_THRESH_LABEL, GianiDefaultParams.CELL_SEG_THRESH_LABEL);
+        map.put(DeprecatedProps.NUC_MAXIMA_DETECT_HESSIAN_THRESH, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_THRESH);
+        map.put(DeprecatedProps.FOCI_MAXIMA_DETECT_HESSIAN_THRESH, GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_THRESH);
         return map;
     }
 }
