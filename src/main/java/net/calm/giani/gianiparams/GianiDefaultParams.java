@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -47,8 +46,8 @@ public class GianiDefaultParams extends Properties {
     public static final String NUC_TOP_HAT_DOWNSIZE_FACTOR_LABEL = "Downsizing Factor for Top Hat Filter for Nuclear Channel";
     public static final String BLOB_NUC_NOISE_TOL_LABEL = "Quality of Simple Nuclear Centroid Detections";
     public static final String BLOB_NUC_RAD_LABEL = String.format("Nuclear Radius for Simple Centroid Detection (%cm)", IJ.micronSymbol);
-    public static final String BLOB_CHAN_NOISE_TOL_LABEL = "Quality of Simple Foci Detections in Channel ";
-    public static final String BLOB_CHAN_RAD_LABEL = String.format("Radius (%cm) for Simple Foci Detection in Channel ", IJ.micronSymbol);
+    public static final String BLOB_CHAN_NOISE_TOL_LABEL = "Quality of Simple Spot Detections in Channel ";
+    public static final String BLOB_CHAN_RAD_LABEL = String.format("Radius (%cm) for Simple Spot Detection in Channel ", IJ.micronSymbol);
     public static final String NUC_SEG_THRESH_LABEL = "Threshold Method for Nuclear Segmentation";
     public static final String NUC_SEG_CHAN_SELECT_LABEL = "Channel for Nuclear Segmentation";
     public static final String CELL_FILT_RAD_LABEL = String.format("Filter Radius for Cell Channel (%cm)", IJ.micronSymbol);
@@ -70,13 +69,13 @@ public class GianiDefaultParams extends Properties {
     public static final String NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE = String.format("Maximum Nuclear Radius for Advanced Centroid Detection (%cm)", IJ.micronSymbol);
     public static final String NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP = String.format("Radius Step Size for Advanced Nuclear Centroid Detection (%cm)", IJ.micronSymbol);
     public static final String NUC_MAXIMA_DETECT_HESSIAN_ABS = "Absolute Nuclear Hessian Detection";
-    public static final String FOCI_MAXIMA_DETECT_BLOBS = "Simple Foci Detector for Channel ";
+    public static final String FOCI_MAXIMA_DETECT_BLOBS = "Simple Spot Detector for Channel ";
     public static final String FOCI_MAXIMA_DETECT_FILTER_RAD = String.format("Filter Radius (%cm) for EDM Detector for Channel ", IJ.micronSymbol);
-    public static final String FOCI_MAXIMA_DETECT_HESSIAN_MAXIMA = "Advanced Foci Detector for Channel ";
-    public static final String FOCI_MAXIMA_DETECT_HESSIAN_THRESH = "Quality of Advanced Foci Detections in Channel ";
-    public static final String FOCI_MAXIMA_DETECT_HESSIAN_MIN_SIZE = "Minimum Foci Radius for Advanced Detection in Channel ";
-    public static final String FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE = "Maximum Foci Radius for Advanced Detection in Channel ";
-    public static final String FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP = "Radius Step Size for Advanced Foci Detection in Channel ";
+    public static final String FOCI_MAXIMA_DETECT_HESSIAN_MAXIMA = "Advanced Spot Detector for Channel ";
+    public static final String FOCI_MAXIMA_DETECT_HESSIAN_THRESH = "Quality of Advanced Spot Detections in Channel ";
+    public static final String FOCI_MAXIMA_DETECT_HESSIAN_MIN_SIZE = "Minimum Spot Radius for Advanced Detection in Channel ";
+    public static final String FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE = "Maximum Spot Radius for Advanced Detection in Channel ";
+    public static final String FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP = "Radius Step Size for Advanced Spot Detection in Channel ";
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_ABS = "Absolute Hessian Detection for Channel ";
     public static final String HELP_ERROR_MESSAGE = "Error: Can't open online help docs.";
     public static final String SPECIFIC_SERIES = "Specific Series";
@@ -88,7 +87,7 @@ public class GianiDefaultParams extends Properties {
     public static final String NUC_SEG_TITLE = "Segmentation of Nuclei Using Centroids as Seeds";
     public static final String CELL_GAUSS_FILTER_TITLE = "Gaussian Filtering to Suppress Noise in Cell Channel Prior to Segmentation";
     public static final String CELL_SEG_TITLE = "Segmentation of Cells Using Nuclei as Seeds";
-    public static final String FOCI_CENTROID_LOCALISATION_TITLE = "Blob Detection to Approximate Locations of Foci in Channel ";
+    public static final String FOCI_CENTROID_LOCALISATION_TITLE = "Blob Detection to Approximate Locations of Spots in Channel ";
     public static final String LOAD_PARAMETERS = "Load Parameters";
     public static final Font TITLE_FONT = new java.awt.Font("Segoe UI Semibold", 1, 14);
 
