@@ -21,24 +21,38 @@ import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
 import net.calm.iaclasslibrary.Process.ROI.MultiThreadedROIConstructor;
-import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedWatershed;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
 
-import java.util.Properties;
-import javax.swing.DefaultListModel;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import java.net.URI;
+import java.util.Properties;
 
+/**
+ * Panel to specify which channels fluorescence intensities should be measured in the {@link GIANIUI}
+ *
+ * @author Dave Barry
+ * @since 1.0.0
+ */
 public class MeasurementPanel extends LayerPanel implements Updateable {
     private final GIANIParamInfos info;
+
     /**
-     * Creates new form MeasurementPanel
+     * Default constructor
      */
     public MeasurementPanel() {
         this(null, null, null, null, null);
     }
 
+    /**
+     * Constructs a MeasurementPanel and associates the specified Properties, BioFormatsImg and process with it.
+     *
+     * @param props contains the parameters governing how the process associated with this panel will run
+     * @param img the image that the process associated with this panel will run on
+     * @param process the process that this panel is seeking user-specified parameters for
+     * @param propLabels the labels associated with the parameters that this panel will display
+     * @param helpURI link to an online help page describing how to use this panel
+     */
     public MeasurementPanel(Properties props, BioFormatsImg img, MultiThreadedROIConstructor process, String[] propLabels, URI helpURI) {
         super(props, img, process, propLabels, helpURI);
         this.info = new GIANIParamInfos();
@@ -81,9 +95,15 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         add(measurePreviewButton, gridBagConstraints);
 
         channelList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+            String[] strings = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
+
+            public int getSize() {
+                return strings.length;
+            }
+
+            public String getElementAt(int i) {
+                return strings[i];
+            }
         });
         channelList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         channelList.addMouseListener(new java.awt.event.MouseAdapter() {
