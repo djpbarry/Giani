@@ -34,7 +34,10 @@ public class GianiResultsTable extends javax.swing.JFrame {
     private String[] tableHeadings;
 
     /**
-     * Creates new form TextResultsFrame
+     * Used by the {@link GianiResultsBrowser} to display numerical data
+     *
+     * @param inputFile CSV file output by GIANI containing data to be displayed
+     * @param objectLabel text label ("cell", "nucleus", "cyto") used to restrict objects displayed in table
      */
     public GianiResultsTable(File inputFile, String objectLabel) {
         this.inputFile = inputFile;
@@ -75,7 +78,7 @@ public class GianiResultsTable extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void loadResults() throws IOException {
+    protected void loadResults() throws IOException {
         ArrayList<String> fileHeadings = new ArrayList();
         ArrayList<String> labels = new ArrayList();
         double[][] data = DataReader.readCSVFile(inputFile, CSVFormat.EXCEL, fileHeadings, labels);
@@ -98,11 +101,11 @@ public class GianiResultsTable extends javax.swing.JFrame {
         }
     }
 
-    public JTable getResultsTable() {
+    protected JTable getResultsTable() {
         return resultsTable;
     }
 
-    public String[] getTableHeadings() {
+    protected String[] getTableHeadings() {
         return tableHeadings;
     }
 

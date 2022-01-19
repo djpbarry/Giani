@@ -11,6 +11,12 @@ import net.calm.iaclasslibrary.UtilClasses.GenUtils;
 import java.io.File;
 import java.util.Properties;
 
+/**
+ * Handles calls to GIANI from the ImageJ Macro Language
+ *
+ * @author Dave Barry
+ * @since 3.2.1
+ */
 public class GIANIMacroExecutor implements MacroExtension {
     private final String LOAD_PROPS = "loadPropertiesFile";
     private final String RUN = "run";
@@ -22,6 +28,7 @@ public class GIANIMacroExecutor implements MacroExtension {
         this.props = new GianiDefaultParams();
     }
 
+    @Override
     public ExtensionDescriptor[] getExtensionFunctions() {
         return new ExtensionDescriptor[]{
                 new ExtensionDescriptor(LOAD_PROPS, new int[]{
@@ -33,6 +40,7 @@ public class GIANIMacroExecutor implements MacroExtension {
                 new ExtensionDescriptor(RUN, new int[0], this),};
     }
 
+    @Override
     public String handleExtension(String name, Object[] args) {
         switch (name) {
             case LOAD_PROPS:
