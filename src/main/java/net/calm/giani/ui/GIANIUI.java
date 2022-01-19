@@ -28,10 +28,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Properties;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Main wizard-based interface for interacting with and specifying parameters for GIANI runs
+ *
+ * @author Dave Barry
+ * @since 1.0.0
  */
 public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
@@ -54,7 +55,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 //    private final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     /**
-     * Creates new form LocalMapperUI
+     * Creates a new instance of the GIANI GUI
      */
     public GIANIUI() {
         img = new BioFormatsImg();
@@ -363,7 +364,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         loadParameters(props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL));
     }//GEN-LAST:event_loadParametersButtonActionPerformed
 
-    public void loadParameters(String location) {
+    protected void loadParameters(String location) {
         String inputDirectory = props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL);
         try {
             PropertyWriter.loadProperties(props, GianiDefaultParams.TITLE, new File(location));
@@ -615,7 +616,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 //        }
 //        return output;
 //    }
-    public static Properties getProps() {
+    protected static Properties getProps() {
         return props;
     }
 
