@@ -40,7 +40,7 @@ public class GIANI {
     /**
      * Run GIANI using the specified list of arguments
      *
-     * @param args
+     * @param args see https://github.com/djpbarry/Giani/wiki/Running-GIANI-on-a-HPC-Cluster
      */
     public static void main(String[] args) {
         if (args == null || args.length < 1) {
@@ -93,7 +93,7 @@ public class GIANI {
     /**
      * Run GIANI using the specified properties
      *
-     * @param props
+     * @param props contains parameter name-value pairs for all parameters necessary to run GIANI
      */
     public void run(Properties props) {
         ProcessPipeline pipeline = (new PipelineBuilder()).buildFullPipeline(props, new Objects3DPopulation());

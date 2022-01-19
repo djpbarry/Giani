@@ -12,28 +12,43 @@ import ij.process.AutoThresholder;
 import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
-import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedWatershed;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
 
+import javax.swing.*;
 import java.io.File;
 import java.net.URI;
 import java.util.Properties;
-import javax.swing.DefaultComboBoxModel;
 
+/**
+ * Panel for segmenting nuclei and cells in the {@link GIANIUI}
+ *
+ * @author Dave Barry
+ * @since 1.0.0
+ */
 public class SegmentationPanel extends LayerPanel implements Updateable {
 
     private final String title;
     private final GIANIParamInfos info;
-    
+
     /**
-     * Creates new form SegmentationPanel
+     * Default constructor
      */
     public SegmentationPanel() {
         this(null, null, null, null, null, null);
     }
 
+    /**
+     * Constructs a SegmentationPanel and associates the specified Properties, BioFormatsImg and process with it.
+     *
+     * @param props contains the parameters governing how the process associated with this panel will run
+     * @param img the image that the process associated with this panel will run on
+     * @param process the process that this panel is seeking user-specified parameters for
+     * @param propLabels the labels associated with the parameters that this panel will display
+     * @param helpURI link to an online help page describing how to use this panel
+     * @param title description of what this panel does
+     */
     public SegmentationPanel(Properties props, BioFormatsImg img, MultiThreadedWatershed process, String[] propLabels, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
         this.title = title;
