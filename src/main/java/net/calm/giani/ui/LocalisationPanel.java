@@ -22,15 +22,29 @@ import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 
 import java.util.Properties;
 
+/**
+ * Colocalisation panel in the {@link GIANIUI}
+ *
+ * @author Dave Barry
+ * @since 1.0.0
+ */
 public class LocalisationPanel extends LayerPanel {
 
     /**
-     * Creates new form ColocalisationPanel
+     * Default constructor
      */
     public LocalisationPanel() {
         this(null, null, null, null);
     }
 
+    /**
+     * Constructs a LocalisationPanel and associates the specified Properties, BioFormatsImg and process with it.
+     *
+     * @param props contains the parameters governing how the process associated with this panel will run
+     * @param img the image that the process associated with this panel will run on
+     * @param process the process that this panel is seeking user-specified parameters for
+     * @param propLabels the labels associated with the parameters that this panel will display
+     */
     public LocalisationPanel(Properties props, BioFormatsImg img, MultiThreadedColocalise process, String[] propLabels) {
         super(props, img, process, propLabels, null);
         initComponents();
