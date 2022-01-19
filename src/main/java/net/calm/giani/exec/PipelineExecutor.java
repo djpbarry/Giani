@@ -41,16 +41,30 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+/**
+ * Runs a GIANI {@link ProcessPipeline}
+ *
+ * @author Dave Barry
+ * @since 1.0.0
+ */
 public class PipelineExecutor extends Thread {
 
     private final ProcessPipeline pipeline;
     private final Properties props;
 
+    /**
+     * Construct an executor with the specified pipeline and properties
+     * @param pipeline the {@link ProcessPipeline} to be executed
+     * @param props the parameter-value pairs for every process in the pipeline
+     */
     public PipelineExecutor(ProcessPipeline pipeline, Properties props) {
         this.pipeline = pipeline;
         this.props = props;
     }
 
+    /**
+     * Execute the pipeline
+     */
     public void run() {
         IJ.log(String.format("Start %s", TimeAndDate.getCurrentTimeAndDate()));
         IJ.log(String.format("Number of Processors: %s", Runtime.getRuntime().availableProcessors()));
