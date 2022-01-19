@@ -8,14 +8,19 @@ package net.calm.giani.ui;
 import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
-import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
 import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Properties;
-import java.net.URI;
 
+/**
+ * Top-Hat Filtering panel in the {@link GIANIUI}
+ *
+ * @author Dave Barry
+ * @since 3.0.0
+ */
 public class TopHatFilterPanel extends LayerPanel {
 
     private ArrayList<String> channelLabels;
@@ -23,16 +28,34 @@ public class TopHatFilterPanel extends LayerPanel {
     private final GIANIParamInfos info;
 
     /**
-     * Creates new form FilteringPanel
+     * Default constructor
      */
     public TopHatFilterPanel() {
         this(null, null, null, null);
     }
 
+    /**
+     * Constructs a TopHatFilterPanel and associates the specified Properties, BioFormatsImg and process with it.
+     *
+     * @param props contains the parameters governing how the process associated with this panel will run
+     * @param img the image that the process associated with this panel will run on
+     * @param process the process that this panel is seeking user-specified parameters for
+     * @param propLabels the labels associated with the parameters that this panel will display
+     */
     public TopHatFilterPanel(Properties props, BioFormatsImg img, MultiThreadedTopHatFilter process, String[] propLabels) {
         this(props, img, process, propLabels, null, null);
     }
 
+    /**
+     * Constructs a TopHatFilterPanel and associates the specified Properties, BioFormatsImg and process with it.
+     *
+     * @param props contains the parameters governing how the process associated with this panel will run
+     * @param img the image that the process associated with this panel will run on
+     * @param process the process that this panel is seeking user-specified parameters for
+     * @param propLabels the labels associated with the parameters that this panel will display
+     * @param helpURI link to an online help page describing how to use this panel
+     * @param title description of what this panel does
+     */
     public TopHatFilterPanel(Properties props, BioFormatsImg img, MultiThreadedTopHatFilter process, String[] propLabels, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
         this.title = title;
