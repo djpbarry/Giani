@@ -35,23 +35,43 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.net.URI;
 
+/**
+ * Panel for selecting input files/folder in the {@link GIANIUI}
+ *
+ * @author Dave Barry
+ * @since 1.0.0
+ */
 public class SelectInputPanel extends LayerPanel {
 
     private static File inputDirectory;
     private final GIANIParamInfos info;
-//    private BioFormatsImg img;
 
     /**
-     * Creates new form SelectInputPanel
+     * Default constructor
      */
     public SelectInputPanel() {
         this(null, null, null);
     }
 
+    /**
+     * Constructs a SelectInputPanel and associates the specified Properties and BioFormatsImg with it.
+     *
+     * @param props contains the parameters governing how the process associated with this panel will run
+     * @param img the image that the process associated with this panel will run on
+     * @param propLabels the labels associated with the parameters that this panel will display
+     */
     public SelectInputPanel(Properties props, BioFormatsImg img, String[] propLabels) {
         this(props, img, propLabels, null);
     }
 
+    /**
+     * Constructs a SelectInputPanel and associates the specified Properties and BioFormatsImg with it.
+     *
+     * @param props contains the parameters governing how the process associated with this panel will run
+     * @param img the image that the process associated with this panel will run on
+     * @param propLabels the labels associated with the parameters that this panel will display
+     * @param helpURI link to an online help page describing how to use this panel
+     */
     public SelectInputPanel(Properties props, BioFormatsImg img, String[] propLabels, URI helpURI) {
         super(props, img, null, propLabels, helpURI);
         initComponents();
