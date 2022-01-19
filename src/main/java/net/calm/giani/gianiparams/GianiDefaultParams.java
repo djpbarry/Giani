@@ -29,6 +29,12 @@ import java.util.HashMap;
 import java.util.Properties;
 import java.util.Set;
 
+/**
+ * Stores all parameter names and values needed to run an instance of GIANI
+ *
+ * @author Dave Barry
+ * @since 1.0.0
+ */
 public class GianiDefaultParams extends Properties {
 
     public static final String PREVIEW = "Preview";
@@ -91,6 +97,9 @@ public class GianiDefaultParams extends Properties {
     public static final String LOAD_PARAMETERS = "Load Parameters";
     public static final Font TITLE_FONT = new java.awt.Font("Segoe UI Semibold", 1, 14);
 
+    /**
+     * Initialises an instance of GianiDefaultParams with most parameters set to zero
+     */
     public GianiDefaultParams() {
         initialise();
     }
@@ -133,6 +142,13 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(SPECIFIC_SERIES, "-1");
     }
 
+    /**
+     * Set the output directory based on the input directory and store it in the Properties
+     *
+     * @param props contains the input directory and will contain the location of the output directory on exiting
+     * @param label if not null, the output directory will contain this label
+     * @return true if output directory has been successfully set, false otherwise
+     */
     public static boolean setOutputDirectory(Properties props, String label) {
         File input = new File(props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL));
         String parent;
@@ -154,7 +170,7 @@ public class GianiDefaultParams extends Properties {
         return true;
     }
 
-    public static String getTitleWithVersion() {
+    protected static String getTitleWithVersion() {
         try {
             File gianiJar = new File(GIANIUI.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
             String filename = FilenameUtils.getBaseName(gianiJar.getAbsolutePath());
@@ -167,6 +183,11 @@ public class GianiDefaultParams extends Properties {
         }
     }
 
+    /**
+     * Search for any deprecated parameter names in the specifed properties and update them
+     *
+     * @param props the parameters to update
+     */
     public static void updateDeprecatedProps(Properties props) {
         HashMap<String, String> map = DeprecatedProps.getDepMap();
         Set<String> propNames = props.stringPropertyNames();

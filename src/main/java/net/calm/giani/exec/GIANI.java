@@ -29,8 +29,19 @@ import java.io.*;
 import java.util.Properties;
 import java.util.Scanner;
 
+/**
+ * Main class for running GIANI from the command line
+ *
+ * @author Dave Barry
+ * @since 1.0.0
+ */
 public class GIANI {
 
+    /**
+     * Run GIANI using the specified list of arguments
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         if (args == null || args.length < 1) {
             GIANIUI ui = new GIANIUI();
@@ -79,6 +90,11 @@ public class GIANI {
         (new GIANI()).run(props);
     }
 
+    /**
+     * Run GIANI using the specified properties
+     *
+     * @param props
+     */
     public void run(Properties props) {
         ProcessPipeline pipeline = (new PipelineBuilder()).buildFullPipeline(props, new Objects3DPopulation());
         PipelineExecutor exec = new PipelineExecutor(pipeline, props);
