@@ -2,7 +2,14 @@ package net.calm.giani.gianiparams;
 
 import java.util.Properties;
 
+/**
+ * Utility class containing tool tip text for {@link net.calm.giani.ui.GIANIUI}
+ *
+ * @author Dave Barry
+ * @since 3.2.1
+ */
 public class GIANIParamInfos extends Properties {
+
     private final int MAX_CHAN = 10;
 
     public GIANIParamInfos() {

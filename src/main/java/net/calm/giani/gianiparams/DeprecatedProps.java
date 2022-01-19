@@ -20,6 +20,12 @@ import ij.IJ;
 
 import java.util.HashMap;
 
+/**
+ * Utility class containing old names for parameters
+ *
+ * @author Dave Barry
+ * @since 3.2.1
+ */
 public class DeprecatedProps {
 
     public static final String BLOB_NUC_NOISE_TOL_LABEL = "Threshold for Simple Nuclear Centroid Detection";
@@ -38,7 +44,7 @@ public class DeprecatedProps {
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP = "Radius Step Size for Advanced Foci Detection in Channel ";
     public static final String FOCI_CENTROID_LOCALISATION_TITLE = "Blob Detection to Approximate Locations of Foci in Channel ";
 
-    public static HashMap<String, String> getDepMap() {
+    protected static HashMap<String, String> getDepMap() {
         HashMap<String, String> map = new HashMap<>();
         map.put(DeprecatedProps.BLOB_NUC_NOISE_TOL_LABEL, GianiDefaultParams.BLOB_NUC_NOISE_TOL_LABEL);
         map.put(DeprecatedProps.BLOB_CHAN_NOISE_TOL_LABEL, GianiDefaultParams.BLOB_CHAN_NOISE_TOL_LABEL);

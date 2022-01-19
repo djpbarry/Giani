@@ -7,7 +7,6 @@ package net.calm.giani.ui;
 
 import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
-import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
 import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
@@ -18,6 +17,12 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Properties;
 
+/**
+ * Gaussian Filtering panel in the {@link GIANIUI}
+ *
+ * @author Dave Barry
+ * @since 1.0.0
+ */
 public class FilteringPanel extends LayerPanel implements Updateable {
 
     private ArrayList<String> channelLabels;
@@ -25,16 +30,34 @@ public class FilteringPanel extends LayerPanel implements Updateable {
     private final GIANIParamInfos info;
 
     /**
-     * Creates new form FilteringPanel
+     * Default constructor
      */
     public FilteringPanel() {
         this(null, null, null, null);
     }
 
+    /**
+     * Constructs a FilteringPanel and associates the specified Properties, BioFormatsImg and process with it.
+     *
+     * @param props contains the parameters governing how the process associated with this panel will run
+     * @param img the image that the process associated with this panel will run on
+     * @param process the process that this panel is seeking user-specified parameters for
+     * @param propLabels the labels associated with the parameters that this panel will display
+     */
     public FilteringPanel(Properties props, BioFormatsImg img, MultiThreadedGaussianFilter process, String[] propLabels) {
         this(props, img, process, propLabels, null, null);
     }
 
+    /**
+     * Constructs a FilteringPanel and associates the specified Properties, BioFormatsImg and process with it.
+     *
+     * @param props contains the parameters governing how the process associated with this panel will run
+     * @param img the image that the process associated with this panel will run on
+     * @param process the process that this panel is seeking user-specified parameters for
+     * @param propLabels the labels associated with the parameters that this panel will display
+     * @param helpURI link to an online help page describing how to use this panel
+     * @param title description of what this panel does
+     */
     public FilteringPanel(Properties props, BioFormatsImg img, MultiThreadedGaussianFilter process, String[] propLabels, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
         this.title = title;
@@ -171,10 +194,17 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         openHelpPage(GianiDefaultParams.HELP_ERROR_MESSAGE);
     }//GEN-LAST:event_helpButtonActionPerformed
 
+    /**
+     * Initialises the process associated with this panel
+     */
     public void setupProcess() {
         process.setup(img, props, propLabels);
     }
 
+    /**
+     * Updates options on this panel that are influenced by image parameters (for example, the number of channels the
+     * user can choose from).
+     */
     public void update() {
         if (img.getId() == null) {
             return;
