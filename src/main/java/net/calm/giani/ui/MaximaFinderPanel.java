@@ -34,6 +34,12 @@ import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
 import ome.units.quantity.Length;
 
+/**
+ * Blob detection (centroid estimation) panel in the {@link GIANIUI}
+ *
+ * @author Dave Barry
+ * @since 1.0.0
+ */
 public class MaximaFinderPanel extends LayerPanel implements Updateable {
 
     private ArrayList<String> channelLabels;
@@ -43,12 +49,25 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     private final GIANIParamInfos info;
 
     /**
-     * Creates new form MaximaFinderPanel
+     * Default constructor
      */
     public MaximaFinderPanel() {
         this(null, null, null, null, true, -1, null, null);
     }
 
+    /**
+     * Constructs a MaximaFinderPanel and associates the specified Properties, BioFormatsImg and process with it.
+     *
+     * @param props contains the parameters governing how the process associated with this panel will run
+     * @param img the image that the process associated with this panel will run on
+     * @param process the process that this panel is seeking user-specified parameters for
+     * @param propLabels the labels associated with the parameters that this panel will display
+     * @param allowChannelSelect set to true to include a dropdown menu allowing channel selection
+     * @param defaultChannel if allowChannelSelect is false, specify the specific channel the process associated with
+     *                       this panel will run on
+     * @param helpURI link to an online help page describing how to use this panel
+     * @param title description of what this panel does
+     */
     public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process, String[] propLabels, boolean allowChannelSelect, int defaultChannel, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
         this.allowChannelSelect = allowChannelSelect;
