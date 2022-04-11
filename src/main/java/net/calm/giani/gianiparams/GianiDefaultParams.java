@@ -97,6 +97,7 @@ public class GianiDefaultParams extends Properties {
     public static final String LOAD_PARAMETERS = "Load Parameters";
     public static final Font TITLE_FONT = new java.awt.Font("Segoe UI Semibold", 1, 14);
     public static final String UNITS = "Units";
+    public static final String ENABLE_TOP_HAT_FILTER = "Enable Top Hat Filtering";
 
     /**
      * Initialises an instance of GianiDefaultParams with most parameters set to
@@ -143,6 +144,7 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(NUC_MAXIMA_DETECT_HESSIAN_ABS, "false");
         this.setProperty(SPECIFIC_SERIES, "-1");
         this.setProperty(UNITS, String.format("%cm", IJ.micronSymbol));
+        this.setProperty(ENABLE_TOP_HAT_FILTER, "true");
     }
 
     /**

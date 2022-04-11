@@ -96,6 +96,7 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
         downSizeFactorTextField = new javax.swing.JTextField();
         titleLabel = new javax.swing.JLabel();
         unitsLabel1 = new javax.swing.JLabel();
+        topHatToggleButton = new javax.swing.JToggleButton();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -108,7 +109,7 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -116,9 +117,10 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
 
         filterRadiusXYLabel.setText(propLabels[MultiThreadedTopHatFilter.FILT_RAD_LABEL]);
         filterRadiusXYLabel.setLabelFor(filterRadiusXYTextField);
+        filterRadiusXYLabel.setEnabled(Boolean.parseBoolean(props.getProperty(GianiDefaultParams.ENABLE_TOP_HAT_FILTER)));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -126,9 +128,10 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
         add(filterRadiusXYLabel, gridBagConstraints);
 
         filterRadiusXYTextField.setText(props.getProperty(propLabels[MultiThreadedTopHatFilter.FILT_RAD_LABEL]));
+        filterRadiusXYTextField.setEnabled(Boolean.parseBoolean(props.getProperty(GianiDefaultParams.ENABLE_TOP_HAT_FILTER)));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -143,7 +146,7 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -151,9 +154,10 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
 
         downsizeFactorLabel.setText(propLabels[MultiThreadedTopHatFilter.RESIZE_FACTOR_LABEL]);
         downsizeFactorLabel.setLabelFor(downSizeFactorTextField);
+        downsizeFactorLabel.setEnabled(Boolean.parseBoolean(props.getProperty(GianiDefaultParams.ENABLE_TOP_HAT_FILTER)));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -161,9 +165,10 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
         add(downsizeFactorLabel, gridBagConstraints);
 
         downSizeFactorTextField.setText(props.getProperty(propLabels[MultiThreadedTopHatFilter.RESIZE_FACTOR_LABEL]));
+        downSizeFactorTextField.setEnabled(Boolean.parseBoolean(props.getProperty(GianiDefaultParams.ENABLE_TOP_HAT_FILTER)));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -184,14 +189,32 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
         add(titleLabel, gridBagConstraints);
 
         unitsLabel1.setText(unitText);
+        unitsLabel1.setEnabled(Boolean.parseBoolean(props.getProperty(GianiDefaultParams.ENABLE_TOP_HAT_FILTER)));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(unitsLabel1, gridBagConstraints);
+
+        topHatToggleButton.setText(propLabels[MultiThreadedTopHatFilter.ENABLE_FILTER_LABEL]);
+        topHatToggleButton.setEnabled(Boolean.parseBoolean(props.getProperty(GianiDefaultParams.ENABLE_TOP_HAT_FILTER)));
+        topHatToggleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                topHatToggleButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(topHatToggleButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     protected void setToolTips() {
@@ -217,6 +240,14 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
         openHelpPage(GianiDefaultParams.HELP_ERROR_MESSAGE);
     }//GEN-LAST:event_helpButtonActionPerformed
 
+    private void topHatToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_topHatToggleButtonActionPerformed
+        filterRadiusXYLabel.setEnabled(topHatToggleButton.isSelected());
+        filterRadiusXYTextField.setEnabled(topHatToggleButton.isSelected());
+        downSizeFactorTextField.setEnabled(topHatToggleButton.isSelected());
+        downsizeFactorLabel.setEnabled(topHatToggleButton.isSelected());
+        unitsLabel1.setEnabled(topHatToggleButton.isSelected());
+    }//GEN-LAST:event_topHatToggleButtonActionPerformed
+
     public void setupProcess() {
         process.setup(img, props, propLabels);
     }
@@ -233,6 +264,7 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
     private javax.swing.JButton helpButton;
     private javax.swing.JButton previewButton;
     private javax.swing.JLabel titleLabel;
+    private javax.swing.JToggleButton topHatToggleButton;
     private javax.swing.JLabel unitsLabel1;
     // End of variables declaration//GEN-END:variables
 }

@@ -76,6 +76,7 @@ public class PipelineBuilder {
         propLabels[MultiThreadedTopHatFilter.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
         propLabels[MultiThreadedTopHatFilter.FILT_RAD_LABEL] = GianiDefaultParams.NUC_TOP_HAT_FILT_RAD_LABEL;
         propLabels[MultiThreadedTopHatFilter.RESIZE_FACTOR_LABEL] = GianiDefaultParams.NUC_TOP_HAT_DOWNSIZE_FACTOR_LABEL;
+        propLabels[MultiThreadedTopHatFilter.ENABLE_FILTER_LABEL] = GianiDefaultParams.ENABLE_TOP_HAT_FILTER;
         MultiThreadedTopHatFilter process = new MultiThreadedTopHatFilter(inputs);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
