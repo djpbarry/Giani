@@ -120,6 +120,7 @@ public class PipelineExecutor extends Thread {
                     continue;
                 }
                 props.setProperty(GianiDefaultParams.SERIES_SELECT_LABEL, String.valueOf(s));
+                props.setProperty(GianiDefaultParams.UNITS, img.getUnits(s));
 //                int imageIndex = 0;
                 for (MultiThreadedProcess process : pipeline) {
                     if (process != null) {

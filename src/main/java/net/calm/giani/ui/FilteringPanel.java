@@ -83,6 +83,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         channelSelectComboBox = new javax.swing.JComboBox<>();
         helpButton = new javax.swing.JButton();
         titleLabel = new javax.swing.JLabel();
+        unitsLabel1 = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -169,6 +170,16 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(titleLabel, gridBagConstraints);
+
+        unitsLabel1.setText(unitText);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(unitsLabel1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     protected void setToolTips() {
@@ -216,6 +227,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         }
         channelSelectComboBox.setModel(new DefaultComboBoxModel(channelLabels.toArray()));
         channelSelectComboBox.setSelectedItem(props.get(propLabels[MultiThreadedGaussianFilter.CHANNEL_LABEL]));
+        unitsLabel1.setText(props.getProperty(GianiDefaultParams.UNITS));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -226,5 +238,6 @@ public class FilteringPanel extends LayerPanel implements Updateable {
     private javax.swing.JButton helpButton;
     private javax.swing.JButton previewButton;
     private javax.swing.JLabel titleLabel;
+    private javax.swing.JLabel unitsLabel1;
     // End of variables declaration//GEN-END:variables
 }

@@ -14,6 +14,9 @@ import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Properties;
+import javax.swing.DefaultComboBoxModel;
+import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
+import net.calm.iaclasslibrary.UIClasses.Updateable;
 
 /**
  * Top-Hat Filtering panel in the {@link GIANIUI}
@@ -21,7 +24,7 @@ import java.util.Properties;
  * @author Dave Barry
  * @since 3.0.0
  */
-public class TopHatFilterPanel extends LayerPanel {
+public class TopHatFilterPanel extends LayerPanel implements Updateable {
 
     private ArrayList<String> channelLabels;
     private final String title;
@@ -35,25 +38,36 @@ public class TopHatFilterPanel extends LayerPanel {
     }
 
     /**
-     * Constructs a TopHatFilterPanel and associates the specified Properties, BioFormatsImg and process with it.
+     * Constructs a TopHatFilterPanel and associates the specified Properties,
+     * BioFormatsImg and process with it.
      *
-     * @param props contains the parameters governing how the process associated with this panel will run
-     * @param img the image that the process associated with this panel will run on
-     * @param process the process that this panel is seeking user-specified parameters for
-     * @param propLabels the labels associated with the parameters that this panel will display
+     * @param props contains the parameters governing how the process associated
+     * with this panel will run
+     * @param img the image that the process associated with this panel will run
+     * on
+     * @param process the process that this panel is seeking user-specified
+     * parameters for
+     * @param propLabels the labels associated with the parameters that this
+     * panel will display
      */
     public TopHatFilterPanel(Properties props, BioFormatsImg img, MultiThreadedTopHatFilter process, String[] propLabels) {
         this(props, img, process, propLabels, null, null);
     }
 
     /**
-     * Constructs a TopHatFilterPanel and associates the specified Properties, BioFormatsImg and process with it.
+     * Constructs a TopHatFilterPanel and associates the specified Properties,
+     * BioFormatsImg and process with it.
      *
-     * @param props contains the parameters governing how the process associated with this panel will run
-     * @param img the image that the process associated with this panel will run on
-     * @param process the process that this panel is seeking user-specified parameters for
-     * @param propLabels the labels associated with the parameters that this panel will display
-     * @param helpURI link to an online help page describing how to use this panel
+     * @param props contains the parameters governing how the process associated
+     * with this panel will run
+     * @param img the image that the process associated with this panel will run
+     * on
+     * @param process the process that this panel is seeking user-specified
+     * parameters for
+     * @param propLabels the labels associated with the parameters that this
+     * panel will display
+     * @param helpURI link to an online help page describing how to use this
+     * panel
      * @param title description of what this panel does
      */
     public TopHatFilterPanel(Properties props, BioFormatsImg img, MultiThreadedTopHatFilter process, String[] propLabels, URI helpURI, String title) {
@@ -81,6 +95,7 @@ public class TopHatFilterPanel extends LayerPanel {
         downsizeFactorLabel = new javax.swing.JLabel();
         downSizeFactorTextField = new javax.swing.JTextField();
         titleLabel = new javax.swing.JLabel();
+        unitsLabel1 = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -167,6 +182,16 @@ public class TopHatFilterPanel extends LayerPanel {
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(titleLabel, gridBagConstraints);
+
+        unitsLabel1.setText(unitText);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(unitsLabel1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     protected void setToolTips() {
@@ -196,6 +221,10 @@ public class TopHatFilterPanel extends LayerPanel {
         process.setup(img, props, propLabels);
     }
 
+    public void update() {
+        unitsLabel1.setText(props.getProperty(GianiDefaultParams.UNITS));
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField downSizeFactorTextField;
     private javax.swing.JLabel downsizeFactorLabel;
@@ -204,5 +233,6 @@ public class TopHatFilterPanel extends LayerPanel {
     private javax.swing.JButton helpButton;
     private javax.swing.JButton previewButton;
     private javax.swing.JLabel titleLabel;
+    private javax.swing.JLabel unitsLabel1;
     // End of variables declaration//GEN-END:variables
 }

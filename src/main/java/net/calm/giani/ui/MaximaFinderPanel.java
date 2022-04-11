@@ -107,6 +107,10 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         hessianThreshLabel = new javax.swing.JLabel();
         hessianMaxSizeTextField = new javax.swing.JTextField();
         titleLabel = new javax.swing.JLabel();
+        unitsLabel1 = new javax.swing.JLabel();
+        unitsLabel2 = new javax.swing.JLabel();
+        unitsLabel3 = new javax.swing.JLabel();
+        unitsLabel4 = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -341,6 +345,46 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(titleLabel, gridBagConstraints);
+
+        unitsLabel1.setText(unitText);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(unitsLabel1, gridBagConstraints);
+
+        unitsLabel2.setText(unitText);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(unitsLabel2, gridBagConstraints);
+
+        unitsLabel3.setText(unitText);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(unitsLabel3, gridBagConstraints);
+
+        unitsLabel4.setText(unitText);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(unitsLabel4, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     protected void setToolTips() {
@@ -465,6 +509,10 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
             channelSelectComboBox.setSelectedIndex(defaultChannel);
         }
         simpleDetectToggleButtonActionPerformed(null);
+        unitsLabel1.setText(props.getProperty(GianiDefaultParams.UNITS));
+        unitsLabel2.setText(props.getProperty(GianiDefaultParams.UNITS));
+        unitsLabel3.setText(props.getProperty(GianiDefaultParams.UNITS));
+        unitsLabel4.setText(props.getProperty(GianiDefaultParams.UNITS));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -487,5 +535,9 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     protected javax.swing.JButton previewButton;
     private javax.swing.JToggleButton simpleDetectToggleButton;
     private javax.swing.JLabel titleLabel;
+    private javax.swing.JLabel unitsLabel1;
+    private javax.swing.JLabel unitsLabel2;
+    private javax.swing.JLabel unitsLabel3;
+    private javax.swing.JLabel unitsLabel4;
     // End of variables declaration//GEN-END:variables
 }

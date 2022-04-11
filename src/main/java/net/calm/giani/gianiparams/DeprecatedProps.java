@@ -43,6 +43,15 @@ public class DeprecatedProps {
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE = "Maximum Foci Radius for Advanced Detection in Channel ";
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP = "Radius Step Size for Advanced Foci Detection in Channel ";
     public static final String FOCI_CENTROID_LOCALISATION_TITLE = "Blob Detection to Approximate Locations of Foci in Channel ";
+    public static final String BLOB_NUC_RAD_LABEL = String.format("Nuclear Radius for Simple Centroid Detection (%cm)", IJ.micronSymbol);
+    public static final String NUC_FILT_RAD_LABEL = String.format("Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
+    public static final String NUC_TOP_HAT_FILT_RAD_LABEL = String.format("Top Hat Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
+    public static final String BLOB_CHAN_RAD_LABEL_2 = String.format("Radius (%cm) for Simple Spot Detection in Channel ", IJ.micronSymbol);
+    public static final String CELL_FILT_RAD_LABEL = String.format("Filter Radius for Cell Channel (%cm)", IJ.micronSymbol);
+    public static final String NUC_MAXIMA_DETECT_HESSIAN_START_SCALE = String.format("Minimum Nuclear Radius for Advanced Centroid Detection (%cm)", IJ.micronSymbol);
+    public static final String NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE = String.format("Maximum Nuclear Radius for Advanced Centroid Detection (%cm)", IJ.micronSymbol);
+    public static final String NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP = String.format("Radius Step Size for Advanced Nuclear Centroid Detection (%cm)", IJ.micronSymbol);
+    public static final String FOCI_MAXIMA_DETECT_FILTER_RAD = String.format("Filter Radius (%cm) for EDM Detector for Channel ", IJ.micronSymbol);
 
     protected static HashMap<String, String> getDepMap() {
         HashMap<String, String> map = new HashMap<>();
@@ -61,6 +70,15 @@ public class DeprecatedProps {
         map.put(DeprecatedProps.FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE, GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE);
         map.put(DeprecatedProps.FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP, GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP);
         map.put(DeprecatedProps.FOCI_CENTROID_LOCALISATION_TITLE, GianiDefaultParams.FOCI_CENTROID_LOCALISATION_TITLE);
+        map.put(DeprecatedProps.BLOB_NUC_RAD_LABEL, GianiDefaultParams.BLOB_NUC_RAD_LABEL);
+        map.put(DeprecatedProps.NUC_FILT_RAD_LABEL, GianiDefaultParams.NUC_FILT_RAD_LABEL);
+        map.put(DeprecatedProps.NUC_TOP_HAT_FILT_RAD_LABEL, GianiDefaultParams.NUC_TOP_HAT_FILT_RAD_LABEL);
+        map.put(DeprecatedProps.BLOB_CHAN_RAD_LABEL_2, GianiDefaultParams.BLOB_CHAN_RAD_LABEL);
+        map.put(DeprecatedProps.CELL_FILT_RAD_LABEL, GianiDefaultParams.CELL_FILT_RAD_LABEL);
+        map.put(DeprecatedProps.NUC_MAXIMA_DETECT_HESSIAN_START_SCALE, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_START_SCALE);
+        map.put(DeprecatedProps.NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE);
+        map.put(DeprecatedProps.NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP);
+        //map.put(DeprecatedProps.FOCI_MAXIMA_DETECT_FILTER_RAD, GianiDefaultParams.FOCI_MAXIMA_DETECT_FILTER_RAD);
         return map;
     }
 }

@@ -296,10 +296,9 @@ public class SelectInputPanel extends LayerPanel {
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         setVariables();
-        int series = Integer.parseInt((String) seriesComboBox.getSelectedItem());
         int channel = Integer.parseInt((String) channelComboBox.getSelectedItem());
         try {
-            img.loadPixelData(series, channel, channel + 1, null);
+            img.loadPixelData(getSelectedSeries(), channel, channel + 1, null);
             ImagePlus imp = img.getLoadedImage();
             imp.show();
             IJ.log(String.format("Displaying \"%s\"", imp.getTitle()));
@@ -308,6 +307,10 @@ public class SelectInputPanel extends LayerPanel {
         }
     }//GEN-LAST:event_previewButtonActionPerformed
 
+    private int getSelectedSeries(){
+        return Integer.parseInt((String) seriesComboBox.getSelectedItem());
+    }
+    
     private void inputDirTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputDirTextFieldKeyPressed
         // TODO add your handling code here:
         if (evt.getKeyCode() != KeyEvent.VK_ENTER) {
@@ -363,6 +366,7 @@ public class SelectInputPanel extends LayerPanel {
             } catch (Exception e) {
                 GenUtils.error(String.format("Problem reading %s", fileName));
             }
+            setVariables();
         }
         channelComboBoxPopupMenuWillBecomeInvisible(evt);
     }//GEN-LAST:event_seriesComboBoxPopupMenuWillBecomeInvisible
@@ -393,6 +397,7 @@ public class SelectInputPanel extends LayerPanel {
     public boolean setVariables() {
         try {
             setProperties(props, this);
+            props.setProperty(GianiDefaultParams.UNITS, img.getUnits(getSelectedSeries()));
             String fileName = (String) fileNameComboBox.getSelectedItem();
 //            img.setId(String.format("%s%s%s", inputDirectory, File.separator, fileName));
 //            props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, String.format("%s%s%s", inputDirectory.getAbsolutePath(), File.separator, GIANIUI.TITLE));

@@ -47,16 +47,16 @@ public class GianiDefaultParams extends Properties {
     public static final String PREVIEW_CHAN_SELECT_LABEL = "Preview Channel";
     public static final String BLOB_NUC_CHAN_SELECT_LABEL = "Nuclear Channel";
     public static final String BLOB_CHAN_SELECT_LABEL = "Detect Spots in Channel ";
-    public static final String NUC_FILT_RAD_LABEL = String.format("Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
-    public static final String NUC_TOP_HAT_FILT_RAD_LABEL = String.format("Top Hat Filter Radius for Nuclear Channel (%cm)", IJ.micronSymbol);
+    public static final String NUC_FILT_RAD_LABEL = "Filter Radius for Nuclear Channel";
+    public static final String NUC_TOP_HAT_FILT_RAD_LABEL = "Top Hat Filter Radius for Nuclear Channel";
     public static final String NUC_TOP_HAT_DOWNSIZE_FACTOR_LABEL = "Downsizing Factor for Top Hat Filter for Nuclear Channel";
     public static final String BLOB_NUC_NOISE_TOL_LABEL = "Quality of Simple Nuclear Centroid Detections";
-    public static final String BLOB_NUC_RAD_LABEL = String.format("Nuclear Radius for Simple Centroid Detection (%cm)", IJ.micronSymbol);
+    public static final String BLOB_NUC_RAD_LABEL = "Nuclear Radius for Simple Centroid Detection";
     public static final String BLOB_CHAN_NOISE_TOL_LABEL = "Quality of Simple Spot Detections in Channel ";
-    public static final String BLOB_CHAN_RAD_LABEL = String.format("Radius (%cm) for Simple Spot Detection in Channel ", IJ.micronSymbol);
+    public static final String BLOB_CHAN_RAD_LABEL = "Radius for Simple Spot Detection in Channel ";
     public static final String NUC_SEG_THRESH_LABEL = "Threshold Method for Nuclear Segmentation";
     public static final String NUC_SEG_CHAN_SELECT_LABEL = "Channel for Nuclear Segmentation";
-    public static final String CELL_FILT_RAD_LABEL = String.format("Filter Radius for Cell Channel (%cm)", IJ.micronSymbol);
+    public static final String CELL_FILT_RAD_LABEL = "Filter Radius for Cell Channel";
     public static final String CELL_SEG_THRESH_LABEL = "Threshold Method for Cell Segmentation";
     public static final String CELL_SEG_CHAN_SELECT_LABEL = "Channel for Cell Segmentation";
     public static final String CHAN_FOR_MEASURE = "Select Channels to Measure";
@@ -71,12 +71,12 @@ public class GianiDefaultParams extends Properties {
     public static final String NUC_MAXIMA_DETECT_BLOBS = "Simple Nuclear Centroid Detector";
     public static final String NUC_MAXIMA_DETECT_HESSIAN_THRESH = "Quality of Advanced Nuclear Centroid Detections";
     public static final String NUC_MAXIMA_DETECT_HESSIAN = "Advanced Nuclear Centroid Detector";
-    public static final String NUC_MAXIMA_DETECT_HESSIAN_START_SCALE = String.format("Minimum Nuclear Radius for Advanced Centroid Detection (%cm)", IJ.micronSymbol);
-    public static final String NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE = String.format("Maximum Nuclear Radius for Advanced Centroid Detection (%cm)", IJ.micronSymbol);
-    public static final String NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP = String.format("Radius Step Size for Advanced Nuclear Centroid Detection (%cm)", IJ.micronSymbol);
+    public static final String NUC_MAXIMA_DETECT_HESSIAN_START_SCALE = "Minimum Nuclear Radius for Advanced Centroid Detection";
+    public static final String NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE = "Maximum Nuclear Radius for Advanced Centroid Detection";
+    public static final String NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP = "Radius Step Size for Advanced Nuclear Centroid Detection";
     public static final String NUC_MAXIMA_DETECT_HESSIAN_ABS = "Absolute Nuclear Hessian Detection";
     public static final String FOCI_MAXIMA_DETECT_BLOBS = "Simple Spot Detector for Channel ";
-    public static final String FOCI_MAXIMA_DETECT_FILTER_RAD = String.format("Filter Radius (%cm) for EDM Detector for Channel ", IJ.micronSymbol);
+    //public static final String FOCI_MAXIMA_DETECT_FILTER_RAD = String.format("Filter Radius (%cm) for EDM Detector for Channel ", IJ.micronSymbol);
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_MAXIMA = "Advanced Spot Detector for Channel ";
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_THRESH = "Quality of Advanced Spot Detections in Channel ";
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_MIN_SIZE = "Minimum Spot Radius for Advanced Detection in Channel ";
@@ -96,9 +96,11 @@ public class GianiDefaultParams extends Properties {
     public static final String FOCI_CENTROID_LOCALISATION_TITLE = "Blob Detection to Approximate Locations of Spots in Channel ";
     public static final String LOAD_PARAMETERS = "Load Parameters";
     public static final Font TITLE_FONT = new java.awt.Font("Segoe UI Semibold", 1, 14);
+    public static final String UNITS = "Units";
 
     /**
-     * Initialises an instance of GianiDefaultParams with most parameters set to zero
+     * Initialises an instance of GianiDefaultParams with most parameters set to
+     * zero
      */
     public GianiDefaultParams() {
         initialise();
@@ -140,14 +142,18 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP, "0.0");
         this.setProperty(NUC_MAXIMA_DETECT_HESSIAN_ABS, "false");
         this.setProperty(SPECIFIC_SERIES, "-1");
+        this.setProperty(UNITS, String.format("%cm", IJ.micronSymbol));
     }
 
     /**
-     * Set the output directory based on the input directory and store it in the Properties
+     * Set the output directory based on the input directory and store it in the
+     * Properties
      *
-     * @param props contains the input directory and will contain the location of the output directory on exiting
+     * @param props contains the input directory and will contain the location
+     * of the output directory on exiting
      * @param label if not null, the output directory will contain this label
-     * @return true if output directory has been successfully set, false otherwise
+     * @return true if output directory has been successfully set, false
+     * otherwise
      */
     public static boolean setOutputDirectory(Properties props, String label) {
         File input = new File(props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL));
@@ -184,7 +190,8 @@ public class GianiDefaultParams extends Properties {
     }
 
     /**
-     * Search for any deprecated parameter names in the specifed properties and update them
+     * Search for any deprecated parameter names in the specifed properties and
+     * update them
      *
      * @param props the parameters to update
      */
