@@ -47,3 +47,10 @@ https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GIANI_Results_Brows
 # Want To Learn More?
 
 See [the Wiki](https://github.com/djpbarry/Giani/wiki) for installation instructions and full documentation.
+
+
+# Citing GIANI
+
+Please cite the following publication if you use GIANI in your work:
+
+David J. Barry, Claudia Gerri, Donald M. Bell, Rocco D’Antuono, Kathy K. Niakan. GIANI: open-source software for automated analysis of 3D microscopy images. bioRxiv 2020.10.15.340810; doi: https://doi.org/10.1101/2020.10.15.340810 
