@@ -1,4 +1,4 @@
-![GitHub](https://img.shields.io/github/license/djpbarry/giani?color=green&style=plastic) ![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fjournals.biologists.com%2Fjcs%2Farticle%2F135%2F10%2Fjcs259511%2F275435%2FGIANI-open-source-software-for-automated-analysis)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/djpbarry/giani?style=plastic) ![GitHub](https://img.shields.io/github/license/djpbarry/giani?color=green&style=plastic) ![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fjournals.biologists.com%2Fjcs%2Farticle%2F135%2F10%2Fjcs259511%2F275435%2FGIANI-open-source-software-for-automated-analysis)
 
 ![GIANI Icon](assets/GianiIcon.png)
 
