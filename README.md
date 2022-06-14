@@ -55,4 +55,4 @@ See [the Wiki](https://github.com/djpbarry/Giani/wiki) for installation instruct
 
 Please cite the following publication if you use GIANI in your work:
 
-David J. Barry, Claudia Gerri, Donald M. Bell, Rocco D’Antuono, Kathy K. Niakan. GIANI: open-source software for automated analysis of 3D microscopy images. bioRxiv 2020.10.15.340810; doi: https://doi.org/10.1101/2020.10.15.340810 
+David J. Barry, Claudia Gerri, Donald M. Bell, Rocco D'Antuono, Kathy K. Niakan; GIANI – open-source software for automated analysis of 3D microscopy images. J Cell Sci 15 May 2022; 135 (10): jcs259511. doi: https://doi.org/10.1242/jcs.259511
