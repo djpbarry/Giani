@@ -120,7 +120,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         );
         nuclearTopHatFilterPanel = new TopHatFilterPanel(props, img, nucTopHatFilter,
                 nucTopHatFilter.getPropLabels(),
-                getHelpURI("https://github.com/djpbarry/Giani/wiki/Background-Subrtraction-Prior-to-Nuclear-Segmentation"),
+                getHelpURI("https://github.com/djpbarry/Giani/wiki/Background-Subtraction-Prior-to-Nuclear-Segmentation"),
                 GianiDefaultParams.NUC_TOP_HAT_TITLE);
         nuclearTopHatFilterPanel.setVisible(false);
         componentList.add(nuclearTopHatFilterPanel);
