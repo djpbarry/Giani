@@ -30,6 +30,7 @@ import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedStarDist;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
 import ome.units.quantity.Length;
@@ -68,7 +69,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
      * @param helpURI link to an online help page describing how to use this panel
      * @param title description of what this panel does
      */
-    public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process, String[] propLabels, boolean allowChannelSelect, int defaultChannel, URI helpURI, String title) {
+    public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedStarDist process, String[] propLabels, boolean allowChannelSelect, int defaultChannel, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
         this.allowChannelSelect = allowChannelSelect;
         this.defaultChannel = defaultChannel;
@@ -410,7 +411,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         } catch (InterruptedException e) {
             return;
         }
-        showOutput(((MultiThreadedMaximaFinder) process).getMaxima(), process.getOutput().getTitle(), ((MultiThreadedMaximaFinder) process).getEdmThresholdOutline());
+        showOutput(((MultiThreadedStarDist) process).getOutput(), process.getOutput().getTitle());
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void simpleDetectToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpleDetectToggleButtonActionPerformed
@@ -439,7 +440,13 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     }//GEN-LAST:event_helpButtonActionPerformed
 
     public void setupProcess() {
+
         process.setup(img, props, propLabels);
+    }
+
+    private void showOutput(ImagePlus imp, String title) {
+        imp.setTitle(title);
+        imp.show();
     }
 
     private void showOutput(ArrayList<int[]> maxima, String title, Roi[] binaryOutline) {

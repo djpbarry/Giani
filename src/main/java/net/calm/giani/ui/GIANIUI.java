@@ -14,6 +14,7 @@ import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
 import net.calm.iaclasslibrary.Process.ProcessPipeline;
 import net.calm.iaclasslibrary.Process.ROI.MultiThreadedROIConstructor;
+import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedStarDist;
 import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedWatershed;
 import net.calm.iaclasslibrary.UIClasses.*;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
@@ -97,7 +98,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                         GianiDefaultParams.PREVIEW_CHAN_SELECT_LABEL},
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Selecting-the-Input-Files"));
         componentList.add(selectInputPanel);
-        MultiThreadedMaximaFinder maximaFinder = PipelineBuilder.getDefaultMaximaFinder(props);
+        MultiThreadedStarDist maximaFinder = PipelineBuilder.getDefaultMaximaFinder(props);
         nuclearCentreFinderPanel = new net.calm.giani.ui.MaximaFinderPanel(props, img, maximaFinder,
                 maximaFinder.getPropLabels(), true, -1,
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Estimating-the-centres-of-nuclei"),
@@ -550,7 +551,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_ABS, i);
                 props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS], "true");
                 propLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
-                MaximaFinderPanel mFP = new MaximaFinderPanel(props, img, new MultiThreadedMaximaFinder(null),
+                MaximaFinderPanel mFP = new MaximaFinderPanel(props, img, new MultiThreadedStarDist(null),
                         propLabels, false, i, getHelpURI("https://github.com/djpbarry/Giani/wiki/Localising-Spots"),
                         String.format("%s%d", GianiDefaultParams.FOCI_CENTROID_LOCALISATION_TITLE, i));
                 maximaFinderPanels.add(mFP);

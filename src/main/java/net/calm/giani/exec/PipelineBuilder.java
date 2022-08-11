@@ -25,6 +25,7 @@ import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
 import net.calm.iaclasslibrary.Process.ProcessPipeline;
 import net.calm.iaclasslibrary.Process.ROI.MultiThreadedROIConstructor;
+import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedStarDist;
 import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedWatershed;
 
 import java.util.Properties;
@@ -44,7 +45,7 @@ public class PipelineBuilder {
      * @param props the properties containing key-value parameter-setting pairs to be associated with the process
      * @return a new {@link MultiThreadedMaximaFinder}
      */
-    public static MultiThreadedMaximaFinder getDefaultMaximaFinder(Properties props) {
+    public static MultiThreadedStarDist getDefaultMaximaFinder(Properties props) {
         String[] propLabels = new String[MultiThreadedMaximaFinder.N_PROP_LABELS];
         propLabels[MultiThreadedMaximaFinder.CHANNEL_SELECT] = GianiDefaultParams.BLOB_NUC_CHAN_SELECT_LABEL;
         propLabels[MultiThreadedMaximaFinder.BLOB_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS;
@@ -58,7 +59,7 @@ public class PipelineBuilder {
         propLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
         propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_THRESH;
         propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_ABS;
-        MultiThreadedMaximaFinder process = new MultiThreadedMaximaFinder(null);
+        MultiThreadedStarDist process = new MultiThreadedStarDist(null);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
     }
