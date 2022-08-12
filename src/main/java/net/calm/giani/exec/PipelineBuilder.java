@@ -59,6 +59,9 @@ public class PipelineBuilder {
         propLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
         propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_THRESH;
         propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_ABS;
+        propLabels[MultiThreadedMaximaFinder.METHOD] = GianiDefaultParams.NUC_CENTROID_LOCALISATION_METHOD;
+        propLabels[MultiThreadedMaximaFinder.STARDIST_OVERLAP] = GianiDefaultParams.STARDIST_OVERLAP_THRESH;
+        propLabels[MultiThreadedMaximaFinder.STARDIST_PROB] = GianiDefaultParams.STARDIST_PROB_THRESH;
         MultiThreadedStarDist process = new MultiThreadedStarDist(null);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;

@@ -19,6 +19,7 @@ package net.calm.giani.gianiparams;
 import ij.IJ;
 
 import java.util.HashMap;
+import java.util.Properties;
 
 /**
  * Utility class containing old names for parameters
@@ -80,5 +81,13 @@ public class DeprecatedProps {
         map.put(DeprecatedProps.NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP);
         //map.put(DeprecatedProps.FOCI_MAXIMA_DETECT_FILTER_RAD, GianiDefaultParams.FOCI_MAXIMA_DETECT_FILTER_RAD);
         return map;
+    }
+
+    protected static void mapControlChanges(Properties props) {
+        if (props.getProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS) != null && Boolean.parseBoolean(props.getProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS))) {
+            props.setProperty(GianiDefaultParams.NUC_CENTROID_LOCALISATION_METHOD, GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS);
+        } else if (props.getProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN) != null &&Boolean.parseBoolean(props.getProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN))) {
+            props.setProperty(GianiDefaultParams.NUC_CENTROID_LOCALISATION_METHOD, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN);
+        }
     }
 }
