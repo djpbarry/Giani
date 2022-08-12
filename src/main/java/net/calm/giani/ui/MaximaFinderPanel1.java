@@ -99,8 +99,6 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         previewButton = new javax.swing.JButton();
         channelSelectLabel = new javax.swing.JLabel();
         channelSelectComboBox = new javax.swing.JComboBox<>();
-        simpleDetectToggleButton = new javax.swing.JToggleButton();
-        advancedDetectToggleButton = new javax.swing.JToggleButton();
         helpButton = new javax.swing.JButton();
         titleLabel = new javax.swing.JLabel();
         methodComboBox = new javax.swing.JComboBox<>();
@@ -168,38 +166,6 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(channelSelectComboBox, gridBagConstraints);
 
-        simpleDetectToggleButton.setText(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT]);
-        simpleDetectToggleButton.setSelected(Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
-        simpleDetectToggleButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                simpleDetectToggleButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(simpleDetectToggleButton, gridBagConstraints);
-
-        advancedDetectToggleButton.setText(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT]);
-        advancedDetectToggleButton.setSelected(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
-        advancedDetectToggleButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                advancedDetectToggleButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(advancedDetectToggleButton, gridBagConstraints);
-
         helpButton.setText("Help");
         helpButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -227,7 +193,7 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(titleLabel, gridBagConstraints);
 
-        methodComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, GianiDefaultParams.STARDIST}));
+        methodComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST}));
         methodComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 methodComboBoxActionPerformed(evt);
@@ -492,8 +458,9 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
 
     protected void setToolTips() {
         channelSelectComboBox.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.CHANNEL_SELECT]));
-        simpleDetectToggleButton.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT]));
-        advancedDetectToggleButton.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT]));
+//        simpleDetectToggleButton.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT]));
+//        advancedDetectToggleButton.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT]));
+        methodComboBox.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.METHOD]));
         blobRadTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_SIZE]));
         noiseTolTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_THRESH]));
         hessianMinSizeTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE]));
@@ -502,6 +469,26 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         hessianThreshTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH]));
         previewButton.setToolTipText(info.getProperty(GianiDefaultParams.PREVIEW));
         helpButton.setToolTipText(info.getProperty(GianiDefaultParams.HELP));
+    }
+
+    public boolean setVariables() {
+        setProperties(props, this);
+        String method = (String) methodComboBox.getSelectedItem();
+        props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, "false");
+        props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, "false");
+        props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST, "false");
+        switch (method) {
+            case GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS:
+                props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, "true");
+                break;
+            case GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN:
+                props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, "true");
+                break;
+            default:
+                props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST, "true");
+        }
+        setupProcess();
+        return true;
     }
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
@@ -515,27 +502,6 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         }
         showOutput(((MultiThreadedStarDist) process).getOutput(), process.getOutput().getTitle());
     }//GEN-LAST:event_previewButtonActionPerformed
-
-    private void simpleDetectToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpleDetectToggleButtonActionPerformed
-        advancedDetectToggleButton.setSelected(!simpleDetectToggleButton.isSelected());
-        advancedDetectToggleButtonActionPerformed(evt);
-    }//GEN-LAST:event_simpleDetectToggleButtonActionPerformed
-
-    private void advancedDetectToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_advancedDetectToggleButtonActionPerformed
-        simpleDetectToggleButton.setSelected(!advancedDetectToggleButton.isSelected());
-        blobRadLabel.setEnabled(simpleDetectToggleButton.isSelected());
-        blobRadTextField.setEnabled(simpleDetectToggleButton.isSelected());
-        noiseTolLabel.setEnabled(simpleDetectToggleButton.isSelected());
-        noiseTolTextField.setEnabled(simpleDetectToggleButton.isSelected());
-        hessianMinSizeLabel.setEnabled(advancedDetectToggleButton.isSelected());
-        hessianMinSizeTextField.setEnabled(advancedDetectToggleButton.isSelected());
-        hessianMaxSizeLabel.setEnabled(advancedDetectToggleButton.isSelected());
-        hessianMaxSizeTextField.setEnabled(advancedDetectToggleButton.isSelected());
-        hessianThreshLabel.setEnabled(advancedDetectToggleButton.isSelected());
-        hessianThreshTextField.setEnabled(advancedDetectToggleButton.isSelected());
-        hessianStepSizeLabel.setEnabled(advancedDetectToggleButton.isSelected());
-        hessianStepSizeTextField.setEnabled(advancedDetectToggleButton.isSelected());
-    }//GEN-LAST:event_advancedDetectToggleButtonActionPerformed
 
     private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed
         openHelpPage(GianiDefaultParams.HELP_ERROR_MESSAGE);
@@ -604,7 +570,7 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
                 o.add(roi);
             }
         }
-        if (advancedDetectToggleButton.isSelected()) {
+        if (props.getProperty(GianiDefaultParams.NUC_CENTROID_LOCALISATION_METHOD).matches(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN)) {
             for (int i = 0; i < imp.getNSlices(); i++) {
                 if (binaryOutline[i] == null) {
                     continue;
@@ -643,7 +609,6 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToggleButton advancedDetectToggleButton;
     private javax.swing.JPanel advancedDetectionPanel;
     private javax.swing.JLabel blobRadLabel;
     private javax.swing.JTextField blobRadTextField;
@@ -665,7 +630,6 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
     private javax.swing.JLabel noiseTolLabel;
     private javax.swing.JTextField noiseTolTextField;
     protected javax.swing.JButton previewButton;
-    private javax.swing.JToggleButton simpleDetectToggleButton;
     private javax.swing.JPanel simpleDetectionPanel;
     private javax.swing.JTextField starDistOverlapTextField;
     private javax.swing.JTextField starDistProbTextField;

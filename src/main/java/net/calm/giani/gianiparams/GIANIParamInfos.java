@@ -29,6 +29,7 @@ public class GIANIParamInfos extends Properties {
         this.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, "Simple detection works well for regularly-shaped nuclei.");
         this.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, "Advanced detection is better for more irregularly-" +
                 "shaped nuclei, but may take longer.");
+        this.setProperty(GianiDefaultParams.NUC_CENTROID_LOCALISATION_METHOD , "Choose a method for detection of nuclei centroids.");
         this.setProperty(GianiDefaultParams.BLOB_NUC_RAD_LABEL, "Approximate radius of nuclei in microns.");
         this.setProperty(GianiDefaultParams.BLOB_NUC_NOISE_TOL_LABEL, "Sensitivity of blob detector - increase this value if " +
                 "non-nuclear artefacts are detected.");

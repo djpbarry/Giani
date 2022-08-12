@@ -99,7 +99,7 @@ public class GianiDefaultParams extends Properties {
     public static final String UNITS = "Units";
     public static final String ENABLE_TOP_HAT_FILTER = "Enable Top Hat Filtering";
     public static final String NUC_CENTROID_LOCALISATION_METHOD = "Choose a Method to Detect Nuclei";
-    public static final String STARDIST = "StarDist";
+    public static final String NUC_MAXIMA_DETECT_STARDIST = "StarDist";
     public static final String STARDIST_PROB_THRESH = "StarDist Probability Threshold";
     public static final String STARDIST_OVERLAP_THRESH = "StarDist Overlap Threshold";
 
@@ -149,7 +149,7 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(SPECIFIC_SERIES, "-1");
         this.setProperty(UNITS, String.format("%cm", IJ.micronSymbol));
         this.setProperty(ENABLE_TOP_HAT_FILTER, "true");
-        this.setProperty(NUC_CENTROID_LOCALISATION_METHOD, GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS);
+        this.setProperty(NUC_MAXIMA_DETECT_STARDIST, "false");
         this.setProperty(STARDIST_PROB_THRESH, "0.75");
         this.setProperty(STARDIST_OVERLAP_THRESH, "0.6");
     }
