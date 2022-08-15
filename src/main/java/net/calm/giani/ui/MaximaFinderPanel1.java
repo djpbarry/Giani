@@ -30,9 +30,13 @@ import ome.units.quantity.Length;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Properties;
+import net.calm.iaclasslibrary.UtilClasses.GenUtils;
+import net.calm.iaclasslibrary.UtilClasses.Utilities;
 
 /**
  * Blob detection (centroid estimation) panel in the {@link GIANIUI}
@@ -59,21 +63,21 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
      * Constructs a MaximaFinderPanel and associates the specified Properties,
      * BioFormatsImg and process with it.
      *
-     * @param props              contains the parameters governing how the process associated
-     *                           with this panel will run
-     * @param img                the image that the process associated with this panel will run
-     *                           on
-     * @param process            the process that this panel is seeking user-specified
-     *                           parameters for
-     * @param propLabels         the labels associated with the parameters that this
-     *                           panel will display
+     * @param props contains the parameters governing how the process associated
+     * with this panel will run
+     * @param img the image that the process associated with this panel will run
+     * on
+     * @param process the process that this panel is seeking user-specified
+     * parameters for
+     * @param propLabels the labels associated with the parameters that this
+     * panel will display
      * @param allowChannelSelect set to true to include a dropdown menu allowing
-     *                           channel selection
-     * @param defaultChannel     if allowChannelSelect is false, specify the
-     *                           specific channel the process associated with this panel will run on
-     * @param helpURI            link to an online help page describing how to use this
-     *                           panel
-     * @param title              description of what this panel does
+     * channel selection
+     * @param defaultChannel if allowChannelSelect is false, specify the
+     * specific channel the process associated with this panel will run on
+     * @param helpURI link to an online help page describing how to use this
+     * panel
+     * @param title description of what this panel does
      */
     public MaximaFinderPanel1(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process, String[] propLabels, boolean allowChannelSelect, int defaultChannel, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
@@ -125,6 +129,12 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         jLabel2 = new javax.swing.JLabel();
         starDistProbTextField = new javax.swing.JTextField();
         starDistOverlapTextField = new javax.swing.JTextField();
+        starDistDirLabel = new javax.swing.JLabel();
+        starDistModelLabel = new javax.swing.JLabel();
+        starDistDirTextField = new javax.swing.JTextField();
+        starDistModelTextField = new javax.swing.JTextField();
+        starDistDirButton = new javax.swing.JButton();
+        starDistModelButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -192,7 +202,7 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(titleLabel, gridBagConstraints);
 
-        methodComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST}));
+        methodComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST}));
         methodComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 methodComboBoxActionPerformed(evt);
@@ -412,6 +422,8 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         jLabel1.setText(propLabels[MultiThreadedMaximaFinder.STARDIST_OVERLAP]);
         jLabel1.setLabelFor(starDistProbTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -422,7 +434,7 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         jLabel2.setLabelFor(starDistOverlapTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -431,6 +443,8 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
 
         starDistProbTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_PROB]));
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -440,12 +454,94 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         starDistOverlapTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_OVERLAP]));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         stardistPanel.add(starDistOverlapTextField, gridBagConstraints);
+
+        starDistDirLabel.setText(propLabels[MultiThreadedMaximaFinder.STARDIST_DIR]);
+        starDistDirLabel.setLabelFor(starDistDirTextField);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        stardistPanel.add(starDistDirLabel, gridBagConstraints);
+
+        starDistModelLabel.setText(propLabels[MultiThreadedMaximaFinder.STARDIST_MODEL]);
+        starDistModelLabel.setLabelFor(starDistModelTextField);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        stardistPanel.add(starDistModelLabel, gridBagConstraints);
+
+        starDistDirTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_DIR]));
+        starDistDirTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                starDistDirTextFieldKeyPressed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        stardistPanel.add(starDistDirTextField, gridBagConstraints);
+
+        starDistModelTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_MODEL]));
+        starDistModelTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                starDistModelTextFieldKeyPressed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        stardistPanel.add(starDistModelTextField, gridBagConstraints);
+
+        starDistDirButton.setText("Specify Location");
+        starDistDirButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                starDistDirButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        stardistPanel.add(starDistDirButton, gridBagConstraints);
+
+        starDistModelButton.setText("Specify Location");
+        starDistModelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                starDistModelButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        stardistPanel.add(starDistModelButton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -527,6 +623,42 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
                 stardistPanel.setVisible(true);
         }
     }//GEN-LAST:event_methodComboBoxActionPerformed
+
+    private void starDistDirTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_starDistDirTextFieldKeyPressed
+        if (evt.getKeyCode() != KeyEvent.VK_ENTER) {
+            return;
+        }
+        directoryUpdated(starDistDirTextField);
+    }//GEN-LAST:event_starDistDirTextFieldKeyPressed
+
+    private void starDistModelTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_starDistModelTextFieldKeyPressed
+        if (evt.getKeyCode() != KeyEvent.VK_ENTER) {
+            return;
+        }
+        directoryUpdated(starDistModelTextField);
+    }//GEN-LAST:event_starDistModelTextFieldKeyPressed
+
+    private void starDistDirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_starDistDirButtonActionPerformed
+        try {
+            starDistDirTextField.setText(Utilities.getFolder(
+                    new File(props.getProperty(GianiDefaultParams.STARDIST_ENV_DIRECTORY)),
+                    "Select input directory...", true).getAbsolutePath());
+        } catch (Exception e) {
+            GenUtils.logError(e, "There was a problem with directory selection.");
+        }
+        directoryUpdated(starDistDirTextField);
+    }//GEN-LAST:event_starDistDirButtonActionPerformed
+
+    private void starDistModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_starDistModelButtonActionPerformed
+        try {
+            starDistModelTextField.setText(Utilities.getFolder(
+                    new File(props.getProperty(GianiDefaultParams.STARDIST_MODEL_DIRECTORY)),
+                    "Select input directory...", true).getAbsolutePath());
+        } catch (Exception e) {
+            GenUtils.logError(e, "There was a problem with directory selection.");
+        }
+        directoryUpdated(starDistDirTextField);
+    }//GEN-LAST:event_starDistModelButtonActionPerformed
 
     public void setupProcess() {
 
@@ -612,6 +744,16 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         unitsLabel4.setText(props.getProperty(GianiDefaultParams.UNITS));
     }
 
+    private void directoryUpdated(JTextField textField) {
+        File inputDirectory = new File(textField.getText());
+        if (inputDirectory.exists() && inputDirectory.isDirectory()) {
+            textField.setForeground(Color.black);
+        } else {
+            textField.setForeground(Color.red);
+
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel advancedDetectionPanel;
     private javax.swing.JLabel blobRadLabel;
@@ -635,6 +777,12 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
     private javax.swing.JTextField noiseTolTextField;
     protected javax.swing.JButton previewButton;
     private javax.swing.JPanel simpleDetectionPanel;
+    private javax.swing.JButton starDistDirButton;
+    private javax.swing.JLabel starDistDirLabel;
+    private javax.swing.JTextField starDistDirTextField;
+    private javax.swing.JButton starDistModelButton;
+    private javax.swing.JLabel starDistModelLabel;
+    private javax.swing.JTextField starDistModelTextField;
     private javax.swing.JTextField starDistOverlapTextField;
     private javax.swing.JTextField starDistProbTextField;
     private javax.swing.JPanel stardistPanel;

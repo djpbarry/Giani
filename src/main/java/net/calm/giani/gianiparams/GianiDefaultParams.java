@@ -102,6 +102,8 @@ public class GianiDefaultParams extends Properties {
     public static final String NUC_MAXIMA_DETECT_STARDIST = "StarDist";
     public static final String STARDIST_PROB_THRESH = "StarDist Probability Threshold";
     public static final String STARDIST_OVERLAP_THRESH = "StarDist Overlap Threshold";
+    public static final String STARDIST_ENV_DIRECTORY = "Location of StarDist Virtual Environment";
+    public static final String STARDIST_MODEL_DIRECTORY = "Location of StarDist Model";
 
     /**
      * Initialises an instance of GianiDefaultParams with most parameters set to
@@ -152,6 +154,8 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(NUC_MAXIMA_DETECT_STARDIST, "false");
         this.setProperty(STARDIST_PROB_THRESH, "0.75");
         this.setProperty(STARDIST_OVERLAP_THRESH, "0.6");
+        this.setProperty(STARDIST_ENV_DIRECTORY, System.getProperty("user.home"));
+        this.setProperty(STARDIST_MODEL_DIRECTORY, System.getProperty("user.home"));
     }
 
     /**

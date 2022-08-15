@@ -62,6 +62,8 @@ public class PipelineBuilder {
         propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST;
         propLabels[MultiThreadedMaximaFinder.STARDIST_OVERLAP] = GianiDefaultParams.STARDIST_OVERLAP_THRESH;
         propLabels[MultiThreadedMaximaFinder.STARDIST_PROB] = GianiDefaultParams.STARDIST_PROB_THRESH;
+        propLabels[MultiThreadedMaximaFinder.STARDIST_DIR] = GianiDefaultParams.STARDIST_ENV_DIRECTORY;
+        propLabels[MultiThreadedMaximaFinder.STARDIST_MODEL] = GianiDefaultParams.STARDIST_MODEL_DIRECTORY;
         MultiThreadedMaximaFinder process = new MultiThreadedMaximaFinder(null);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
