@@ -25,7 +25,6 @@ import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
 import net.calm.iaclasslibrary.Process.ProcessPipeline;
 import net.calm.iaclasslibrary.Process.ROI.MultiThreadedROIConstructor;
-import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedStarDist;
 import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedWatershed;
 
 import java.util.Properties;
@@ -45,7 +44,7 @@ public class PipelineBuilder {
      * @param props the properties containing key-value parameter-setting pairs to be associated with the process
      * @return a new {@link MultiThreadedMaximaFinder}
      */
-    public static MultiThreadedStarDist getDefaultMaximaFinder(Properties props) {
+    public static MultiThreadedMaximaFinder getDefaultMaximaFinder(Properties props) {
         String[] propLabels = new String[MultiThreadedMaximaFinder.N_PROP_LABELS];
         propLabels[MultiThreadedMaximaFinder.CHANNEL_SELECT] = GianiDefaultParams.BLOB_NUC_CHAN_SELECT_LABEL;
         propLabels[MultiThreadedMaximaFinder.BLOB_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS;
@@ -63,7 +62,7 @@ public class PipelineBuilder {
         propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST;
         propLabels[MultiThreadedMaximaFinder.STARDIST_OVERLAP] = GianiDefaultParams.STARDIST_OVERLAP_THRESH;
         propLabels[MultiThreadedMaximaFinder.STARDIST_PROB] = GianiDefaultParams.STARDIST_PROB_THRESH;
-        MultiThreadedStarDist process = new MultiThreadedStarDist(null);
+        MultiThreadedMaximaFinder process = new MultiThreadedMaximaFinder(null);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
     }
@@ -71,7 +70,7 @@ public class PipelineBuilder {
     /**
      * Returns the default top hat filter process used by GIANI
      *
-     * @param props the properties containing key-value parameter-setting pairs to be associated with the process
+     * @param props  the properties containing key-value parameter-setting pairs to be associated with the process
      * @param inputs the processes whose outputs will be used as inputs for this process
      * @return a new {@link MultiThreadedTopHatFilter}
      */
@@ -106,9 +105,9 @@ public class PipelineBuilder {
     /**
      * Returns the default nuclear segmentation process used by GIANI
      *
-     * @param props the properties containing key-value parameter-setting pairs to be associated with the process
+     * @param props  the properties containing key-value parameter-setting pairs to be associated with the process
      * @param inputs the processes whose outputs will be used as inputs for this process
-     * @param cells instance of an {@link Objects3DPopulation} that will store the resulting segmentation
+     * @param cells  instance of an {@link Objects3DPopulation} that will store the resulting segmentation
      * @return a new {@link MultiThreadedWatershed}
      */
     public static MultiThreadedWatershed getDefaultNucSegmenter(Properties props, MultiThreadedProcess[] inputs, Objects3DPopulation cells) {
@@ -148,9 +147,9 @@ public class PipelineBuilder {
     /**
      * Returns the default cell segmentation process used by GIANI
      *
-     * @param props the properties containing key-value parameter-setting pairs to be associated with the process
+     * @param props  the properties containing key-value parameter-setting pairs to be associated with the process
      * @param inputs the processes whose outputs will be used as inputs for this process
-     * @param cells instance of an {@link Objects3DPopulation} that will store the resulting segmentation
+     * @param cells  instance of an {@link Objects3DPopulation} that will store the resulting segmentation
      * @return a new {@link MultiThreadedWatershed}
      */
     public static MultiThreadedWatershed getDefaultCellSegmenter(Properties props, MultiThreadedProcess[] inputs, Objects3DPopulation cells) {
@@ -176,9 +175,9 @@ public class PipelineBuilder {
     /**
      * Returns the default object measurement process used by GIANI
      *
-     * @param props the properties containing key-value parameter-setting pairs to be associated with the process
+     * @param props  the properties containing key-value parameter-setting pairs to be associated with the process
      * @param inputs the processes whose outputs will be used as inputs for this process
-     * @param cells instance of an {@link Objects3DPopulation} that will store the resulting segmentation
+     * @param cells  instance of an {@link Objects3DPopulation} that will store the resulting segmentation
      * @return a new {@link MultiThreadedWatershed}
      */
     public static MultiThreadedROIConstructor getDefaultMeasure(Properties props, MultiThreadedProcess[] inputs, Objects3DPopulation cells) {

@@ -98,7 +98,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                         GianiDefaultParams.PREVIEW_CHAN_SELECT_LABEL},
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Selecting-the-Input-Files"));
         componentList.add(selectInputPanel);
-        MultiThreadedStarDist maximaFinder = PipelineBuilder.getDefaultMaximaFinder(props);
+        MultiThreadedMaximaFinder maximaFinder = PipelineBuilder.getDefaultMaximaFinder(props);
         nuclearCentreFinderPanel = new net.calm.giani.ui.MaximaFinderPanel1(props, img, maximaFinder,
                 maximaFinder.getPropLabels(), true, -1,
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Estimating-the-centres-of-nuclei"),

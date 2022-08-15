@@ -19,21 +19,20 @@ package net.calm.giani.ui;
 import ij.ImagePlus;
 import ij.gui.OvalRoi;
 import ij.gui.Overlay;
-import java.util.ArrayList;
-import java.util.Properties;
-import javax.swing.DefaultComboBoxModel;
 import ij.gui.Roi;
-import java.awt.Color;
-import java.net.URI;
-
 import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
-import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedStarDist;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
 import ome.units.quantity.Length;
+
+import javax.swing.*;
+import java.awt.*;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * Blob detection (centroid estimation) panel in the {@link GIANIUI}
@@ -60,23 +59,23 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
      * Constructs a MaximaFinderPanel and associates the specified Properties,
      * BioFormatsImg and process with it.
      *
-     * @param props contains the parameters governing how the process associated
-     * with this panel will run
-     * @param img the image that the process associated with this panel will run
-     * on
-     * @param process the process that this panel is seeking user-specified
-     * parameters for
-     * @param propLabels the labels associated with the parameters that this
-     * panel will display
+     * @param props              contains the parameters governing how the process associated
+     *                           with this panel will run
+     * @param img                the image that the process associated with this panel will run
+     *                           on
+     * @param process            the process that this panel is seeking user-specified
+     *                           parameters for
+     * @param propLabels         the labels associated with the parameters that this
+     *                           panel will display
      * @param allowChannelSelect set to true to include a dropdown menu allowing
-     * channel selection
-     * @param defaultChannel if allowChannelSelect is false, specify the
-     * specific channel the process associated with this panel will run on
-     * @param helpURI link to an online help page describing how to use this
-     * panel
-     * @param title description of what this panel does
+     *                           channel selection
+     * @param defaultChannel     if allowChannelSelect is false, specify the
+     *                           specific channel the process associated with this panel will run on
+     * @param helpURI            link to an online help page describing how to use this
+     *                           panel
+     * @param title              description of what this panel does
      */
-    public MaximaFinderPanel1(Properties props, BioFormatsImg img, MultiThreadedStarDist process, String[] propLabels, boolean allowChannelSelect, int defaultChannel, URI helpURI, String title) {
+    public MaximaFinderPanel1(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process, String[] propLabels, boolean allowChannelSelect, int defaultChannel, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
         this.allowChannelSelect = allowChannelSelect;
         this.defaultChannel = defaultChannel;
@@ -193,7 +192,7 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(titleLabel, gridBagConstraints);
 
-        methodComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST}));
+        methodComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST}));
         methodComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 methodComboBoxActionPerformed(evt);
@@ -500,7 +499,12 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         } catch (InterruptedException e) {
             return;
         }
-        showOutput(((MultiThreadedStarDist) process).getOutput(), process.getOutput().getTitle());
+        if (Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT]))) {
+            showOutput(process.getOutput(), process.getOutput().getTitle());
+        } else {
+            showOutput(((MultiThreadedMaximaFinder) process).getMaxima(), process.getOutput().getTitle(),
+                    ((MultiThreadedMaximaFinder) process).getEdmThresholdOutline());
+        }
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed
@@ -570,7 +574,7 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
                 o.add(roi);
             }
         }
-        if (props.getProperty(GianiDefaultParams.NUC_CENTROID_LOCALISATION_METHOD).matches(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN)) {
+        if (Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT]))) {
             for (int i = 0; i < imp.getNSlices(); i++) {
                 if (binaryOutline[i] == null) {
                     continue;
