@@ -753,7 +753,7 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
 
         }
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel advancedDetectionPanel;
     private javax.swing.JLabel blobRadLabel;

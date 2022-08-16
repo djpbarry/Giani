@@ -30,7 +30,8 @@ import java.util.LinkedList;
 import java.util.Properties;
 
 /**
- * Main wizard-based interface for interacting with and specifying parameters for GIANI runs
+ * Main wizard-based interface for interacting with and specifying parameters
+ * for GIANI runs
  *
  * @author Dave Barry
  * @since 1.0.0
@@ -54,7 +55,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }
 
 //    private final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
     /**
      * Creates a new instance of the GIANI GUI
      */
@@ -352,13 +352,17 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         addProcess();
         layerIndex++;
-        updateLayer();
+        while (!updateLayer()) {
+            layerIndex++;
+        }
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
         layerIndex--;
         removeProcess();
-        updateLayer();
+        while (!updateLayer()) {
+            layerIndex--;
+        }
     }//GEN-LAST:event_previousButtonActionPerformed
 
     private void loadParametersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadParametersButtonActionPerformed
@@ -417,7 +421,10 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         }
     }//GEN-LAST:event_selectInputPanelComponentShown
 
-    void updateLayer() {
+    boolean updateLayer() {
+        if (checkIfStarDist()) {
+            return false;
+        }
         for (int i = 0; i < componentList.size(); i++) {
             if (i == layerIndex) {
                 componentList.get(i).setVisible(true);
@@ -429,6 +436,14 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
             }
         }
         checkLayerIndex();
+        return true;
+    }
+
+    private boolean checkIfStarDist() {
+        return Boolean.parseBoolean(props.getProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST))
+                && (componentList.get(layerIndex).equals(nuclearFilteringPanel)
+                || componentList.get(layerIndex).equals(nuclearTopHatFilterPanel)
+                || componentList.get(layerIndex).equals(nuclearSegmentationPanel));
     }
 
     void checkLayerIndex() {
