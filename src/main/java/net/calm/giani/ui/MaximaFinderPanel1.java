@@ -125,8 +125,8 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         unitsLabel3 = new javax.swing.JLabel();
         unitsLabel4 = new javax.swing.JLabel();
         stardistPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        starDistProbLabel = new javax.swing.JLabel();
+        starDistOverlapLabel = new javax.swing.JLabel();
         starDistProbTextField = new javax.swing.JTextField();
         starDistOverlapTextField = new javax.swing.JTextField();
         starDistDirLabel = new javax.swing.JLabel();
@@ -135,6 +135,10 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         starDistModelTextField = new javax.swing.JTextField();
         starDistDirButton = new javax.swing.JButton();
         starDistModelButton = new javax.swing.JButton();
+        starDistTileXYLabel = new javax.swing.JLabel();
+        starDistTileZLabel = new javax.swing.JLabel();
+        starDistTileXYTextField = new javax.swing.JTextField();
+        starDistTileZTextField = new javax.swing.JTextField();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -287,7 +291,7 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 13;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         add(simpleDetectionPanel, gridBagConstraints);
@@ -413,14 +417,14 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 12;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         add(advancedDetectionPanel, gridBagConstraints);
 
         stardistPanel.setMinimumSize(new java.awt.Dimension(136, 180));
         stardistPanel.setLayout(new java.awt.GridBagLayout());
 
-        jLabel1.setText(propLabels[MultiThreadedMaximaFinder.STARDIST_OVERLAP]);
-        jLabel1.setLabelFor(starDistProbTextField);
+        starDistProbLabel.setText(propLabels[MultiThreadedMaximaFinder.STARDIST_OVERLAP]);
+        starDistProbLabel.setLabelFor(starDistProbTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -428,10 +432,10 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        stardistPanel.add(jLabel1, gridBagConstraints);
+        stardistPanel.add(starDistProbLabel, gridBagConstraints);
 
-        jLabel2.setText(propLabels[MultiThreadedMaximaFinder.STARDIST_PROB]);
-        jLabel2.setLabelFor(starDistOverlapTextField);
+        starDistOverlapLabel.setText(propLabels[MultiThreadedMaximaFinder.STARDIST_PROB]);
+        starDistOverlapLabel.setLabelFor(starDistOverlapTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -439,7 +443,7 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        stardistPanel.add(jLabel2, gridBagConstraints);
+        stardistPanel.add(starDistOverlapLabel, gridBagConstraints);
 
         starDistProbTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_PROB]));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -543,11 +547,53 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         stardistPanel.add(starDistModelButton, gridBagConstraints);
 
+        starDistTileXYLabel.setText(propLabels[MultiThreadedMaximaFinder.STARDIST_TILE_XY]);
+        starDistTileXYLabel.setLabelFor(starDistTileXYTextField);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        stardistPanel.add(starDistTileXYLabel, gridBagConstraints);
+
+        starDistTileZLabel.setText(propLabels[MultiThreadedMaximaFinder.STARDIST_TILE_Z]);
+        starDistTileZLabel.setLabelFor(starDistTileZTextField);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        stardistPanel.add(starDistTileZLabel, gridBagConstraints);
+
+        starDistTileXYTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_TILE_XY]));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        stardistPanel.add(starDistTileXYTextField, gridBagConstraints);
+
+        starDistTileZTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_TILE_Z]));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        stardistPanel.add(starDistTileZTextField, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 11;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         add(stardistPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -769,8 +815,6 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
     private javax.swing.JTextField hessianStepSizeTextField;
     private javax.swing.JLabel hessianThreshLabel;
     private javax.swing.JTextField hessianThreshTextField;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JComboBox<String> methodComboBox;
     private javax.swing.JLabel methodLabel;
     private javax.swing.JLabel noiseTolLabel;
@@ -783,8 +827,14 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
     private javax.swing.JButton starDistModelButton;
     private javax.swing.JLabel starDistModelLabel;
     private javax.swing.JTextField starDistModelTextField;
+    private javax.swing.JLabel starDistOverlapLabel;
     private javax.swing.JTextField starDistOverlapTextField;
+    private javax.swing.JLabel starDistProbLabel;
     private javax.swing.JTextField starDistProbTextField;
+    private javax.swing.JLabel starDistTileXYLabel;
+    private javax.swing.JTextField starDistTileXYTextField;
+    private javax.swing.JLabel starDistTileZLabel;
+    private javax.swing.JTextField starDistTileZTextField;
     private javax.swing.JPanel stardistPanel;
     private javax.swing.JLabel titleLabel;
     private javax.swing.JLabel unitsLabel1;
