@@ -19,13 +19,7 @@ package net.calm.giani.ui;
 import ij.ImagePlus;
 import ij.gui.OvalRoi;
 import ij.gui.Overlay;
-import java.util.ArrayList;
-import java.util.Properties;
-import javax.swing.DefaultComboBoxModel;
 import ij.gui.Roi;
-import java.awt.Color;
-import java.net.URI;
-
 import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
@@ -34,6 +28,12 @@ import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedStarDist;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
 import ome.units.quantity.Length;
+
+import javax.swing.*;
+import java.awt.*;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * Blob detection (centroid estimation) panel in the {@link GIANIUI}
@@ -59,15 +59,15 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     /**
      * Constructs a MaximaFinderPanel and associates the specified Properties, BioFormatsImg and process with it.
      *
-     * @param props contains the parameters governing how the process associated with this panel will run
-     * @param img the image that the process associated with this panel will run on
-     * @param process the process that this panel is seeking user-specified parameters for
-     * @param propLabels the labels associated with the parameters that this panel will display
+     * @param props              contains the parameters governing how the process associated with this panel will run
+     * @param img                the image that the process associated with this panel will run on
+     * @param process            the process that this panel is seeking user-specified parameters for
+     * @param propLabels         the labels associated with the parameters that this panel will display
      * @param allowChannelSelect set to true to include a dropdown menu allowing channel selection
-     * @param defaultChannel if allowChannelSelect is false, specify the specific channel the process associated with
-     *                       this panel will run on
-     * @param helpURI link to an online help page describing how to use this panel
-     * @param title description of what this panel does
+     * @param defaultChannel     if allowChannelSelect is false, specify the specific channel the process associated with
+     *                           this panel will run on
+     * @param helpURI            link to an online help page describing how to use this panel
+     * @param title              description of what this panel does
      */
     public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedStarDist process, String[] propLabels, boolean allowChannelSelect, int defaultChannel, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
@@ -411,7 +411,10 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         } catch (InterruptedException e) {
             return;
         }
-        showOutput(((MultiThreadedStarDist) process).getOutput(), process.getOutput().getTitle());
+        showOutput(process.getOutput(),
+                ((MultiThreadedMaximaFinder) process).getMaxima(),
+                process.getOutput().getTitle(),
+                ((MultiThreadedMaximaFinder) process).getEdmThresholdOutline());
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void simpleDetectToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpleDetectToggleButtonActionPerformed
@@ -444,12 +447,13 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         process.setup(img, props, propLabels);
     }
 
-    private void showOutput(ImagePlus imp, String title) {
-        imp.setTitle(title);
-        imp.show();
-    }
-
-    private void showOutput(ArrayList<int[]> maxima, String title, Roi[] binaryOutline) {
+    private void showOutput(ImagePlus output, ArrayList<int[]> maxima, String title, Roi[] binaryOutline) {
+        if(Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT]))){
+            ImagePlus imp = output.duplicate();
+            imp.setTitle(title);
+            imp.show();
+            return;
+        }
         ImagePlus imp = img.getLoadedImage();
         Overlay o = new Overlay();
         Length zLength = img.getZSpatialRes(Integer.parseInt(props.getProperty(GianiDefaultParams.SERIES_SELECT_LABEL)));
