@@ -66,6 +66,8 @@ public class PipelineBuilder {
         propLabels[MultiThreadedMaximaFinder.STARDIST_MODEL] = GianiDefaultParams.STARDIST_MODEL_DIRECTORY;
         propLabels[MultiThreadedMaximaFinder.STARDIST_TILE_XY] = GianiDefaultParams.STARDIST_TILE_XY;
         propLabels[MultiThreadedMaximaFinder.STARDIST_TILE_Z] = GianiDefaultParams.STARDIST_TILE_Z;
+        propLabels[MultiThreadedMaximaFinder.ILASTIK_FILE] = GianiDefaultParams.ILASTIK_PROJECT_FILE;
+        propLabels[MultiThreadedMaximaFinder.ILASTIK_CHANNEL] = GianiDefaultParams.ILASTIK_INPUT_CHANNEL;
         MultiThreadedMaximaFinder process = new MultiThreadedMaximaFinder(null);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;

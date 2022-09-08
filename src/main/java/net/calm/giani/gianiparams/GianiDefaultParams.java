@@ -107,6 +107,9 @@ public class GianiDefaultParams extends Properties {
     public static final String STARDIST_TILE_XY = "Number of Tile Divisions in X and Y";
     public static final String STARDIST_TILE_Z = "Number of Tile Divisions in Z";
     public static final String NUC_DETECT_MODE = "Detection Method";
+    public static final String NUC_MAXIMA_DETECT_ILASTIK = "ilastik";
+    public static final String ILASTIK_PROJECT_FILE = "Location of ilastik Project File";
+    public static final String ILASTIK_INPUT_CHANNEL = "Select channel to use in ilastik output";
 
     /**
      * Initialises an instance of GianiDefaultParams with most parameters set to
@@ -161,6 +164,9 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(STARDIST_MODEL_DIRECTORY, System.getProperty("user.home"));
         this.setProperty(STARDIST_TILE_XY, "8");
         this.setProperty(STARDIST_TILE_Z, "2");
+        this.setProperty(NUC_MAXIMA_DETECT_ILASTIK, "false");
+        this.setProperty(ILASTIK_PROJECT_FILE, System.getProperty("user.home"));
+        this.setProperty(ILASTIK_INPUT_CHANNEL, "0");
     }
 
     /**
