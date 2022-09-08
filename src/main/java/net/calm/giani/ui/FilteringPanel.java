@@ -39,9 +39,9 @@ public class FilteringPanel extends LayerPanel implements Updateable {
     /**
      * Constructs a FilteringPanel and associates the specified Properties, BioFormatsImg and process with it.
      *
-     * @param props contains the parameters governing how the process associated with this panel will run
-     * @param img the image that the process associated with this panel will run on
-     * @param process the process that this panel is seeking user-specified parameters for
+     * @param props      contains the parameters governing how the process associated with this panel will run
+     * @param img        the image that the process associated with this panel will run on
+     * @param process    the process that this panel is seeking user-specified parameters for
      * @param propLabels the labels associated with the parameters that this panel will display
      */
     public FilteringPanel(Properties props, BioFormatsImg img, MultiThreadedGaussianFilter process, String[] propLabels) {
@@ -51,12 +51,12 @@ public class FilteringPanel extends LayerPanel implements Updateable {
     /**
      * Constructs a FilteringPanel and associates the specified Properties, BioFormatsImg and process with it.
      *
-     * @param props contains the parameters governing how the process associated with this panel will run
-     * @param img the image that the process associated with this panel will run on
-     * @param process the process that this panel is seeking user-specified parameters for
+     * @param props      contains the parameters governing how the process associated with this panel will run
+     * @param img        the image that the process associated with this panel will run on
+     * @param process    the process that this panel is seeking user-specified parameters for
      * @param propLabels the labels associated with the parameters that this panel will display
-     * @param helpURI link to an online help page describing how to use this panel
-     * @param title description of what this panel does
+     * @param helpURI    link to an online help page describing how to use this panel
+     * @param title      description of what this panel does
      */
     public FilteringPanel(Properties props, BioFormatsImg img, MultiThreadedGaussianFilter process, String[] propLabels, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
@@ -228,6 +228,11 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         channelSelectComboBox.setModel(new DefaultComboBoxModel(channelLabels.toArray()));
         channelSelectComboBox.setSelectedItem(props.get(propLabels[MultiThreadedGaussianFilter.CHANNEL_LABEL]));
         unitsLabel1.setText(props.getProperty(GianiDefaultParams.UNITS));
+        if (Boolean.parseBoolean(props.getProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST))
+                && this.title.matches(GianiDefaultParams.NUC_GAUSS_FILTER_TITLE)) {
+            this.setEnabled(false);
+        } else this.setEnabled(true);
+        setComponentsEnabled();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
