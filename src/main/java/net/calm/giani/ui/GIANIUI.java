@@ -55,6 +55,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }
 
 //    private final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
     /**
      * Creates a new instance of the GIANI GUI
      */
@@ -422,9 +423,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }//GEN-LAST:event_selectInputPanelComponentShown
 
     boolean updateLayer() {
-        if (checkIfStarDist()) {
-            return false;
-        }
+//        if (checkIfStarDist()) {
+//            return false;
+//        }
         for (int i = 0; i < componentList.size(); i++) {
             if (i == layerIndex) {
                 componentList.get(i).setVisible(true);
@@ -440,10 +441,16 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }
 
     private boolean checkIfStarDist() {
-        return Boolean.parseBoolean(props.getProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST))
+        if (Boolean.parseBoolean(props.getProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST))
                 && (componentList.get(layerIndex).equals(nuclearFilteringPanel)
                 || componentList.get(layerIndex).equals(nuclearTopHatFilterPanel)
-                || componentList.get(layerIndex).equals(nuclearSegmentationPanel));
+                || componentList.get(layerIndex).equals(nuclearSegmentationPanel))) {
+            if (componentList.get(layerIndex).equals(nuclearCentreFinderPanel)) {
+                nuclearCentreFinderPanel.getProcess().updateOutputDests(cellSegmentationPanel.getProcess());
+            }
+            return true;
+        }
+        return false;
     }
 
     void checkLayerIndex() {
@@ -510,6 +517,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }
 
     void addProcess() {
+        if (checkIfStarDist()) return;
         componentList.get(layerIndex).setVariables();
         MultiThreadedProcess process = componentList.get(layerIndex).getProcess();
         if (process == null) {
@@ -519,6 +527,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }
 
     void removeProcess() {
+        if (checkIfStarDist()) return;
         pipeline.removeProcesses(layerIndex);
     }
 
