@@ -26,6 +26,8 @@ import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
+import net.calm.iaclasslibrary.UtilClasses.GenUtils;
+import net.calm.iaclasslibrary.UtilClasses.Utilities;
 import ome.units.quantity.Length;
 
 import javax.swing.*;
@@ -35,8 +37,6 @@ import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Properties;
-import net.calm.iaclasslibrary.UtilClasses.GenUtils;
-import net.calm.iaclasslibrary.UtilClasses.Utilities;
 
 /**
  * Blob detection (centroid estimation) panel in the {@link GIANIUI}
@@ -63,21 +63,21 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
      * Constructs a MaximaFinderPanel and associates the specified Properties,
      * BioFormatsImg and process with it.
      *
-     * @param props contains the parameters governing how the process associated
-     * with this panel will run
-     * @param img the image that the process associated with this panel will run
-     * on
-     * @param process the process that this panel is seeking user-specified
-     * parameters for
-     * @param propLabels the labels associated with the parameters that this
-     * panel will display
+     * @param props              contains the parameters governing how the process associated
+     *                           with this panel will run
+     * @param img                the image that the process associated with this panel will run
+     *                           on
+     * @param process            the process that this panel is seeking user-specified
+     *                           parameters for
+     * @param propLabels         the labels associated with the parameters that this
+     *                           panel will display
      * @param allowChannelSelect set to true to include a dropdown menu allowing
-     * channel selection
-     * @param defaultChannel if allowChannelSelect is false, specify the
-     * specific channel the process associated with this panel will run on
-     * @param helpURI link to an online help page describing how to use this
-     * panel
-     * @param title description of what this panel does
+     *                           channel selection
+     * @param defaultChannel     if allowChannelSelect is false, specify the
+     *                           specific channel the process associated with this panel will run on
+     * @param helpURI            link to an online help page describing how to use this
+     *                           panel
+     * @param title              description of what this panel does
      */
     public MaximaFinderPanel1(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process, String[] propLabels, boolean allowChannelSelect, int defaultChannel, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
@@ -145,6 +145,9 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         ilastikFileTextField = new javax.swing.JTextField();
         ilastikChannelTextField = new javax.swing.JTextField();
         ilastikFileButton = new javax.swing.JButton();
+        ilastikDirLabel = new javax.swing.JLabel();
+        ilastikDirTextField = new javax.swing.JTextField();
+        ilastikDirButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -212,7 +215,7 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(titleLabel, gridBagConstraints);
 
-        methodComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST, GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK}));
+        methodComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST, GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK}));
         methodComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 methodComboBoxActionPerformed(evt);
@@ -611,6 +614,8 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         ilastikFileLabel.setText(propLabels[MultiThreadedMaximaFinder.ILASTIK_FILE]);
         ilastikFileLabel.setLabelFor(ilastikFileTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -621,7 +626,7 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         ilastikChannelLabel.setLabelFor(ilastikChannelTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -630,6 +635,8 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
 
         ilastikFileTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_FILE]));
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -639,7 +646,7 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         ilastikChannelTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_CHANNEL]));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -653,11 +660,47 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         ilastikPanel.add(ilastikFileButton, gridBagConstraints);
+
+        ilastikDirLabel.setText(propLabels[MultiThreadedMaximaFinder.ILASTIK_DIR]);
+        ilastikDirLabel.setLabelFor(ilastikDirTextField);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        ilastikPanel.add(ilastikDirLabel, gridBagConstraints);
+
+        ilastikDirTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_DIR]));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        ilastikPanel.add(ilastikDirTextField, gridBagConstraints);
+
+        ilastikDirButton.setText("Specify Location");
+        ilastikDirButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ilastikDirButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        ilastikPanel.add(ilastikDirButton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -690,12 +733,16 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, "false");
         props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, "false");
         props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST, "false");
+        props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK, "false");
         switch (method) {
             case GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS:
                 props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, "true");
                 break;
             case GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN:
                 props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, "true");
+                break;
+            case GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK:
+                props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK, "true");
                 break;
             default:
                 props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST, "true");
@@ -717,7 +764,7 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
             showOutput(process.getOutput(), process.getOutput().getTitle());
         } else {
             showOutput(((MultiThreadedMaximaFinder) process).getMaxima(), process.getOutput().getTitle(),
-                    ((MultiThreadedMaximaFinder) process).getEdmThresholdOutline());
+                    ((MultiThreadedMaximaFinder) process).getDetectedObjectsOutline());
         }
     }//GEN-LAST:event_previewButtonActionPerformed
 
@@ -793,6 +840,17 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         fileUpdated(ilastikFileTextField);
     }//GEN-LAST:event_ilastikFileButtonActionPerformed
 
+    private void ilastikDirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ilastikDirButtonActionPerformed
+        try {
+            ilastikDirTextField.setText(Utilities.getFolder(
+                    new File(props.getProperty(GianiDefaultParams.ILASTIK_DIRECTORY)),
+                    "Select folder containing ilastik installation", true).getAbsolutePath());
+        } catch (Exception e) {
+            GenUtils.logError(e, "There was a problem with directory selection.");
+        }
+        directoryUpdated(ilastikDirTextField);
+    }//GEN-LAST:event_ilastikDirButtonActionPerformed
+
     public void setupProcess() {
 
         process.setup(img, props, propLabels);
@@ -839,7 +897,8 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
                 o.add(roi);
             }
         }
-        if (Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT]))) {
+        if (Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT]))
+        || Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_DETECT]))) {
             for (int i = 0; i < imp.getNSlices(); i++) {
                 if (binaryOutline[i] == null) {
                     continue;
@@ -886,7 +945,7 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
 
         }
     }
-    
+
     private void fileUpdated(JTextField textField) {
         File inputFile = new File(textField.getText());
         if (inputFile.exists() && inputFile.isFile()) {
@@ -914,6 +973,9 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
     private javax.swing.JTextField hessianThreshTextField;
     private javax.swing.JLabel ilastikChannelLabel;
     private javax.swing.JTextField ilastikChannelTextField;
+    private javax.swing.JButton ilastikDirButton;
+    private javax.swing.JLabel ilastikDirLabel;
+    private javax.swing.JTextField ilastikDirTextField;
     private javax.swing.JButton ilastikFileButton;
     private javax.swing.JLabel ilastikFileLabel;
     private javax.swing.JTextField ilastikFileTextField;

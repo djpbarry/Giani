@@ -110,6 +110,7 @@ public class GianiDefaultParams extends Properties {
     public static final String NUC_MAXIMA_DETECT_ILASTIK = "ilastik";
     public static final String ILASTIK_PROJECT_FILE = "Location of ilastik Project File";
     public static final String ILASTIK_INPUT_CHANNEL = "Select channel to use in ilastik output";
+    public static final String ILASTIK_DIRECTORY = "Location of ilastik installation";
 
     /**
      * Initialises an instance of GianiDefaultParams with most parameters set to
@@ -120,7 +121,8 @@ public class GianiDefaultParams extends Properties {
     }
 
     private void initialise() {
-        this.setProperty(INPUT_DIR_LABEL, System.getProperty("user.home"));
+        //this.setProperty(INPUT_DIR_LABEL, System.getProperty("user.home"));
+        this.setProperty(INPUT_DIR_LABEL, "E:\\Dropbox (The Francis Crick)\\Debugging\\Giani\\images\\subset");
         this.setProperty(OUTPUT_DIR_LABEL, "");
         this.setProperty(SERIES_SELECT_LABEL, "0");
         this.setProperty(INPUT_FILE_LABEL, "0");
@@ -165,7 +167,10 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(STARDIST_TILE_XY, "8");
         this.setProperty(STARDIST_TILE_Z, "2");
         this.setProperty(NUC_MAXIMA_DETECT_ILASTIK, "false");
-        this.setProperty(ILASTIK_PROJECT_FILE, System.getProperty("user.home"));
+        //this.setProperty(ILASTIK_PROJECT_FILE, System.getProperty("user.home"));
+        this.setProperty(ILASTIK_PROJECT_FILE, "E:\\Dropbox (The Francis Crick)\\Debugging\\Giani\\ilastik_integration\\MyProject.ilp");
+        //this.setProperty(ILASTIK_DIRECTORY, System.getProperty("user.home"));
+        this.setProperty(ILASTIK_DIRECTORY, "C:\\Program Files\\ilastik-1.3.3post3");
         this.setProperty(ILASTIK_INPUT_CHANNEL, "0");
     }
 
@@ -174,7 +179,7 @@ public class GianiDefaultParams extends Properties {
      * Properties
      *
      * @param props contains the input directory and will contain the location
-     * of the output directory on exiting
+     *              of the output directory on exiting
      * @param label if not null, the output directory will contain this label
      * @return true if output directory has been successfully set, false
      * otherwise
