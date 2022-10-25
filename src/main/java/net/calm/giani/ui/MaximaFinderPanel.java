@@ -410,7 +410,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         } catch (InterruptedException e) {
             return;
         }
-        showOutput(((MultiThreadedMaximaFinder) process).getMaxima(), process.getOutput().getTitle(), ((MultiThreadedMaximaFinder) process).getEdmThresholdOutline());
+        showOutput(((MultiThreadedMaximaFinder) process).getMaxima(), process.getOutput().getTitle(), ((MultiThreadedMaximaFinder) process).getDetectedObjectsOutline());
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void simpleDetectToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpleDetectToggleButtonActionPerformed
