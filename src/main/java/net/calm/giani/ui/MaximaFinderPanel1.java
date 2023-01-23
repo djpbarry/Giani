@@ -150,6 +150,9 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         ilastikDirButton = new javax.swing.JButton();
         ilastikThreshLabel = new javax.swing.JLabel();
         ilastikThreshTextField = new javax.swing.JTextField();
+        ilastikSmoothingLabel = new javax.swing.JLabel();
+        ilastikSmoothingTextField = new javax.swing.JTextField();
+        unitsLabel5 = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -708,7 +711,7 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         ilastikThreshLabel.setLabelFor(ilastikThreshTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -718,12 +721,43 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         ilastikThreshTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_THRESH]));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         ilastikPanel.add(ilastikThreshTextField, gridBagConstraints);
+
+        ilastikSmoothingLabel.setText(propLabels[MultiThreadedMaximaFinder.ILASTIK_SMOOTHING]);
+        ilastikSmoothingLabel.setLabelFor(ilastikSmoothingTextField);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        ilastikPanel.add(ilastikSmoothingLabel, gridBagConstraints);
+
+        ilastikSmoothingTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_SMOOTHING]));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        ilastikPanel.add(ilastikSmoothingTextField, gridBagConstraints);
+
+        unitsLabel5.setText(unitText);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        ilastikPanel.add(unitsLabel5, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -957,6 +991,7 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         unitsLabel2.setText(props.getProperty(GianiDefaultParams.UNITS));
         unitsLabel3.setText(props.getProperty(GianiDefaultParams.UNITS));
         unitsLabel4.setText(props.getProperty(GianiDefaultParams.UNITS));
+        unitsLabel5.setText(props.getProperty(GianiDefaultParams.UNITS));
     }
 
     private void directoryUpdated(JTextField textField) {
@@ -1003,8 +1038,11 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
     private javax.swing.JLabel ilastikFileLabel;
     private javax.swing.JTextField ilastikFileTextField;
     private javax.swing.JPanel ilastikPanel;
+    private javax.swing.JLabel ilastikSmoothingLabel;
+    private javax.swing.JTextField ilastikSmoothingTextField;
     private javax.swing.JLabel ilastikThreshLabel;
     private javax.swing.JTextField ilastikThreshTextField;
+    private javax.swing.JLabel unitsLabel5;
     private javax.swing.JComboBox<String> methodComboBox;
     private javax.swing.JLabel methodLabel;
     private javax.swing.JLabel noiseTolLabel;

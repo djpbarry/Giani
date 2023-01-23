@@ -112,6 +112,7 @@ public class GianiDefaultParams extends Properties {
     public static final String ILASTIK_INPUT_CHANNEL = "Select channel to use in ilastik output";
     public static final String ILASTIK_DIRECTORY = "Location of ilastik installation";
     public static final String ILASTIK_THRESHOLD = "Probability threshold for ilastik output";
+    public static final String ILASTIK_SMOOTHING = "Filter radius to smooth ilastik output";
 
     /**
      * Initialises an instance of GianiDefaultParams with most parameters set to
@@ -174,6 +175,7 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(ILASTIK_DIRECTORY, "C:\\Program Files\\ilastik-1.3.3post3");
         this.setProperty(ILASTIK_INPUT_CHANNEL, "0");
         this.setProperty(ILASTIK_THRESHOLD, "0.75");
+        this.setProperty(ILASTIK_SMOOTHING, "1.0");
     }
 
     /**
