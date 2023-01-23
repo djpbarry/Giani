@@ -99,7 +99,7 @@ public class GianiDefaultParams extends Properties {
     public static final String UNITS = "Units";
     public static final String ENABLE_TOP_HAT_FILTER = "Enable Top Hat Filtering";
     public static final String NUC_CENTROID_LOCALISATION_METHOD = "Choose a Method to Detect Nuclei";
-    public static final String NUC_MAXIMA_DETECT_STARDIST = "StarDist";
+    public static final String NUC_MAXIMA_DETECT_STARDIST = "StarDist (beta)";
     public static final String STARDIST_PROB_THRESH = "StarDist Probability Threshold";
     public static final String STARDIST_OVERLAP_THRESH = "StarDist Overlap Threshold";
     public static final String STARDIST_ENV_DIRECTORY = "Location of StarDist Virtual Environment";
@@ -107,7 +107,7 @@ public class GianiDefaultParams extends Properties {
     public static final String STARDIST_TILE_XY = "Number of Tile Divisions in X and Y";
     public static final String STARDIST_TILE_Z = "Number of Tile Divisions in Z";
     public static final String NUC_DETECT_MODE = "Detection Method";
-    public static final String NUC_MAXIMA_DETECT_ILASTIK = "ilastik";
+    public static final String NUC_MAXIMA_DETECT_ILASTIK = "ilastik (beta)";
     public static final String ILASTIK_PROJECT_FILE = "Location of ilastik Project File";
     public static final String ILASTIK_INPUT_CHANNEL = "Select channel to use in ilastik output";
     public static final String ILASTIK_DIRECTORY = "Location of ilastik installation";
