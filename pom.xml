@@ -7,13 +7,13 @@
     <parent>
         <groupId>org.scijava</groupId>
         <artifactId>pom-scijava</artifactId>
-        <version>31.1.0</version>
+        <version>33.2.0</version>
         <relativePath/>
     </parent>
 
     <groupId>net.calm</groupId>
     <artifactId>giani</artifactId>
-    <version>3.3.7</version>
+    <version>3.3.8</version>
 
     <build>
         <plugins>
