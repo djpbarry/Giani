@@ -148,6 +148,8 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         ilastikDirLabel = new javax.swing.JLabel();
         ilastikDirTextField = new javax.swing.JTextField();
         ilastikDirButton = new javax.swing.JButton();
+        ilastikThreshLabel = new javax.swing.JLabel();
+        ilastikThreshTextField = new javax.swing.JTextField();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -215,7 +217,7 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(titleLabel, gridBagConstraints);
 
-        methodComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST, GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK}));
+        methodComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST, GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK}));
         methodComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 methodComboBoxActionPerformed(evt);
@@ -702,6 +704,27 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         ilastikPanel.add(ilastikDirButton, gridBagConstraints);
 
+        ilastikThreshLabel.setText(propLabels[MultiThreadedMaximaFinder.ILASTIK_THRESH]);
+        ilastikThreshLabel.setLabelFor(ilastikThreshTextField);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        ilastikPanel.add(ilastikThreshLabel, gridBagConstraints);
+
+        ilastikThreshTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_THRESH]));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        ilastikPanel.add(ilastikThreshTextField, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -980,6 +1003,8 @@ public class MaximaFinderPanel1 extends LayerPanel implements Updateable {
     private javax.swing.JLabel ilastikFileLabel;
     private javax.swing.JTextField ilastikFileTextField;
     private javax.swing.JPanel ilastikPanel;
+    private javax.swing.JLabel ilastikThreshLabel;
+    private javax.swing.JTextField ilastikThreshTextField;
     private javax.swing.JComboBox<String> methodComboBox;
     private javax.swing.JLabel methodLabel;
     private javax.swing.JLabel noiseTolLabel;
