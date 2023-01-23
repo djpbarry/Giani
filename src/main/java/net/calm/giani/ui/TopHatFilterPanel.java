@@ -10,13 +10,11 @@ import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
 import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
+import net.calm.iaclasslibrary.UIClasses.Updateable;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Properties;
-import javax.swing.DefaultComboBoxModel;
-import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
-import net.calm.iaclasslibrary.UIClasses.Updateable;
 
 /**
  * Top-Hat Filtering panel in the {@link GIANIUI}
@@ -41,14 +39,14 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
      * Constructs a TopHatFilterPanel and associates the specified Properties,
      * BioFormatsImg and process with it.
      *
-     * @param props contains the parameters governing how the process associated
-     * with this panel will run
-     * @param img the image that the process associated with this panel will run
-     * on
-     * @param process the process that this panel is seeking user-specified
-     * parameters for
+     * @param props      contains the parameters governing how the process associated
+     *                   with this panel will run
+     * @param img        the image that the process associated with this panel will run
+     *                   on
+     * @param process    the process that this panel is seeking user-specified
+     *                   parameters for
      * @param propLabels the labels associated with the parameters that this
-     * panel will display
+     *                   panel will display
      */
     public TopHatFilterPanel(Properties props, BioFormatsImg img, MultiThreadedTopHatFilter process, String[] propLabels) {
         this(props, img, process, propLabels, null, null);
@@ -58,17 +56,17 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
      * Constructs a TopHatFilterPanel and associates the specified Properties,
      * BioFormatsImg and process with it.
      *
-     * @param props contains the parameters governing how the process associated
-     * with this panel will run
-     * @param img the image that the process associated with this panel will run
-     * on
-     * @param process the process that this panel is seeking user-specified
-     * parameters for
+     * @param props      contains the parameters governing how the process associated
+     *                   with this panel will run
+     * @param img        the image that the process associated with this panel will run
+     *                   on
+     * @param process    the process that this panel is seeking user-specified
+     *                   parameters for
      * @param propLabels the labels associated with the parameters that this
-     * panel will display
-     * @param helpURI link to an online help page describing how to use this
-     * panel
-     * @param title description of what this panel does
+     *                   panel will display
+     * @param helpURI    link to an online help page describing how to use this
+     *                   panel
+     * @param title      description of what this panel does
      */
     public TopHatFilterPanel(Properties props, BioFormatsImg img, MultiThreadedTopHatFilter process, String[] propLabels, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
@@ -254,6 +252,11 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
 
     public void update() {
         unitsLabel1.setText(props.getProperty(GianiDefaultParams.UNITS));
+        if (Boolean.parseBoolean(props.getProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST))
+                && this.title.matches(GianiDefaultParams.NUC_TOP_HAT_TITLE)) {
+            this.setEnabled(false);
+        } else this.setEnabled(true);
+        setComponentsEnabled();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -437,7 +437,7 @@ public class SelectInputPanel extends LayerPanel {
     public void setupProcess() {
 
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> channelComboBox;
     private javax.swing.JLabel channelSelectLabel;

@@ -14,6 +14,7 @@ import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
 import net.calm.iaclasslibrary.Process.ProcessPipeline;
 import net.calm.iaclasslibrary.Process.ROI.MultiThreadedROIConstructor;
+import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedStarDist;
 import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedWatershed;
 import net.calm.iaclasslibrary.UIClasses.*;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
@@ -29,7 +30,8 @@ import java.util.LinkedList;
 import java.util.Properties;
 
 /**
- * Main wizard-based interface for interacting with and specifying parameters for GIANI runs
+ * Main wizard-based interface for interacting with and specifying parameters
+ * for GIANI runs
  *
  * @author Dave Barry
  * @since 1.0.0
@@ -98,7 +100,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Selecting-the-Input-Files"));
         componentList.add(selectInputPanel);
         MultiThreadedMaximaFinder maximaFinder = PipelineBuilder.getDefaultMaximaFinder(props);
-        nuclearCentreFinderPanel = new net.calm.giani.ui.MaximaFinderPanel(props, img, maximaFinder,
+        nuclearCentreFinderPanel = new net.calm.giani.ui.MaximaFinderPanel1(props, img, maximaFinder,
                 maximaFinder.getPropLabels(), true, -1,
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Estimating-the-centres-of-nuclei"),
                 GianiDefaultParams.NUC_CENTROID_LOCALISATION_TITLE);
@@ -351,13 +353,17 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         addProcess();
         layerIndex++;
-        updateLayer();
+        while (!updateLayer()) {
+            layerIndex++;
+        }
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
         layerIndex--;
         removeProcess();
-        updateLayer();
+        while (!updateLayer()) {
+            layerIndex--;
+        }
     }//GEN-LAST:event_previousButtonActionPerformed
 
     private void loadParametersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadParametersButtonActionPerformed
@@ -416,7 +422,10 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         }
     }//GEN-LAST:event_selectInputPanelComponentShown
 
-    void updateLayer() {
+    boolean updateLayer() {
+//        if (checkIfStarDist()) {
+//            return false;
+//        }
         for (int i = 0; i < componentList.size(); i++) {
             if (i == layerIndex) {
                 componentList.get(i).setVisible(true);
@@ -428,6 +437,20 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
             }
         }
         checkLayerIndex();
+        return true;
+    }
+
+    private boolean checkIfStarDist() {
+        if (Boolean.parseBoolean(props.getProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST))
+                && (componentList.get(layerIndex).equals(nuclearFilteringPanel)
+                || componentList.get(layerIndex).equals(nuclearTopHatFilterPanel)
+                || componentList.get(layerIndex).equals(nuclearSegmentationPanel))) {
+            if (componentList.get(layerIndex).equals(nuclearCentreFinderPanel)) {
+                nuclearCentreFinderPanel.getProcess().updateOutputDests(cellSegmentationPanel.getProcess());
+            }
+            return true;
+        }
+        return false;
     }
 
     void checkLayerIndex() {
@@ -494,6 +517,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }
 
     void addProcess() {
+        if (checkIfStarDist()) return;
         componentList.get(layerIndex).setVariables();
         MultiThreadedProcess process = componentList.get(layerIndex).getProcess();
         if (process == null) {
@@ -503,6 +527,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }
 
     void removeProcess() {
+        if (checkIfStarDist()) return;
         pipeline.removeProcesses(layerIndex);
     }
 
@@ -539,14 +564,14 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 props.setProperty(propLabels[MultiThreadedMaximaFinder.BLOB_THRESH], "0.0");
                 propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAXIMA, i);
                 props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT], "false");
-                propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE], "0.0");
+                //propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE, i);
+                //props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE], "0.0");
                 propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MIN_SIZE, i);
                 props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE], "0.0");
                 propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_THRESH, i);
                 props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH], "0.0");
-                propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP], "0.0");
+                //propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP, i);
+                //props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP], "0.0");
                 propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_ABS, i);
                 props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS], "true");
                 propLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
@@ -628,7 +653,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     private javax.swing.JButton loadParametersButton;
     private net.calm.giani.ui.MeasurementPanel measurementPanel;
     private javax.swing.JButton nextButton;
-    private net.calm.giani.ui.MaximaFinderPanel nuclearCentreFinderPanel;
+    private net.calm.giani.ui.MaximaFinderPanel1 nuclearCentreFinderPanel;
     private net.calm.giani.ui.FilteringPanel nuclearFilteringPanel;
     private net.calm.giani.ui.SegmentationPanel nuclearSegmentationPanel;
     private net.calm.giani.ui.TopHatFilterPanel nuclearTopHatFilterPanel;

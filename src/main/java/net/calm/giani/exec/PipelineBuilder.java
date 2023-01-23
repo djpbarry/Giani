@@ -51,13 +51,27 @@ public class PipelineBuilder {
         propLabels[MultiThreadedMaximaFinder.BLOB_SIZE] = GianiDefaultParams.BLOB_NUC_RAD_LABEL;
         propLabels[MultiThreadedMaximaFinder.BLOB_THRESH] = GianiDefaultParams.BLOB_NUC_NOISE_TOL_LABEL;
         propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN;
-        propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE;
+        //propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE;
         propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_START_SCALE;
-        propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP;
+        //propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP;
         propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_THRESH;
         propLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
         propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_THRESH;
         propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_ABS;
+        propLabels[MultiThreadedMaximaFinder.METHOD] = GianiDefaultParams.NUC_DETECT_MODE;
+        propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST;
+        propLabels[MultiThreadedMaximaFinder.STARDIST_OVERLAP] = GianiDefaultParams.STARDIST_OVERLAP_THRESH;
+        propLabels[MultiThreadedMaximaFinder.STARDIST_PROB] = GianiDefaultParams.STARDIST_PROB_THRESH;
+        propLabels[MultiThreadedMaximaFinder.STARDIST_DIR] = GianiDefaultParams.STARDIST_ENV_DIRECTORY;
+        propLabels[MultiThreadedMaximaFinder.STARDIST_MODEL] = GianiDefaultParams.STARDIST_MODEL_DIRECTORY;
+        propLabels[MultiThreadedMaximaFinder.STARDIST_TILE_XY] = GianiDefaultParams.STARDIST_TILE_XY;
+        propLabels[MultiThreadedMaximaFinder.STARDIST_TILE_Z] = GianiDefaultParams.STARDIST_TILE_Z;
+        propLabels[MultiThreadedMaximaFinder.ILASTIK_FILE] = GianiDefaultParams.ILASTIK_PROJECT_FILE;
+        propLabels[MultiThreadedMaximaFinder.ILASTIK_DIR] = GianiDefaultParams.ILASTIK_DIRECTORY;
+        propLabels[MultiThreadedMaximaFinder.ILASTIK_CHANNEL] = GianiDefaultParams.ILASTIK_INPUT_CHANNEL;
+        propLabels[MultiThreadedMaximaFinder.ILASTIK_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK;
+        propLabels[MultiThreadedMaximaFinder.ILASTIK_THRESH] = GianiDefaultParams.ILASTIK_THRESHOLD;
+        propLabels[MultiThreadedMaximaFinder.ILASTIK_SMOOTHING] = GianiDefaultParams.ILASTIK_SMOOTHING;
         MultiThreadedMaximaFinder process = new MultiThreadedMaximaFinder(null);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
@@ -66,7 +80,7 @@ public class PipelineBuilder {
     /**
      * Returns the default top hat filter process used by GIANI
      *
-     * @param props the properties containing key-value parameter-setting pairs to be associated with the process
+     * @param props  the properties containing key-value parameter-setting pairs to be associated with the process
      * @param inputs the processes whose outputs will be used as inputs for this process
      * @return a new {@link MultiThreadedTopHatFilter}
      */
@@ -101,9 +115,9 @@ public class PipelineBuilder {
     /**
      * Returns the default nuclear segmentation process used by GIANI
      *
-     * @param props the properties containing key-value parameter-setting pairs to be associated with the process
+     * @param props  the properties containing key-value parameter-setting pairs to be associated with the process
      * @param inputs the processes whose outputs will be used as inputs for this process
-     * @param cells instance of an {@link Objects3DPopulation} that will store the resulting segmentation
+     * @param cells  instance of an {@link Objects3DPopulation} that will store the resulting segmentation
      * @return a new {@link MultiThreadedWatershed}
      */
     public static MultiThreadedWatershed getDefaultNucSegmenter(Properties props, MultiThreadedProcess[] inputs, Objects3DPopulation cells) {
@@ -143,9 +157,9 @@ public class PipelineBuilder {
     /**
      * Returns the default cell segmentation process used by GIANI
      *
-     * @param props the properties containing key-value parameter-setting pairs to be associated with the process
+     * @param props  the properties containing key-value parameter-setting pairs to be associated with the process
      * @param inputs the processes whose outputs will be used as inputs for this process
-     * @param cells instance of an {@link Objects3DPopulation} that will store the resulting segmentation
+     * @param cells  instance of an {@link Objects3DPopulation} that will store the resulting segmentation
      * @return a new {@link MultiThreadedWatershed}
      */
     public static MultiThreadedWatershed getDefaultCellSegmenter(Properties props, MultiThreadedProcess[] inputs, Objects3DPopulation cells) {
@@ -171,9 +185,9 @@ public class PipelineBuilder {
     /**
      * Returns the default object measurement process used by GIANI
      *
-     * @param props the properties containing key-value parameter-setting pairs to be associated with the process
+     * @param props  the properties containing key-value parameter-setting pairs to be associated with the process
      * @param inputs the processes whose outputs will be used as inputs for this process
-     * @param cells instance of an {@link Objects3DPopulation} that will store the resulting segmentation
+     * @param cells  instance of an {@link Objects3DPopulation} that will store the resulting segmentation
      * @return a new {@link MultiThreadedWatershed}
      */
     public static MultiThreadedROIConstructor getDefaultMeasure(Properties props, MultiThreadedProcess[] inputs, Objects3DPopulation cells) {

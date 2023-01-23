@@ -17,6 +17,10 @@
 package net.calm.giani.exec;
 
 import ij.IJ;
+import ij.ImagePlus;
+import loci.formats.FormatException;
+import loci.plugins.BF;
+import loci.plugins.in.ImporterOptions;
 import mcib3d.geom.Objects3DPopulation;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.giani.ui.GIANIUI;
@@ -51,6 +55,21 @@ public class GIANI {
             System.exit(0);
         }
     }
+//    public static void main(String[] args) {
+//        try {
+//            ImporterOptions io = new ImporterOptions();
+//            io.setCBegin(0, 0);
+//            io.setCEnd(0, 0);
+//            io.setCStep(0, 1);
+//            io.setSpecifyRanges(true);
+//            io.setId("C:/Users/davej/ilastikTemp/ilastik_temp.ilastik.tiff");
+//            ImagePlus output = BF.openImagePlus(io)[0];
+//            output.show();
+//        } catch (IOException | FormatException e) {
+//
+//        }
+//        //System.exit(0);
+//    }
 
     private static void init(String[] args) {
         if (args.length < 3) {
