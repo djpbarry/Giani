@@ -343,6 +343,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
                 ((MultiThreadedMaximaFinder) process).getMaxima(),
                 process.getOutput().getTitle(),
                 ((MultiThreadedMaximaFinder) process).getDetectedObjectsOutline());
+
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void simpleDetectToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpleDetectToggleButtonActionPerformed
