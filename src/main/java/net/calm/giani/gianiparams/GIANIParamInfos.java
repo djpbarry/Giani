@@ -34,10 +34,10 @@ public class GIANIParamInfos extends Properties {
         this.setProperty(GianiDefaultParams.BLOB_NUC_NOISE_TOL_LABEL, "Sensitivity of blob detector - increase this value if " +
                 "non-nuclear artefacts are detected.");
         this.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_START_SCALE, "Approximate minimum radius of nuclei in microns.");
-        this.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE, "Approximate maximum radius of nuclei in microns. " +
-                "Set equal to the minimum radius to search for only one nuclear radius.");
-        this.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP, "When attempting detection of nuclei between " +
-                "the minimum and maximum radius, specify how much the detection radius should increase by at each stage.");
+        //this.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE, "Approximate maximum radius of nuclei in microns. " +
+        //        "Set equal to the minimum radius to search for only one nuclear radius.");
+        //this.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP, "When attempting detection of nuclei between " +
+        //        "the minimum and maximum radius, specify how much the detection radius should increase by at each stage.");
         this.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_THRESH, "Sensitivity of blob detector - increase this value if " +
                 "non-nuclear artefacts are detected.");
         this.setProperty(GianiDefaultParams.NUC_SEG_CHAN_SELECT_LABEL, "Select the channel that will be used to segment " +
@@ -77,15 +77,15 @@ public class GIANIParamInfos extends Properties {
             this.setProperty(String.format("%s%d", GianiDefaultParams.BLOB_CHAN_RAD_LABEL, i), "Approximate radius of spots in microns.");
             this.setProperty(String.format("%s%d", GianiDefaultParams.BLOB_CHAN_NOISE_TOL_LABEL, i), "Sensitivity of blob detector " +
                     "- increase this value if artefacts are detected.");
-            this.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE, i), "Approximate " +
-                    "maximum radius of spots in microns - set equal to the minimum radius to search for only one spot radius.");
+            //this.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE, i), "Approximate " +
+             //       "maximum radius of spots in microns - set equal to the minimum radius to search for only one spot radius.");
             this.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MIN_SIZE, i), "Approximate " +
                     "minimum radius of spots in microns.");
             this.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_THRESH, i), "Sensitivity " +
                     "of blob detector - increase this value if artefacts are detected.");
-            this.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP, i), "When attempting " +
-                    "detection of spots between the minimum and maximum radii, specify how much the detection radius should " +
-                    "increase by at each stage.");
+            //this.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP, i), "When attempting " +
+            //        "detection of spots between the minimum and maximum radii, specify how much the detection radius should " +
+            //        "increase by at each stage.");
         }
     }
 }

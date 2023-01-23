@@ -69,7 +69,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
      * @param helpURI            link to an online help page describing how to use this panel
      * @param title              description of what this panel does
      */
-    public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedStarDist process, String[] propLabels, boolean allowChannelSelect, int defaultChannel, URI helpURI, String title) {
+    public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process, String[] propLabels, boolean allowChannelSelect, int defaultChannel, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
         this.allowChannelSelect = allowChannelSelect;
         this.defaultChannel = defaultChannel;
@@ -99,19 +99,13 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         simpleDetectToggleButton = new javax.swing.JToggleButton();
         advancedDetectToggleButton = new javax.swing.JToggleButton();
         hessianMinSizeLabel = new javax.swing.JLabel();
-        hessianMaxSizeLabel = new javax.swing.JLabel();
         hessianMinSizeTextField = new javax.swing.JTextField();
         hessianThreshTextField = new javax.swing.JTextField();
         helpButton = new javax.swing.JButton();
-        hessianStepSizeLabel = new javax.swing.JLabel();
-        hessianStepSizeTextField = new javax.swing.JTextField();
         hessianThreshLabel = new javax.swing.JLabel();
-        hessianMaxSizeTextField = new javax.swing.JTextField();
         titleLabel = new javax.swing.JLabel();
         unitsLabel1 = new javax.swing.JLabel();
         unitsLabel2 = new javax.swing.JLabel();
-        unitsLabel3 = new javax.swing.JLabel();
-        unitsLabel4 = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -240,18 +234,6 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(hessianMinSizeLabel, gridBagConstraints);
 
-        hessianMaxSizeLabel.setText(propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE]);
-        hessianMaxSizeLabel.setLabelFor(hessianMaxSizeTextField);
-        hessianMaxSizeLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(hessianMaxSizeLabel, gridBagConstraints);
-
         hessianMinSizeTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE]));
         hessianMinSizeTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -288,29 +270,6 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(helpButton, gridBagConstraints);
 
-        hessianStepSizeLabel.setText(propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP]);
-        hessianStepSizeLabel.setLabelFor(hessianStepSizeTextField);
-        hessianStepSizeLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 9;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(hessianStepSizeLabel, gridBagConstraints);
-
-        hessianStepSizeTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP]));
-        hessianStepSizeTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 9;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(hessianStepSizeTextField, gridBagConstraints);
-
         hessianThreshLabel.setText(propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH]);
         hessianThreshLabel.setLabelFor(hessianThreshTextField);
         hessianThreshLabel.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
@@ -322,17 +281,6 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(hessianThreshLabel, gridBagConstraints);
-
-        hessianMaxSizeTextField.setText(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE]));
-        hessianMaxSizeTextField.setEnabled(!Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT])));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(hessianMaxSizeTextField, gridBagConstraints);
 
         titleLabel.setFont(GianiDefaultParams.TITLE_FONT);
         titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -366,26 +314,6 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(unitsLabel2, gridBagConstraints);
-
-        unitsLabel3.setText(unitText);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(unitsLabel3, gridBagConstraints);
-
-        unitsLabel4.setText(unitText);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 9;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(unitsLabel4, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     protected void setToolTips() {
@@ -395,8 +323,8 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         blobRadTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_SIZE]));
         noiseTolTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.BLOB_THRESH]));
         hessianMinSizeTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE]));
-        hessianMaxSizeTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE]));
-        hessianStepSizeTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP]));
+//        hessianMaxSizeTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE]));
+//        hessianStepSizeTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP]));
         hessianThreshTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH]));
         previewButton.setToolTipText(info.getProperty(GianiDefaultParams.PREVIEW));
         helpButton.setToolTipText(info.getProperty(GianiDefaultParams.HELP));
@@ -430,12 +358,12 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         noiseTolTextField.setEnabled(simpleDetectToggleButton.isSelected());
         hessianMinSizeLabel.setEnabled(advancedDetectToggleButton.isSelected());
         hessianMinSizeTextField.setEnabled(advancedDetectToggleButton.isSelected());
-        hessianMaxSizeLabel.setEnabled(advancedDetectToggleButton.isSelected());
-        hessianMaxSizeTextField.setEnabled(advancedDetectToggleButton.isSelected());
+//        hessianMaxSizeLabel.setEnabled(advancedDetectToggleButton.isSelected());
+//        hessianMaxSizeTextField.setEnabled(advancedDetectToggleButton.isSelected());
         hessianThreshLabel.setEnabled(advancedDetectToggleButton.isSelected());
         hessianThreshTextField.setEnabled(advancedDetectToggleButton.isSelected());
-        hessianStepSizeLabel.setEnabled(advancedDetectToggleButton.isSelected());
-        hessianStepSizeTextField.setEnabled(advancedDetectToggleButton.isSelected());
+//        hessianStepSizeLabel.setEnabled(advancedDetectToggleButton.isSelected());
+//        hessianStepSizeTextField.setEnabled(advancedDetectToggleButton.isSelected());
     }//GEN-LAST:event_advancedDetectToggleButtonActionPerformed
 
     private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed
@@ -448,12 +376,12 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     }
 
     private void showOutput(ImagePlus output, ArrayList<int[]> maxima, String title, Roi[] binaryOutline) {
-        if(Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT]))){
-            ImagePlus imp = output.duplicate();
-            imp.setTitle(title);
-            imp.show();
-            return;
-        }
+//        if(Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT]))){
+//            ImagePlus imp = output.duplicate();
+//            imp.setTitle(title);
+//            imp.show();
+//            return;
+//        }
         ImagePlus imp = img.getLoadedImage();
         Overlay o = new Overlay();
         Length zLength = img.getZSpatialRes(Integer.parseInt(props.getProperty(GianiDefaultParams.SERIES_SELECT_LABEL)));
@@ -522,8 +450,8 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         simpleDetectToggleButtonActionPerformed(null);
         unitsLabel1.setText(props.getProperty(GianiDefaultParams.UNITS));
         unitsLabel2.setText(props.getProperty(GianiDefaultParams.UNITS));
-        unitsLabel3.setText(props.getProperty(GianiDefaultParams.UNITS));
-        unitsLabel4.setText(props.getProperty(GianiDefaultParams.UNITS));
+//        unitsLabel3.setText(props.getProperty(GianiDefaultParams.UNITS));
+//        unitsLabel4.setText(props.getProperty(GianiDefaultParams.UNITS));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -533,12 +461,8 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     private javax.swing.JComboBox<String> channelSelectComboBox;
     private javax.swing.JLabel channelSelectLabel;
     private javax.swing.JButton helpButton;
-    private javax.swing.JLabel hessianMaxSizeLabel;
-    private javax.swing.JTextField hessianMaxSizeTextField;
     private javax.swing.JLabel hessianMinSizeLabel;
     private javax.swing.JTextField hessianMinSizeTextField;
-    private javax.swing.JLabel hessianStepSizeLabel;
-    private javax.swing.JTextField hessianStepSizeTextField;
     private javax.swing.JLabel hessianThreshLabel;
     private javax.swing.JTextField hessianThreshTextField;
     private javax.swing.JLabel noiseTolLabel;
@@ -548,7 +472,5 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     private javax.swing.JLabel titleLabel;
     private javax.swing.JLabel unitsLabel1;
     private javax.swing.JLabel unitsLabel2;
-    private javax.swing.JLabel unitsLabel3;
-    private javax.swing.JLabel unitsLabel4;
     // End of variables declaration//GEN-END:variables
 }

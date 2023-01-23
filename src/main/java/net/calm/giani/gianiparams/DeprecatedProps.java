@@ -68,8 +68,8 @@ public class DeprecatedProps {
         map.put(DeprecatedProps.FOCI_MAXIMA_DETECT_HESSIAN_MAXIMA, GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAXIMA);
         map.put(DeprecatedProps.FOCI_MAXIMA_DETECT_HESSIAN_THRESH_2, GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_THRESH);
         map.put(DeprecatedProps.FOCI_MAXIMA_DETECT_HESSIAN_MIN_SIZE, GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MIN_SIZE);
-        map.put(DeprecatedProps.FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE, GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE);
-        map.put(DeprecatedProps.FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP, GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP);
+//        map.put(DeprecatedProps.FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE, GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE);
+//        map.put(DeprecatedProps.FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP, GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP);
         map.put(DeprecatedProps.FOCI_CENTROID_LOCALISATION_TITLE, GianiDefaultParams.FOCI_CENTROID_LOCALISATION_TITLE);
         map.put(DeprecatedProps.BLOB_NUC_RAD_LABEL, GianiDefaultParams.BLOB_NUC_RAD_LABEL);
         map.put(DeprecatedProps.NUC_FILT_RAD_LABEL, GianiDefaultParams.NUC_FILT_RAD_LABEL);
@@ -77,8 +77,8 @@ public class DeprecatedProps {
         map.put(DeprecatedProps.BLOB_CHAN_RAD_LABEL_2, GianiDefaultParams.BLOB_CHAN_RAD_LABEL);
         map.put(DeprecatedProps.CELL_FILT_RAD_LABEL, GianiDefaultParams.CELL_FILT_RAD_LABEL);
         map.put(DeprecatedProps.NUC_MAXIMA_DETECT_HESSIAN_START_SCALE, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_START_SCALE);
-        map.put(DeprecatedProps.NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE);
-        map.put(DeprecatedProps.NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP);
+//        map.put(DeprecatedProps.NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE);
+//        map.put(DeprecatedProps.NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP);
         //map.put(DeprecatedProps.FOCI_MAXIMA_DETECT_FILTER_RAD, GianiDefaultParams.FOCI_MAXIMA_DETECT_FILTER_RAD);
         return map;
     }
