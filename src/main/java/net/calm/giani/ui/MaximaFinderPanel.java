@@ -214,7 +214,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(titleLabel, gridBagConstraints);
 
-        methodComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST, GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK}));
+        methodComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST, GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK}));
         methodComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 methodComboBoxActionPerformed(evt);
@@ -719,23 +719,20 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     public boolean setVariables() {
         setProperties(props, this);
         String method = (String) methodComboBox.getSelectedItem();
-        props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, "false");
-        props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, "false");
-        props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST, "false");
-        props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK, "false");
-        switch (method) {
-            case GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS:
-                props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, "true");
-                break;
-            case GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN:
-                props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, "true");
-                break;
-            case GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK:
-                props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK, "true");
-                break;
-            default:
-                props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST, "true");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT], "false");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT], "false");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_DETECT], "false");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT], "false");
+        if (method.toLowerCase().contains("ilastik")) {
+            props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_DETECT], "true");
+        } else if (method.toLowerCase().contains("stardist")) {
+            props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT], "true");
+        } else if (method.toLowerCase().contains("advanced")) {
+            props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT], "true");
+        } else {
+            props.setProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT], "true");
         }
+
         setupProcess();
         return true;
     }
@@ -887,7 +884,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
             }
         }
         if (Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT]))
-        || Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_DETECT]))) {
+                || Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_DETECT]))) {
             for (int i = 0; i < imp.getNSlices(); i++) {
                 if (binaryOutline[i] == null) {
                     continue;
