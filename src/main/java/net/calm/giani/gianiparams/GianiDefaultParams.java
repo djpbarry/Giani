@@ -113,6 +113,20 @@ public class GianiDefaultParams extends Properties {
     public static final String ILASTIK_DIRECTORY = "Location of ilastik installation";
     public static final String ILASTIK_THRESHOLD = "Probability threshold for ilastik output";
     public static final String ILASTIK_SMOOTHING = "Filter radius to smooth ilastik output";
+    public static final String BLOB_CHAN_MAXIMA_DETECT_STARDIST = "StarDist (beta) for Channel ";
+    public static final String BLOB_CHAN_STARDIST_OVERLAP_THRESH = "StarDist Overlap Threshold for Channel ";
+    public static final String BLOB_CHAN_STARDIST_PROB_THRESH = "StarDist Probability Threshold for Channel ";
+    public static final String BLOB_CHAN_STARDIST_ENV_DIRECTORY = "Location of StarDist Virtual Environment for Channel ";
+    public static final String BLOB_CHAN_STARDIST_MODEL_DIRECTORY = "Location of StarDist Model for Channel ";
+    public static final String BLOB_CHAN_STARDIST_TILE_XY = GianiDefaultParams.STARDIST_TILE_XY + " for Channel ";
+    public static final String BLOB_CHAN_STARDIST_TILE_Z = GianiDefaultParams.STARDIST_TILE_Z + " for Channel ";
+    public static final String BLOB_CHAN_ILASTIK_PROJECT_FILE = GianiDefaultParams.ILASTIK_PROJECT_FILE + " for Channel ";
+    public static final String BLOB_CHAN_ILASTIK_DIRECTORY = GianiDefaultParams.ILASTIK_DIRECTORY + " for Channel ";
+    public static final String BLOB_CHAN_ILASTIK_INPUT_CHANNEL = GianiDefaultParams.ILASTIK_INPUT_CHANNEL + " for Channel ";
+    public static final String BLOB_CHAN_NUC_MAXIMA_DETECT_ILASTIK = GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK + " for Channel ";
+    public static final String BLOB_CHAN_ILASTIK_THRESHOLD = GianiDefaultParams.ILASTIK_THRESHOLD + " for Channel ";
+    public static final String BLOB_CHAN_ILASTIK_SMOOTHING = GianiDefaultParams.ILASTIK_SMOOTHING + " for Channel ";
+    public static final String BLOB_CHAN_CENTROID_LOCALISATION_METHOD = "Choose a Method to Detect Blobs in Channel ";
 
     /**
      * Initialises an instance of GianiDefaultParams with most parameters set to

@@ -51,12 +51,9 @@ public class PipelineBuilder {
         propLabels[MultiThreadedMaximaFinder.BLOB_SIZE] = GianiDefaultParams.BLOB_NUC_RAD_LABEL;
         propLabels[MultiThreadedMaximaFinder.BLOB_THRESH] = GianiDefaultParams.BLOB_NUC_NOISE_TOL_LABEL;
         propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN;
-        //propLabels[MultiThreadedMaximaFinder.HESSIAN_STOP_SCALE] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE;
         propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_START_SCALE;
-        //propLabels[MultiThreadedMaximaFinder.HESSIAN_SCALE_STEP] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP;
         propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_THRESH;
         propLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
-        propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_THRESH;
         propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS] = GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_ABS;
         propLabels[MultiThreadedMaximaFinder.METHOD] = GianiDefaultParams.NUC_DETECT_MODE;
         propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST;
