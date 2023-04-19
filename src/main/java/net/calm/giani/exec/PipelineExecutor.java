@@ -20,6 +20,7 @@ import ij.IJ;
 import ij.measure.ResultsTable;
 import ij.plugin.filter.Analyzer;
 import ij.plugin.frame.RoiManager;
+import loci.common.DebugTools;
 import loci.formats.FormatException;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsFileLister;
@@ -66,6 +67,7 @@ public class PipelineExecutor extends Thread {
      * Execute the pipeline
      */
     public void run() {
+        DebugTools.setRootLevel("WARN");
         IJ.log(String.format("Start %s", TimeAndDate.getCurrentTimeAndDate()));
         IJ.log(String.format("Number of Processors: %s", Runtime.getRuntime().availableProcessors()));
         IJ.log(String.format("%s %s", GianiDefaultParams.TITLE, TimeAndDate.getCurrentTimeAndDate()));

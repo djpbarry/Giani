@@ -1,5 +1,6 @@
 package net.calm.giani.ui;
 
+import loci.common.DebugTools;
 import mcib3d.geom.Objects3DPopulation;
 import net.calm.giani.exec.PipelineBuilder;
 import net.calm.giani.exec.PipelineExecutor;
@@ -60,6 +61,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
      * Creates a new instance of the GIANI GUI
      */
     public GIANIUI() {
+        DebugTools.setRootLevel("WARN");
         img = new BioFormatsImg();
         pipeline = new ProcessPipeline();
         cells = new Objects3DPopulation();
