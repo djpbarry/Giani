@@ -570,7 +570,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_THRESH, i);
                 props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH], "0.0");
                 propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_ABS, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS], "true");
+                props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS], "false");
                 propLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
                 propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_MAXIMA_DETECT_STARDIST, i);
                 props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT], "false");
