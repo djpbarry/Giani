@@ -75,13 +75,13 @@ public class GIANI {
         IJ.log(String.format("Job List: %s", args[0]));
         IJ.log(String.format("Properties File: %s", args[1]));
         IJ.log(String.format("Job Number: %s", args[2]));
-        if (args.length > 3) {
-            if (new File(args[3]).exists()) {
-                IJ.log(String.format("Output Directory: %s", args[3]));
-            } else {
-                IJ.log(String.format("%s is not a valid file path.", args[3]));
-            }
-        }
+//        if (args.length > 3) {
+//            if (new File(args[3]).exists()) {
+//                IJ.log(String.format("Output Directory: %s", args[3]));
+//            } else {
+//                IJ.log(String.format("%s is not a valid file path.", args[3]));
+//            }
+//        }
         System.setProperty("java.awt.headless", "true");
         Properties props = new GianiDefaultParams();
         try {
@@ -105,14 +105,17 @@ public class GIANI {
         }
         props.setProperty(GianiDefaultParams.INPUT_DIR_LABEL, jobDetails[0]);
         props.setProperty(GianiDefaultParams.SPECIFIC_SERIES, jobDetails[1]);
+        String label = String.format("%s_S%s", FilenameUtils.getName(jobDetails[0]), jobDetails[1]);
+        String outputDir;
         if (args.length > 3) {
-            props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, args[3]);
+            outputDir = props.getProperty(GianiDefaultParams.OUTPUT_DIR_LABEL);
         } else {
-            String label = String.format("%s_S%s", FilenameUtils.getName(jobDetails[0]), jobDetails[1]);
-            if (!GianiDefaultParams.setOutputDirectory(props, label)) {
-                System.exit(0);
-            }
+            outputDir = props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL);
         }
+        if (!GianiDefaultParams.setOutputDirectory(props, label, outputDir)) {
+            System.exit(0);
+        }
+        IJ.log(String.format("Output Directory: %s", props.getProperty(GianiDefaultParams.OUTPUT_DIR_LABEL)));
         (new GIANI()).run(props);
     }
 
