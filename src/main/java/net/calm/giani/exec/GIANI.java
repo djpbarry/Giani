@@ -108,7 +108,7 @@ public class GIANI {
         String label = String.format("%s_S%s", FilenameUtils.getName(jobDetails[0]), jobDetails[1]);
         String outputDir;
         if (args.length > 3) {
-            outputDir = props.getProperty(GianiDefaultParams.OUTPUT_DIR_LABEL);
+            outputDir = args[3];
         } else {
             outputDir = props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL);
         }
