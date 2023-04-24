@@ -127,6 +127,7 @@ public class GianiDefaultParams extends Properties {
     public static final String BLOB_CHAN_ILASTIK_THRESHOLD = GianiDefaultParams.ILASTIK_THRESHOLD + " for Channel ";
     public static final String BLOB_CHAN_ILASTIK_SMOOTHING = GianiDefaultParams.ILASTIK_SMOOTHING + " for Channel ";
     public static final String BLOB_CHAN_CENTROID_LOCALISATION_METHOD = "Choose a Method to Detect Blobs in Channel ";
+    public static final int MAX_CHANNELS = 10;
 
     /**
      * Initialises an instance of GianiDefaultParams with most parameters set to
