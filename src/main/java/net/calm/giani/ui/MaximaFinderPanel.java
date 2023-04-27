@@ -20,6 +20,7 @@ import ij.ImagePlus;
 import ij.gui.OvalRoi;
 import ij.gui.Overlay;
 import ij.gui.Roi;
+import ij.process.AutoThresholder;
 import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
@@ -63,21 +64,21 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
      * Constructs a MaximaFinderPanel1 and associates the specified Properties,
      * BioFormatsImg and process with it.
      *
-     * @param props              contains the parameters governing how the process associated
-     *                           with this panel will run
-     * @param img                the image that the process associated with this panel will run
-     *                           on
-     * @param process            the process that this panel is seeking user-specified
-     *                           parameters for
-     * @param propLabels         the labels associated with the parameters that this
-     *                           panel will display
+     * @param props contains the parameters governing how the process associated
+     * with this panel will run
+     * @param img the image that the process associated with this panel will run
+     * on
+     * @param process the process that this panel is seeking user-specified
+     * parameters for
+     * @param propLabels the labels associated with the parameters that this
+     * panel will display
      * @param allowChannelSelect set to true to include a dropdown menu allowing
-     *                           channel selection
-     * @param defaultChannel     if allowChannelSelect is false, specify the
-     *                           specific channel the process associated with this panel will run on
-     * @param helpURI            link to an online help page describing how to use this
-     *                           panel
-     * @param title              description of what this panel does
+     * channel selection
+     * @param defaultChannel if allowChannelSelect is false, specify the
+     * specific channel the process associated with this panel will run on
+     * @param helpURI link to an online help page describing how to use this
+     * panel
+     * @param title description of what this panel does
      */
     public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process, String[] propLabels, boolean allowChannelSelect, int defaultChannel, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
@@ -147,6 +148,9 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         ilastikSmoothingLabel = new javax.swing.JLabel();
         ilastikSmoothingTextField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        thresholdPanel = new javax.swing.JPanel();
+        thresholdLabel = new javax.swing.JLabel();
+        thresholdComboBox = new javax.swing.JComboBox<>();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
@@ -159,7 +163,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 14;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -195,7 +199,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 14;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
@@ -214,7 +218,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(titleLabel, gridBagConstraints);
 
-        methodComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST, GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK}));
+        methodComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST, GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK, GianiDefaultParams.NUC_MAXIMA_DETECT_THRESHOLD}));
         methodComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 methodComboBoxActionPerformed(evt);
@@ -297,7 +301,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 13;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -361,7 +365,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -539,7 +543,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -699,6 +703,36 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         add(ilastikPanel, gridBagConstraints);
+
+        thresholdPanel.setLayout(new java.awt.GridBagLayout());
+
+        thresholdLabel.setText(propLabels[MultiThreadedMaximaFinder.THRESH_METHOD]);
+        thresholdLabel.setLabelFor(thresholdComboBox);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        thresholdPanel.add(thresholdLabel, gridBagConstraints);
+
+        thresholdComboBox.setModel(new DefaultComboBoxModel(AutoThresholder.getMethods()));
+        thresholdComboBox.setSelectedItem("Default");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        thresholdPanel.add(thresholdComboBox, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridwidth = 2;
+        add(thresholdPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     protected void setToolTips() {
@@ -764,6 +798,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         advancedDetectionPanel.setVisible(false);
         stardistPanel.setVisible(false);
         ilastikPanel.setVisible(false);
+        thresholdPanel.setVisible(false);
         switch (method) {
             case GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS:
                 simpleDetectionPanel.setVisible(true);
@@ -773,6 +808,9 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
                 break;
             case GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK:
                 ilastikPanel.setVisible(true);
+                break;
+            case GianiDefaultParams.NUC_MAXIMA_DETECT_THRESHOLD:
+                thresholdPanel.setVisible(true);
                 break;
             default:
                 stardistPanel.setVisible(true);
@@ -989,6 +1027,9 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     private javax.swing.JLabel starDistTileZLabel;
     private javax.swing.JTextField starDistTileZTextField;
     private javax.swing.JPanel stardistPanel;
+    private javax.swing.JComboBox<String> thresholdComboBox;
+    private javax.swing.JLabel thresholdLabel;
+    private javax.swing.JPanel thresholdPanel;
     private javax.swing.JLabel titleLabel;
     private javax.swing.JLabel unitsLabel1;
     private javax.swing.JLabel unitsLabel2;

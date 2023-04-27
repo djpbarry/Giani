@@ -127,6 +127,10 @@ public class GianiDefaultParams extends Properties {
     public static final String BLOB_CHAN_ILASTIK_THRESHOLD = GianiDefaultParams.ILASTIK_THRESHOLD + " for Channel ";
     public static final String BLOB_CHAN_ILASTIK_SMOOTHING = GianiDefaultParams.ILASTIK_SMOOTHING + " for Channel ";
     public static final String BLOB_CHAN_CENTROID_LOCALISATION_METHOD = "Choose a Method to Detect Blobs in Channel ";
+    public static final String NUC_MAXIMA_DETECT_THRESHOLD = "Grey Level Thresholding";
+    public static final String NUC_MAXIMA_SEG_THRESH_LABEL = "Threshold Method for Nuclear Centroid Detection";
+    public static final String BLOB_CHAN_DETECT_THRESHOLD = "Grey Level Thresholding for Blobs in Channel ";
+    public static final String BLOB_CHAN_SEG_THRESH_LABEL = "Threshold Method for Blob Detection for Channel ";
 
     /**
      * Initialises an instance of GianiDefaultParams with most parameters set to

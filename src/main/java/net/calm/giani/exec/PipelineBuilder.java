@@ -69,6 +69,7 @@ public class PipelineBuilder {
         propLabels[MultiThreadedMaximaFinder.ILASTIK_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK;
         propLabels[MultiThreadedMaximaFinder.ILASTIK_THRESH] = GianiDefaultParams.ILASTIK_THRESHOLD;
         propLabels[MultiThreadedMaximaFinder.ILASTIK_SMOOTHING] = GianiDefaultParams.ILASTIK_SMOOTHING;
+        propLabels[MultiThreadedMaximaFinder.THRESH_METHOD] = GianiDefaultParams.NUC_MAXIMA_DETECT_THRESHOLD;
         MultiThreadedMaximaFinder process = new MultiThreadedMaximaFinder(null);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
