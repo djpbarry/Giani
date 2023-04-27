@@ -387,7 +387,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
         setVariables();
-        if (!GianiDefaultParams.setOutputDirectory(props, null)) {
+        if (!GianiDefaultParams.setOutputDirectory(props, null, props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL))) {
             return;
         }
         while (nextButton.isEnabled()) {

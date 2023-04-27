@@ -131,6 +131,7 @@ public class GianiDefaultParams extends Properties {
     public static final String NUC_MAXIMA_SEG_THRESH_LABEL = "Threshold Method for Nuclear Centroid Detection";
     public static final String BLOB_CHAN_DETECT_THRESHOLD = "Grey Level Thresholding for Blobs in Channel ";
     public static final String BLOB_CHAN_SEG_THRESH_LABEL = "Threshold Method for Blob Detection for Channel ";
+    public static final int MAX_CHANNELS = 10;
 
     /**
      * Initialises an instance of GianiDefaultParams with most parameters set to
@@ -206,13 +207,18 @@ public class GianiDefaultParams extends Properties {
      * @return true if output directory has been successfully set, false
      * otherwise
      */
-    public static boolean setOutputDirectory(Properties props, String label) {
-        File input = new File(props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL));
-        String parent;
-        if (input.isDirectory()) {
-            parent = input.getAbsolutePath();
+    public static boolean setOutputDirectory(Properties props, String label, String ref) {
+        File refFile;
+        if (ref != null) {
+            refFile = new File(ref);
         } else {
-            parent = input.getParent();
+            refFile = new File(props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL));
+        }
+        String parent;
+        if (refFile.isDirectory()) {
+            parent = refFile.getAbsolutePath();
+        } else {
+            parent = refFile.getParent();
         }
         if (label != null) {
             props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, String.format("%s%s%s_%s", parent, File.separator, GianiDefaultParams.TITLE, label));

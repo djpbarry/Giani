@@ -20,6 +20,7 @@ import mcib3d.geom.Objects3DPopulation;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.Process.Colocalise.MultiThreadedColocalise;
 import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
 import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
@@ -27,6 +28,7 @@ import net.calm.iaclasslibrary.Process.ProcessPipeline;
 import net.calm.iaclasslibrary.Process.ROI.MultiThreadedROIConstructor;
 import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedWatershed;
 
+import java.util.ArrayList;
 import java.util.Properties;
 
 /**
@@ -229,6 +231,68 @@ public class PipelineBuilder {
                 new MultiThreadedProcess[]{
                         pipeline.getProcess(3), pipeline.getProcess(5)
                 }, cells));
+
+        String selectedChannels = props.getProperty(GianiDefaultParams.CHAN_FOR_MEASURE);
+        if (selectedChannels == null || !Boolean.parseBoolean(props.getProperty(GianiDefaultParams.LOCALISE_SPOTS))) {
+            return pipeline;
+        }
+        int channels = Integer.parseInt(selectedChannels);
+        ArrayList<MultiThreadedMaximaFinder> maxFinders = new ArrayList<>();
+        for (int i = 0; i < GianiDefaultParams.MAX_CHANNELS; i++) {
+            if ((channels & (int) Math.pow(2.0, i)) != 0) {
+                maxFinders.add(PipelineBuilder.getDefaultFociMaximaFinder(props, i));
+            }
+        }
+        int nInputs = maxFinders.size() + 2;
+        MultiThreadedProcess[] localisationInputs = new MultiThreadedProcess[nInputs];
+        for (int j = 0; j < maxFinders.size(); j++) {
+            pipeline.addProcess(maxFinders.get(j));
+            localisationInputs[j] = maxFinders.get(j);
+        }
+        localisationInputs[nInputs - 2] = pipeline.getProcess(5);
+        localisationInputs[nInputs - 1] = pipeline.getProcess(3);
+        pipeline.addProcess(getDefaultColocalisationProcess(props, localisationInputs, cells));
+
         return pipeline;
+    }
+
+    public static MultiThreadedMaximaFinder getDefaultFociMaximaFinder(Properties props, int i) {
+        String[] propLabels = new String[MultiThreadedMaximaFinder.N_PROP_LABELS];
+        propLabels[MultiThreadedMaximaFinder.CHANNEL_SELECT] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_SELECT_LABEL, i);
+        propLabels[MultiThreadedMaximaFinder.BLOB_DETECT] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_BLOBS, i);
+        propLabels[MultiThreadedMaximaFinder.BLOB_SIZE] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_RAD_LABEL, i);
+        propLabels[MultiThreadedMaximaFinder.BLOB_THRESH] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_NOISE_TOL_LABEL, i);
+        propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAXIMA, i);
+        propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MIN_SIZE, i);
+        propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_THRESH, i);
+        propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_ABS, i);
+        propLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
+        propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_MAXIMA_DETECT_STARDIST, i);
+        propLabels[MultiThreadedMaximaFinder.STARDIST_PROB] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_STARDIST_PROB_THRESH, i);
+        propLabels[MultiThreadedMaximaFinder.STARDIST_OVERLAP] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_STARDIST_OVERLAP_THRESH, i);
+        propLabels[MultiThreadedMaximaFinder.STARDIST_DIR] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_STARDIST_ENV_DIRECTORY, i);
+        propLabels[MultiThreadedMaximaFinder.STARDIST_MODEL] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_STARDIST_MODEL_DIRECTORY, i);
+        propLabels[MultiThreadedMaximaFinder.STARDIST_TILE_XY] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_STARDIST_TILE_XY, i);
+        propLabels[MultiThreadedMaximaFinder.STARDIST_TILE_Z] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_STARDIST_TILE_Z, i);
+        propLabels[MultiThreadedMaximaFinder.ILASTIK_DETECT] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_NUC_MAXIMA_DETECT_ILASTIK, i);
+        propLabels[MultiThreadedMaximaFinder.ILASTIK_FILE] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_ILASTIK_PROJECT_FILE, i);
+        propLabels[MultiThreadedMaximaFinder.ILASTIK_DIR] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_ILASTIK_DIRECTORY, i);
+        propLabels[MultiThreadedMaximaFinder.ILASTIK_CHANNEL] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_ILASTIK_INPUT_CHANNEL, i);
+        propLabels[MultiThreadedMaximaFinder.ILASTIK_THRESH] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_ILASTIK_THRESHOLD, i);
+        propLabels[MultiThreadedMaximaFinder.ILASTIK_SMOOTHING] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_ILASTIK_SMOOTHING, i);
+        propLabels[MultiThreadedMaximaFinder.METHOD] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_CENTROID_LOCALISATION_METHOD, i);
+        MultiThreadedMaximaFinder process = new MultiThreadedMaximaFinder(null);
+        process.setup(new BioFormatsImg(), props, propLabels);
+        return process;
+    }
+
+    public static MultiThreadedColocalise getDefaultColocalisationProcess(Properties props, MultiThreadedProcess[] inputs, Objects3DPopulation cells) {
+        String[] localisationPropLabels = new String[MultiThreadedColocalise.N_PROP_LABELS];
+        localisationPropLabels[MultiThreadedColocalise.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
+        localisationPropLabels[MultiThreadedColocalise.CHANNELS_LABEL] = GianiDefaultParams.CHAN_FOR_MEASURE;
+        localisationPropLabels[MultiThreadedColocalise.OUTPUT_LABEL] = GianiDefaultParams.OUTPUT_DIR_LABEL;
+        MultiThreadedColocalise process = new MultiThreadedColocalise(inputs, cells);
+        process.setup(new BioFormatsImg(), props, localisationPropLabels);
+        return process;
     }
 }
