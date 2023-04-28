@@ -71,7 +71,8 @@ public class PipelineBuilder {
         propLabels[MultiThreadedMaximaFinder.ILASTIK_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK;
         propLabels[MultiThreadedMaximaFinder.ILASTIK_THRESH] = GianiDefaultParams.ILASTIK_THRESHOLD;
         propLabels[MultiThreadedMaximaFinder.ILASTIK_SMOOTHING] = GianiDefaultParams.ILASTIK_SMOOTHING;
-        propLabels[MultiThreadedMaximaFinder.THRESH_METHOD] = GianiDefaultParams.NUC_MAXIMA_DETECT_THRESHOLD;
+        propLabels[MultiThreadedMaximaFinder.THRESH_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_THRESHOLD;
+        propLabels[MultiThreadedMaximaFinder.THRESH_METHOD] = GianiDefaultParams.NUC_MAXIMA_SEG_THRESH_METHOD;
         MultiThreadedMaximaFinder process = new MultiThreadedMaximaFinder(null);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
@@ -281,6 +282,8 @@ public class PipelineBuilder {
         propLabels[MultiThreadedMaximaFinder.ILASTIK_THRESH] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_ILASTIK_THRESHOLD, i);
         propLabels[MultiThreadedMaximaFinder.ILASTIK_SMOOTHING] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_ILASTIK_SMOOTHING, i);
         propLabels[MultiThreadedMaximaFinder.METHOD] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_CENTROID_LOCALISATION_METHOD, i);
+        propLabels[MultiThreadedMaximaFinder.THRESH_METHOD] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_SEG_THRESH_METHOD, i);
+        propLabels[MultiThreadedMaximaFinder.THRESH_DETECT] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_DETECT_THRESHOLD, i);
         MultiThreadedMaximaFinder process = new MultiThreadedMaximaFinder(null);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;

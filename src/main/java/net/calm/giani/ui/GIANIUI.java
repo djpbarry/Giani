@@ -599,7 +599,10 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 propLabels[MultiThreadedMaximaFinder.ILASTIK_SMOOTHING] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_ILASTIK_SMOOTHING, i);
                 props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_SMOOTHING], "0.0");
                 propLabels[MultiThreadedMaximaFinder.METHOD] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_CENTROID_LOCALISATION_METHOD, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.METHOD], GianiDefaultParams.NUC_CENTROID_LOCALISATION_METHOD);
+                props.setProperty(propLabels[MultiThreadedMaximaFinder.METHOD], props.getProperty(GianiDefaultParams.NUC_DETECT_MODE));
+                propLabels[MultiThreadedMaximaFinder.THRESH_METHOD] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_SEG_THRESH_METHOD, i);
+                props.setProperty(propLabels[MultiThreadedMaximaFinder.THRESH_METHOD], "Default");
+                propLabels[MultiThreadedMaximaFinder.THRESH_DETECT] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_DETECT_THRESHOLD, i);
                 MaximaFinderPanel mFP = new MaximaFinderPanel(props, img, new MultiThreadedMaximaFinder(null),
                         propLabels, false, i, getHelpURI("https://github.com/djpbarry/Giani/wiki/Localising-Spots"),
                         String.format("%s%d", GianiDefaultParams.FOCI_CENTROID_LOCALISATION_TITLE, i));

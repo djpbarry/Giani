@@ -128,9 +128,9 @@ public class GianiDefaultParams extends Properties {
     public static final String BLOB_CHAN_ILASTIK_SMOOTHING = GianiDefaultParams.ILASTIK_SMOOTHING + " for Channel ";
     public static final String BLOB_CHAN_CENTROID_LOCALISATION_METHOD = "Choose a Method to Detect Blobs in Channel ";
     public static final String NUC_MAXIMA_DETECT_THRESHOLD = "Grey Level Thresholding";
-    public static final String NUC_MAXIMA_SEG_THRESH_LABEL = "Threshold Method for Nuclear Centroid Detection";
+    public static final String NUC_MAXIMA_SEG_THRESH_METHOD = "Threshold Method for Nuclear Centroid Detection";
     public static final String BLOB_CHAN_DETECT_THRESHOLD = "Grey Level Thresholding for Blobs in Channel ";
-    public static final String BLOB_CHAN_SEG_THRESH_LABEL = "Threshold Method for Blob Detection for Channel ";
+    public static final String BLOB_CHAN_SEG_THRESH_METHOD = "Threshold Method for Blob Detection for Channel ";
     public static final int MAX_CHANNELS = 10;
 
     /**
@@ -174,6 +174,7 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(NUC_MAXIMA_DETECT_BLOBS, "true");
         this.setProperty(NUC_MAXIMA_DETECT_HESSIAN, "false");
         this.setProperty(NUC_MAXIMA_DETECT_HESSIAN_START_SCALE, "0.0");
+        this.setProperty(NUC_MAXIMA_SEG_THRESH_METHOD, "Default");
         //this.setProperty(NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE, "0.0");
         //this.setProperty(NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP, "0.0");
         this.setProperty(NUC_MAXIMA_DETECT_HESSIAN_ABS, "false");

@@ -17,6 +17,7 @@
 package net.calm.giani.exec;
 
 import ij.IJ;
+import loci.common.DebugTools;
 import mcib3d.geom.Objects3DPopulation;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.giani.ui.GIANIUI;
@@ -125,6 +126,7 @@ public class GIANI {
      * @param props contains parameter name-value pairs for all parameters necessary to run GIANI
      */
     public void run(Properties props) {
+        DebugTools.setRootLevel("WARN");
         ProcessPipeline pipeline = (new PipelineBuilder()).buildFullPipeline(props, new Objects3DPopulation());
         PipelineExecutor exec = new PipelineExecutor(pipeline, props);
         exec.start();

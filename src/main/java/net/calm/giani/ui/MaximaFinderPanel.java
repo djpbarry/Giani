@@ -64,21 +64,21 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
      * Constructs a MaximaFinderPanel1 and associates the specified Properties,
      * BioFormatsImg and process with it.
      *
-     * @param props contains the parameters governing how the process associated
-     * with this panel will run
-     * @param img the image that the process associated with this panel will run
-     * on
-     * @param process the process that this panel is seeking user-specified
-     * parameters for
-     * @param propLabels the labels associated with the parameters that this
-     * panel will display
+     * @param props              contains the parameters governing how the process associated
+     *                           with this panel will run
+     * @param img                the image that the process associated with this panel will run
+     *                           on
+     * @param process            the process that this panel is seeking user-specified
+     *                           parameters for
+     * @param propLabels         the labels associated with the parameters that this
+     *                           panel will display
      * @param allowChannelSelect set to true to include a dropdown menu allowing
-     * channel selection
-     * @param defaultChannel if allowChannelSelect is false, specify the
-     * specific channel the process associated with this panel will run on
-     * @param helpURI link to an online help page describing how to use this
-     * panel
-     * @param title description of what this panel does
+     *                           channel selection
+     * @param defaultChannel     if allowChannelSelect is false, specify the
+     *                           specific channel the process associated with this panel will run on
+     * @param helpURI            link to an online help page describing how to use this
+     *                           panel
+     * @param title              description of what this panel does
      */
     public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process, String[] propLabels, boolean allowChannelSelect, int defaultChannel, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
@@ -218,7 +218,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         add(titleLabel, gridBagConstraints);
 
-        methodComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST, GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK, GianiDefaultParams.NUC_MAXIMA_DETECT_THRESHOLD}));
+        methodComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST, GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK, GianiDefaultParams.NUC_MAXIMA_DETECT_THRESHOLD}));
         methodComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 methodComboBoxActionPerformed(evt);
@@ -757,12 +757,15 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT], "false");
         props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_DETECT], "false");
         props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT], "false");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.THRESH_DETECT], "false");
         if (method.toLowerCase().contains("ilastik")) {
             props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_DETECT], "true");
         } else if (method.toLowerCase().contains("stardist")) {
             props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT], "true");
         } else if (method.toLowerCase().contains("advanced")) {
             props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT], "true");
+        } else if (method.toLowerCase().contains("thresh")) {
+            props.setProperty(propLabels[MultiThreadedMaximaFinder.THRESH_DETECT], "true");
         } else {
             props.setProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT], "true");
         }
@@ -922,7 +925,8 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
             }
         }
         if (Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT]))
-                || Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_DETECT]))) {
+                || Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_DETECT]))
+                || Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.THRESH_DETECT]))) {
             for (int i = 0; i < imp.getNSlices(); i++) {
                 if (binaryOutline[i] == null) {
                     continue;
