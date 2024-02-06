@@ -16,7 +16,7 @@
  */
 package net.calm.giani.ui;
 
-import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.IO.BioFormats.LocationAgnosticBioFormatsImg;
 import net.calm.iaclasslibrary.Process.Colocalise.MultiThreadedColocalise;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 
@@ -45,7 +45,7 @@ public class LocalisationPanel extends LayerPanel {
      * @param process the process that this panel is seeking user-specified parameters for
      * @param propLabels the labels associated with the parameters that this panel will display
      */
-    public LocalisationPanel(Properties props, BioFormatsImg img, MultiThreadedColocalise process, String[] propLabels) {
+    public LocalisationPanel(Properties props, LocationAgnosticBioFormatsImg img, MultiThreadedColocalise process, String[] propLabels) {
         super(props, img, process, propLabels, null);
         initComponents();
     }

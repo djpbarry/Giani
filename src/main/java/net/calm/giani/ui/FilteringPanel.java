@@ -8,6 +8,7 @@ package net.calm.giani.ui;
 import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.IO.BioFormats.LocationAgnosticBioFormatsImg;
 import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
@@ -44,7 +45,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
      * @param process    the process that this panel is seeking user-specified parameters for
      * @param propLabels the labels associated with the parameters that this panel will display
      */
-    public FilteringPanel(Properties props, BioFormatsImg img, MultiThreadedGaussianFilter process, String[] propLabels) {
+    public FilteringPanel(Properties props, LocationAgnosticBioFormatsImg img, MultiThreadedGaussianFilter process, String[] propLabels) {
         this(props, img, process, propLabels, null, null);
     }
 
@@ -58,7 +59,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
      * @param helpURI    link to an online help page describing how to use this panel
      * @param title      description of what this panel does
      */
-    public FilteringPanel(Properties props, BioFormatsImg img, MultiThreadedGaussianFilter process, String[] propLabels, URI helpURI, String title) {
+    public FilteringPanel(Properties props, LocationAgnosticBioFormatsImg img, MultiThreadedGaussianFilter process, String[] propLabels, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
         this.title = title;
         this.info = new GIANIParamInfos();

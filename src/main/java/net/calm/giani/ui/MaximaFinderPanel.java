@@ -24,7 +24,7 @@ import ij.process.AutoThresholder;
 import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
-import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.IO.BioFormats.LocationAgnosticBioFormatsImg;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
@@ -80,7 +80,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
      *                           panel
      * @param title              description of what this panel does
      */
-    public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process, String[] propLabels, boolean allowChannelSelect, int defaultChannel, URI helpURI, String title) {
+    public MaximaFinderPanel(Properties props, LocationAgnosticBioFormatsImg img, MultiThreadedMaximaFinder process, String[] propLabels, boolean allowChannelSelect, int defaultChannel, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
         this.allowChannelSelect = allowChannelSelect;
         this.defaultChannel = defaultChannel;

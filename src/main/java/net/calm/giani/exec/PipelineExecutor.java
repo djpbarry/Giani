@@ -21,10 +21,9 @@ import ij.measure.ResultsTable;
 import ij.plugin.filter.Analyzer;
 import ij.plugin.frame.RoiManager;
 import loci.common.DebugTools;
-import loci.formats.FormatException;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsFileLister;
-import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.IO.BioFormats.LocationAgnosticBioFormatsImg;
 import net.calm.iaclasslibrary.IO.DataWriter;
 import net.calm.iaclasslibrary.IO.PropertyWriter;
 import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
@@ -55,8 +54,9 @@ public class PipelineExecutor extends Thread {
 
     /**
      * Construct an executor with the specified pipeline and properties
+     *
      * @param pipeline the {@link ProcessPipeline} to be executed
-     * @param props the parameter-value pairs for every process in the pipeline
+     * @param props    the parameter-value pairs for every process in the pipeline
      */
     public PipelineExecutor(ProcessPipeline pipeline, Properties props) {
         this.pipeline = pipeline;
@@ -94,12 +94,14 @@ public class PipelineExecutor extends Thread {
         ExecutorService exec = Executors.newSingleThreadExecutor();
         while (files.size() > 0) {
             String file = files.get(0);
-            BioFormatsImg img = new BioFormatsImg();
-            try {
-                img.setId(String.format("%s%s%s", input, File.separator, file));
-            } catch (IOException | FormatException e) {
-                GenUtils.logError(e, String.format("Failed to initialise %s", file));
-            }
+            String bioFormatsOptions = String.format("location=[Local machine] open=[%s%s%s] windowless=true view=Hyperstack",
+                    input, File.separator, file);
+            LocationAgnosticBioFormatsImg img = new LocationAgnosticBioFormatsImg(bioFormatsOptions);
+//            try {
+//                img.setId(String.format("%s%s%s", input, File.separator, file));
+//            } catch (IOException | FormatException e) {
+//                GenUtils.logError(e, String.format("Failed to initialise %s", file));
+//            }
             props.put(img.reformatFileName(), file);
             IJ.log(String.format("Analysing file %s", FilenameUtils.getName(file)));
             int nSeries = img.getSeriesCount();
@@ -152,7 +154,7 @@ public class PipelineExecutor extends Thread {
         IJ.log(String.format("Done %s", TimeAndDate.getCurrentTimeAndDate()));
     }
 
-    private void updateFileList(BioFormatsImg img, ArrayList<String> files) {
+    private void updateFileList(LocationAgnosticBioFormatsImg img, ArrayList<String> files) {
         String[] relatedFiles = img.getFileList();
         for (String rf : relatedFiles) {
             for (String f : files) {

@@ -24,7 +24,7 @@ import ij.ImagePlus;
 import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsFileLister;
-import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.IO.BioFormats.LocationAgnosticBioFormatsImg;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
 import net.calm.iaclasslibrary.UtilClasses.Utilities;
@@ -60,7 +60,7 @@ public class SelectInputPanel extends LayerPanel {
      * @param img the image that the process associated with this panel will run on
      * @param propLabels the labels associated with the parameters that this panel will display
      */
-    public SelectInputPanel(Properties props, BioFormatsImg img, String[] propLabels) {
+    public SelectInputPanel(Properties props, LocationAgnosticBioFormatsImg img, String[] propLabels) {
         this(props, img, propLabels, null);
     }
 
@@ -72,7 +72,7 @@ public class SelectInputPanel extends LayerPanel {
      * @param propLabels the labels associated with the parameters that this panel will display
      * @param helpURI link to an online help page describing how to use this panel
      */
-    public SelectInputPanel(Properties props, BioFormatsImg img, String[] propLabels, URI helpURI) {
+    public SelectInputPanel(Properties props, LocationAgnosticBioFormatsImg img, String[] propLabels, URI helpURI) {
         super(props, img, null, propLabels, helpURI);
         initComponents();
         this.info = new GIANIParamInfos();

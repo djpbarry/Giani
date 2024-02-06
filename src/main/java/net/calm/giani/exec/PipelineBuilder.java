@@ -19,7 +19,7 @@ package net.calm.giani.exec;
 import mcib3d.geom.Objects3DPopulation;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
-import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.IO.BioFormats.LocationAgnosticBioFormatsImg;
 import net.calm.iaclasslibrary.Process.Colocalise.MultiThreadedColocalise;
 import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
 import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
@@ -74,7 +74,7 @@ public class PipelineBuilder {
         propLabels[MultiThreadedMaximaFinder.THRESH_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_THRESHOLD;
         propLabels[MultiThreadedMaximaFinder.THRESH_METHOD] = GianiDefaultParams.NUC_MAXIMA_SEG_THRESH_METHOD;
         MultiThreadedMaximaFinder process = new MultiThreadedMaximaFinder(null);
-        process.setup(new BioFormatsImg(), props, propLabels);
+        process.setup(new LocationAgnosticBioFormatsImg(null), props, propLabels);
         return process;
     }
 
@@ -93,7 +93,7 @@ public class PipelineBuilder {
         propLabels[MultiThreadedTopHatFilter.RESIZE_FACTOR_LABEL] = GianiDefaultParams.NUC_TOP_HAT_DOWNSIZE_FACTOR_LABEL;
         propLabels[MultiThreadedTopHatFilter.ENABLE_FILTER_LABEL] = GianiDefaultParams.ENABLE_TOP_HAT_FILTER;
         MultiThreadedTopHatFilter process = new MultiThreadedTopHatFilter(inputs);
-        process.setup(new BioFormatsImg(), props, propLabels);
+        process.setup(new LocationAgnosticBioFormatsImg(null), props, propLabels);
         return process;
     }
 
@@ -109,7 +109,7 @@ public class PipelineBuilder {
         propLabels[MultiThreadedGaussianFilter.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
         propLabels[MultiThreadedGaussianFilter.FILT_RAD_LABEL] = GianiDefaultParams.NUC_FILT_RAD_LABEL;
         MultiThreadedGaussianFilter process = new MultiThreadedGaussianFilter(null);
-        process.setup(new BioFormatsImg(), props, propLabels);
+        process.setup(new LocationAgnosticBioFormatsImg(null), props, propLabels);
         return process;
     }
 
@@ -135,7 +135,7 @@ public class PipelineBuilder {
                 false,
                 cells,
                 MultiThreadedWatershed.NUCLEI);
-        process.setup(new BioFormatsImg(), props, propLabels);
+        process.setup(new LocationAgnosticBioFormatsImg(null), props, propLabels);
         return process;
     }
 
@@ -151,7 +151,7 @@ public class PipelineBuilder {
         propLabels[MultiThreadedGaussianFilter.CHANNEL_LABEL] = GianiDefaultParams.CELL_SEG_CHAN_SELECT_LABEL;
         propLabels[MultiThreadedGaussianFilter.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
         propLabels[MultiThreadedGaussianFilter.FILT_RAD_LABEL] = GianiDefaultParams.CELL_FILT_RAD_LABEL;
-        process.setup(new BioFormatsImg(), props, propLabels);
+        process.setup(new LocationAgnosticBioFormatsImg(null), props, propLabels);
         return process;
     }
 
@@ -179,7 +179,7 @@ public class PipelineBuilder {
                 cells,
                 MultiThreadedWatershed.CELLS
         );
-        process.setup(new BioFormatsImg(), props, propLabels);
+        process.setup(new LocationAgnosticBioFormatsImg(null), props, propLabels);
         return process;
     }
 
@@ -201,7 +201,7 @@ public class PipelineBuilder {
                 inputs,
                 cells
         );
-        process.setup(new BioFormatsImg(), props, propLabels);
+        process.setup(new LocationAgnosticBioFormatsImg(null), props, propLabels);
         return process;
     }
 
@@ -285,7 +285,7 @@ public class PipelineBuilder {
         propLabels[MultiThreadedMaximaFinder.THRESH_METHOD] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_SEG_THRESH_METHOD, i);
         propLabels[MultiThreadedMaximaFinder.THRESH_DETECT] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_DETECT_THRESHOLD, i);
         MultiThreadedMaximaFinder process = new MultiThreadedMaximaFinder(null);
-        process.setup(new BioFormatsImg(), props, propLabels);
+        process.setup(new LocationAgnosticBioFormatsImg(null), props, propLabels);
         return process;
     }
 
@@ -295,7 +295,7 @@ public class PipelineBuilder {
         localisationPropLabels[MultiThreadedColocalise.CHANNELS_LABEL] = GianiDefaultParams.CHAN_FOR_MEASURE;
         localisationPropLabels[MultiThreadedColocalise.OUTPUT_LABEL] = GianiDefaultParams.OUTPUT_DIR_LABEL;
         MultiThreadedColocalise process = new MultiThreadedColocalise(inputs, cells);
-        process.setup(new BioFormatsImg(), props, localisationPropLabels);
+        process.setup(new LocationAgnosticBioFormatsImg(null), props, localisationPropLabels);
         return process;
     }
 }

@@ -19,7 +19,7 @@ package net.calm.giani.ui;
 import ij.plugin.filter.Analyzer;
 import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
-import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.IO.BioFormats.LocationAgnosticBioFormatsImg;
 import net.calm.iaclasslibrary.Process.ROI.MultiThreadedROIConstructor;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
@@ -53,7 +53,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
      * @param propLabels the labels associated with the parameters that this panel will display
      * @param helpURI link to an online help page describing how to use this panel
      */
-    public MeasurementPanel(Properties props, BioFormatsImg img, MultiThreadedROIConstructor process, String[] propLabels, URI helpURI) {
+    public MeasurementPanel(Properties props, LocationAgnosticBioFormatsImg img, MultiThreadedROIConstructor process, String[] propLabels, URI helpURI) {
         super(props, img, process, propLabels, helpURI);
         this.info = new GIANIParamInfos();
         initComponents();

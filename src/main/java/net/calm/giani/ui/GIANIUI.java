@@ -7,7 +7,7 @@ import net.calm.giani.exec.PipelineExecutor;
 import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
-import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.IO.BioFormats.LocationAgnosticBioFormatsImg;
 import net.calm.iaclasslibrary.IO.PropertyWriter;
 import net.calm.iaclasslibrary.Process.Colocalise.MultiThreadedColocalise;
 import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
@@ -38,7 +38,7 @@ import java.util.Properties;
  */
 public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
-    private final BioFormatsImg img;
+    private final LocationAgnosticBioFormatsImg img;
     private static Properties props;
     private final LinkedList<LayerPanel> componentList = new LinkedList();
     private int layerIndex = 0;
@@ -61,7 +61,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
      */
     public GIANIUI() {
         DebugTools.setRootLevel("WARN");
-        img = new BioFormatsImg();
+        img = new LocationAgnosticBioFormatsImg(null);
         pipeline = new ProcessPipeline();
         cells = new Objects3DPopulation();
         this.info = new GIANIParamInfos();

@@ -11,7 +11,7 @@ import ij.plugin.LutLoader;
 import ij.process.AutoThresholder;
 import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
-import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.IO.BioFormats.LocationAgnosticBioFormatsImg;
 import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedWatershed;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
@@ -49,7 +49,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
      * @param helpURI    link to an online help page describing how to use this panel
      * @param title      description of what this panel does
      */
-    public SegmentationPanel(Properties props, BioFormatsImg img, MultiThreadedWatershed process, String[] propLabels, URI helpURI, String title) {
+    public SegmentationPanel(Properties props, LocationAgnosticBioFormatsImg img, MultiThreadedWatershed process, String[] propLabels, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
         this.title = title;
         this.info = new GIANIParamInfos();

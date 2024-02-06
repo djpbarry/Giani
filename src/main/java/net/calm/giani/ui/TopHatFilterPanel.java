@@ -7,7 +7,7 @@ package net.calm.giani.ui;
 
 import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
-import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.IO.BioFormats.LocationAgnosticBioFormatsImg;
 import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
@@ -48,7 +48,7 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
      * @param propLabels the labels associated with the parameters that this
      *                   panel will display
      */
-    public TopHatFilterPanel(Properties props, BioFormatsImg img, MultiThreadedTopHatFilter process, String[] propLabels) {
+    public TopHatFilterPanel(Properties props, LocationAgnosticBioFormatsImg img, MultiThreadedTopHatFilter process, String[] propLabels) {
         this(props, img, process, propLabels, null, null);
     }
 
@@ -68,7 +68,7 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
      *                   panel
      * @param title      description of what this panel does
      */
-    public TopHatFilterPanel(Properties props, BioFormatsImg img, MultiThreadedTopHatFilter process, String[] propLabels, URI helpURI, String title) {
+    public TopHatFilterPanel(Properties props, LocationAgnosticBioFormatsImg img, MultiThreadedTopHatFilter process, String[] propLabels, URI helpURI, String title) {
         super(props, img, process, propLabels, helpURI);
         this.title = title;
         this.info = new GIANIParamInfos();
