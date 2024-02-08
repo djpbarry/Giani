@@ -7,13 +7,13 @@
     <parent>
         <groupId>org.scijava</groupId>
         <artifactId>pom-scijava</artifactId>
-        <version>33.2.0</version>
+        <version>37.0.0</version>
         <relativePath/>
     </parent>
 
     <groupId>net.calm</groupId>
     <artifactId>giani</artifactId>
-    <version>3.5.0</version>
+    <version>3.5.1</version>
 
     <build>
         <plugins>
@@ -155,7 +155,7 @@
         <dependency>
             <groupId>net.calm</groupId>
             <artifactId>iaclasslibrary</artifactId>
-            <version>1.0.29</version>
+            <version>1.0.30</version>
         </dependency>
         <dependency>
             <groupId>com.github.mcib3d</groupId>
