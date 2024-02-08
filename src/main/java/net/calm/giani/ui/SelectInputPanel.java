@@ -298,7 +298,7 @@ public class SelectInputPanel extends LayerPanel {
         setVariables();
         int channel = Integer.parseInt((String) channelComboBox.getSelectedItem());
         try {
-            img.loadPixelData(getSelectedSeries(), channel, channel + 1, null);
+            img.loadPixelData(getSelectedSeries(), channel, channel, null);
             ImagePlus imp = img.getLoadedImage();
             imp.show();
             IJ.log(String.format("Displaying \"%s\"", imp.getTitle()));
