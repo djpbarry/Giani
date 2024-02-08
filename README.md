@@ -3,7 +3,7 @@
 # Overview
 GIANI is a FIJI plugin designed to facilitate routine analysis of 3D cell biology images. Implemented specifically with batch-processing in mind, GIANI is designed to:
 
-* Read data sets in their native, proprietary format
+* Read data sets in their native format
 * Automatically segment nuclei and cells
 * Measure nuclear and cell morphology, together with fluorescence intensities within these regions.
 * Allow users to explore their results
