@@ -131,6 +131,13 @@ public class GianiDefaultParams extends Properties {
     public static final String NUC_MAXIMA_SEG_THRESH_METHOD = "Threshold Method for Nuclear Centroid Detection";
     public static final String BLOB_CHAN_DETECT_THRESHOLD = "Grey Level Thresholding for Blobs in Channel ";
     public static final String BLOB_CHAN_SEG_THRESH_METHOD = "Threshold Method for Blob Detection for Channel ";
+    public static final String IMAGE_LOCATION = "Location of images";
+    public static final String OMERO_SERVER = "OMERO Server";
+    public static final String OMERO_USER = "OMERO UserName";
+    public static final String OMERO_PASSWORD = "OMERO Password";
+    public static final String OMERO_PORT = "OMERO Port";
+    public static final String OMERO_GROUP = "OMERO GroupID";
+    public static final String OMERO_DATASET = "OMERO Dataset";
     public static final int MAX_CHANNELS = 10;
 
     /**

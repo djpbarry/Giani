@@ -149,13 +149,18 @@
             <id>github</id>
             <url>https://maven.pkg.github.com/djpbarry/*</url>
         </repository>
+        <repository>
+            <id>ome</id>
+            <name>OME Artifactory</name>
+            <url>https://artifacts.openmicroscopy.org/artifactory/maven/</url>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>net.calm</groupId>
             <artifactId>iaclasslibrary</artifactId>
-            <version>1.0.30</version>
+            <version>1.0.31</version>
         </dependency>
         <dependency>
             <groupId>com.github.mcib3d</groupId>
@@ -171,6 +176,10 @@
                     <artifactId>mcib3d-core</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.openmicroscopy</groupId>
+            <artifactId>omero-gateway</artifactId>
         </dependency>
     </dependencies>
 

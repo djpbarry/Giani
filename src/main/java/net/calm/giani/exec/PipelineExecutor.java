@@ -30,11 +30,22 @@ import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
 import net.calm.iaclasslibrary.Process.ProcessPipeline;
 import net.calm.iaclasslibrary.TimeAndDate.TimeAndDate;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
+import omero.gateway.Gateway;
+import omero.gateway.LoginCredentials;
+import omero.gateway.SecurityContext;
+import omero.gateway.exception.DSAccessException;
+import omero.gateway.exception.DSOutOfServiceException;
+import omero.gateway.facility.BrowseFacility;
+import omero.gateway.model.ExperimenterData;
+import omero.gateway.model.ImageData;
+import omero.log.SimpleLogger;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -83,25 +94,38 @@ public class PipelineExecutor extends Thread {
         IJ.log(String.format("Input: %s", input.getAbsolutePath()));
         File outputDir = new File(props.getProperty(GianiDefaultParams.OUTPUT_DIR_LABEL));
         IJ.log(String.format("Output: %s", outputDir.getAbsolutePath()));
-        ArrayList<String> files;
+        ArrayList<String> images;
         if (input.isDirectory()) {
-            files = BioFormatsFileLister.obtainValidFileList(input);
+            images = BioFormatsFileLister.obtainValidFileList(input);
+        } else if (props.getProperty(GianiDefaultParams.IMAGE_LOCATION).equals("OMERO")) {
+            images = getImageIDList(props.getProperty(GianiDefaultParams.OMERO_SERVER),
+                    props.getProperty(GianiDefaultParams.OMERO_USER),
+                    props.getProperty(GianiDefaultParams.OMERO_PASSWORD),
+                    Integer.parseInt(props.getProperty(GianiDefaultParams.OMERO_GROUP)),
+                    Long.parseLong(props.getProperty(GianiDefaultParams.OMERO_DATASET)),
+                    Integer.parseInt(props.getProperty(GianiDefaultParams.OMERO_PORT)));
         } else {
-            files = new ArrayList();
-            files.add(input.getName());
+            images = new ArrayList<>();
+            images.add(input.getName());
             input = new File(input.getParent());
         }
         ExecutorService exec = Executors.newSingleThreadExecutor();
-        while (files.size() > 0) {
-            String file = files.get(0);
-            String bioFormatsOptions = String.format("location=[Local machine] open=[%s%s%s] windowless=true view=Hyperstack",
-                    input, File.separator, file);
+        while (images.size() > 0) {
+            String file = images.get(0);
+            String bioFormatsOptions;
+            if (props.getProperty(GianiDefaultParams.IMAGE_LOCATION).equals("OMERO")) {
+                bioFormatsOptions = String.format("location=[OMERO] open=[omero:server=%s\nuser=%s\nport=%s\npass=%s\ngroupID=%s\niid=%s]" +
+                                "windowless=true view=Hyperstack",
+                        props.getProperty(GianiDefaultParams.OMERO_SERVER),
+                        props.getProperty(GianiDefaultParams.OMERO_USER),
+                        props.getProperty(GianiDefaultParams.OMERO_PORT),
+                        props.getProperty(GianiDefaultParams.OMERO_PASSWORD),
+                        props.getProperty(GianiDefaultParams.OMERO_GROUP), file);
+            } else {
+                bioFormatsOptions = String.format("location=[Local machine] open=[%s%s%s] windowless=true view=Hyperstack",
+                        input, File.separator, file);
+            }
             LocationAgnosticBioFormatsImg img = new LocationAgnosticBioFormatsImg(bioFormatsOptions);
-//            try {
-//                img.setId(String.format("%s%s%s", input, File.separator, file));
-//            } catch (IOException | FormatException e) {
-//                GenUtils.logError(e, String.format("Failed to initialise %s", file));
-//            }
             props.put(img.reformatFileName(), file);
             IJ.log(String.format("Analysing file %s", FilenameUtils.getName(file)));
             int nSeries = img.getSeriesCount();
@@ -139,7 +163,7 @@ public class PipelineExecutor extends Thread {
                     }
                 }
             }
-            updateFileList(img, files);
+            updateFileList(img, images);
         }
         try {
             DataWriter.saveResultsTable(Analyzer.getResultsTable(), new File(String.format("%s%s%s_Output.csv", outputDir, File.separator, GianiDefaultParams.TITLE)), false, true);
@@ -164,6 +188,25 @@ public class PipelineExecutor extends Thread {
                 }
             }
         }
+    }
+
+    private ArrayList<String> getImageIDList(String host, String username, String password, int groupID, long datasetID, int port) {
+        Collection<ImageData> images = null;
+        try {
+            Gateway gateway = new Gateway(new SimpleLogger());
+            ExperimenterData user = gateway.connect(new LoginCredentials(username, password, host, port));
+            BrowseFacility browse = gateway.getFacility(BrowseFacility.class);
+            images = browse.getImagesForDatasets(new SecurityContext(groupID), Arrays.asList(datasetID));
+        } catch (DSOutOfServiceException | ExecutionException | DSAccessException e) {
+            System.out.print(e.toString());
+        }
+        ArrayList<String> imageIDs = new ArrayList<>();
+        if (images != null) {
+            for (ImageData i : images) {
+                imageIDs.add(String.valueOf(i.getId()));
+            }
+        }
+        return imageIDs;
     }
 
 }
