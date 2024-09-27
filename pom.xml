@@ -146,16 +146,16 @@
             <url>https://maven.scijava.org/content/groups/public</url>
         </repository>
         <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/djpbarry/*</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
     <dependencies>
         <dependency>
-            <groupId>net.calm</groupId>
-            <artifactId>iaclasslibrary</artifactId>
-            <version>1.0.30</version>
+            <groupId>com.github.djpbarry</groupId>
+            <artifactId>IAClassLibrary</artifactId>
+            <version>216117f86e</version>
         </dependency>
         <dependency>
             <groupId>com.github.mcib3d</groupId>
