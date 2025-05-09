@@ -13,7 +13,7 @@
 
     <groupId>net.calm</groupId>
     <artifactId>giani</artifactId>
-    <version>3.4.7</version>
+    <version>3.4.8</version>
 
     <build>
         <plugins>
@@ -155,7 +155,7 @@
         <dependency>
             <groupId>com.github.djpbarry</groupId>
             <artifactId>IAClassLibrary</artifactId>
-            <version>974c374d69</version>
+            <version>fe92f24c6e</version>
         </dependency>
         <dependency>
             <groupId>com.github.mcib3d</groupId>
