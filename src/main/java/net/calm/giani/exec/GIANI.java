@@ -48,72 +48,99 @@ public class GIANI {
             GIANIUI ui = new GIANIUI();
             ui.setVisible(true);
         } else {
-            GIANI.init(args);
+            System.setProperty("java.awt.headless", "true");
+            File file = null;
+            File list = null;
+            File props = null;
+            File output = null;
+            int jobNumber = -1;
+            int series = 0;
+            try {
+                for (int i = 0; i < args.length - 1; i++) {
+                    switch (args[i]) {
+                        case "-f":
+                            file = new File(args[i + 1]);
+                            break;
+                        case "-o":
+                            output = new File(args[i + 1]);
+                            break;
+                        case "-l":
+                            list = new File(args[i + 1]);
+                            break;
+                        case "-p":
+                            props = new File(args[i + 1]);
+                            break;
+                        case "-n":
+                            jobNumber = Integer.parseInt(args[i + 1]);
+                        case "-s":
+                            series = Integer.parseInt(args[i + 1]);
+                            break;
+                        case "-h":
+                            System.out.println("For instructions on how to run GIANI from a command line or shell, " +
+                                    "see here: https://github.com/djpbarry/Giani/wiki/Running-GIANI-on-a-HPC-Cluster");
+                        default:
+
+                    }
+                }
+            } catch (NumberFormatException e) {
+                GenUtils.logError(e, "Invalid numeric argument - using default value.");
+            } catch (NullPointerException e) {
+                GenUtils.logError(e, "Invalid filename - aborting.");
+            }
+            if (props == null) {
+                System.out.println("No valid properties file specified - exiting.");
+                System.exit(0);
+            } else if (list == null && file == null) {
+                System.out.println("No valid input file or file list specified - exiting.");
+                System.exit(0);
+            }
+            if (list != null && jobNumber < 0) {
+                System.out.println("Invalid job number specified - exiting.");
+                System.exit(0);
+            }
+            GIANI.init(props, list, file, jobNumber, series, output);
             System.exit(0);
         }
     }
-//    public static void main(String[] args) {
-//        try {
-//            ImporterOptions io = new ImporterOptions();
-//            io.setCBegin(0, 0);
-//            io.setCEnd(0, 0);
-//            io.setCStep(0, 1);
-//            io.setSpecifyRanges(true);
-//            io.setId("C:/Users/davej/ilastikTemp/ilastik_temp.ilastik.tiff");
-//            ImagePlus output = BF.openImagePlus(io)[0];
-//            output.show();
-//        } catch (IOException | FormatException e) {
-//
-//        }
-//        //System.exit(0);
-//    }
 
-    private static void init(String[] args) {
-        if (args.length < 3) {
-            System.out.println("Insufficient arguments specified.");
-            System.exit(0);
-        }
-        IJ.log(String.format("Job List: %s", args[0]));
-        IJ.log(String.format("Properties File: %s", args[1]));
-        IJ.log(String.format("Job Number: %s", args[2]));
-//        if (args.length > 3) {
-//            if (new File(args[3]).exists()) {
-//                IJ.log(String.format("Output Directory: %s", args[3]));
-//            } else {
-//                IJ.log(String.format("%s is not a valid file path.", args[3]));
-//            }
-//        }
+    private static void init(File inputProps, File jobListFile, File file, int jobNumber, int series, File outputDir) {
+        IJ.log(String.format("Properties File: %s", inputProps.getAbsolutePath()));
+        if (jobListFile != null) {
+            IJ.log(String.format("Job List: %s", jobListFile.getAbsolutePath()));
+            IJ.log(String.format("Job Number: %d", jobNumber));
+        } else IJ.log(String.format("Input File: %s", file));
         System.setProperty("java.awt.headless", "true");
         Properties props = new GianiDefaultParams();
         try {
-            PropertyWriter.loadProperties(props, null, new File(args[1]));
+            PropertyWriter.loadProperties(props, null, inputProps);
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to load properties file.");
         }
-        File jobListFile = new File(args[0]);
-        if (!jobListFile.exists()) {
-            IJ.log(String.format("%s is not a valid job list file - skipping.", args[0]));
-        }
         String[] jobDetails;
-        try {
-            jobDetails = getJobDetails(jobListFile, Integer.parseInt(args[2]));
-        } catch (FileNotFoundException e) {
-            GenUtils.logError(e, "Job list file not found - aborting.");
-            return;
-        } catch (IOException e) {
-            GenUtils.logError(e, "Could not read job list file - aborting.");
-            return;
+        if (jobListFile != null) {
+            if (!jobListFile.exists()) {
+                IJ.log(String.format("%s is not a valid job list file - exiting.", jobListFile.getAbsolutePath()));
+                return;
+            }
+            try {
+                jobDetails = getJobDetails(jobListFile, jobNumber);
+                file = new File(jobDetails[0]);
+                series = Integer.parseInt(jobDetails[1]);
+            } catch (FileNotFoundException e) {
+                GenUtils.logError(e, "Job list file not found - aborting.");
+                return;
+            } catch (IOException | NullPointerException e) {
+                GenUtils.logError(e, "Could not read job list file - aborting.");
+                return;
+            }
         }
-        props.setProperty(GianiDefaultParams.INPUT_DIR_LABEL, jobDetails[0]);
-        props.setProperty(GianiDefaultParams.SPECIFIC_SERIES, jobDetails[1]);
-        String label = String.format("%s_S%s", FilenameUtils.getName(jobDetails[0]), jobDetails[1]);
-        String outputDir;
-        if (args.length > 3) {
-            outputDir = args[3];
-        } else {
-            outputDir = props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL);
+        props.setProperty(GianiDefaultParams.INPUT_DIR_LABEL, file.getAbsolutePath());
+        props.setProperty(GianiDefaultParams.SPECIFIC_SERIES, String.valueOf(series));
+        String label = String.format("%s_S%s", FilenameUtils.getName(file.getAbsolutePath()), series);
+        if (outputDir == null) {
+            outputDir = new File(props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL));
         }
-        if (!GianiDefaultParams.setOutputDirectory(props, label, outputDir)) {
+        if (!GianiDefaultParams.setOutputDirectory(props, label, outputDir.getAbsolutePath())) {
             System.exit(0);
         }
         IJ.log(String.format("Output Directory: %s", props.getProperty(GianiDefaultParams.OUTPUT_DIR_LABEL)));
