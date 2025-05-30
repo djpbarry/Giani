@@ -13,7 +13,7 @@
 
     <groupId>net.calm</groupId>
     <artifactId>giani</artifactId>
-    <version>3.4.8</version>
+    <version>3.4.9</version>
 
     <build>
         <plugins>
