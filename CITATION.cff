@@ -1,0 +1,49 @@
+cff-version: 1.2.0
+message: "If you use GIANI in your work, please cite both the software and the associated publication (see preferred-citation)."
+title: "GIANI: General Image Analysis of Nuclei-containing Images"
+abstract: >-
+  GIANI is a FIJI/ImageJ plugin for automated batch analysis of 3D
+  microscopy images. It reads proprietary image formats, segments nuclei
+  and cells, measures morphology and fluorescence intensity, and provides
+  a browser for exploring the results.
+type: software
+license: GPL-3.0-or-later
+version: 3.4.10
+date-released: "2019-01-01"
+repository-code: "https://github.com/djpbarry/Giani"
+url: "https://giani-docs.readthedocs.io"
+keywords:
+  - Fiji
+  - ImageJ
+  - image analysis
+  - microscopy
+  - cell segmentation
+  - 3D
+authors:
+  - family-names: Barry
+    given-names: David J
+    orcid: "https://orcid.org/0000-0003-2763-5244"
+    website: "https://www.david-j-barry.com/"
+    affiliation: "The Francis Crick Institute, London, UK"
+preferred-citation:
+  type: article
+  title: "GIANI - open-source software for automated analysis of 3D microscopy images"
+  authors:
+    - family-names: Barry
+      given-names: David J
+      orcid: "https://orcid.org/0000-0003-2763-5244"
+      affiliation: "The Francis Crick Institute, London, UK"
+    - family-names: Gerri
+      given-names: Claudia
+    - family-names: Bell
+      given-names: Donald M
+    - family-names: D'Antuono
+      given-names: Rocco
+    - family-names: Niakan
+      given-names: Kathy K
+  journal: "Journal of Cell Science"
+  volume: 135
+  issue: 10
+  start: jcs259511
+  year: 2022
+  doi: "10.1242/jcs.259511"

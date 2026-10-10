@@ -62,3 +62,17 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   `Settings.setAllowTrackSplitting(true)`.
 - Noted that inTRACKtive shows one track type (the cell lineage); nuclei/punctae
   stay in `GIANI_Output.csv`/`Spot_Data.csv` and `ResultsBrowser`, not inTRACKtive.
+
+## 2026-10-10 — Citation metadata added
+
+- Added `CITATION.cff` (Citation File Format 1.2.0) at the repo root, and
+  documented it as **B3** in `DEVELOPMENT_PLAN.md`.
+- Author: David J Barry, ORCID `0000-0003-2763-5244` (The Francis Crick
+  Institute). `preferred-citation` is the J Cell Sci 2022 paper
+  (doi `10.1242/jcs.259511`).
+- Declared `license: GPL-3.0-or-later`, consistent with the headers and B1;
+  the POM's BSD-2 declaration remains the outstanding inconsistency to fix.
+- `version`/`date-released` are placeholders (`3.4.10`) and must be kept in step
+  with `pom.xml` at each `vX.Y.Z` tag.
+- Not validated locally (no `pyyaml`; installing packages was declined); the CFF
+  was hand-checked against the CFF 1.2.0 schema.

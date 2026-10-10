@@ -209,6 +209,20 @@ The repo has no tags beyond implicit history. Once the license and the Phase F
 re-pin are done, cut a fresh semver tag (`vX.Y.Z`) so downstream consumers (and
 JitPack) can resolve a tagged release rather than a commit hash.
 
+### B3. Add a `CITATION.cff` (citation metadata)
+
+Community-standard Citation File Format file so GitHub's "Cite this repository"
+widget and reference managers pick up the correct citation.
+
+- **Added** `CITATION.cff` (CFF 1.2.0): author **David J Barry**
+  (ORCID `0000-0003-2763-5244`, The Francis Crick Institute), GPL-3.0-or-later
+  (per B1), `repository-code` = the GitHub repo, and a `preferred-citation` to
+  the J Cell Sci 2022 paper (doi `10.1242/jcs.259511`).
+- **Follow-ups:** (i) version/`date-released` must be kept in step with
+  `pom.xml` at each `vX.Y.Z` tag (currently `3.4.10`; `date-released` is a
+  placeholder until the first real tagged release); (ii) confirm the authors of
+  `preferred-citation` against the journal's author list.
+
 ---
 
 ## Phase C — Introduce tests (the biggest maintainability win)
