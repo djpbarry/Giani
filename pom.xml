@@ -7,13 +7,13 @@
     <parent>
         <groupId>org.scijava</groupId>
         <artifactId>pom-scijava</artifactId>
-        <version>40.0.0</version>
+        <version>45.1.0</version>
         <relativePath/>
     </parent>
 
     <groupId>net.calm</groupId>
     <artifactId>giani</artifactId>
-    <version>3.4.9</version>
+    <version>3.4.10</version>
 
     <build>
         <plugins>
@@ -135,11 +135,17 @@
     <properties>
         <package-name>net.calm.giani</package-name>
         <main-class>net.calm.giani.exec.GIANI</main-class>
+        <scijava.jvm.version>21</scijava.jvm.version>
         <license.licenseName>bsd_2</license.licenseName>
         <license.copyrightOwners>Francis Crick Institute</license.copyrightOwners>
     </properties>
 
     <repositories>
+        <!-- NB: pom-scijava drops the implicit Maven Central; declare it explicitly. -->
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
         <!-- NB: for SciJava dependencies -->
         <repository>
             <id>scijava.public</id>
@@ -155,7 +161,7 @@
         <dependency>
             <groupId>com.github.djpbarry</groupId>
             <artifactId>IAClassLibrary</artifactId>
-            <version>fe92f24c6e</version>
+            <version>v2.0.23</version>
         </dependency>
         <dependency>
             <groupId>com.github.mcib3d</groupId>

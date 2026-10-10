@@ -16,14 +16,14 @@ GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](ht
 
 There are **no unit tests** in this repository (`src/test` does not exist). Verification means "does it compile and package".
 
-CI build (`.github/workflows/maven.yml`, JDK 11):
+CI build (`.github/workflows/maven.yml`, JDK 21):
 
 ```bash
 mvn --batch-mode --update-snapshots -Dinternal.repo.password="$PAT" --settings mvn_settings.xml verify
 ```
 
 - `mvn_settings.xml` activates a `github` profile that adds the GitHub Packages repo `https://maven.pkg.github.com/djpbarry/*` and authenticates with username `djpbarry` / password `${internal.repo.password}`. The `PAT` is a GitHub Actions secret; locally you must supply your own token via `-Dinternal.repo.password=...` if that repo is needed.
-- The POM also declares Maven repos `scijava.public` (`https://maven.scijava.org/content/groups/public`) and `jitpack.io` for its dependencies.
+- The POM declares Maven repos `central` (explicit, because `pom-scijava` ≥ 45 drops the implicit Maven Central), `scijava.public`, and `jitpack.io` for its dependencies. It targets **Java 21** via `scijava.jvm.version=21` (required to consume `IAClassLibrary` ≥ 2.0.x, which is compiled at Java 21).
 - The `maven-dependency-plugin` is bound to the `package` phase to copy all runtime dependencies into `${project.build.directory}` (so the resulting JAR is runnable alongside its dependencies in a Fiji `plugins/` folder).
 
 Entry point (configured via `<main-class>` in the POM):
@@ -34,6 +34,15 @@ net.calm.giani.exec.GIANI
 
 - **No arguments** → launches the Swing GUI (`GIANIUI`).
 - **With arguments** → headless batch mode. Flags: `-f <input file>`, `-o <output dir>`, `-l <job list file>`, `-p <properties file>`, `-n <job number>`, `-s <series>`. A `-p` (properties) and either `-f` or `-l` are required. Full usage is documented on the GitHub wiki (`Running-GIANI-on-a-HPC-Cluster`).
+
+## Versioning
+
+The repo follows the sibling-repo convention (IAClassLibrary / ADAPT):
+
+- `pom.xml` `<version>` is a plain `X.Y.Z` with **no `-SNAPSHOT`** suffix.
+- Bump `<version>` on **every** code change: `fix`/`refactor`/`chore`/`docs`/`test` → patch, `feat` → minor, breaking change → major.
+- Commit messages use [Conventional Commits](https://www.conventionalcommits.org/) (`fix:`, `feat:`, `chore:`, `refactor:`, `docs:`, `test:`; `BREAKING CHANGE:`/`!` for breaking changes).
+- Releases are tagged `vX.Y.Z` (e.g. `v3.4.10`).
 
 ## Architecture and data flow
 

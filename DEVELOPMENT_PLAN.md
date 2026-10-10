@@ -38,16 +38,16 @@ safe to do.
 - GIANI (`net.calm.giani`) is a **Fiji/ImageJ plugin** (Swing GUI + headless CLI
   + ImageJ macro extension) for batch segmentation/measurement of 3D cell-biology
   images.
-- **Build:** Maven, parent `org.scijava:pom-scijava:40.0.0`, version `3.4.9`,
+- **Build:** Maven, parent `org.scijava:pom-scijava:45.1.0`, version `3.4.10` (Java 21 via `scijava.jvm.version=21`),
   declared license **Simplified BSD** (`license.licenseName=bsd_2`). The actual
   `LICENSE` file and all source headers are **GPL-3.0** — same BSD/GPL
   contradiction the sibling repos resolved (see Phase B).
 - **CI:** `.github/workflows/maven.yml` runs a single
   `mvn --batch-mode --update-snapshots -Dinternal.repo.password="$PAT" --settings mvn_settings.xml verify`
-  on **JDK 11**. No Maven wrapper, no dependency caching.
+  on **JDK 21**. No Maven wrapper, no dependency caching.
 - **Tests:** none — `src/test` does not exist. No lint/format tooling.
 - **Dependencies:**
-  - `com.github.djpbarry:IAClassLibrary:fe92f24c6e` (JitPack, **untagged commit**)
+  - `com.github.djpbarry:IAClassLibrary:v2.0.23` (JitPack, tagged)
   - `com.github.mcib3d:mcib3d-plugins:3.96.3` (tagged; `imageware` and
     `mcib3d-core` excluded)
 - **Plugin packaging:** `pom.xml` sets `main-class=net.calm.giani.exec.GIANI`,
@@ -363,17 +363,18 @@ already-resolved decisions.
    GitHub Packages for *dependencies*. Re-pin `IAClassLibrary` from the
    `fe92f24c6e` commit hash to a tagged release; keep `mcib3d-plugins` pinned to
    a tagged release.
-3. **Target JDK — Java 21.** Align with `IAClassLibrary`, Fiji's runtime, and
-   TrackMate ≥ 8; bump `pom-scijava` to `45.1.0` and set
-   `scijava.jvm.version=21`.
+3. **Target JDK — Java 21.** ✔ Adopted (2026-10-10). Align with `IAClassLibrary`,
+   Fiji's runtime, and TrackMate ≥ 8; `pom-scijava` bumped to `45.1.0` and
+   `scijava.jvm.version=21` set.
 4. **Package namespace.** The library moved `net.calm.*` →
    `io.github.djpbarry.*`; decide whether GIANI follows suit (renaming
    `net.calm.giani` → `io.github.djpbarry.giani`) in the same pass, or keeps
    `net.calm.giani` and only migrates the *library* imports. Recommend migrating
    both together for consistency.
-5. **Versioning — plain `X.Y.Z`, tag `vX.Y.Z`.** Follow the sibling convention:
-   no `-SNAPSHOT` suffix; bump `<version>` on every code change
-   (`fix`→patch, `feat`→minor, breaking→major); use Conventional Commits.
+5. **Versioning — plain `X.Y.Z`, tag `vX.Y.Z`.** ✔ Adopted (2026-10-10). Follow the
+   sibling convention: no `-SNAPSHOT` suffix; bump `<version>` on every code
+   change (`fix`→patch, `feat`→minor, breaking→major); use Conventional Commits.
+   (Version bumped `3.4.9` → `3.4.10` for the dependency `chore`.)
 6. **Plugin framework — stay ImageJ 1.x.** Keep the Swing GUI + `PlugIn`-style
    model; establish the missing `plugins.config` (D5). A SciJava `Command`
    rewrite is out of scope.
