@@ -23,3 +23,42 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   on every change; Conventional Commits; tag `vX.Y.Z`). Version bumped
   `3.4.9` → `3.4.10` for this `chore`.
 - Not built locally (no Maven on PATH and no wrapper yet); verify via CI.
+
+## 2026-10-10 — Timelapse (4D) & tracking planned
+
+- Added `DEVELOPMENT_PLAN.md` **Phase H** to extend GIANI from per-series 3D
+  stacks to 4D (3D + time): treat each timepoint as an independent 3D stack
+  (H1), persist per-timepoint segmentations/measurements (H2), and track the
+  segmented objects across time (H3).
+- **Decision (recorded as Proposed decision 8):** use the TrackMate API *inside*
+  GIANI (option b) rather than exporting to TrackMate (option a). TrackMate
+  tracks a single flat object type, whereas GIANI objects are hierarchical
+  (cell → nucleus → punctae); exporting would flatten and lose the parent–child
+  links, while tracking in-process keeps the hierarchy and only delegates the
+  lineage to TrackMate. TrackMate is already a GIANI dependency.
+- Tracking design: one TrackMate `Spot` per cell per timepoint (represented by
+  its nucleus centroid + radius, since cells are seeded 1:1 by nuclei), run a LAP
+  tracker, and let children (nucleus measurements, punctae) inherit the parent
+  cell's track ID via the existing `Cell ID` association.
+- Open items: target object (cells vs nuclei vs both), motion model + linking
+  penalties, and whether `BioFormatsImg` already exposes `getSizeT`/time indexing
+  or needs an `IAClassLibrary` change.
+
+## 2026-10-10 — inTRACKtive result viewing planned
+
+- Added `DEVELOPMENT_PLAN.md` **H4** to export the Phase H cell lineage for
+  `inTRACKtive` (royerlab/inTRACKtive), a **browser-based** cell-tracking viewer
+  (not a Fiji plugin) that consumes the **Ultrack CSV format**:
+  `track_id, t, z, y, x, parent_track_id` (+ optional `radius`/attribute
+  columns), converted to Zarr via `intracktive convert`/`open`.
+- GIANI's role is limited to emitting `GIANI_tracks.csv` (track ID = TrackMate
+  track ID, `t`/`z`/`y`/`x` = cell centroid in calibrated units, `parent_track_id`
+  from division events); the user runs `intracktive open` themselves — no
+  inTRACKtive/Python dependency inside GIANI.
+- Recorded a model-mapping gotcha: Ultrack uses a tree/forest model
+  (`parent_track_id` encodes division), whereas TrackMate uses a graph (division =
+  spot with two successors), so H4 needs a translation step that re-labels each
+  post-division branch as its own `track_id`. Division detection requires
+  `Settings.setAllowTrackSplitting(true)`.
+- Noted that inTRACKtive shows one track type (the cell lineage); nuclei/punctae
+  stay in `GIANI_Output.csv`/`Spot_Data.csv` and `ResultsBrowser`, not inTRACKtive.

@@ -351,6 +351,118 @@ ordered by risk (behaviour-preserving first):
 
 ---
 
+## Phase H — Timelapse (4D) processing & lineage tracking
+
+Extend GIANI from per-series 3D stacks to 4D (3D + time) datasets, and add
+across-time lineage tracking of the segmented objects.
+
+### H1. Treat each timepoint as an independent 3D stack
+
+`PipelineExecutor.run()` currently loops over series only
+(`img.getSeriesCount()`, `img.getSizeZ(s)`); Bio-Formats exposes the time axis as
+`img.getSizeT(s)` (`BioFormatsImg` wraps `loci.formats`). Add a nested time loop
+(`for t in 0..getSizeT(s)-1`) so each timepoint re-runs the existing per-stack
+pipeline unchanged — each process already receives its frame via
+`setup(img, props, propLabels)`, so a stage is re-run per timepoint exactly as it
+is re-run per series today. New parameter(s) (`TRACK_TIMELAPSE` and, if needed, a
+time/frame selector) follow the existing `GianiDefaultParams` + `propLabels` +
+UI-panel wiring convention.
+
+### H2. Persist per-timepoint segmentations and measurements (not just the last one)
+
+The segmentation state is a single shared `Objects3DPopulation cells` created in
+`GIANI.run()` and passed through the whole pipeline; the measurement stage reads
+that population. Across the series loop this is acceptable because each series
+overwrites and is measured in turn, but tracking needs *all* timepoints
+simultaneously. Persist each timepoint's segmentation (the existing
+`Objects3DPopulation` zip export, currently named `...-S{series}_{label}.zip`)
+extended with a time index (`-T{time}`), and emit a time column in
+`GIANI_Output.csv` (or per-timepoint CSVs) so downstream consumers can group rows
+by frame.
+
+### H3. Tracking: use the TrackMate API *inside* GIANI (recommend option (b))
+
+**Recommendation: (b) — track within GIANI via the TrackMate API**, not (a)
+export-and-track-in-TrackMate. Rationale grounded in the object model:
+
+- **TrackMate tracks a single, flat object type** (`Spot` with position, radius,
+  and numeric features, grouped into tracks per frame). GIANI's objects are
+  **hierarchical**: a cell owns exactly one nucleus (the watershed seed) and N
+  punctae/spots (`Spot_Data.csv` already links punctae to cells via `Cell ID`).
+- Option (a) requires **flattening** that hierarchy into one spot type and
+  round-tripping through TrackMate's GUI/XML, which cannot represent the
+  parent–child links; the hierarchy has to be reconstructed afterwards from
+  foreign keys. Option (b) keeps the hierarchy in GIANI and uses TrackMate only
+  for the lineage, so nothing is lost.
+- GIANI **already depends on TrackMate** (`fiji.plugin.trackmate.Spot` is used in
+  `ResultsBrowser`), so (b) adds no new dependency.
+
+**Design for (b):**
+
+1. Build a TrackMate `SpotCollection` with one spot per cell per timepoint, keyed
+   by TrackMate `frame = time`. Represent each cell by its **nucleus centroid +
+   equivalent radius** (nuclei are the seeds, so the cell↔nucleus map is 1:1, and
+   nucleus centroids are more stable than whole-cell centroids). Attach GIANI's
+   per-object measurements (intensity, morphology) as `Spot` features so they
+   survive into the tracking and can gate/display tracks.
+2. Run one of TrackMate's **LAP trackers** (`SimpleFastLAPTracker`,
+   `SparseLAPTracker`) with the calibration from `img.getCalibration(series)` so
+   linking distances are in physical units, not pixels.
+3. Read back the `TrackModel`: each track ID is the **cell lineage**. Because
+   cells↔nuclei are 1:1 and punctae already carry a `Cell ID`, the children
+   (nucleus measurements, punctae) **inherit the parent cell's track ID** — no
+   independent tracking of children required.
+4. Write a lineage table (track ID per cell per timepoint) alongside
+   `GIANI_Output.csv` (or as an extra column), and surface tracks in the
+   `ResultsBrowser`.
+
+**Note on punctae/spot tracking:** if the goal is to track punctae themselves as
+independent objects (rather than cell lineage), that is a separate, second
+TrackMate run over the punctae — but it should still happen inside GIANI using
+the same (b) pattern, retaining the `Cell ID`/`Track ID` association.
+
+**Open items to confirm before implementation:**
+
+- Target object for lineage: **cells** (recommended) vs nuclei vs both.
+- Tracking motion model (Brownian vs linear motion) and gap-closing/linking
+  penalties; expose as parameters or use sensible defaults.
+- Whether `BioFormatsImg` already exposes `getSizeT`/time indexing, or needs an
+  `IAClassLibrary` change (coordinate with Phase F).
+
+### H4. Export the lineage for inTRACKtive
+
+`inTRACKtive` (royerlab/inTRACKtive) is a **browser-based** viewer for cell
+tracking data — not a Fiji plugin. It consumes the **Ultrack CSV format**,
+`track_id, t, z, y, x, parent_track_id` (plus optional `radius` and arbitrary
+attribute columns), converted to a Zarr bundle via `intracktive convert` /
+`intracktive open`. This is an easy, high-value target for the H3 lineage and
+reinforces tracking **cells** as the primary lineage object:
+
+- Emit a `GIANI_tracks.csv` in Ultrack format: `track_id` = TrackMate track ID
+  (integer, from 1), `t` = time index (continuous, 0-based), `z/y/x` = cell
+  centroid in calibrated physical units (`img.getCalibration(series)`),
+  `parent_track_id` from division events (`-1` when there is no parent).
+- Optionally add a `radius` column (cell equivalent radius) and per-cell
+  attributes (intensity, punctae count, etc.) so the viewer's `--add_radius` /
+  `--add_attribute` can size/colour cells.
+- **No inTRACKtive/Python dependency inside GIANI:** GIANI only writes the CSV;
+  the user runs `intracktive open GIANI_tracks.csv` (or `convert`/`serve`) to
+  view it. A bundled helper script is a later optional nicety.
+- **Model-mapping gotcha:** Ultrack uses a forest/tree model (each track is one
+  lineage; `parent_track_id` encodes division), whereas TrackMate uses a graph
+  (division = a spot with two successors; the daughters stay in the same
+  connected component unless re-labelled). H4 therefore needs a small
+  translation step — walk the `TrackModel`, detect division events (spots with
+  >1 successor, enabled via `Settings.setAllowTrackSplitting(true)`), and
+  re-label each post-division branch as its own `track_id` with the parent's
+  `track_id` as `parent_track_id`.
+- **Hierarchy note:** inTRACKtive visualises one track type (the cell lineage);
+  nuclei and punctae are not shown as separate objects, so their parent–child
+  relationships stay in `GIANI_Output.csv` / `Spot_Data.csv` and are surfaced in
+  the `ResultsBrowser` rather than inTRACKtive.
+
+---
+
 ## Proposed decisions
 
 To be confirmed with the maintainer; the defaults follow the sibling repos'
@@ -381,6 +493,12 @@ already-resolved decisions.
 7. **Version source.** `GianiDefaultParams.TITLE` currently reads the JAR
    filename; replace with a manifest/build-time version read (matching the
    siblings) so the version and title are robust.
+8. **Timelapse tracking — TrackMate API in-process (option (b)).** For 4D
+   datasets, treat each timepoint as an independent 3D stack and track the
+   segmented **cells** (via their nucleus seeds) using the TrackMate API inside
+   GIANI, rather than exporting to TrackMate. TrackMate supplies only the
+   lineage; GIANI's hierarchy (cell → nucleus → punctae) is preserved by
+   inheriting the parent cell's track ID in the children.
 
 ---
 
@@ -396,6 +514,11 @@ already-resolved decisions.
    bump Java/pom-scijava, reconcile API changes. Gated on M2. (Phase F)
 5. **M5 — Modern Java + docs:** generics/try-with-resources/language features,
    Javadoc, README build/install docs, resolve `plugins.config`. (Phase E, G)
+6. **M6 — Timelapse & tracking (Phase H):** the 4D frame loop (H1) and
+   per-timepoint persistence (H2) are self-contained and can land early; the
+   TrackMate lineage tracking (H3) and the inTRACKtive Ultrack-CSV export (H4)
+   depend on M2 (tests) and M4 (the re-pin, to fix the TrackMate version under
+   `pom-scijava:45.1.0`) and are a separate, later increment.
 
 Each milestone is independently shippable. **M1 and M2 are the immediate next
 steps** and unblock the risky M4 re-pin.
