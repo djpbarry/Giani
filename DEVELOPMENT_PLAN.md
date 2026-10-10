@@ -33,6 +33,30 @@ safe to do.
   (recoverable from git).
 - Record every decision, mistake, and lesson in `REVISION_LOG.md`.
 
+## Scope & positioning (decided 2026-10-10)
+
+GIANI was originally built as an alternative to **Imaris' cell detection and
+tracking** (Imaris for Cell Biologists), whose 3D detection/tracking is widely
+regarded as weak. Its niche is the user who *just wants to detect cells*: a
+guided wizard, sensible defaults, and one CSV out.
+
+- **MIA (`mianalysis/mia`)** is the stronger tool *overall* — a general-purpose
+  Fiji/ImageJ modular workflow framework (200+ modules, native 5D, built-in
+  tracking + TrackMate integration, GPL-3, actively maintained). Where MIA
+  overlaps GIANI, MIA wins on generality and capability.
+- **Decision: finish this plan, then treat GIANI as feature-complete.** No
+  significant new feature development beyond the phases below (i.e. Phase H
+  lands, then development stops).
+- **Where GIANI stays preferable:** the simple cell-detection use case, where a
+  guided, opinionated wizard with baked-in hierarchical objects (cell → nucleus
+  → punctae) beats assembling a generic modular workflow.
+- **Therefore the priority is the *interface*, not features:** make the wizard
+  friendlier and the defaults sensible enough that a non-expert can go from a
+  folder of images to measurements with minimal configuration. This is the main
+  thing that justifies GIANI's continued existence next to MIA.
+- **Point users at MIA** for anything beyond that scope (custom pipelines,
+  broader 5D workflows, extensive tracking). See Proposed decision 9.
+
 ## Current state (context for the plan)
 
 - GIANI (`net.calm.giani`) is a **Fiji/ImageJ plugin** (Swing GUI + headless CLI
@@ -513,6 +537,42 @@ already-resolved decisions.
    GIANI, rather than exporting to TrackMate. TrackMate supplies only the
    lineage; GIANI's hierarchy (cell → nucleus → punctae) is preserved by
    inheriting the parent cell's track ID in the children.
+9. **Positioning — finish the plan, then feature-freeze; compete on interface.**
+   ✔ Adopted (2026-10-10). MIA is the stronger general tool; GIANI's niche is
+   simple, guided cell detection (its original Imaris-alternative purpose).
+   Complete Phases A–H, then stop adding features and invest effort in making the
+   wizard friendlier and the defaults sensible, pointing users at MIA for
+   anything more ambitious. See "Scope & positioning".
+
+---
+
+## Phase I — User-interface friendliness (the post-freeze priority)
+
+With feature development stopping after Phase H, the interface is where GIANI
+earns its place next to MIA. Concrete, low-risk items:
+
+- **Sensible, non-zero defaults** so that a first run with no configuration
+  produces useful output: replace the hard-coded developer paths in
+  `GianiDefaultParams.initialise()` (the Dropbox/ilastik leftovers flagged in
+  D1) with safe, informative defaults, and give filter radii / detection
+  parameters sensible starting values rather than `"0.0"`.
+- **Reduce the number of required decisions.** Many wizard steps exist for
+  flexibility few users need; consider collapsing optional/advanced stages
+  behind an "advanced" toggle, leaving a default path of: pick folder → pick
+  channels → run.
+- **Validate input and explain failures in the UI**, rather than relying on
+  `GenUtils.logError` output to the ImageJ log (see D4).
+- **Inline help and tooltips** for every parameter (the `GIANIParamInfos`
+  tooltip mechanism already exists; audit coverage on the wizard panels).
+- **A quick-start flow** in `README.md` (pick folder → channels → run → open
+  results) alongside the existing overview, and a pointer to MIA for advanced
+  needs.
+- **Preview fidelity:** the preview panels are the main differentiator over a
+  config file; make sure defaults and previews make it obvious when a
+  segmentation is wrong.
+
+This phase is deliberately broad and is expected to be driven by user feedback
+once the modernisation lands.
 
 ---
 
@@ -533,6 +593,12 @@ already-resolved decisions.
    TrackMate lineage tracking (H3) and the inTRACKtive Ultrack-CSV export (H4)
    depend on M2 (tests) and M4 (the re-pin, to fix the TrackMate version under
    `pom-scijava:45.1.0`) and are a separate, later increment.
+7. **M7 — Interface friendliness (Phase I):** the final milestone before the
+   feature freeze — friendlier wizard, sensible defaults, inline help, quick-start
+   docs. This is where GIANI differentiates itself from MIA, so it is a
+   first-class deliverable rather than an afterthought.
 
 Each milestone is independently shippable. **M1 and M2 are the immediate next
-steps** and unblock the risky M4 re-pin.
+steps** and unblock the risky M4 re-pin. **M7 is the last planned milestone:**
+after it, GIANI is feature-complete and maintained, with new functionality
+directed to MIA.

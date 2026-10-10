@@ -76,3 +76,26 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   with `pom.xml` at each `vX.Y.Z` tag.
 - Not validated locally (no `pyyaml`; installing packages was declined); the CFF
   was hand-checked against the CFF 1.2.0 schema.
+
+## 2026-10-10 — Positioning vs MIA: finish the plan, then feature-freeze
+
+- Reviewed **MIA** (`mianalysis/mia`): a GPL-3, actively-maintained Fiji/ImageJ
+  modular workflow framework (200+ modules, native 5D, built-in tracking +
+  TrackMate integration). It overlaps and exceeds GIANI's core capability, and
+  already covers most of our planned Phase H (4D/tracking) out of the box.
+- Context recovered from the maintainer: GIANI was originally an alternative to
+  **Imaris' cell detection and tracking** (weak for 3D). Its niche is the user
+  who just wants to detect cells.
+- **Decision (Proposed decision 9):** complete Phases A–H, then treat GIANI as
+  **feature-complete** — no significant new features after that. MIA is the
+  stronger general tool; GIANI competes on **interface**, not capability.
+- Added **Phase I — User-interface friendliness** and milestone **M7** (the final
+  planned milestone): friendlier wizard, sensible non-zero defaults (removes the
+  hard-coded developer paths from D1), fewer required decisions, inline help, and
+  a quick-start flow in `README.md`. The overall priority is to make the simple
+  cell-detection path accessible to non-experts.
+- Added a "Scope & positioning" section to `DEVELOPMENT_PLAN.md`; plan to point
+  users at **MIA** for anything beyond GIANI's scope.
+- Explicitly considered and rejected **archiving** GIANI: the opinionated,
+  hierarchical, guided workflow retains a distinct use case, and archiving would
+  strand existing users and the published citation.
