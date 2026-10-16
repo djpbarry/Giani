@@ -312,7 +312,6 @@ public class SelectInputPanel extends LayerPanel {
     }
     
     private void inputDirTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputDirTextFieldKeyPressed
-        // TODO add your handling code here:
         if (evt.getKeyCode() != KeyEvent.VK_ENTER) {
             return;
         }

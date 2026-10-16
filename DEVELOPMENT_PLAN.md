@@ -306,6 +306,15 @@ pipeline-wiring invariants that are cheap to assert.
 
 ### D1. Remove hard-coded paths and dead code (do first)
 
+✔ Done (2026-10-10). Replaced the Dropbox/ilastik defaults in
+`GianiDefaultParams.initialise()` with `System.getProperty("user.home")`; removed
+the machine-specific LUT fallback in `SegmentationPanel` (now guards on a null
+`IJ.getDirectory("luts")`); stripped the commented-out `main()`/`buildPipeline()`
+blocks in `GIANIUI`, the commented `buildnumber-maven-plugin` in `pom.xml`, the
+commented-out parameter constants/setProperty lines in `GianiDefaultParams`, the
+commented-out `map.put` lines in `DeprecatedProps`, and the NetBeans `// TODO`
+stub in `SelectInputPanel`.
+
 - Replace the `GianiDefaultParams` Dropbox/ilastik defaults
   (`GianiDefaultParams.java:146,193,195`) with neutral defaults (empty or
   `user.home`), matching the pattern the sibling repos adopted.

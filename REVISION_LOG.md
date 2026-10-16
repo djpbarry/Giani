@@ -176,3 +176,18 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   headless fixture image under `src/test/resources`.
 - Bumped version `3.4.15` → `3.4.16` for this `test` change, and kept
   `CITATION.cff` `version` in step.
+
+## 2026-10-16 — Code hygiene: hard-coded paths & dead code removed (Phase D1)
+
+- Replaced the `GianiDefaultParams` Dropbox/ilastik defaults with
+  `System.getProperty("user.home")` (matches the sibling neutral-default pattern).
+- Removed the machine-specific LUT fallback (`C:\Users\barryd\Fiji.app\...`) in
+  `SegmentationPanel.previewButtonActionPerformed`; now guards on a null
+  `IJ.getDirectory("luts")`.
+- Stripped dead code: commented-out `main()` and `buildPipeline()` blocks in
+  `GIANIUI`, the commented `buildnumber-maven-plugin` in `pom.xml`, commented-out
+  parameter constants/setProperty lines in `GianiDefaultParams`, commented-out
+  `map.put` lines in `DeprecatedProps`, and the NetBeans `// TODO` stub in
+  `SelectInputPanel`.
+- `./mvnw test` still green (10/10). Bumped version `3.4.16` → `3.4.17` for this
+  `refactor`, and kept `CITATION.cff` `version` in step.

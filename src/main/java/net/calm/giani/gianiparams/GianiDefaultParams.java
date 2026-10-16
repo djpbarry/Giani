@@ -72,16 +72,11 @@ public class GianiDefaultParams extends Properties {
     public static final String NUC_MAXIMA_DETECT_HESSIAN_THRESH = "Quality of Advanced Nuclear Centroid Detections";
     public static final String NUC_MAXIMA_DETECT_HESSIAN = "Advanced Nuclear Centroid Detector";
     public static final String NUC_MAXIMA_DETECT_HESSIAN_START_SCALE = "Minimum Nuclear Radius for Advanced Centroid Detection";
-    //public static final String NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE = "Maximum Nuclear Radius for Advanced Centroid Detection";
-    //public static final String NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP = "Radius Step Size for Advanced Nuclear Centroid Detection";
     public static final String NUC_MAXIMA_DETECT_HESSIAN_ABS = "Absolute Nuclear Hessian Detection";
     public static final String FOCI_MAXIMA_DETECT_BLOBS = "Simple Spot Detector for Channel ";
-    //public static final String FOCI_MAXIMA_DETECT_FILTER_RAD = String.format("Filter Radius (%cm) for EDM Detector for Channel ", IJ.micronSymbol);
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_MAXIMA = "Advanced Spot Detector for Channel ";
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_THRESH = "Quality of Advanced Spot Detections in Channel ";
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_MIN_SIZE = "Minimum Spot Radius for Advanced Detection in Channel ";
-    //public static final String FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE = "Maximum Spot Radius for Advanced Detection in Channel ";
-    //public static final String FOCI_MAXIMA_DETECT_HESSIAN_SCALE_STEP = "Radius Step Size for Advanced Spot Detection in Channel ";
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_ABS = "Absolute Hessian Detection for Channel ";
     public static final String HELP_ERROR_MESSAGE = "Error: Can't open online help docs.";
     public static final String SPECIFIC_SERIES = "Specific Series";
@@ -142,8 +137,7 @@ public class GianiDefaultParams extends Properties {
     }
 
     private void initialise() {
-        //this.setProperty(INPUT_DIR_LABEL, System.getProperty("user.home"));
-        this.setProperty(INPUT_DIR_LABEL, "E:\\Dropbox (The Francis Crick)\\Debugging\\Giani\\images\\subset");
+        this.setProperty(INPUT_DIR_LABEL, System.getProperty("user.home"));
         this.setProperty(OUTPUT_DIR_LABEL, "");
         this.setProperty(SERIES_SELECT_LABEL, "0");
         this.setProperty(INPUT_FILE_LABEL, "0");
@@ -175,8 +169,6 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(NUC_MAXIMA_DETECT_HESSIAN, "false");
         this.setProperty(NUC_MAXIMA_DETECT_HESSIAN_START_SCALE, "0.0");
         this.setProperty(NUC_MAXIMA_SEG_THRESH_METHOD, "Default");
-        //this.setProperty(NUC_MAXIMA_DETECT_HESSIAN_STOP_SCALE, "0.0");
-        //this.setProperty(NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP, "0.0");
         this.setProperty(NUC_MAXIMA_DETECT_HESSIAN_ABS, "false");
         this.setProperty(SPECIFIC_SERIES, "-1");
         this.setProperty(UNITS, String.format("%cm", IJ.micronSymbol));
@@ -189,10 +181,8 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(STARDIST_TILE_XY, "8");
         this.setProperty(STARDIST_TILE_Z, "2");
         this.setProperty(NUC_MAXIMA_DETECT_ILASTIK, "false");
-        //this.setProperty(ILASTIK_PROJECT_FILE, System.getProperty("user.home"));
-        this.setProperty(ILASTIK_PROJECT_FILE, "E:\\Dropbox (The Francis Crick)\\Debugging\\Giani\\ilastik_integration\\MyProject.ilp");
-        //this.setProperty(ILASTIK_DIRECTORY, System.getProperty("user.home"));
-        this.setProperty(ILASTIK_DIRECTORY, "C:\\Program Files\\ilastik-1.3.3post3");
+        this.setProperty(ILASTIK_PROJECT_FILE, System.getProperty("user.home"));
+        this.setProperty(ILASTIK_DIRECTORY, System.getProperty("user.home"));
         this.setProperty(ILASTIK_INPUT_CHANNEL, "0");
         this.setProperty(ILASTIK_THRESHOLD, "0.75");
         this.setProperty(ILASTIK_SMOOTHING, "1.0");

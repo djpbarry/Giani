@@ -229,11 +229,10 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
             return;
         }
         ImagePlus imp = process.getOutput();
-        String lutPath = String.format("%s%s%s", IJ.getDirectory("luts"), File.separator, "glasbey_on_dark.lut");
-        if (IJ.getInstance() == null) {
-            lutPath = "C:\\Users\\barryd\\Fiji.app\\luts\\glasbey_on_dark.lut";
+        String lutDir = IJ.getDirectory("luts");
+        if (lutDir != null) {
+            imp.setLut(LutLoader.openLut(lutDir + File.separator + "glasbey_on_dark.lut"));
         }
-        imp.setLut(LutLoader.openLut(lutPath));
         imp.resetDisplayRange();
         imp.show();
     }//GEN-LAST:event_previewButtonActionPerformed
