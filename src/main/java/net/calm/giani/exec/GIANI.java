@@ -167,8 +167,8 @@ public class GIANI {
 
     private static String[] getJobDetails(File jobList, int jobNumber) throws FileNotFoundException, IOException {
         try (BufferedReader fileListReader = new BufferedReader(new FileReader(jobList))) {
-            while (fileListReader.ready()) {
-                String line = fileListReader.readLine();
+            String line;
+            while ((line = fileListReader.readLine()) != null) {
                 Scanner scanner = new Scanner(line);
                 scanner.useDelimiter(",");
                 if (jobNumber == Integer.parseInt(scanner.next())) {

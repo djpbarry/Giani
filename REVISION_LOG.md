@@ -294,3 +294,11 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   the job-list reader is closed on all exit paths.
 - `./mvnw test` still green (10/10). Bumped version `3.4.24` → `3.4.25` for this
   `fix`, and kept `CITATION.cff` `version` in step.
+
+## 2026-10-16 — Fix job-list EOF detection (robustness)
+
+- `GIANI.getJobDetails()`: replaced the unreliable `while (fileListReader.ready())`
+  loop with the idiomatic `while ((line = fileListReader.readLine()) != null)`,
+  so the job list is read to EOF regardless of `ready()`'s buffering heuristics.
+- `./mvnw test` still green (10/10). Bumped version `3.4.25` → `3.4.26` for this
+  `fix`, and kept `CITATION.cff` `version` in step.
