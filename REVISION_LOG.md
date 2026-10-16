@@ -216,3 +216,12 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
 - **Follow-up flagged:** `GianiResultsBrowser` also has a `private static File
   inputDirectory` (same shared-state pattern) — not in D3's scope, left for a
   later pass.
+
+## 2026-10-16 — Normalised CLI logging (Phase D4)
+
+- Replaced the four `System.out.println` calls in `GIANI.main` (the `-h` help
+  text and the three validation/exit messages) with `IJ.log`, so all GIANI output
+  now goes through `IJ.log`. The existing `GenUtils.logError` catch blocks were
+  already actionable and were left unchanged.
+- `./mvnw test` still green (10/10). Bumped version `3.4.19` → `3.4.20` for this
+  `refactor`, and kept `CITATION.cff` `version` in step.

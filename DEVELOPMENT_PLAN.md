@@ -357,6 +357,12 @@ follow-up.
 
 ### D4. Normalise error handling & logging
 
+✔ Done (2026-10-16). Replaced the four `System.out.println` calls in
+`GIANI.main` (the `-h` help text and the three validation/exit messages) with
+`IJ.log`, so all GIANI output now goes through the codebase's single logging
+path. The existing `GenUtils.logError` catch blocks in `main` were already
+actionable and were left as-is.
+
 Replace `System.out.println` in `GIANI.java` (CLI argument/validation messages)
 with `IJ.log` for consistency with the rest of the codebase (or keep stdout but
 make it deliberate — GIANI is also a CLI, so decide and document). Add actionable

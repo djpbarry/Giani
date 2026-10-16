@@ -76,7 +76,7 @@ public class GIANI {
                             series = Integer.parseInt(args[i + 1]);
                             break;
                         case "-h":
-                            System.out.println("For instructions on how to run GIANI from a command line or shell, " +
+                            IJ.log("For instructions on how to run GIANI from a command line or shell, " +
                                     "see here: https://github.com/djpbarry/Giani/wiki/Running-GIANI-on-a-HPC-Cluster");
                         default:
 
@@ -88,14 +88,14 @@ public class GIANI {
                 GenUtils.logError(e, "Invalid filename - aborting.");
             }
             if (props == null) {
-                System.out.println("No valid properties file specified - exiting.");
+                IJ.log("No valid properties file specified - exiting.");
                 System.exit(0);
             } else if (list == null && file == null) {
-                System.out.println("No valid input file or file list specified - exiting.");
+                IJ.log("No valid input file or file list specified - exiting.");
                 System.exit(0);
             }
             if (list != null && jobNumber < 0) {
-                System.out.println("Invalid job number specified - exiting.");
+                IJ.log("Invalid job number specified - exiting.");
                 System.exit(0);
             }
             GIANI.init(props, list, file, jobNumber, series, output);
