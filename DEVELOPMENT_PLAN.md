@@ -195,6 +195,12 @@ Pin a reproducible toolchain by committing `mvnw`/`mvnw.cmd` + `.mvn/wrapper/`
 
 ### A2. Harden CI
 
+✔ Done (2026-10-10), items 1–3. CI now uses `./mvnw` (the wrapper), caches
+Maven deps via `setup-java`'s built-in `cache: 'maven'`, and pins JDK 21 with
+`distribution: 'temurin'` on `actions/checkout@v5` + `actions/setup-java@v5`
+(matching the `ADAPT` workflow). Item 4 (split `build`/`test` jobs) is deferred
+until Phase C lands.
+
 `.github/workflows/maven.yml` currently runs a single `mvn verify` on JDK 11 with
 `--settings mvn_settings.xml` and a `PAT` secret.
 

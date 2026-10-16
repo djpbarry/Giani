@@ -119,3 +119,14 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   `chmod +x` will not survive `git add`).
 - Bumped version `3.4.11` → `3.4.12` for this `chore`, and kept `CITATION.cff`
   `version` in step.
+
+## 2026-10-10 — CI hardened (Phase A2)
+
+- Updated `.github/workflows/maven.yml` to run `./mvnw` (the wrapper) instead of
+  a system `mvn`, cache Maven deps via `setup-java`'s `cache: 'maven'`, and move
+  to `actions/checkout@v5` + `actions/setup-java@v5` with `distribution:
+  'temurin'` (matching the `ADAPT` workflow).
+- Kept the `PAT` + `--settings mvn_settings.xml` wiring for now; it is removed
+  separately in A4 once a clean CI run confirms it is vestigial.
+- Bumped version `3.4.12` → `3.4.13` for this `chore`, and kept `CITATION.cff`
+  `version` in step.
