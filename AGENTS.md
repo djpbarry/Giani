@@ -14,7 +14,11 @@ GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](ht
 
 ## Build / run commands
 
-There are **no unit tests** in this repository (`src/test` does not exist). Verification means "does it compile and package".
+Tests live under `src/test/java` (JUnit 5, managed by `pom-scijava`). Run them with:
+
+```bash
+./mvnw test
+```
 
 CI build (`.github/workflows/maven.yml`, JDK 21):
 
@@ -23,6 +27,7 @@ CI build (`.github/workflows/maven.yml`, JDK 21):
 ```
 
 - The **Maven wrapper** (`./mvnw`, pinned to Maven 3.9.16) is used — no system `mvn` required.
+- On Windows, ensure `JAVA_HOME` points to a **JDK 21** before running `./mvnw` (e.g. `JAVA_HOME="<jdk21>" cmd /c mvnw.cmd test`); the project targets Java 21 and `IAClassLibrary` is Java 21 bytecode.
 - The POM declares Maven repos `central` (explicit, because `pom-scijava` ≥ 45 drops the implicit Maven Central), `scijava.public`, and `jitpack.io` for its dependencies. It targets **Java 21** via `scijava.jvm.version=21` (required to consume `IAClassLibrary` ≥ 2.0.x, which is compiled at Java 21).
 - `mvn_settings.xml` (GitHub Packages) is retained but **not used by CI**: no `pom.xml` dependency resolves from `maven.pkg.github.com`, so it is vestigial for building.
 - The `maven-dependency-plugin` is bound to the `package` phase to copy all runtime dependencies into `${project.build.directory}` (so the resulting JAR is runnable alongside its dependencies in a Fiji `plugins/` folder).

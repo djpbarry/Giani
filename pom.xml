@@ -13,7 +13,7 @@
 
     <groupId>net.calm</groupId>
     <artifactId>giani</artifactId>
-    <version>3.4.15</version>
+    <version>3.4.16</version>
 
     <build>
         <plugins>
@@ -178,6 +178,16 @@
                     <artifactId>mcib3d-core</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

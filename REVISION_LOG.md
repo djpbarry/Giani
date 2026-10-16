@@ -160,3 +160,19 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   missing GPL header to `GIANIUI`, `GIANIParamInfos`, and `GIANIMacroExecutor`.
 - Bumped version `3.4.14` → `3.4.15` for this `chore`, and kept `CITATION.cff`
   `version` in step.
+
+## 2026-10-10 — JUnit 5 harness + tests (Phase C, M2)
+
+- Added `junit-jupiter-api` + `junit-jupiter-engine` (test scope, parent-managed)
+  to `pom.xml`; `pom-scijava` already wires surefire (JUnit Platform) + JaCoCo.
+- Added `GianiDefaultParamsTest` (4), `DeprecatedPropsTest` (3), and
+  `PipelineBuilderTest` (3) — 10 tests, all green via `./mvnw test`.
+- `PipelineBuilderTest` pins the fixed, index-coupled stage ordering and asserts
+  the maxima-finder `propLabels` reference real `GianiDefaultParams` constants.
+- Confirmed the local build works: `JAVA_HOME="<jdk21>" cmd /c mvnw.cmd test` on
+  Windows. The Windows `JAVA_HOME` here defaults to JDK 11, which is too old for
+  the Java 21 target, so JDK 21 must be set explicitly.
+- Deferred (item 3): executor-output CSV/properties golden tests — need a
+  headless fixture image under `src/test/resources`.
+- Bumped version `3.4.15` → `3.4.16` for this `test` change, and kept
+  `CITATION.cff` `version` in step.

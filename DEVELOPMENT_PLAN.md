@@ -276,12 +276,17 @@ widget and reference managers pick up the correct citation.
 
 ## Phase C — Introduce tests (the biggest maintainability win)
 
+**Status (2026-10-10): items 1–2 done** — JUnit 5 wired (`junit-jupiter-api` +
+`-engine`, parent-managed); `GianiDefaultParamsTest`, `DeprecatedPropsTest`, and
+`PipelineBuilderTest` added (10 tests green). Item 3 (executor-output golden
+tests) is deferred pending a headless fixture image.
+
 No tests exist. GIANI is a GUI/CLI plugin whose logic is entangled with ImageJ
 and `IAClassLibrary`, so start with the pure-logic, ImageJ-free classes and the
 pipeline-wiring invariants that are cheap to assert.
 
 1. **`gianiparams` pure logic** (no ImageJ runtime needed beyond `IJ.micronSymbol`,
-   which is a static string):
+   which is a static string): ✔ Done.
    - `GianiDefaultParams` — defaults are all present and correctly typed.
    - `DeprecatedProps.getDepMap()` — old→new name migration covers the known
      renames, and `mapControlChanges()` sets `NUC_CENTROID_LOCALISATION_METHOD`
