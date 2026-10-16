@@ -338,4 +338,15 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
 - Repointed ReadTheDocs to `djpbarry/Giani`; the `development` build succeeds at
   https://giani-docs.readthedocs.io/en/development/. RTD slug is still
   `giani-docs`, so `README.md`/`CITATION.cff` links remain valid.
-- Remaining: content review (defer until code settles), archive `giani-docs`.
+- Archived `giani-docs`. Remaining: content review (defer until code settles).
+
+## 2026-10-16 — Corrected Phase F premise (IAClassLibrary re-pin)
+
+- Verified `djpbarry/IAClassLibrary`: `master` HEAD is the `v2.0.23` tag and the
+  library has **not** been package-renamed (still `net.calm.iaclasslibrary`; pom
+  declares `net.calm:iaclasslibrary:2.0.23`). The plan's earlier claim of a
+  rename to `io.github.djpbarry.iaclasslibrary` was wrong.
+- Corrected `DEVELOPMENT_PLAN.md` (overarching aim, stale-pin gotcha, Phase E/F
+  notes, package-namespace decision) and `AGENTS.md` (stale Project overview
+  version numbers) to reflect that GIANI already pins `v2.0.23`, so F1 is done
+  and no import migration is required.

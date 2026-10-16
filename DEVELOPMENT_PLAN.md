@@ -15,14 +15,13 @@ the plan's writing.
 
 ## Overarching aim
 
-**Modernise a ~7-year-old Fiji/ImageJ plugin whose heavy lifting lives in a
-library that has since been modernised under a new package namespace.** The
-immediate driver is that GIANI pins `IAClassLibrary` at an untagged commit
-(`fe92f24c6e`) that predates that library's modernisation (Java 21, GPL-3, and a
-package rename from `net.calm.iaclasslibrary` to `io.github.djpbarry.iaclasslibrary`).
-Aligning with the modernised library is a breaking change and the single largest
-item of work; everything else (tests, hygiene, CI, docs) makes that migration
-safe to do.
+**Modernise a ~7-year-old Fiji/ImageJ plugin whose heavy lifting lives in the
+upstream `IAClassLibrary`.** GIANI originally pinned that library at an untagged
+commit (`fe92f24c6e`) predating its modernisation; it is now pinned to the tagged
+release `v2.0.23` (Java 21, GPL-3.0-or-later, parent `pom-scijava:45.1.0`). The
+library kept its `net.calm.iaclasslibrary` package (no rename), so aligning with
+it is **not** a package-breaking change; the remaining work (tests, hygiene, CI,
+docs) makes that pin safe and the plugin maintainable.
 
 - Modernisation takes precedence over backward compatibility of the current
   internals. Where a choice is between a cleaner design and preserving a legacy
@@ -119,12 +118,12 @@ guided wizard, sensible defaults, and one CSV out.
   every source header is GPL-3.0. Also `license.copyrightOwners` is set to
   "Francis Crick Institute"; the sibling repos concluded copyright is
   **David Barry** (development predates the Crick) — confirm for GIANI.
-- **Stale upstream pin:** `IAClassLibrary` is pinned at commit `fe92f24c6e`
-  (`pom.xml:158`), the same untagged commit ADAPT previously pinned. The library
-  has since been modernised: Java 21, GPL-3, and the package root renamed
-  `net.calm.iaclasslibrary` → `io.github.djpbarry.iaclasslibrary`. Repinning is
-  therefore a **breaking change** (every `net.calm.iaclasslibrary.*` import
-  breaks) and the core of Phase F.
+- **Upstream pin (resolved):** `IAClassLibrary` was pinned at commit `fe92f24c6e`;
+  it is now pinned to tagged release `v2.0.23` (`com.github.djpbarry:IAClassLibrary:v2.0.23`
+  via JitPack). The library modernised to Java 21 and GPL-3.0-or-later but kept
+  its `net.calm.iaclasslibrary` package (its own pom declares
+  `net.calm:iaclasslibrary:2.0.23`), so re-pinning was **not** package-breaking.
+  See Phase F.
 - **Hard-coded developer-specific paths:**
   - `GianiDefaultParams.initialise()` sets `INPUT_DIR_LABEL` to
     `E:\Dropbox (The Francis Crick)\Debugging\Giani\images\subset`
@@ -397,15 +396,15 @@ Determine and document how GIANI is discovered in Fiji:
   the headless CLI usage (the `-f/-l/-p/-n/-s/-o` flags), and the Fiji install
   procedure (once D5 resolves it).
 - **`AGENTS.md`** (already present) documents architecture, conventions, and
-  gotchas. Keep it in sync as Phases D/F land (especially the package rename and
-  any pipeline reordering).
+  gotchas. Keep it in sync as Phases D/F land (especially any dependency-pin or
+  pipeline-reordering changes).
 - **Javadoc:** the `exec` package is reasonably documented; the `ui` panels and
   `ResultsBrowser` have little class/method Javadoc. Add it to the public API as
   part of the refactor.
 
 ### E1. Consolidate ReadTheDocs into this repo
 
-**Status: in progress (steps 1, 2, 4 done).** GIANI's user docs live in a separate repo
+**Status: complete (content review deferred).** GIANI's user docs live in a separate repo
 (`djpbarry/giani-docs`), a Sphinx + ReadTheDocs project forked from
 `readthedocs/tutorial-template`. It contains `.rst` content under
 `docs/{overview,start,cells,nuclei,measure,cluster,complete,test}` plus PNG
@@ -434,7 +433,7 @@ Steps:
 4. **Repoint ReadTheDocs** from `djpbarry/giani-docs` to `djpbarry/Giani`
    (one-time RTD dashboard action). Done 2026-10-16; the `development` build
    succeeds at https://giani-docs.readthedocs.io/en/development/.
-5. **Archive `giani-docs`** (leave a README pointer to the new location).
+5. **Archive `giani-docs`** (leave a README pointer to the new location). Done 2026-10-16.
 6. **Update links** in `README.md`/`AGENTS.md` if the RTD URL changes. No change
    needed: the RTD slug is still `giani-docs`, so `README.md` and `CITATION.cff`
    already point at the right host.
@@ -445,21 +444,30 @@ separately (deferred).
 
 ---
 
-## Phase F — Upstream coordination & re-pin (the breaking change, do with tests in place)
+## Phase F — Upstream coordination & re-pin
 
-GIANI's single largest risk is its stale `IAClassLibrary` pin. The library has
-been modernised (Java 21, GPL-3, package rename to
-`io.github.djpbarry.iaclasslibrary`, tagged releases). Re-pinning is breaking:
+**Status (2026-10-16): resolved — no package migration required.** GIANI already
+pins the latest `IAClassLibrary` release `v2.0.23`. Investigation of
+`djpbarry/IAClassLibrary` shows `master` HEAD is the `v2.0.23` tag and the
+library has **not** renamed its package: its source is still
+`net.calm.iaclasslibrary`, and its pom declares
+`net.calm:iaclasslibrary:2.0.23` (`<package-name>net.calm.iaclasslibrary</package-name>`).
+The earlier assumption of a rename to `io.github.djpbarry.iaclasslibrary` was
+incorrect. What the library did modernise: Java 21 (`scijava.jvm.version=21`),
+GPL-3.0-or-later, parent `pom-scijava:45.1.0`.
 
-### F1. Re-pin `IAClassLibrary` to a tagged release
+### F1. Re-pin `IAClassLibrary` to a tagged release — ✔ Done (2026-10-16)
 
-1. Confirm the target tag (e.g. `v2.0.x`).
-2. Migrate every `net.calm.iaclasslibrary.*` import to
-   `io.github.djpbarry.iaclasslibrary.*` (this is the bulk of the work; it
-   touches `exec`, `ui`, `gianiparams`, `macro`, and `ResultsBrowser`).
-3. Reconcile any API changes the library made during its own modernisation
-   (deprecated/removed classes GIANI references, e.g. any `IAClasses` usage).
-4. Gate on `mvn verify` + the Phase C pipeline-wiring tests.
+1. Confirm the target tag — `v2.0.23` is the latest and is already pinned.
+2. Migrate `net.calm.iaclasslibrary.*` imports — not needed; no rename occurred.
+3. Reconcile API changes — none at the same coordinate.
+4. Gate on `mvn verify` + the Phase C pipeline-wiring tests (10/10 green).
+
+Optional low-value cleanup: switch the dependency from the JitPack alias
+`com.github.djpbarry:IAClassLibrary:v2.0.23` to the library's real coordinate
+`net.calm:iaclasslibrary:2.0.23`, but only if that artifact is published to a
+real Maven repo (it currently is not). If a future `v3.x` performs the package
+rename, revisit this phase.
 
 ### F2. Coordinate the Java / TrackMate / pom-scijava bump
 
@@ -645,11 +653,11 @@ already-resolved decisions.
 3. **Target JDK — Java 21.** ✔ Adopted (2026-10-10). Align with `IAClassLibrary`,
    Fiji's runtime, and TrackMate ≥ 8; `pom-scijava` bumped to `45.1.0` and
    `scijava.jvm.version=21` set.
-4. **Package namespace.** The library moved `net.calm.*` →
-   `io.github.djpbarry.*`; decide whether GIANI follows suit (renaming
-   `net.calm.giani` → `io.github.djpbarry.giani`) in the same pass, or keeps
-   `net.calm.giani` and only migrates the *library* imports. Recommend migrating
-   both together for consistency.
+4. **Package namespace.** The library has **not** moved off `net.calm.*` (still
+   `net.calm.iaclasslibrary` at `v2.0.23`), so there is no library-import
+   migration to mirror. Any future rename of GIANI itself
+   (`net.calm.giani` → `io.github.djpbarry.giani`) is an independent decision,
+   not coupled to a library rename.
 5. **Versioning — plain `X.Y.Z`, tag `vX.Y.Z`.** ✔ Adopted (2026-10-10). Follow the
    sibling convention: no `-SNAPSHOT` suffix; bump `<version>` on every code
    change (`fix`→patch, `feat`→minor, breaking→major); use Conventional Commits.

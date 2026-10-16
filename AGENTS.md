@@ -6,10 +6,10 @@ Guidance for AI agents working in the GIANI repository.
 
 GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](https://imagej.net/software/fiji/) plugin for batch analysis of 3D microscopy images: it reads proprietary image formats, segments nuclei and cells, measures morphology/fluorescence intensity, and lets users browse results.
 
-- **Language/toolchain:** Java 11, Maven, Swing (NetBeans GUI forms), built as an ImageJ/Fiji plugin.
-- **Group/artifact:** `net.calm:giani`, version `3.4.9`.
-- **Parent POM:** `org.scijava:pom-scijava:40.0.0` (SciJava build conventions).
-- **Core library dependency:** `com.github.djpbarry:IAClassLibrary:fe92f24c6e` (pulled from JitPack) provides the actual image-processing primitives (`MultiThreaded*` process classes, `BioFormatsImg`, `ProcessPipeline`, `PropertyWriter`, etc.). GIANI is mostly glue that wires these primitives into a pipeline and exposes UI/CLI/macro entry points.
+- **Language/toolchain:** Java 21, Maven, Swing (NetBeans GUI forms), built as an ImageJ/Fiji plugin.
+- **Group/artifact:** `net.calm:giani`, version `3.4.27`.
+- **Parent POM:** `org.scijava:pom-scijava:45.1.0` (SciJava build conventions).
+- **Core library dependency:** `com.github.djpbarry:IAClassLibrary:v2.0.23` (JitPack alias for `net.calm:iaclasslibrary:2.0.23`) provides the actual image-processing primitives (`MultiThreaded*` process classes, `BioFormatsImg`, `ProcessPipeline`, `PropertyWriter`, etc.). GIANI is mostly glue that wires these primitives into a pipeline and exposes UI/CLI/macro entry points.
 - **Other dependency:** `com.github.mcib3d:mcib3d-plugins:3.96.3` (with `imageware` and `mcib3d-core` excluded) provides 3D geometry (`mcib3d.geom.Object3D`, `Objects3DPopulation`).
 
 ## Build / run commands

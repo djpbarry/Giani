@@ -45,7 +45,7 @@ https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GIANI_Results_Brows
 
 # Want To Learn More?
 
-See [the documentation](https://giani-docs.readthedocs.io/) for installation instructions and full instructions.
+See [the documentation](https://giani-docs.readthedocs.io/) for installation instructions and full instructions. The documentation source lives in this repository under [docs/](docs/) (Sphinx).
 
 
 # Citing GIANI
