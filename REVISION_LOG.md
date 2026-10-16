@@ -107,3 +107,15 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   tree).
 - Bumped version `3.4.10` → `3.4.11` for this `chore`, and kept `CITATION.cff`
   `version` in step.
+
+## 2026-10-10 — Maven wrapper added (Phase A1)
+
+- Added `mvnw`, `mvnw.cmd`, and `.mvn/wrapper/maven-wrapper.properties`
+  (script-only wrapper, pinned to Maven `3.9.16`, `wrapperVersion=3.3.4`),
+  copied verbatim from the sibling `ADAPT` `development` branch so the three
+  repos share an identical wrapper setup.
+- `mvnw` must be committed with the executable bit set (CI runs `./mvnw`); use
+  `git add --chmod=+x mvnw` (the repo has `core.filemode=false`, so a plain
+  `chmod +x` will not survive `git add`).
+- Bumped version `3.4.11` → `3.4.12` for this `chore`, and kept `CITATION.cff`
+  `version` in step.

@@ -186,6 +186,10 @@ guided wizard, sensible defaults, and one CSV out.
 
 ### A1. Add a Maven wrapper
 
+✔ Done (2026-10-10). Added `mvnw`/`mvnw.cmd` + `.mvn/wrapper/maven-wrapper.properties`
+(script-only type, pinned to Maven 3.9.16), copied from the sibling `ADAPT`
+`development` branch so the wrapper matches the shared setup exactly.
+
 Pin a reproducible toolchain by committing `mvnw`/`mvnw.cmd` + `.mvn/wrapper/`
 (mirrors the siblings' A1) so builds don't depend on an unknown system Maven.
 
