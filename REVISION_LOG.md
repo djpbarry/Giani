@@ -285,3 +285,12 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   never shut down; `GIANI.getJobDetails` leaks a `BufferedReader`.
 - `./mvnw test` still green (10/10). Bumped version `3.4.23` → `3.4.24` for this
   `refactor`, and kept `CITATION.cff` `version` in step.
+
+## 2026-10-16 — Fixed executor & BufferedReader leaks (Phase G2 follow-up)
+
+- `PipelineExecutor.run()`: added `exec.shutdown()` after the file loop, so the
+  single-thread executor's worker is no longer leaked.
+- `GIANI.getJobDetails()`: wrapped the `BufferedReader` in try-with-resources, so
+  the job-list reader is closed on all exit paths.
+- `./mvnw test` still green (10/10). Bumped version `3.4.24` → `3.4.25` for this
+  `fix`, and kept `CITATION.cff` `version` in step.

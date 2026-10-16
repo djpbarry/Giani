@@ -463,9 +463,9 @@ ordered by risk (behaviour-preserving first):
    `BioFormatsImg` field to a local try-with-resources (reader closed after
    loading; the in-memory `CompositeImage` is unaffected). `GianiResultsTable`
    needs no change — `DataReader.readCSVFile` already closes its reader in
-   IAClassLibrary. Flagged (out of scope): `PipelineExecutor`'s
-   `ExecutorService` is never shut down, and `GIANI.getJobDetails` leaks a
-   `BufferedReader`.
+   IAClassLibrary. Then fixed the two flagged leaks: `PipelineExecutor`'s
+   `ExecutorService` is now `shutdown()`, and `GIANI.getJobDetails`'s
+   `BufferedReader` is now try-with-resources.
 3. **Language features:** `switch` → arrow, `instanceof` pattern matching,
    anonymous inner classes → lambdas (the many NetBeans `ActionListener` blocks
    in `initComponents` are generated — do **not** hand-edit those; only the

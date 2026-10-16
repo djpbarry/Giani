@@ -139,6 +139,7 @@ public class PipelineExecutor extends Thread {
                 GenUtils.logError(e, String.format("Failed to close image reader for %s", file));
             }
         }
+        exec.shutdown();
         try {
             DataWriter.saveResultsTable(Analyzer.getResultsTable(), new File(String.format("%s%s%s_Output.csv", outputDir, File.separator, GianiDefaultParams.TITLE)), false, true);
         } catch (IOException e) {
