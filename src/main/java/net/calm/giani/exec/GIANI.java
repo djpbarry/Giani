@@ -58,29 +58,16 @@ public class GIANI {
             try {
                 for (int i = 0; i < args.length - 1; i++) {
                     switch (args[i]) {
-                        case "-f":
-                            file = new File(args[i + 1]);
-                            break;
-                        case "-o":
-                            output = new File(args[i + 1]);
-                            break;
-                        case "-l":
-                            list = new File(args[i + 1]);
-                            break;
-                        case "-p":
-                            props = new File(args[i + 1]);
-                            break;
-                        case "-n":
-                            jobNumber = Integer.parseInt(args[i + 1]);
-                            break;
-                        case "-s":
-                            series = Integer.parseInt(args[i + 1]);
-                            break;
-                        case "-h":
-                            IJ.log("For instructions on how to run GIANI from a command line or shell, " +
-                                    "see here: https://github.com/djpbarry/Giani/wiki/Running-GIANI-on-a-HPC-Cluster");
-                        default:
-
+                        case "-f" -> file = new File(args[i + 1]);
+                        case "-o" -> output = new File(args[i + 1]);
+                        case "-l" -> list = new File(args[i + 1]);
+                        case "-p" -> props = new File(args[i + 1]);
+                        case "-n" -> jobNumber = Integer.parseInt(args[i + 1]);
+                        case "-s" -> series = Integer.parseInt(args[i + 1]);
+                        case "-h" -> IJ.log("For instructions on how to run GIANI from a command line or shell, " +
+                                "see here: https://github.com/djpbarry/Giani/wiki/Running-GIANI-on-a-HPC-Cluster");
+                        default -> {
+                        }
                     }
                 }
             } catch (NumberFormatException e) {

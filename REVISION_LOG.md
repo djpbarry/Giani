@@ -302,3 +302,16 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   so the job list is read to EOF regardless of `ready()`'s buffering heuristics.
 - `./mvnw test` still green (10/10). Bumped version `3.4.25` → `3.4.26` for this
   `fix`, and kept `CITATION.cff` `version` in step.
+
+## 2026-10-16 — Modern language features (Phase G3)
+
+- Converted the three `switch` statements to arrow `switch`: `GIANI`'s argument
+  parser, `GIANIMacroExecutor.handleExtension`, and `MaximaFinderPanel`'s method
+  selector.
+- Replaced `instanceof` + cast with pattern matching in `GianiResultsBrowser`
+  (`addListenerToRoiManager3DObjectList`, `enableRoiManagerLiveMode`) and
+  `GIANIUI.updateLayer`.
+- No anonymous-inner-class→lambda candidates in hand-written code (all in
+  generated `initComponents()`, left untouched per the plan).
+- `./mvnw test` still green (10/10). Bumped version `3.4.26` → `3.4.27` for this
+  `refactor`, and kept `CITATION.cff` `version` in step.

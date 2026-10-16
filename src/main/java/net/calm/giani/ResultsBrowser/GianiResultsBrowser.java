@@ -308,24 +308,24 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
 
     void addListenerToRoiManager3DObjectList(Component[] components) {
         for (Component c : components) {
-            if (c instanceof JScrollPane) {
-                roiManagerObjectList = (JList) ((JScrollPane) c).getViewport().getView();
+            if (c instanceof JScrollPane scrollPane) {
+                roiManagerObjectList = (JList) scrollPane.getViewport().getView();
                 roiManagerObjectList.addMouseListener(this);
-            } else if (c instanceof Container) {
-                addListenerToRoiManager3DObjectList(((Container) c).getComponents());
+            } else if (c instanceof Container container) {
+                addListenerToRoiManager3DObjectList(container.getComponents());
             }
         }
     }
 
     void enableRoiManagerLiveMode(Component[] components) {
         for (Component c : components) {
-            if (c instanceof JButton) {
-                String text = ((JButton) c).getText();
+            if (c instanceof JButton button) {
+                String text = button.getText();
                 if (text.contains("Live Roi")) {
-                    ((JButton) c).doClick();
+                    button.doClick();
                 }
-            } else if (c instanceof Container) {
-                enableRoiManagerLiveMode(((Container) c).getComponents());
+            } else if (c instanceof Container container) {
+                enableRoiManagerLiveMode(container.getComponents());
             }
         }
     }

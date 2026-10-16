@@ -59,23 +59,17 @@ public class GIANIMacroExecutor implements MacroExtension {
     @Override
     public String handleExtension(String name, Object[] args) {
         switch (name) {
-            case LOAD_PROPS:
-                loadPropertiesFile(args);
-                break;
-            case SET_PROP:
-                setProperty(args);
-                break;
-            case GET_PROP_LIST:
+            case LOAD_PROPS -> loadPropertiesFile(args);
+            case SET_PROP -> setProperty(args);
+            case GET_PROP_LIST -> {
                 String output = "";
                 for (String p : props.stringPropertyNames()) {
                     output = output + p + ",";
                 }
                 return output;
-            case RUN:
-                run();
-                break;
-            default:
-                IJ.log(String.format("Error: %s is not a valid command.", name));
+            }
+            case RUN -> run();
+            default -> IJ.log(String.format("Error: %s is not a valid command.", name));
         }
         return null;
     }

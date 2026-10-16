@@ -440,8 +440,8 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         for (int i = 0; i < componentList.size(); i++) {
             if (i == layerIndex) {
                 componentList.get(i).setVisible(true);
-                if (componentList.get(i) instanceof Updateable) {
-                    ((Updateable) componentList.get(i)).update();
+                if (componentList.get(i) instanceof Updateable updateable) {
+                    updateable.update();
                 }
             } else {
                 componentList.get(i).setVisible(false);

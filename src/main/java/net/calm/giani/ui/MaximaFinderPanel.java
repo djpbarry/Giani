@@ -803,20 +803,11 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         ilastikPanel.setVisible(false);
         thresholdPanel.setVisible(false);
         switch (method) {
-            case GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS:
-                simpleDetectionPanel.setVisible(true);
-                break;
-            case GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN:
-                advancedDetectionPanel.setVisible(true);
-                break;
-            case GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK:
-                ilastikPanel.setVisible(true);
-                break;
-            case GianiDefaultParams.NUC_MAXIMA_DETECT_THRESHOLD:
-                thresholdPanel.setVisible(true);
-                break;
-            default:
-                stardistPanel.setVisible(true);
+            case GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS -> simpleDetectionPanel.setVisible(true);
+            case GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN -> advancedDetectionPanel.setVisible(true);
+            case GianiDefaultParams.NUC_MAXIMA_DETECT_ILASTIK -> ilastikPanel.setVisible(true);
+            case GianiDefaultParams.NUC_MAXIMA_DETECT_THRESHOLD -> thresholdPanel.setVisible(true);
+            default -> stardistPanel.setVisible(true);
         }
     }//GEN-LAST:event_methodComboBoxActionPerformed
 

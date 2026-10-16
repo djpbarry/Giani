@@ -466,10 +466,13 @@ ordered by risk (behaviour-preserving first):
    IAClassLibrary. Then fixed the two flagged leaks: `PipelineExecutor`'s
    `ExecutorService` is now `shutdown()`, and `GIANI.getJobDetails`'s
    `BufferedReader` is now try-with-resources.
-3. **Language features:** `switch` → arrow, `instanceof` pattern matching,
-   anonymous inner classes → lambdas (the many NetBeans `ActionListener` blocks
-   in `initComponents` are generated — do **not** hand-edit those; only the
-   hand-written `//GEN-FIRST` handlers).
+3. **Language features:** ✔ Done (2026-10-16). Converted the three `switch`
+   statements to arrow `switch` (`GIANI`'s arg parser, `GIANIMacroExecutor`'s
+   `handleExtension`, `MaximaFinderPanel`'s method selector) and replaced
+   `instanceof` + cast with pattern matching in `GianiResultsBrowser`
+   (`addListenerToRoiManager3DObjectList`, `enableRoiManagerLiveMode`) and
+   `GIANIUI.updateLayer`. No anonymous-inner-class→lambda candidates existed in
+   hand-written code (they are all in generated `initComponents()`, left alone).
 4. **Static-state removal (D3) and logging (D4)** land here as behaviour-preserving
    follow-ups.
 
