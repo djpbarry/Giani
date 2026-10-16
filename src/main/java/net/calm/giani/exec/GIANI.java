@@ -72,6 +72,7 @@ public class GIANI {
                             break;
                         case "-n":
                             jobNumber = Integer.parseInt(args[i + 1]);
+                            break;
                         case "-s":
                             series = Integer.parseInt(args[i + 1]);
                             break;

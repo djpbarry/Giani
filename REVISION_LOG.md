@@ -225,3 +225,11 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   already actionable and were left unchanged.
 - `./mvnw test` still green (10/10). Bumped version `3.4.19` → `3.4.20` for this
   `refactor`, and kept `CITATION.cff` `version` in step.
+
+## 2026-10-16 — Fixed `-n` argument fall-through (bug)
+
+- Added the missing `break` after `case "-n"` in `GIANI.main`'s argument switch.
+  Previously `-n <job>` fell through into `case "-s"` and also overwrote `series`
+  with the job number.
+- `./mvnw test` still green (10/10). Bumped version `3.4.20` → `3.4.21` for this
+  `fix`, and kept `CITATION.cff` `version` in step.
