@@ -257,7 +257,7 @@ public class PipelineBuilder {
         return pipeline;
     }
 
-    public static MultiThreadedMaximaFinder getDefaultFociMaximaFinder(Properties props, int i) {
+    public static String[] getFociPropLabels(int i) {
         String[] propLabels = new String[MultiThreadedMaximaFinder.N_PROP_LABELS];
         propLabels[MultiThreadedMaximaFinder.CHANNEL_SELECT] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_SELECT_LABEL, i);
         propLabels[MultiThreadedMaximaFinder.BLOB_DETECT] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_BLOBS, i);
@@ -284,6 +284,38 @@ public class PipelineBuilder {
         propLabels[MultiThreadedMaximaFinder.METHOD] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_CENTROID_LOCALISATION_METHOD, i);
         propLabels[MultiThreadedMaximaFinder.THRESH_METHOD] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_SEG_THRESH_METHOD, i);
         propLabels[MultiThreadedMaximaFinder.THRESH_DETECT] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_DETECT_THRESHOLD, i);
+        return propLabels;
+    }
+
+    public static void setDefaultFociParams(Properties props, int i) {
+        String[] propLabels = getFociPropLabels(i);
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.CHANNEL_SELECT], "0");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT], "true");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.BLOB_SIZE], "0.0");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.BLOB_THRESH], "0.0");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT], "false");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE], "0.0");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH], "0.0");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS], "false");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT], "false");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_PROB], "0.0");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_OVERLAP], "0");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_DIR], GianiDefaultParams.STARDIST_ENV_DIRECTORY);
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_MODEL], GianiDefaultParams.STARDIST_MODEL_DIRECTORY);
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_TILE_XY], "8");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_TILE_Z], "2");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_DETECT], "false");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_FILE], GianiDefaultParams.ILASTIK_PROJECT_FILE);
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_DIR], GianiDefaultParams.ILASTIK_DIRECTORY);
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_CHANNEL], "0");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_THRESH], "0.0");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_SMOOTHING], "0.0");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.METHOD], props.getProperty(GianiDefaultParams.NUC_DETECT_MODE));
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.THRESH_METHOD], "Default");
+    }
+
+    public static MultiThreadedMaximaFinder getDefaultFociMaximaFinder(Properties props, int i) {
+        String[] propLabels = getFociPropLabels(i);
         MultiThreadedMaximaFinder process = new MultiThreadedMaximaFinder(null);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;

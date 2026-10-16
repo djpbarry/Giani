@@ -328,6 +328,12 @@ stub in `SelectInputPanel`.
 
 ### D2. De-duplicate the per-channel `propLabels` wiring
 
+✔ Done (2026-10-16). Extracted `PipelineBuilder.getFociPropLabels(int)` (builds
+the per-channel label array) and `PipelineBuilder.setDefaultFociParams(Properties,
+int)` (sets the per-channel defaults). `getDefaultFociMaximaFinder` and
+`GIANIUI.addAdditionalBlobDetectionPanels` now both call these, so the label
+indices and defaults can no longer drift between the two copies.
+
 `PipelineBuilder.getDefaultFociMaximaFinder` and
 `GIANIUI.addAdditionalBlobDetectionPanels` both build the same per-channel
 `propLabels` array, with divergent default values. Extract a single

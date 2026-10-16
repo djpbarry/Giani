@@ -539,55 +539,8 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         int n = img.getSizeC(Integer.parseInt(props.getProperty(GianiDefaultParams.SERIES_SELECT_LABEL)));
         for (int i = 0; i < n; i++) {
             if ((channels & (int) Math.pow(2.0, i)) != 0) {
-                String[] propLabels = new String[MultiThreadedMaximaFinder.N_PROP_LABELS];
-                propLabels[MultiThreadedMaximaFinder.CHANNEL_SELECT] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_SELECT_LABEL, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.CHANNEL_SELECT], "0");
-                propLabels[MultiThreadedMaximaFinder.BLOB_DETECT] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_BLOBS, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT], "true");
-                propLabels[MultiThreadedMaximaFinder.BLOB_SIZE] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_RAD_LABEL, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.BLOB_SIZE], "0.0");
-                propLabels[MultiThreadedMaximaFinder.BLOB_THRESH] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_NOISE_TOL_LABEL, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.BLOB_THRESH], "0.0");
-                propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAXIMA, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT], "false");
-                propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MIN_SIZE, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE], "0.0");
-                propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_THRESH, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_THRESH], "0.0");
-                propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS] = String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_ABS, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.HESSIAN_ABS], "false");
-                propLabels[MultiThreadedMaximaFinder.SERIES_SELECT] = GianiDefaultParams.SERIES_SELECT_LABEL;
-                propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_MAXIMA_DETECT_STARDIST, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT], "false");
-                propLabels[MultiThreadedMaximaFinder.STARDIST_PROB] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_STARDIST_PROB_THRESH, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_PROB], "0.0");
-                propLabels[MultiThreadedMaximaFinder.STARDIST_OVERLAP] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_STARDIST_OVERLAP_THRESH, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_OVERLAP], "0");
-                propLabels[MultiThreadedMaximaFinder.STARDIST_DIR] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_STARDIST_ENV_DIRECTORY, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_DIR], GianiDefaultParams.STARDIST_ENV_DIRECTORY);
-                propLabels[MultiThreadedMaximaFinder.STARDIST_MODEL] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_STARDIST_MODEL_DIRECTORY, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_MODEL], GianiDefaultParams.STARDIST_MODEL_DIRECTORY);
-                propLabels[MultiThreadedMaximaFinder.STARDIST_TILE_XY] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_STARDIST_TILE_XY, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_TILE_XY], "8");
-                propLabels[MultiThreadedMaximaFinder.STARDIST_TILE_Z] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_STARDIST_TILE_Z, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_TILE_Z], "2");
-                propLabels[MultiThreadedMaximaFinder.ILASTIK_DETECT] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_NUC_MAXIMA_DETECT_ILASTIK, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_DETECT], "false");
-                propLabels[MultiThreadedMaximaFinder.ILASTIK_FILE] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_ILASTIK_PROJECT_FILE, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_FILE], GianiDefaultParams.ILASTIK_PROJECT_FILE);
-                propLabels[MultiThreadedMaximaFinder.ILASTIK_DIR] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_ILASTIK_DIRECTORY, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_DIR], GianiDefaultParams.ILASTIK_DIRECTORY);
-                propLabels[MultiThreadedMaximaFinder.ILASTIK_CHANNEL] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_ILASTIK_INPUT_CHANNEL, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_CHANNEL], "0");
-                propLabels[MultiThreadedMaximaFinder.ILASTIK_THRESH] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_ILASTIK_THRESHOLD, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_THRESH], "0.0");
-                propLabels[MultiThreadedMaximaFinder.ILASTIK_SMOOTHING] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_ILASTIK_SMOOTHING, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_SMOOTHING], "0.0");
-                propLabels[MultiThreadedMaximaFinder.METHOD] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_CENTROID_LOCALISATION_METHOD, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.METHOD], props.getProperty(GianiDefaultParams.NUC_DETECT_MODE));
-                propLabels[MultiThreadedMaximaFinder.THRESH_METHOD] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_SEG_THRESH_METHOD, i);
-                props.setProperty(propLabels[MultiThreadedMaximaFinder.THRESH_METHOD], "Default");
-                propLabels[MultiThreadedMaximaFinder.THRESH_DETECT] = String.format("%s%d", GianiDefaultParams.BLOB_CHAN_DETECT_THRESHOLD, i);
+                String[] propLabels = PipelineBuilder.getFociPropLabels(i);
+                PipelineBuilder.setDefaultFociParams(props, i);
                 MaximaFinderPanel mFP = new MaximaFinderPanel(props, img, new MultiThreadedMaximaFinder(null),
                         propLabels, false, i, getHelpURI("https://github.com/djpbarry/Giani/wiki/Localising-Spots"),
                         String.format("%s%d", GianiDefaultParams.FOCI_CENTROID_LOCALISATION_TITLE, i));

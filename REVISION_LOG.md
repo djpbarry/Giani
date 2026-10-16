@@ -191,3 +191,16 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   `SelectInputPanel`.
 - `./mvnw test` still green (10/10). Bumped version `3.4.16` → `3.4.17` for this
   `refactor`, and kept `CITATION.cff` `version` in step.
+
+## 2026-10-16 — De-duplicated per-channel propLabels wiring (Phase D2)
+
+- Extracted `PipelineBuilder.getFociPropLabels(int)` (builds the per-channel
+  label array) and `PipelineBuilder.setDefaultFociParams(Properties, int)` (sets
+  the per-channel defaults).
+- `PipelineBuilder.getDefaultFociMaximaFinder` and
+  `GIANIUI.addAdditionalBlobDetectionPanels` now both call these two methods,
+  replacing ~48 lines of duplicated label-building/default-setting with two calls.
+  Behaviour is preserved exactly (including the existing "THRESH_DETECT has no
+  default" quirk).
+- `./mvnw test` still green (10/10). Bumped version `3.4.17` → `3.4.18` for this
+  `refactor`, and kept `CITATION.cff` `version` in step.
