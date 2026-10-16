@@ -79,8 +79,8 @@ public class GianiResultsTable extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     protected void loadResults() throws IOException {
-        ArrayList<String> fileHeadings = new ArrayList();
-        ArrayList<String> labels = new ArrayList();
+        ArrayList<String> fileHeadings = new ArrayList<>();
+        ArrayList<String> labels = new ArrayList<>();
         double[][] data = DataReader.readCSVFile(inputFile, CSVFormat.EXCEL, fileHeadings, labels);
         tableHeadings = new String[fileHeadings.size() + 1];
         tableHeadings[0] = "Image";

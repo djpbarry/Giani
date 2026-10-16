@@ -56,7 +56,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
     private final BioFormatsImg img;
     private final Properties props = new GianiDefaultParams();
-    private final LinkedList<LayerPanel> componentList = new LinkedList();
+    private final LinkedList<LayerPanel> componentList = new LinkedList<>();
     private int layerIndex = 0;
     private final ProcessPipeline pipeline;
     private ArrayList<MaximaFinderPanel> maximaFinderPanels;
@@ -523,7 +523,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 getContentPane().remove(localisationPanel);
             }
         }
-        maximaFinderPanels = new ArrayList();
+        maximaFinderPanels = new ArrayList<>();
         String selectedChannels = props.getProperty(GianiDefaultParams.CHAN_FOR_MEASURE);
         if (selectedChannels == null || !Boolean.parseBoolean(props.getProperty(GianiDefaultParams.LOCALISE_SPOTS))) {
             updateUI();

@@ -232,7 +232,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
             return;
         }
         int channels = img.getSizeC(img.getCurrentSeries());
-        channelLabels = new ArrayList();
+        channelLabels = new ArrayList<>();
         for (int c = 0; c < channels; c++) {
             channelLabels.add(String.valueOf(c));
         }

@@ -327,7 +327,7 @@ public class SelectInputPanel extends LayerPanel {
             try {
                 img.setId(String.format("%s%s%s", inputDirectory, File.separator, fileName));
                 int series = img.getSeriesCount();
-                ArrayList<String> seriesLabels = new ArrayList();
+                ArrayList<String> seriesLabels = new ArrayList<>();
                 for (int s = 0; s < series; s++) {
                     if (img.getSizeZ(s) > 1) {
                         seriesLabels.add(String.valueOf(s));
@@ -355,7 +355,7 @@ public class SelectInputPanel extends LayerPanel {
             String fileName = (String) fileNameComboBox.getSelectedItem();
             try {
                 int channels = img.getSizeC(Integer.parseInt((String) seriesComboBox.getSelectedItem()));
-                ArrayList<String> channelLabels = new ArrayList();
+                ArrayList<String> channelLabels = new ArrayList<>();
                 for (int c = 0; c < channels; c++) {
                     channelLabels.add(String.valueOf(c));
                 }

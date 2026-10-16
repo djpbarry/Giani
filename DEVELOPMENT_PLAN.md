@@ -452,8 +452,11 @@ available at the pinned `3.96.3` (or the current release) under Java 21.
 Once Phase F lands, apply the same mechanical modernisation the siblings used,
 ordered by risk (behaviour-preserving first):
 
-1. **Collections/generics:** replace raw `new ArrayList()`/`new LinkedList()`
-   with diamond-parameterised declarations (GIANIUI, PipelineExecutor, panels).
+1. **Collections/generics:** ✔ Done (2026-10-16). Replaced the raw
+   `new ArrayList()`/`new LinkedList()`/`new LinkedHashMap()` instantiations with
+   diamond (`<>`) across `GIANIUI`, `PipelineExecutor`, `SelectInputPanel`,
+   `FilteringPanel`, `MaximaFinderPanel`, `GianiResultsBrowser`, and
+   `GianiResultsTable` (14 sites).
 2. **Try-with-resources:** audit `PipelineExecutor`/`GianiResultsBrowser`/
    `GianiResultsTable` file/reader handling (the results browser uses
    `DataReader.readCSVFile`; verify readers/`CSVPrinter`s are closed).

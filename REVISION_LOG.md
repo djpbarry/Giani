@@ -260,3 +260,12 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
 - Decision: keep `3.96.3` for now; revisit if the core is bumped in lockstep or
   the results browser (the only `RoiManager3D_2` consumer) is retired. `pom.xml`
   reverted — no version bump, working tree clean.
+
+## 2026-10-16 — Generics: diamond-parameterised raw collections (Phase G1)
+
+- Replaced raw `new ArrayList()`, `new LinkedList()`, and `new LinkedHashMap()`
+  instantiations with diamond (`<>`) across `GIANIUI`, `PipelineExecutor`,
+  `SelectInputPanel`, `FilteringPanel`, `MaximaFinderPanel`, `GianiResultsBrowser`,
+  and `GianiResultsTable` (14 sites). Behaviour-preserving.
+- `./mvnw test` still green (10/10). Bumped version `3.4.22` → `3.4.23` for this
+  `refactor`, and kept `CITATION.cff` `version` in step.

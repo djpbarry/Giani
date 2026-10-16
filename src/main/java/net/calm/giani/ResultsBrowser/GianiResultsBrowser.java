@@ -275,11 +275,11 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
     }//GEN-LAST:event_loadObjectsButtonActionPerformed
 
     void loadSpotData() throws IOException {
-        ArrayList<String> fileHeadings = new ArrayList();
-        spots = new ArrayList();
-        cellIndexSpotMap = new LinkedHashMap();
+        ArrayList<String> fileHeadings = new ArrayList<>();
+        spots = new ArrayList<>();
+        cellIndexSpotMap = new LinkedHashMap<>();
         double[][] data = DataReader.readCSVFile(new File(String.format("%s%sSpot_Data.csv", inputDirectory.getAbsolutePath(), File.separator)), CSVFormat.EXCEL, fileHeadings, null);
-        LinkedHashMap<String, Integer> colIndexMap = new LinkedHashMap();
+        LinkedHashMap<String, Integer> colIndexMap = new LinkedHashMap<>();
         for (int h = 0; h < fileHeadings.size(); h++) {
             colIndexMap.put(fileHeadings.get(h), h);
         }
@@ -288,7 +288,7 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
             Integer spotsIndex = cellIndexSpotMap.get(cellID);
             if (spotsIndex == null) {
                 cellIndexSpotMap.put(cellID, spots.size());
-                spots.add(new ArrayList());
+                spots.add(new ArrayList<>());
                 spotsIndex = cellIndexSpotMap.get(cellID);
             }
             double distToNuc = d[colIndexMap.get("DISTANCE_TO_NUCLEUS")];

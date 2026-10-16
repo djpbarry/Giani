@@ -87,7 +87,7 @@ public class PipelineExecutor extends Thread {
         if (input.isDirectory()) {
             files = BioFormatsFileLister.obtainValidFileList(input);
         } else {
-            files = new ArrayList();
+            files = new ArrayList<>();
             files.add(input.getName());
             input = new File(input.getParent());
         }
