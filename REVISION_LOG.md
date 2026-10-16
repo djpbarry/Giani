@@ -146,3 +146,17 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   build.
 - Bumped version `3.4.13` → `3.4.14` for this `chore`, and kept `CITATION.cff`
   `version` in step.
+
+## 2026-10-10 — License reconciled (Phase B1)
+
+- Confirmed **GPL-3.0-or-later** with the maintainer. `license.copyrightOwners`
+  stays **"Francis Crick Institute"** (maintainer was there when development
+  started; this deliberately differs from ADAPT's "David Barry").
+- `pom.xml`: `<licenses>` → "GNU General Public License v3.0 or later" + URL,
+  `license.licenseName` `bsd_2` → `gpl_v3`. `LICENSE` and `CITATION.cff` already
+  agreed.
+- Header tidy-up (B1.2): replaced the three NetBeans "change this header" stubs
+  (`FilteringPanel`, `TopHatFilterPanel`, `SegmentationPanel`) and added the
+  missing GPL header to `GIANIUI`, `GIANIParamInfos`, and `GIANIMacroExecutor`.
+- Bumped version `3.4.14` → `3.4.15` for this `chore`, and kept `CITATION.cff`
+  `version` in step.

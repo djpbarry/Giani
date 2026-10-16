@@ -234,6 +234,14 @@ likely removable from CI. Verify with one clean CI run before deleting; keep the
 
 ### B1. Resolve the license (proposed Decision 1)
 
+✔ Done (2026-10-10). Confirmed **GPL-3.0-or-later** with the maintainer;
+`license.copyrightOwners` stays **"Francis Crick Institute"** (the maintainer was
+there when development started, overriding the ADAPT precedent of "David Barry").
+`pom.xml` corrected (`<licenses>` → GPL-3.0-or-later + URL, `license.licenseName`
+→ `gpl_v3`). Also fixed the three NetBeans "change this header" stubs
+(`FilteringPanel`, `TopHatFilterPanel`, `SegmentationPanel`) and added the
+missing GPL header to `GIANIUI`, `GIANIParamInfos`, and `GIANIMacroExecutor`.
+
 `LICENSE` and all source headers are GPL-3.0, but `pom.xml` declares Simplified
 BSD. Confirm with the maintainer that **GPL-3.0** is intended (consistent with
 the headers, the `LICENSE` file, and the sibling repos' resolution), then:
