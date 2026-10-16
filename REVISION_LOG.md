@@ -326,3 +326,16 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   (re-root into `docs/`, fix `conf.py`, content review, repoint RTD, archive
   `giani-docs`, update links). Open decision: keep `.rst` vs migrate to MyST
   (recommend keep-`.rst` for the move, migrate later).
+
+## 2026-10-16 — Docs consolidation complete (Phase E1, steps 1-2 & 4)
+
+- Re-rooted the Sphinx project into `docs/` (`conf.py`, `index.rst`,
+  `requirements.txt`, `Makefile`, `make.bat`, content subdirs + `images/`),
+  added a root `.readthedocs.yaml` pointing at `docs/conf.py`, fixed `conf.py`
+  (`version` → `3.4.27`, `html_logo` → `overview/images/Icon.png`), and
+  corrected `docs/index.rst` toctree/figure paths. Dropped the unused
+  `pyproject.toml` (flit boilerplate unrelated to the docs build).
+- Repointed ReadTheDocs to `djpbarry/Giani`; the `development` build succeeds at
+  https://giani-docs.readthedocs.io/en/development/. RTD slug is still
+  `giani-docs`, so `README.md`/`CITATION.cff` links remain valid.
+- Remaining: content review (defer until code settles), archive `giani-docs`.

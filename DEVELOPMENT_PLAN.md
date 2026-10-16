@@ -405,7 +405,7 @@ Determine and document how GIANI is discovered in Fiji:
 
 ### E1. Consolidate ReadTheDocs into this repo
 
-**Status: planned (2026-10-16).** GIANI's user docs live in a separate repo
+**Status: in progress (steps 1, 2, 4 done).** GIANI's user docs live in a separate repo
 (`djpbarry/giani-docs`), a Sphinx + ReadTheDocs project forked from
 `readthedocs/tutorial-template`. It contains `.rst` content under
 `docs/{overview,start,cells,nuclei,measure,cluster,complete,test}` plus PNG
@@ -432,9 +432,12 @@ Steps:
    installation page (Fiji update-site screenshots) and any stale parameter/UI
    text once the code settles.
 4. **Repoint ReadTheDocs** from `djpbarry/giani-docs` to `djpbarry/Giani`
-   (one-time RTD dashboard action).
+   (one-time RTD dashboard action). Done 2026-10-16; the `development` build
+   succeeds at https://giani-docs.readthedocs.io/en/development/.
 5. **Archive `giani-docs`** (leave a README pointer to the new location).
-6. **Update links** in `README.md`/`AGENTS.md` if the RTD URL changes.
+6. **Update links** in `README.md`/`AGENTS.md` if the RTD URL changes. No change
+   needed: the RTD slug is still `giani-docs`, so `README.md` and `CITATION.cff`
+   already point at the right host.
 
 Open decision: keep `.rst` (least work) or migrate to Markdown/MyST to match
 ADAPT's docs. Recommend keeping `.rst` for the move and doing a MyST migration
