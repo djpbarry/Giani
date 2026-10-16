@@ -99,3 +99,11 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
 - Explicitly considered and rejected **archiving** GIANI: the opinionated,
   hierarchical, guided workflow retains a distinct use case, and archiving would
   strand existing users and the published citation.
+
+## 2026-10-10 — `.gitignore` expanded (Phase A3)
+
+- Added `.idea/`, `*.iml`, `.DS_Store`, and `Thumbs.db` to `.gitignore`, closing
+  out Phase A3 (the `.idea/` directory was previously untracked in the working
+  tree).
+- Bumped version `3.4.10` → `3.4.11` for this `chore`, and kept `CITATION.cff`
+  `version` in step.
