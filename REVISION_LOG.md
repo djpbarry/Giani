@@ -204,3 +204,15 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   default" quirk).
 - `./mvnw test` still green (10/10). Bumped version `3.4.17` → `3.4.18` for this
   `refactor`, and kept `CITATION.cff` `version` in step.
+
+## 2026-10-16 — Eliminated mutable static state (Phase D3)
+
+- `GIANIUI.props`: `private static Properties` → `private final Properties props =
+  new GianiDefaultParams()` (inline initialisation); removed the `static { ... }`
+  block and the now-unused `protected static getProps()` method.
+- `SelectInputPanel.inputDirectory`: `private static File` → `private File`.
+- `./mvnw test` still green (10/10). Bumped version `3.4.18` → `3.4.19` for this
+  `refactor`, and kept `CITATION.cff` `version` in step.
+- **Follow-up flagged:** `GianiResultsBrowser` also has a `private static File
+  inputDirectory` (same shared-state pattern) — not in D3's scope, left for a
+  later pass.

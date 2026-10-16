@@ -342,6 +342,13 @@ the wizard call, so defaults and label indices cannot drift.
 
 ### D3. Eliminate mutable static state
 
+✔ Done (2026-10-16), first two items. `GIANIUI.props` is now a `final` instance
+field (initialised inline, static initialiser and dead `getProps()` removed);
+`SelectInputPanel.inputDirectory` is now an instance field. `GianiDefaultParams.TITLE`
+is left as-is (Decision 7 is a separate, later item). Note: `GianiResultsBrowser`
+also has a `static File inputDirectory` — the same pattern, flagged for a
+follow-up.
+
 - `GIANIUI.props` (`static Properties`) → per-instance field passed down to
   panels (the panels already receive `props` in their constructors).
 - `SelectInputPanel.inputDirectory` (`static File`) → instance field.

@@ -55,7 +55,7 @@ import java.util.Properties;
 public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
     private final BioFormatsImg img;
-    private static Properties props;
+    private final Properties props = new GianiDefaultParams();
     private final LinkedList<LayerPanel> componentList = new LinkedList();
     private int layerIndex = 0;
     private final ProcessPipeline pipeline;
@@ -63,12 +63,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     private LocalisationPanel localisationPanel;
     private final Objects3DPopulation cells;
     private final GIANIParamInfos info;
-
-    static {
-        if (props == null) {
-            props = new GianiDefaultParams();
-        }
-    }
 
 //    private final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
@@ -594,10 +588,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
             return null;
         }
         return helpURI;
-    }
-
-    protected static Properties getProps() {
-        return props;
     }
 
 

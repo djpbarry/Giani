@@ -43,7 +43,7 @@ import java.net.URI;
  */
 public class SelectInputPanel extends LayerPanel {
 
-    private static File inputDirectory;
+    private File inputDirectory;
     private final GIANIParamInfos info;
 
     /**
