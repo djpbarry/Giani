@@ -93,8 +93,20 @@ src/main/java/net/calm/giani/
   gianiparams/     parameter definitions, tooltips, deprecated-name migration
   ResultsBrowser/  post-analysis results browser (Fiji TrackMate + mcib3d)
   macro/           ImageJ Macro Language extension (MacroExtension)
-src/main/resources/icon/icon.png   app icon
+src/main/resources/icon/icon.png      app icon
+src/main/resources/plugins.config     Fiji plugin config (registers the macro extension)
 ```
+
+### Plugin discovery in Fiji
+
+- `src/main/resources/plugins.config` registers the macro extension
+  (`GIANIMacroExecutor`), exposing `loadPropertiesFile` / `setProperty` /
+  `getPropertyList` / `run` to ImageJ macros as `Ext.GIANI.<function>`.
+- The Swing GUI (`GIANIUI`) is launched from `GIANI.main()` (run the JAR with no
+  arguments) — it is **not** a `PlugIn`, so it has no `Plugins>`-menu entry.
+- `GianiResultsBrowser` is **not wired to any entry point** (no `PlugIn`/`main`
+  method and never instantiated in the codebase) — open question for a later pass
+  if it should be reachable from the Fiji menu.
 
 ## Conventions and patterns
 

@@ -371,6 +371,14 @@ messages to broad/empty `catch` blocks (e.g. `GIANI.main`'s `NumberFormatExcepti
 
 ### D5. Resolve the plugin-discovery question (no `plugins.config`)
 
+✔ Done (2026-10-16), determination + minimal fix. Added
+`src/main/resources/plugins.config` registering the macro extension
+(`Extensions, "GIANI", net.calm.giani.macro.GIANIMacroExecutor`). Determined and
+documented (in `AGENTS.md`): the Swing GUI is launched via `GIANI.main()` (not a
+`PlugIn`, so no menu entry); the macro extension is now registered; and
+`GianiResultsBrowser` is **orphaned** (no `PlugIn`/`main`, never instantiated) —
+flagged as an open question for whether it should get a Fiji menu entry.
+
 Determine and document how GIANI is discovered in Fiji:
 - Is it installed by dropping the jar into `Fiji.app/plugins/` and run via the
   main class, or via the macro extension?

@@ -233,3 +233,14 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   with the job number.
 - `./mvnw test` still green (10/10). Bumped version `3.4.20` → `3.4.21` for this
   `fix`, and kept `CITATION.cff` `version` in step.
+
+## 2026-10-16 — Resolved plugin discovery (Phase D5)
+
+- Added `src/main/resources/plugins.config` registering the macro extension:
+  `Extensions, "GIANI", net.calm.giani.macro.GIANIMacroExecutor`.
+- Determined and documented (in `AGENTS.md`): the Swing GUI is launched via
+  `GIANI.main()` (not a `PlugIn`, so no Fiji menu entry); the macro extension is
+  now registered; and `GianiResultsBrowser` is orphaned (no `PlugIn`/`main`,
+  never instantiated in the codebase) — open question for a later pass.
+- Bumped version `3.4.21` → `3.4.22` for this `chore`, and kept `CITATION.cff`
+  `version` in step.
