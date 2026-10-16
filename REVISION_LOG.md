@@ -244,3 +244,19 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   never instantiated in the codebase) — open question for a later pass.
 - Bumped version `3.4.21` → `3.4.22` for this `chore`, and kept `CITATION.cff`
   `version` in step.
+
+## 2026-10-16 — mcib3d-plugins upgrade investigated, deferred (Phase F3)
+
+- Investigated upgrading `mcib3d-plugins` from the stale GitHub-mirror coordinate
+  (`com.github.mcib3d:mcib3d-plugins:3.96.3`) to the modern Framagit coordinate
+  (`org.framagit.mcib3d:mcib3d-plugins`).
+- Findings: GIANI currently has a version split — `mcib3d-core:4.0.93` (via
+  `IAClassLibrary`) + `mcib3d-plugins:3.96.3`. The GitHub mirror is stale (last
+  tag `3.96.3`); the Framagit repo has `4.0.93`/`4.1.0`/`4.1.7`.
+- `4.0.93` (the version matching the core) **fails to build on JitPack** ("Error";
+  its tag's pom declares groupId `com.github.mcib3d` and version `4.0.92`). `4.1.7`
+  builds ("ok") but depends on `mcib3d-core:4.1.7`, which would split against the
+  `4.0.93` core. `RoiManager3D_2` still exists in 4.x (verified).
+- Decision: keep `3.96.3` for now; revisit if the core is bumped in lockstep or
+  the results browser (the only `RoiManager3D_2` consumer) is retired. `pom.xml`
+  reverted — no version bump, working tree clean.

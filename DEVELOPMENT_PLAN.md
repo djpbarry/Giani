@@ -430,6 +430,17 @@ been modernised (Java 21, GPL-3, package rename to
 
 ### F3. Decide on `mcib3d-plugins`
 
+**Status (2026-10-16): deferred — keep `3.96.3` for now.** Investigated an
+upgrade; the modern coordinate is `org.framagit.mcib3d:mcib3d-plugins`, but
+`4.0.93` (the version matching the core GIANI already gets via IAClassLibrary)
+is **broken on JitPack** (build "Error" — its tag's pom is internally
+inconsistent: groupId `com.github.mcib3d`, version `4.0.92`). The newer `4.1.7`
+builds cleanly but depends on `mcib3d-core:4.1.7`, which would split against the
+`4.0.93` core from IAClassLibrary. `RoiManager3D_2` still exists in 4.x (no
+class-removal breakage), so an upgrade remains feasible once the core is bumped
+in lockstep (or the results browser is retired, at which point `mcib3d-plugins`
+can be dropped entirely). Reverted to `com.github.mcib3d:mcib3d-plugins:3.96.3`.
+
 GIANI uses `mcib3d.geom.Objects3DPopulation` (passed throughout the pipeline) and
 `mcib_plugins.tools.RoiManager3D_2` (results browser). Confirm these remain
 available at the pinned `3.96.3` (or the current release) under Java 21.
