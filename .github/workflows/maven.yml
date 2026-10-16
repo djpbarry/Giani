@@ -17,6 +17,4 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven wrapper
-        env:
-          PAT: ${{ secrets.PAT }}
-        run: ./mvnw --batch-mode --update-snapshots -Dinternal.repo.password="$PAT" --settings mvn_settings.xml verify
+        run: ./mvnw --batch-mode --update-snapshots verify

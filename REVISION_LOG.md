@@ -130,3 +130,19 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   separately in A4 once a clean CI run confirms it is vestigial.
 - Bumped version `3.4.12` → `3.4.13` for this `chore`, and kept `CITATION.cff`
   `version` in step.
+
+## 2026-10-10 — GitHub Packages wiring removed from CI (Phase A4)
+
+- Removed `--settings mvn_settings.xml`, `-Dinternal.repo.password="$PAT"`, and
+  the `PAT` env from `.github/workflows/maven.yml`; the build is now just
+  `./mvnw --batch-mode --update-snapshots verify`.
+- Confirmed no `pom.xml` dependency resolves from `maven.pkg.github.com` (deps
+  are JitPack + SciJava + explicit Central), so the GitHub Packages profile is
+  vestigial for building — same finding as ADAPT.
+- `mvn_settings.xml` is retained (unreferenced) pending a clean CI run, then it
+  can be deleted. The `distributionManagement` section in `pom.xml` is kept for
+  any future GitHub Packages publishing.
+- Updated `AGENTS.md` build instructions to reflect the wrapper + no-settings
+  build.
+- Bumped version `3.4.13` → `3.4.14` for this `chore`, and kept `CITATION.cff`
+  `version` in step.

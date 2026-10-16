@@ -216,6 +216,13 @@ directory in the working tree.)
 
 ### A4. Remove/confirm the `mvn_settings.xml` GitHub Packages profile
 
+✔ Done (2026-10-10), CI wiring removed. The `./mvnw` build no longer passes
+`--settings mvn_settings.xml` / `-Dinternal.repo.password` and no longer sets the
+`PAT` secret. `mvn_settings.xml` is retained (unreferenced) and can be deleted
+once a clean CI run confirms the build — no `pom.xml` dependency resolves from
+`maven.pkg.github.com` (deps are JitPack + SciJava). The `distributionManagement`
+section in `pom.xml` is kept for any future GitHub Packages publishing.
+
 Mirror ADAPT's finding: no `pom.xml` dependency resolves from
 `maven.pkg.github.com`, so the `--settings mvn_settings.xml` + `PAT` wiring is
 likely removable from CI. Verify with one clean CI run before deleting; keep the
