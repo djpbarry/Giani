@@ -2,6 +2,9 @@
 /dist/
 /target/
 
+# Sphinx docs build output
+docs/build/
+
 # IDE
 .idea/
 *.iml
