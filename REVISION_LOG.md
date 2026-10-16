@@ -269,3 +269,19 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   and `GianiResultsTable` (14 sites). Behaviour-preserving.
 - `./mvnw test` still green (10/10). Bumped version `3.4.22` → `3.4.23` for this
   `refactor`, and kept `CITATION.cff` `version` in step.
+
+## 2026-10-16 — Try-with-resources for BioFormatsImg (Phase G2)
+
+- `PipelineExecutor.run()`: wrapped the per-file `BioFormatsImg` in
+  try-with-resources, so the Bio-Formats reader is closed after each file (was
+  previously leaked).
+- `GianiResultsBrowser.openImage()`: replaced the `BioFormatsImg` field with a
+  local try-with-resources (reader closed after loading; the `CompositeImage`
+  holds the in-memory pixels, so display is unaffected); removed the now-unused
+  `img` field.
+- `GianiResultsTable`: no change needed — `DataReader.readCSVFile` closes its own
+  reader (IAClassLibrary's G4 already made it try-with-resources).
+- Flagged, not fixed (out of scope): `PipelineExecutor`'s `ExecutorService` is
+  never shut down; `GIANI.getJobDetails` leaks a `BufferedReader`.
+- `./mvnw test` still green (10/10). Bumped version `3.4.23` → `3.4.24` for this
+  `refactor`, and kept `CITATION.cff` `version` in step.

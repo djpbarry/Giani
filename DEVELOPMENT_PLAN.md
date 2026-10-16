@@ -457,9 +457,15 @@ ordered by risk (behaviour-preserving first):
    diamond (`<>`) across `GIANIUI`, `PipelineExecutor`, `SelectInputPanel`,
    `FilteringPanel`, `MaximaFinderPanel`, `GianiResultsBrowser`, and
    `GianiResultsTable` (14 sites).
-2. **Try-with-resources:** audit `PipelineExecutor`/`GianiResultsBrowser`/
-   `GianiResultsTable` file/reader handling (the results browser uses
-   `DataReader.readCSVFile`; verify readers/`CSVPrinter`s are closed).
+2. **Try-with-resources:** ✔ Done (2026-10-16). Wrapped the per-file
+   `BioFormatsImg` in `PipelineExecutor.run()` in try-with-resources (reader is
+   now closed per file), and converted `GianiResultsBrowser.openImage`'s
+   `BioFormatsImg` field to a local try-with-resources (reader closed after
+   loading; the in-memory `CompositeImage` is unaffected). `GianiResultsTable`
+   needs no change — `DataReader.readCSVFile` already closes its reader in
+   IAClassLibrary. Flagged (out of scope): `PipelineExecutor`'s
+   `ExecutorService` is never shut down, and `GIANI.getJobDetails` leaks a
+   `BufferedReader`.
 3. **Language features:** `switch` → arrow, `instanceof` pattern matching,
    anonymous inner classes → lambdas (the many NetBeans `ActionListener` blocks
    in `initComponents` are generated — do **not** hand-edit those; only the

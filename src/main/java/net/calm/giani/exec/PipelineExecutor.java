@@ -94,50 +94,50 @@ public class PipelineExecutor extends Thread {
         ExecutorService exec = Executors.newSingleThreadExecutor();
         while (files.size() > 0) {
             String file = files.get(0);
-            BioFormatsImg img = new BioFormatsImg();
-            try {
-                img.setId(String.format("%s%s%s", input, File.separator, file));
-            } catch (IOException | FormatException e) {
-                GenUtils.logError(e, String.format("Failed to initialise %s", file));
-            }
-            props.put(img.reformatFileName(), file);
-            IJ.log(String.format("Analysing file %s", FilenameUtils.getName(file)));
-            int nSeries = img.getSeriesCount();
-            int s0 = 0;
-            try {
-                int specificSeries = Integer.parseInt(props.getProperty(GianiDefaultParams.SPECIFIC_SERIES));
-                if (specificSeries > -1 && specificSeries < nSeries) {
-                    s0 = specificSeries;
-                    nSeries = specificSeries + 1;
-                } else {
-//                    IJ.log(String.format("Specific series is outside range 0 - %d.", nSeries - 1));
+            try (BioFormatsImg img = new BioFormatsImg()) {
+                try {
+                    img.setId(String.format("%s%s%s", input, File.separator, file));
+                } catch (IOException | FormatException e) {
+                    GenUtils.logError(e, String.format("Failed to initialise %s", file));
                 }
-            } catch (NumberFormatException e) {
-                IJ.log("Specific series not a parsable integer - ignoring.");
-            }
-            for (int s = s0; s < nSeries; s++) {
-                IJ.log(String.format("Analysing series %d", s));
-                if (img.getSizeZ(s) < 2) {
-                    IJ.log("Only 2 dimensions - skipping.");
-                    continue;
+                props.put(img.reformatFileName(), file);
+                IJ.log(String.format("Analysing file %s", FilenameUtils.getName(file)));
+                int nSeries = img.getSeriesCount();
+                int s0 = 0;
+                try {
+                    int specificSeries = Integer.parseInt(props.getProperty(GianiDefaultParams.SPECIFIC_SERIES));
+                    if (specificSeries > -1 && specificSeries < nSeries) {
+                        s0 = specificSeries;
+                        nSeries = specificSeries + 1;
+                    }
+                } catch (NumberFormatException e) {
+                    IJ.log("Specific series not a parsable integer - ignoring.");
                 }
-                props.setProperty(GianiDefaultParams.SERIES_SELECT_LABEL, String.valueOf(s));
-                props.setProperty(GianiDefaultParams.UNITS, img.getUnits(s));
-//                int imageIndex = 0;
-                for (MultiThreadedProcess process : pipeline) {
-                    if (process != null) {
-                        IJ.log(String.format("%s Process %s", TimeAndDate.getCurrentTimeAndDate(), process.getClass().toString()));
-                        try {
-                            process.setup(img, props, process.getPropLabels());
-                            Future f = exec.submit(process, img);
-                            f.get();
-                        } catch (InterruptedException | ExecutionException e) {
-                            GenUtils.logError(e, String.format("Failed to execute process %s", process.getClass().toString()));
+                for (int s = s0; s < nSeries; s++) {
+                    IJ.log(String.format("Analysing series %d", s));
+                    if (img.getSizeZ(s) < 2) {
+                        IJ.log("Only 2 dimensions - skipping.");
+                        continue;
+                    }
+                    props.setProperty(GianiDefaultParams.SERIES_SELECT_LABEL, String.valueOf(s));
+                    props.setProperty(GianiDefaultParams.UNITS, img.getUnits(s));
+                    for (MultiThreadedProcess process : pipeline) {
+                        if (process != null) {
+                            IJ.log(String.format("%s Process %s", TimeAndDate.getCurrentTimeAndDate(), process.getClass().toString()));
+                            try {
+                                process.setup(img, props, process.getPropLabels());
+                                Future f = exec.submit(process, img);
+                                f.get();
+                            } catch (InterruptedException | ExecutionException e) {
+                                GenUtils.logError(e, String.format("Failed to execute process %s", process.getClass().toString()));
+                            }
                         }
                     }
                 }
+                updateFileList(img, files);
+            } catch (IOException e) {
+                GenUtils.logError(e, String.format("Failed to close image reader for %s", file));
             }
-            updateFileList(img, files);
         }
         try {
             DataWriter.saveResultsTable(Analyzer.getResultsTable(), new File(String.format("%s%s%s_Output.csv", outputDir, File.separator, GianiDefaultParams.TITLE)), false, true);

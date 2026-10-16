@@ -67,7 +67,6 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
     private Objects3DPopulation popImp;
     private static File inputDirectory;
     private CompositeImage imp;
-    private BioFormatsImg img;
     private Properties props;
 //    private boolean spotData;
     private ArrayList<ArrayList<Spot>> spots;
@@ -355,13 +354,14 @@ public class GianiResultsBrowser extends javax.swing.JFrame implements MouseList
 
     void openImage(File directory, String name, int series) throws IOException, FormatException {
         ArrayList<String> files = BioFormatsFileLister.obtainValidFileList(directory);
-        img = new BioFormatsImg();
         for (String f : files) {
             if (f.contains(name)) {
-                img.setId(String.format("%s%s%s", directory, File.separator, f));
-                img.loadPixelData(series);
-                imp = new CompositeImage(img.getLoadedImage(), IJ.COMPOSITE);
-                imp.show();
+                try (BioFormatsImg image = new BioFormatsImg()) {
+                    image.setId(String.format("%s%s%s", directory, File.separator, f));
+                    image.loadPixelData(series);
+                    imp = new CompositeImage(image.getLoadedImage(), IJ.COMPOSITE);
+                    imp.show();
+                }
                 return;
             }
         }
