@@ -315,3 +315,14 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   generated `initComponents()`, left untouched per the plan).
 - `./mvnw test` still green (10/10). Bumped version `3.4.26` → `3.4.27` for this
   `refactor`, and kept `CITATION.cff` `version` in step.
+
+## 2026-10-16 — Planned docs consolidation (Phase E1)
+
+- Investigated `djpbarry/giani-docs`: a separate Sphinx + ReadTheDocs repo
+  (fork of `readthedocs/tutorial-template`) with `.rst` content + PNG screenshots,
+  `sphinx_rtd_theme`, Python 3.10, and a stale `conf.py` `version = '3.4.9'`.
+- Decided to pull the docs into this repo (matching ADAPT's in-repo `docs/`
+  pattern). Added **Phase E1** to `DEVELOPMENT_PLAN.md` with a 6-step migration
+  (re-root into `docs/`, fix `conf.py`, content review, repoint RTD, archive
+  `giani-docs`, update links). Open decision: keep `.rst` vs migrate to MyST
+  (recommend keep-`.rst` for the move, migrate later).

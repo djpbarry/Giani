@@ -403,6 +403,43 @@ Determine and document how GIANI is discovered in Fiji:
   `ResultsBrowser` have little class/method Javadoc. Add it to the public API as
   part of the refactor.
 
+### E1. Consolidate ReadTheDocs into this repo
+
+**Status: planned (2026-10-16).** GIANI's user docs live in a separate repo
+(`djpbarry/giani-docs`), a Sphinx + ReadTheDocs project forked from
+`readthedocs/tutorial-template`. It contains `.rst` content under
+`docs/{overview,start,cells,nuclei,measure,cluster,complete,test}` plus PNG
+screenshots, with `conf.py`/`index.rst` at the repo root, `.readthedocs.yaml`
+(Python 3.10, `sphinx.configuration: conf.py`, PDF output), and a single
+dependency `sphinx_rtd_theme`. Its `conf.py` has `version = '3.4.9'` (stale) and
+`html_logo = 'docs/overview/images/Icon.png'`.
+
+**Decision:** pull the docs into this repo (matching ADAPT's in-repo `docs/`
+pattern), so they are versioned and reviewed with the code instead of drifting.
+
+Steps:
+
+1. **Re-root into `docs/`.** Create `docs/` and move the Sphinx project so the
+   source root is `docs/` (matching ADAPT): `docs/conf.py`, `docs/index.rst`,
+   `docs/requirements.txt`, `docs/Makefile`, `docs/make.bat`, and the content
+   subdirs + `images/`. Add `.readthedocs.yaml` at the repo root pointing at
+   `docs/conf.py`.
+2. **Fix `conf.py`.** Update `version` to the current `3.4.x` (and keep it in
+   step with `pom.xml`, as `CITATION.cff` is) and correct the `html_logo` path
+   for the new source root.
+3. **Content review (after the move).** The docs describe the wizard/installation
+   and predate D5's `plugins.config` and the other modernisation; update the
+   installation page (Fiji update-site screenshots) and any stale parameter/UI
+   text once the code settles.
+4. **Repoint ReadTheDocs** from `djpbarry/giani-docs` to `djpbarry/Giani`
+   (one-time RTD dashboard action).
+5. **Archive `giani-docs`** (leave a README pointer to the new location).
+6. **Update links** in `README.md`/`AGENTS.md` if the RTD URL changes.
+
+Open decision: keep `.rst` (least work) or migrate to Markdown/MyST to match
+ADAPT's docs. Recommend keeping `.rst` for the move and doing a MyST migration
+separately (deferred).
+
 ---
 
 ## Phase F — Upstream coordination & re-pin (the breaking change, do with tests in place)
