@@ -56,7 +56,7 @@ guided wizard, sensible defaults, and one CSV out.
 - **Point users at MIA** for anything beyond that scope (custom pipelines,
   broader 5D workflows, extensive tracking). See Proposed decision 9.
 
-## Current state (context for the plan)
+## Initial state (2026-10-10, context for the plan)
 
 - GIANI (`net.calm.giani`) is a **Fiji/ImageJ plugin** (Swing GUI + headless CLI
   + ImageJ macro extension) for batch segmentation/measurement of 3D cell-biology
@@ -87,9 +87,9 @@ guided wizard, sensible defaults, and one CSV out.
   (`MultiThreadedMaximaFinder`, `MultiThreadedGaussianFilter`,
   `MultiThreadedTopHatFilter`, `MultiThreadedWatershed`,
   `MultiThreadedROIConstructor`, `MultiThreadedColocalise`, `ProcessPipeline`,
-  `BioFormatsImg`, `PropertyWriter`) all come from `IAClassLibrary`. The two
-  mcib3d types GIANI uses directly are `mcib3d.geom.Objects3DPopulation` and
-  (in the results browser) `mcib_plugins.tools.RoiManager3D_2`.
+  `BioFormatsImg`, `PropertyWriter`) all come from `IAClassLibrary`. The one
+  mcib3d type GIANI uses directly is `mcib3d.geom.Objects3DPopulation` (the
+  segmentation-result container threaded through the pipeline).
 - **Three entry points** share one pipeline builder:
   `exec.GIANI` (CLI + headless), `ui.GIANIUI` (Swing wizard), and
   `macro.GIANIMacroExecutor` (ImageJ `MacroExtension`).
@@ -112,12 +112,9 @@ guided wizard, sensible defaults, and one CSV out.
 
 ### Verified gotchas (from the code review)
 
-- **License mismatch:** `pom.xml` declares Simplified BSD
-  (`<license><name>Simplified BSD License</name>` at `pom.xml:82`,
-  `license.licenseName=bsd_2` at `pom.xml:138`), but `LICENSE` is GPL-3.0 and
-  every source header is GPL-3.0. Also `license.copyrightOwners` is set to
-  "Francis Crick Institute"; the sibling repos concluded copyright is
-  **David Barry** (development predates the Crick) — confirm for GIANI.
+- **License mismatch (resolved):** `pom.xml` now declares GPL-3.0-or-later
+  (`license.licenseName=gpl_v3`) with copyright owner **Francis Crick Institute**,
+  matching `LICENSE` and the source headers (Phase B1).
 - **Upstream pin (resolved):** `IAClassLibrary` was pinned at commit `fe92f24c6e`;
   it is now pinned to tagged release `v2.0.23` (`com.github.djpbarry:IAClassLibrary:v2.0.23`
   via JitPack). The library modernised to Java 21 and GPL-3.0-or-later but kept
@@ -267,8 +264,8 @@ widget and reference managers pick up the correct citation.
   (per B1), `repository-code` = the GitHub repo, and a `preferred-citation` to
   the J Cell Sci 2022 paper (doi `10.1242/jcs.259511`).
 - **Follow-ups:** (i) version/`date-released` must be kept in step with
-  `pom.xml` at each `vX.Y.Z` tag (currently `3.4.10`; `date-released` is a
-  placeholder until the first real tagged release); (ii) confirm the authors of
+  `pom.xml` at each `vX.Y.Z` tag (`date-released` is a placeholder until the
+  first real tagged release); (ii) confirm the authors of
   `preferred-citation` against the journal's author list.
 
 ---
@@ -347,8 +344,7 @@ the wizard call, so defaults and label indices cannot drift.
 field (initialised inline, static initialiser and dead `getProps()` removed);
 `SelectInputPanel.inputDirectory` is now an instance field. `GianiDefaultParams.TITLE`
 is left as-is (Decision 7 is a separate, later item). Note: `GianiResultsBrowser`
-also has a `static File inputDirectory` — the same pattern, flagged for a
-follow-up.
+had the same `static File inputDirectory` pattern, but it was retired in F3.
 
 - `GIANIUI.props` (`static Properties`) → per-instance field passed down to
   panels (the panels already receive `props` in their constructors).
@@ -377,17 +373,17 @@ messages to broad/empty `catch` blocks (e.g. `GIANI.main`'s `NumberFormatExcepti
 (`Extensions, "GIANI", net.calm.giani.macro.GIANIMacroExecutor`). Determined and
 documented (in `AGENTS.md`): the Swing GUI is launched via `GIANI.main()` (not a
 `PlugIn`, so no menu entry); the macro extension is now registered; and
-`GianiResultsBrowser` is **orphaned** (no `PlugIn`/`main`, never instantiated) —
-flagged as an open question for whether it should get a Fiji menu entry.
+`GianiResultsBrowser` was **orphaned** (no `PlugIn`/`main`, never instantiated);
+it was later retired in F3 rather than wired to a Fiji menu entry.
 
 Determine and document how GIANI is discovered in Fiji:
 - Is it installed by dropping the jar into `Fiji.app/plugins/` and run via the
   main class, or via the macro extension?
 - The `GIANIMacroExecutor` (`MacroExtension`) requires registration (typically a
   `plugins.config` `Macros`/`Extensions` line, or a `_`-prefixed jar).
-- If a `plugins.config` is the intended mechanism, add it (listing the UI, the
-  results browser, and the macro extension); otherwise document the current
-  install procedure in `README.md`/`AGENTS.md`.
+- If a `plugins.config` is the intended mechanism, add it (registering the macro
+  extension); otherwise document the current install procedure in
+  `README.md`/`AGENTS.md`.
 
 ---
 
@@ -400,9 +396,8 @@ Determine and document how GIANI is discovered in Fiji:
 - **`AGENTS.md`** (already present) documents architecture, conventions, and
   gotchas. Keep it in sync as Phases D/F land (especially any dependency-pin or
   pipeline-reordering changes).
-- **Javadoc:** the `exec` package is reasonably documented; the `ui` panels and
-  `ResultsBrowser` have little class/method Javadoc. Add it to the public API as
-  part of the refactor.
+- **Javadoc:** the `exec` package is reasonably documented; the `ui` panels have
+  little class/method Javadoc. Add it to the public API as part of the refactor.
 
 ### E1. Consolidate ReadTheDocs into this repo
 
@@ -503,10 +498,11 @@ ordered by risk (behaviour-preserving first):
    `new ArrayList()`/`new LinkedList()`/`new LinkedHashMap()` instantiations with
    diamond (`<>`) across `GIANIUI`, `PipelineExecutor`, `SelectInputPanel`,
    `FilteringPanel`, `MaximaFinderPanel`, `GianiResultsBrowser`, and
-   `GianiResultsTable` (14 sites).
+   `GianiResultsTable` (14 sites; the last two retired in F3).
 2. **Try-with-resources:** ✔ Done (2026-10-16). Wrapped the per-file
    `BioFormatsImg` in `PipelineExecutor.run()` in try-with-resources (reader is
    now closed per file), and converted `GianiResultsBrowser.openImage`'s
+   (later retired in F3)
    `BioFormatsImg` field to a local try-with-resources (reader closed after
    loading; the in-memory `CompositeImage` is unaffected). `GianiResultsTable`
    needs no change — `DataReader.readCSVFile` already closes its reader in
@@ -516,7 +512,8 @@ ordered by risk (behaviour-preserving first):
 3. **Language features:** ✔ Done (2026-10-16). Converted the three `switch`
    statements to arrow `switch` (`GIANI`'s arg parser, `GIANIMacroExecutor`'s
    `handleExtension`, `MaximaFinderPanel`'s method selector) and replaced
-   `instanceof` + cast with pattern matching in `GianiResultsBrowser`
+   `instanceof` + cast with pattern matching in `GianiResultsBrowser` (later
+   retired in F3)
    (`addListenerToRoiManager3DObjectList`, `enableRoiManagerLiveMode`) and
    `GIANIUI.updateLayer`. No anonymous-inner-class→lambda candidates existed in
    hand-written code (they are all in generated `initComponents()`, left alone).
@@ -568,8 +565,8 @@ export-and-track-in-TrackMate. Rationale grounded in the object model:
   parent–child links; the hierarchy has to be reconstructed afterwards from
   foreign keys. Option (b) keeps the hierarchy in GIANI and uses TrackMate only
   for the lineage, so nothing is lost.
-- GIANI **already depends on TrackMate** (`fiji.plugin.trackmate.Spot` is used in
-  `ResultsBrowser`), so (b) adds no new dependency.
+- GIANI **already depends on TrackMate** transitively via `IAClassLibrary` (its
+  maxima finder uses TrackMate's `LogDetector`), so (b) adds no new dependency.
 
 **Design for (b):**
 
@@ -587,8 +584,8 @@ export-and-track-in-TrackMate. Rationale grounded in the object model:
    (nucleus measurements, punctae) **inherit the parent cell's track ID** — no
    independent tracking of children required.
 4. Write a lineage table (track ID per cell per timepoint) alongside
-   `GIANI_Output.csv` (or as an extra column), and surface tracks in the
-   `ResultsBrowser`.
+   `GIANI_Output.csv` (or as an extra column). There is no results browser, so
+   lineage is surfaced via the exported CSV (H4).
 
 **Note on punctae/spot tracking:** if the goal is to track punctae themselves as
 independent objects (rather than cell lineage), that is a separate, second
@@ -632,8 +629,8 @@ reinforces tracking **cells** as the primary lineage object:
   `track_id` as `parent_track_id`.
 - **Hierarchy note:** inTRACKtive visualises one track type (the cell lineage);
   nuclei and punctae are not shown as separate objects, so their parent–child
-  relationships stay in `GIANI_Output.csv` / `Spot_Data.csv` and are surfaced in
-  the `ResultsBrowser` rather than inTRACKtive.
+  relationships stay in `GIANI_Output.csv` / `Spot_Data.csv` rather than
+  inTRACKtive.
 
 ---
 
