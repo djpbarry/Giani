@@ -350,3 +350,14 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   notes, package-namespace decision) and `AGENTS.md` (stale Project overview
   version numbers) to reflect that GIANI already pins `v2.0.23`, so F1 is done
   and no import migration is required.
+
+## 2026-10-16 — Phase F2 verified (TrackMate 8.0.0)
+
+- Confirmed `sc.fiji:TrackMate:8.0.0` resolves (managed by `pom-scijava:45.1.0`,
+  pulled transitively via `IAClassLibrary:v2.0.23`; `dependency:tree`).
+- GIANI's only TrackMate use is `fiji.plugin.trackmate.Spot` in
+  `GianiResultsBrowser` (`new Spot(x, y, z, radius, quality)` + `putFeature`),
+  which compiles against 8.0.0 (`mvnw test` green). Noted it is dead code (the
+  only `loadSpotData()` call is commented out).
+- Marked F2 done in `DEVELOPMENT_PLAN.md` (pom-scijava/Java 21 already landed in
+  M4).

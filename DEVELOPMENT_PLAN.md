@@ -469,12 +469,16 @@ Optional low-value cleanup: switch the dependency from the JitPack alias
 real Maven repo (it currently is not). If a future `v3.x` performs the package
 rename, revisit this phase.
 
-### F2. Coordinate the Java / TrackMate / pom-scijava bump
+### F2. Coordinate the Java / TrackMate / pom-scijava bump — ✔ Done (2026-10-16)
 
-- Bump the parent to `pom-scijava:45.1.0` and target **Java 21**
-  (`scijava.jvm.version=21`), in lockstep with the re-pinned library.
-- Confirm the TrackMate version (parent-managed `8.0.0` after the bump) is
-  compatible with GIANI's `ResultsBrowser` usage of `fiji.plugin.trackmate.Spot`.
+- Parent `pom-scijava:45.1.0` + **Java 21** (`scijava.jvm.version=21`) already
+  landed in M4 (dependency modernisation).
+- TrackMate resolves to `8.0.0` (managed by `pom-scijava:45.1.0`, pulled
+  transitively via `IAClassLibrary`; confirmed with `dependency:tree`). GIANI's
+  only TrackMate use is `fiji.plugin.trackmate.Spot` in `GianiResultsBrowser`
+  (`new Spot(x, y, z, radius, quality)` + `putFeature(...)`), which compiles
+  against 8.0.0 (`mvnw test` green). That code is currently dead — the sole call
+  to `loadSpotData()` is commented out — so it is compile-time-only for now.
 
 ### F3. Decide on `mcib3d-plugins`
 
