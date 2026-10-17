@@ -475,27 +475,20 @@ rename, revisit this phase.
   landed in M4 (dependency modernisation).
 - TrackMate resolves to `8.0.0` (managed by `pom-scijava:45.1.0`, pulled
   transitively via `IAClassLibrary`; confirmed with `dependency:tree`). GIANI's
-  only TrackMate use is `fiji.plugin.trackmate.Spot` in `GianiResultsBrowser`
-  (`new Spot(x, y, z, radius, quality)` + `putFeature(...)`), which compiles
-  against 8.0.0 (`mvnw test` green). That code is currently dead — the sole call
-  to `loadSpotData()` is commented out — so it is compile-time-only for now.
+  only TrackMate use was the dead `fiji.plugin.trackmate.Spot` code in the
+  results browser, removed along with it in F3.
 
-### F3. Decide on `mcib3d-plugins`
+### F3. Decide on `mcib3d-plugins` — ✔ Done (2026-10-16): dropped
 
-**Status (2026-10-16): deferred — keep `3.96.3` for now.** Investigated an
-upgrade; the modern coordinate is `org.framagit.mcib3d:mcib3d-plugins`, but
-`4.0.93` (the version matching the core GIANI already gets via IAClassLibrary)
-is **broken on JitPack** (build "Error" — its tag's pom is internally
-inconsistent: groupId `com.github.mcib3d`, version `4.0.92`). The newer `4.1.7`
-builds cleanly but depends on `mcib3d-core:4.1.7`, which would split against the
-`4.0.93` core from IAClassLibrary. `RoiManager3D_2` still exists in 4.x (no
-class-removal breakage), so an upgrade remains feasible once the core is bumped
-in lockstep (or the results browser is retired, at which point `mcib3d-plugins`
-can be dropped entirely). Reverted to `com.github.mcib3d:mcib3d-plugins:3.96.3`.
+Retired the unwired results browser (`GianiResultsBrowser` + `GianiResultsTable`,
+dead code) and removed the `com.github.mcib3d:mcib3d-plugins:3.96.3` dependency
+and its exclusions. `mcib3d-plugins` existed only to provide
+`mcib_plugins.tools.RoiManager3D_2` for that browser, so dropping it resolves the
+`3.96.3` vs `4.0.93` core version split.
 
-GIANI uses `mcib3d.geom.Objects3DPopulation` (passed throughout the pipeline) and
-`mcib_plugins.tools.RoiManager3D_2` (results browser). Confirm these remain
-available at the pinned `3.96.3` (or the current release) under Java 21.
+`mcib3d-core` (transitive via `IAClassLibrary`, `4.0.93`) remains and is
+unavoidable: `mcib3d.geom.Objects3DPopulation` is the segmentation-result
+container threaded through IAClassLibrary's pipeline API. No further action.
 
 ---
 
@@ -652,8 +645,8 @@ already-resolved decisions.
    (**David Barry** per the sibling precedent).
 2. **Dependencies — stay on JitPack, pin to tags.** Do not vendor; do not use
    GitHub Packages for *dependencies*. Re-pin `IAClassLibrary` from the
-   `fe92f24c6e` commit hash to a tagged release; keep `mcib3d-plugins` pinned to
-   a tagged release.
+   `fe92f24c6e` commit hash to a tagged release (`mcib3d-plugins` later dropped
+   in F3).
 3. **Target JDK — Java 21.** ✔ Adopted (2026-10-10). Align with `IAClassLibrary`,
    Fiji's runtime, and TrackMate ≥ 8; `pom-scijava` bumped to `45.1.0` and
    `scijava.jvm.version=21` set.

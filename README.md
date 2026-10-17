@@ -36,13 +36,6 @@ If you wish, you can segment smaller, sub-cellular structures using additional b
 
 ![GIANI Detect Spots Preview](https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GIANI_Detect_Spots_Preview.PNG)
 
-# Explore Results
-
-Examine your results using the included results browser:
-
-![GIANI Results Browser Post Directory Selection](
-https://raw.githubusercontent.com/wiki/djpbarry/Giani/images/GIANI_Results_Browser_Final.PNG)
-
 # Want To Learn More?
 
 See [the documentation](https://giani-docs.readthedocs.io/) for installation instructions and full instructions. The documentation source lives in this repository under [docs/](docs/) (Sphinx).

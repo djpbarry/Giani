@@ -13,7 +13,7 @@
 
     <groupId>net.calm</groupId>
     <artifactId>giani</artifactId>
-    <version>3.4.27</version>
+    <version>3.4.28</version>
 
     <build>
         <plugins>
@@ -137,21 +137,6 @@
             <groupId>com.github.djpbarry</groupId>
             <artifactId>IAClassLibrary</artifactId>
             <version>v2.0.23</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.mcib3d</groupId>
-            <artifactId>mcib3d-plugins</artifactId>
-            <version>3.96.3</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>sc.fiji</groupId>
-                    <artifactId>imageware</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.github.mcib3d</groupId>
-                    <artifactId>mcib3d-core</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

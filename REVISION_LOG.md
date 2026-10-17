@@ -361,3 +361,15 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   only `loadSpotData()` call is commented out).
 - Marked F2 done in `DEVELOPMENT_PLAN.md` (pom-scijava/Java 21 already landed in
   M4).
+
+## 2026-10-16 — Retired results browser, dropped mcib3d-plugins (Phase F3)
+
+- Deleted the unwired `GianiResultsBrowser` and `GianiResultsTable` (dead code,
+  never instantiated) and removed the `com.github.mcib3d:mcib3d-plugins:3.96.3`
+  dependency + its exclusions from `pom.xml`.
+- Resolves the F3 version split: `mcib3d-plugins` existed only for
+  `RoiManager3D_2` in that browser. `mcib3d-core:4.0.93` (transitive via
+  `IAClassLibrary`) remains as the pipeline's `Objects3DPopulation` result type.
+- Also removed GIANI's only TrackMate import (dead `Spot` code). Updated
+  `README.md`, `AGENTS.md`, `CITATION.cff`, and bumped version `3.4.27` →
+  `3.4.28`.

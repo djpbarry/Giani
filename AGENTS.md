@@ -10,7 +10,7 @@ GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](ht
 - **Group/artifact:** `net.calm:giani`, version `3.4.27`.
 - **Parent POM:** `org.scijava:pom-scijava:45.1.0` (SciJava build conventions).
 - **Core library dependency:** `com.github.djpbarry:IAClassLibrary:v2.0.23` (JitPack alias for `net.calm:iaclasslibrary:2.0.23`) provides the actual image-processing primitives (`MultiThreaded*` process classes, `BioFormatsImg`, `ProcessPipeline`, `PropertyWriter`, etc.). GIANI is mostly glue that wires these primitives into a pipeline and exposes UI/CLI/macro entry points.
-- **Other dependency:** `com.github.mcib3d:mcib3d-plugins:3.96.3` (with `imageware` and `mcib3d-core` excluded) provides 3D geometry (`mcib3d.geom.Object3D`, `Objects3DPopulation`).
+- **Transitive dependency:** `mcib3d-core` (via `IAClassLibrary`) provides `mcib3d.geom.Objects3DPopulation`/`Object3D`, the segmentation-result container threaded through the pipeline.
 
 ## Build / run commands
 
@@ -91,7 +91,6 @@ src/main/java/net/calm/giani/
   exec/            CLI entry (GIANI), pipeline assembly (PipelineBuilder), runner (PipelineExecutor)
   ui/              Swing wizard panels (one per pipeline stage), extends LayerPanel
   gianiparams/     parameter definitions, tooltips, deprecated-name migration
-  ResultsBrowser/  post-analysis results browser (Fiji TrackMate + mcib3d)
   macro/           ImageJ Macro Language extension (MacroExtension)
 src/main/resources/icon/icon.png      app icon
 src/main/resources/plugins.config     Fiji plugin config (registers the macro extension)
@@ -104,9 +103,6 @@ src/main/resources/plugins.config     Fiji plugin config (registers the macro ex
   `getPropertyList` / `run` to ImageJ macros as `Ext.GIANI.<function>`.
 - The Swing GUI (`GIANIUI`) is launched from `GIANI.main()` (run the JAR with no
   arguments) — it is **not** a `PlugIn`, so it has no `Plugins>`-menu entry.
-- `GianiResultsBrowser` is **not wired to any entry point** (no `PlugIn`/`main`
-  method and never instantiated in the codebase) — open question for a later pass
-  if it should be reachable from the Fiji menu.
 
 ## Conventions and patterns
 
