@@ -1,0 +1,15 @@
+@echo off
+rem Machine-specific paths for the bin/ scripts.
+rem
+rem Copy this file to `local-env.cmd` (in this same `bin/` directory) and set the
+rem values for the current machine. `local-env.cmd` is gitignored, so each
+rem machine keeps its own copy without churning the committed scripts.
+rem
+rem The scripts `call` this file (if present); a command-line argument overrides
+rem FIJI_DIR.
+
+rem Fiji installation directory (contains plugins/, jars/, fiji-windows-x64.exe).
+set "FIJI_DIR=C:\path\to\Fiji"
+
+rem JDK 21 home. Prefer the OS JAVA_HOME; this is a fallback for the smoke test.
+set "JAVA_HOME=C:\path\to\jdk-21"
