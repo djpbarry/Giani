@@ -275,10 +275,11 @@ widget and reference managers pick up the correct citation.
 
 ## Phase C — Introduce tests (the biggest maintainability win)
 
-**Status (2026-10-10): items 1–2 done** — JUnit 5 wired (`junit-jupiter-api` +
+**Status (2026-10-17): items 1–3 done.** JUnit 5 wired (`junit-jupiter-api` +
 `-engine`, parent-managed); `GianiDefaultParamsTest`, `DeprecatedPropsTest`, and
-`PipelineBuilderTest` added (10 tests green). Item 3 (executor-output golden
-tests) is deferred pending a headless fixture image.
+`PipelineBuilderTest` added (10 tests green). Item 3 is done as
+`PipelineExecutorIntegrationTest` (tagged `integration`, gated behind
+`-Pintegration`).
 
 No tests exist. GIANI is a GUI/CLI plugin whose logic is entangled with ImageJ
 and `IAClassLibrary`, so start with the pure-logic, ImageJ-free classes and the
@@ -295,9 +296,10 @@ pipeline-wiring invariants that are cheap to assert.
    sequence and that the `propLabels` mappings reference real
    `GianiDefaultParams` constants. This pins the index-coupled ordering that is
    currently only implicit and duplicated across two files.
-3. **CSV/property golden tests** for the output written by
-   `PipelineExecutor` (the `GIANI_Output.csv` + saved `Properties`) if a headless
-   fixture image can be checked in under `src/test/resources`.
+3. **Executor-output integration test** ✔ Done (2026-10-17): runs the full
+   pipeline headless over `test_data/18.06.10_Experiment.lif_7.ome.tiff` and
+   asserts the `*_Output.csv` + `properties.xml` are produced with data. Tagged
+   `integration` (excluded from default `mvn test`; run via `-Pintegration`).
 
 ---
 

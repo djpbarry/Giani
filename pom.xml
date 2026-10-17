@@ -13,7 +13,7 @@
 
     <groupId>net.calm</groupId>
     <artifactId>giani</artifactId>
-    <version>3.4.28</version>
+    <version>3.4.29</version>
 
     <build>
         <plugins>
@@ -36,6 +36,14 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>@{argLine} -Xmx4g</argLine>
+                    <excludedGroups>${excludedGroups}</excludedGroups>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -113,6 +121,7 @@
         <scijava.jvm.version>21</scijava.jvm.version>
         <license.licenseName>gpl_v3</license.licenseName>
         <license.copyrightOwners>Francis Crick Institute</license.copyrightOwners>
+        <excludedGroups>integration</excludedGroups>
     </properties>
 
     <repositories>
@@ -157,5 +166,14 @@
             <url>https://maven.pkg.github.com/djpbarry/giani</url>
         </repository>
     </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>integration</id>
+            <properties>
+                <excludedGroups></excludedGroups>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

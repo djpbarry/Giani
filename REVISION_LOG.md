@@ -373,3 +373,21 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
 - Also removed GIANI's only TrackMate import (dead `Spot` code). Updated
   `README.md`, `AGENTS.md`, `CITATION.cff`, and bumped version `3.4.27` →
   `3.4.28`.
+
+## 2026-10-17 — Phase C3 executor integration test + Fiji live-test scripts
+
+- Added `PipelineExecutorIntegrationTest` (Phase C item 3), which runs the full
+  pipeline headless over `test_data/18.06.10_Experiment.lif_7.ome.tiff` and
+  asserts the `*_Output.csv` + `properties.xml` are produced with data.
+- Two gotchas found making it pass: (1) the zeroed detector defaults make blob
+  detection search at radius 0 / threshold 0 and exhaust the heap, so the test
+  seeds the advanced (Hessian) detector with the live-run parameters; (2) the
+  CSV is written in the platform default encoding (not UTF-8), so the test reads
+  it as ISO-8859-1.
+- Gated with `@Tag("integration")` + a `-Pintegration` profile; default
+  `mvn test` still runs only the 10 fast unit tests. The integration test needs a
+  4 GB JVM (`-Xmx4g` surefire argLine).
+- Added `bin/` scripts (`install-to-fiji.cmd`, `run-fiji.cmd`,
+  `smoke-test-fiji.cmd`, `local-env.cmd` + `.example`) adapted from ADAPT, and
+  live-tested in Fiji: all three entry classes load and a full
+  segmentation/measurement run produced a 362 KB CSV.
