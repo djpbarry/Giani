@@ -708,6 +708,32 @@ already-resolved decisions.
    Complete Phases A–H, then stop adding features and invest effort in making the
    wizard friendlier and the defaults sensible, pointing users at MIA for
    anything more ambitious. See "Scope & positioning".
+10. **IAClassLibrary process parameters (R2) — accept R2a; R2b conditional,
+    after Phase H.** Proposed (2026-10-18), in response to
+    `GIANI-process-params-note.md`. IAClassLibrary plans to replace the
+    `Properties` + `String[] propLabels` + integer-index contract with a typed
+    `ProcessParams` facade (R2a, label strings stay as keys, no GIANI change) and
+    later a canonical `Parameter` with a stable `key()` separate from `label()`
+    (R2b, coordinated GIANI migration). GIANI's position:
+    - **R2a:** welcome; verify each release against `PipelineExecutorIntegrationTest`
+      / `PipelineBuilderTest` before re-pinning.
+    - **R2b:** willing, but not before Phase H lands (ideally folded into Phase I),
+      and only if: (a) label-keyed property files (CLI `-p`, HPC job lists, macro
+      `loadPropertiesFile`, GUI "Load Parameters") still load via a label→key alias
+      layer, alongside `DeprecatedProps`; (b) per-channel indexed parameters
+      (`%s%d` labels such as `"Detect Spots in Channel 3"`) are supported, e.g.
+      `Parameter.forChannel(i)`; (c) parameters are namespaced per process instance,
+      because the same class runs twice (nuclear vs cell Gaussian filter/watershed)
+      while `SERIES_SELECT_LABEL` stays intentionally shared; (d) the
+      `Properties`/label `setup()` path survives as a deprecated overload for at
+      least one transition release; (e) the macro API (`Ext.GIANI.setProperty`,
+      `getPropertyList`) keeps accepting label strings. GIANI-specific vocabulary
+      ("Nuclear Channel") and `GIANIParamInfos` tooltips stay owned by GIANI; the
+      library defines generic parameters.
+    - **Fallback:** if those conditions are too costly, keep R2a label keys
+      indefinitely for GIANI (acceptable given the feature freeze, decision 9).
+    - The process-level `setTime(int)` request for Phase H1 must not be coupled
+      to, or blocked by, R2b.
 
 ---
 

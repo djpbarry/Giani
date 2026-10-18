@@ -439,3 +439,20 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
 - Left untracked-but-tracked as-is: `test_data/18.06.10_Experiment.lif_7.ome.tiff`
   is a 33 MB LFS candidate but is currently a normal git blob; converting it is a
   separate decision (rewriting history), not done here.
+
+## 2026-10-18 — Responded to IAClassLibrary process-parameter note (R2)
+
+- Reviewed `GIANI-process-params-note.md` from the IAClassLibrary team (R2a typed
+  `ProcessParams` facade; R2b canonical `Parameter` with stable key vs label).
+- Confirmed the premise against GIANI: label-as-key / index coupling runs through
+  `PipelineBuilder`, `PipelineExecutor.setup`, the wizard panels (display text,
+  props key and tooltip key all share `propLabels[i]`), `GIANIParamInfos` and the
+  macro API; `DeprecatedProps` already exists because label renames changed keys.
+- Recorded Proposed decision 10 in `DEVELOPMENT_PLAN.md`: accept R2a; R2b
+  conditional (backward-compatible loading of label-keyed property files,
+  per-channel indexed parameters, per-instance namespacing, deprecated
+  `Properties` overload, macro API keeps labels) and scheduled after Phase H;
+  fallback is to keep label keys indefinitely. Phase H's `setTime` request stays
+  independent of R2b.
+- Appended GIANI's reply to the end of `GIANI-process-params-note.md`.
+- Docs-only; no code or version change.
