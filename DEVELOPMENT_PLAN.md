@@ -529,22 +529,25 @@ across-time lineage tracking of the segmented objects.
 
 ### H1. Treat each timepoint as an independent 3D stack
 
-**Blocking detail:** `BioFormatsImg.getSizeT(series)` already exists, but
-`loadPixelData(series, cBegin, cEnd, dimOrder)` does **not** select a timepoint —
-it opens the series with `ImporterOptions` and no `TBegin/TEnd`, so a 4D dataset
-loads **all T into the ImagePlus Z-stack** (timepoints would be treated as extra
-Z-slices). H1 therefore requires a small `IAClassLibrary` change, not just a loop.
+**Status: loader foundation done (IAClassLibrary v2.0.30); process time selection
+still required.**
 
-- **IAClassLibrary:** add `BioFormatsImg.setCurrentTime(int t)` (default `-1`);
-  when `t >= 0`, `loadPixelData` sets `options.setSpecifyRanges(true)` +
-  `setTBegin(series, t)` + `setTEnd(series, t)`. This mirrors the existing series
-  handling and avoids touching every process class (`MultiThreadedProcess`
-  subclasses already reset state at the start of `run()`).
+- **IAClassLibrary loader — done (v2.0.30, their Phase H):** `BioFormatsImg` now
+  has `loadPixelData(series, cBegin, cEnd, zBegin, zEnd, tBegin, tEnd, dimOrder)`
+  (explicit C/Z/T window), `getSizeT(series)`, and time metadata
+  (`getTimeIncrement`/`getTimeCalibration`).
+- **IAClassLibrary processes — remaining (not in their DEVELOPMENT_PLAN):**
+  `MultiThreadedMaximaFinder`, `MultiThreadedGaussianFilter`, and
+  `MultiThreadedTopHatFilter` still call the 4-arg `loadPixelData(series, cBegin,
+  cEnd, dimOrder)` (full Z+T), so 4D data still loads as one Z×T stack. Add a
+  process-level time selector — a `setTime(int)`/`time` field on
+  `MultiThreadedProcess` and switch those three classes to the 8-arg load with
+  `tBegin = tEnd = time` (additive, no public-API break). See
+  `IAClassLibrary-time-support-proposal.md`.
 - **GIANI:** nest a time loop in `PipelineExecutor.run()` — for each series, loop
-  `t in 0..getSizeT(s)-1` and call `img.setCurrentTime(t)` before re-running the
-  pipeline. Add `TRACK_TIMELAPSE` (boolean) and `TIME_SELECT` (specific time,
-  like `SPECIFIC_SERIES`) to `GianiDefaultParams`, wired via `propLabels` + a UI
-  panel.
+  `t in 0..getSizeT(s)-1` and call `process.setTime(t)` before each process. Add
+  `TRACK_TIMELAPSE` (boolean) and `TIME_SELECT` (specific time, like
+  `SPECIFIC_SERIES`) to `GianiDefaultParams`, wired via `propLabels` + a UI panel.
 - Keep the `getSizeZ(s) < 2` skip. Decide whether `TRACK_TIMELAPSE` is explicit
   or auto-detected from `getSizeT(s) > 1` (see decisions).
 
@@ -645,15 +648,17 @@ reinforces tracking **cells** as the primary lineage object:
 
 ### Phase H decisions to confirm
 
-1. **IAClassLibrary time-loading design** — settable `setCurrentTime` (recommended)
-   vs a per-process time prop.
+1. ~~IAClassLibrary time-loading design~~ — resolved: v2.0.30 added the 8-arg
+   `loadPixelData` + time metadata; the remaining work is the process-level
+   `setTime` selector.
 2. **`TRACK_TIMELAPSE`** — explicit boolean vs auto-detect `T > 1`.
 3. **Lineage target** — cells (recommended) vs nuclei vs both.
 4. **Output shape** — time column vs per-timepoint CSV.
 5. **Watershed `cells` reset** — verify, then decide fresh-vs-reset.
 
-Cross-repo consequence: H1 needs an `IAClassLibrary` release (time-aware
-`loadPixelData`) and a GIANI re-pin to it.
+Cross-repo consequence: v2.0.30 (loader) is released and GIANI is re-pinned to
+it; the process-level `setTime` change is the remaining IAClassLibrary work and
+is not yet in their DEVELOPMENT_PLAN (see `IAClassLibrary-time-support-proposal.md`).
 
 ---
 

@@ -405,3 +405,18 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   semantics, lineage target, output shape, watershed `cells` reset).
 - Cross-repo consequence: H1 needs an `IAClassLibrary` release and a GIANI
   re-pin.
+
+## 2026-10-18 — Re-pinned to IAClassLibrary v2.0.30; reconciled time support
+
+- IAClassLibrary released its Phase H ("BioFormatsImg facade & time hardening"):
+  the loader now has the 8-arg `loadPixelData` (explicit C/Z/T window),
+  `getSizeT`, and time metadata. GIANI re-pinned `v2.0.23` → `v2.0.30` (build
+  green, 10/10).
+- Gap found: IAClassLibrary Phase H covers only the loader. The process classes
+  (`MultiThreadedMaximaFinder`, `MultiThreadedGaussianFilter`,
+  `MultiThreadedTopHatFilter`) still use the 4-arg `loadPixelData` (full Z+T), so
+  they cannot select a timepoint. Documented in
+  `IAClassLibrary-time-support-proposal.md` and in GIANI's Phase H1 as the
+  remaining IAClassLibrary work (a process-level `setTime` + 8-arg load).
+- Updated GIANI `DEVELOPMENT_PLAN.md` H1 + decisions to reflect the split: loader
+  done, process time selection remaining.
