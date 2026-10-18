@@ -391,3 +391,17 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   `smoke-test-fiji.cmd`, `local-env.cmd` + `.example`) adapted from ADAPT, and
   live-tested in Fiji: all three entry classes load and a full
   segmentation/measurement run produced a 362 KB CSV.
+
+## 2026-10-17 — Phase H planned (timelapse 4D + lineage)
+
+- Planned Phase H in detail. Key finding: `BioFormatsImg.getSizeT(series)` exists
+  but `loadPixelData` does not select a timepoint (no `TBegin/TEnd`), so 4D data
+  would load all timepoints into the Z-stack. H1 therefore needs a small
+  `IAClassLibrary` change (settable current time + `setTBegin/setTEnd`) before
+  the GIANI time loop.
+- Documented H1 (time-aware loading + nested loop + `TRACK_TIMELAPSE` /
+  `TIME_SELECT`), H2 (per-timepoint `cells`, `Time` column, `-T{time}` zip
+  names), and five open decisions (time-loading design, `TRACK_TIMELAPSE`
+  semantics, lineage target, output shape, watershed `cells` reset).
+- Cross-repo consequence: H1 needs an `IAClassLibrary` release and a GIANI
+  re-pin.

@@ -529,27 +529,38 @@ across-time lineage tracking of the segmented objects.
 
 ### H1. Treat each timepoint as an independent 3D stack
 
-`PipelineExecutor.run()` currently loops over series only
-(`img.getSeriesCount()`, `img.getSizeZ(s)`); Bio-Formats exposes the time axis as
-`img.getSizeT(s)` (`BioFormatsImg` wraps `loci.formats`). Add a nested time loop
-(`for t in 0..getSizeT(s)-1`) so each timepoint re-runs the existing per-stack
-pipeline unchanged — each process already receives its frame via
-`setup(img, props, propLabels)`, so a stage is re-run per timepoint exactly as it
-is re-run per series today. New parameter(s) (`TRACK_TIMELAPSE` and, if needed, a
-time/frame selector) follow the existing `GianiDefaultParams` + `propLabels` +
-UI-panel wiring convention.
+**Blocking detail:** `BioFormatsImg.getSizeT(series)` already exists, but
+`loadPixelData(series, cBegin, cEnd, dimOrder)` does **not** select a timepoint —
+it opens the series with `ImporterOptions` and no `TBegin/TEnd`, so a 4D dataset
+loads **all T into the ImagePlus Z-stack** (timepoints would be treated as extra
+Z-slices). H1 therefore requires a small `IAClassLibrary` change, not just a loop.
+
+- **IAClassLibrary:** add `BioFormatsImg.setCurrentTime(int t)` (default `-1`);
+  when `t >= 0`, `loadPixelData` sets `options.setSpecifyRanges(true)` +
+  `setTBegin(series, t)` + `setTEnd(series, t)`. This mirrors the existing series
+  handling and avoids touching every process class (`MultiThreadedProcess`
+  subclasses already reset state at the start of `run()`).
+- **GIANI:** nest a time loop in `PipelineExecutor.run()` — for each series, loop
+  `t in 0..getSizeT(s)-1` and call `img.setCurrentTime(t)` before re-running the
+  pipeline. Add `TRACK_TIMELAPSE` (boolean) and `TIME_SELECT` (specific time,
+  like `SPECIFIC_SERIES`) to `GianiDefaultParams`, wired via `propLabels` + a UI
+  panel.
+- Keep the `getSizeZ(s) < 2` skip. Decide whether `TRACK_TIMELAPSE` is explicit
+  or auto-detected from `getSizeT(s) > 1` (see decisions).
 
 ### H2. Persist per-timepoint segmentations and measurements (not just the last one)
 
 The segmentation state is a single shared `Objects3DPopulation cells` created in
-`GIANI.run()` and passed through the whole pipeline; the measurement stage reads
-that population. Across the series loop this is acceptable because each series
-overwrites and is measured in turn, but tracking needs *all* timepoints
-simultaneously. Persist each timepoint's segmentation (the existing
-`Objects3DPopulation` zip export, currently named `...-S{series}_{label}.zip`)
-extended with a time index (`-T{time}`), and emit a time column in
-`GIANI_Output.csv` (or per-timepoint CSVs) so downstream consumers can group rows
-by frame.
+`GIANI.run()` and passed through the pipeline; the measurement stage reads it.
+For timelapse each timepoint needs its own population:
+
+- Verify whether `MultiThreadedWatershed` resets `cells` at the start of each run
+  (the series loop already re-runs it with the same `cells` today). Then either
+  reset `cells` per timepoint or create a fresh one per timepoint.
+- Add a `Time` column to `GIANI_Output.csv` (preferred over per-timepoint CSVs)
+  so downstream consumers can group rows by frame.
+- Extend the `Objects3DPopulation` zip export name with a time index
+  (`-T{time}`).
 
 ### H3. Tracking: use the TrackMate API *inside* GIANI (recommend option (b))
 
@@ -631,6 +642,18 @@ reinforces tracking **cells** as the primary lineage object:
   nuclei and punctae are not shown as separate objects, so their parent–child
   relationships stay in `GIANI_Output.csv` / `Spot_Data.csv` rather than
   inTRACKtive.
+
+### Phase H decisions to confirm
+
+1. **IAClassLibrary time-loading design** — settable `setCurrentTime` (recommended)
+   vs a per-process time prop.
+2. **`TRACK_TIMELAPSE`** — explicit boolean vs auto-detect `T > 1`.
+3. **Lineage target** — cells (recommended) vs nuclei vs both.
+4. **Output shape** — time column vs per-timepoint CSV.
+5. **Watershed `cells` reset** — verify, then decide fresh-vs-reset.
+
+Cross-repo consequence: H1 needs an `IAClassLibrary` release (time-aware
+`loadPixelData`) and a GIANI re-pin to it.
 
 ---
 
