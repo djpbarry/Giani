@@ -79,7 +79,8 @@ guided wizard, sensible defaults, and one CSV out.
   discovered in the Fiji `Plugins>` menu, and how its `MacroExtension` is
   registered, is unclear and must be established before distribution work.
 - **Structure:** 17 Java files (plus 11 NetBeans `.form` files) under
-  `src/main/java/net/calm/giani/{exec,ui,gianiparams,ResultsBrowser,macro}`.
+  `src/main/java/net/calm/giani/{exec,ui,gianiparams,ResultsBrowser,macro}`
+  (the `ResultsBrowser` package was retired in F3 — see below).
 
 ### Key architectural facts
 
@@ -481,7 +482,8 @@ Retired the unwired results browser (`GianiResultsBrowser` + `GianiResultsTable`
 dead code) and removed the `com.github.mcib3d:mcib3d-plugins:3.96.3` dependency
 and its exclusions. `mcib3d-plugins` existed only to provide
 `mcib_plugins.tools.RoiManager3D_2` for that browser, so dropping it resolves the
-`3.96.3` vs `4.0.93` core version split.
+`3.96.3` vs `4.0.93` core version split. The orphaned NetBeans `.form` files left
+behind by the deletion were removed separately (2026-10-18).
 
 `mcib3d-core` (transitive via `IAClassLibrary`, `4.0.93`) remains and is
 unavoidable: `mcib3d.geom.Objects3DPopulation` is the segmentation-result
@@ -611,8 +613,10 @@ the same (b) pattern, retaining the `Cell ID`/`Track ID` association.
 - Target object for lineage: **cells** (recommended) vs nuclei vs both.
 - Tracking motion model (Brownian vs linear motion) and gap-closing/linking
   penalties; expose as parameters or use sensible defaults.
-- Whether `BioFormatsImg` already exposes `getSizeT`/time indexing, or needs an
-  `IAClassLibrary` change (coordinate with Phase F).
+- ~~Whether `BioFormatsImg` already exposes `getSizeT`/time indexing~~ —
+  **resolved (2026-10-18):** `getSizeT(series)` and the 8-arg `loadPixelData`
+  exist in `IAClassLibrary v2.0.30`; only process-level time selection remains
+  (see H1).
 
 ### H4. Export the lineage for inTRACKtive
 

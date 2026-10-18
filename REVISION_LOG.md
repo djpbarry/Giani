@@ -420,3 +420,22 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   remaining IAClassLibrary work (a process-level `setTime` + 8-arg load).
 - Updated GIANI `DEVELOPMENT_PLAN.md` H1 + decisions to reflect the split: loader
   done, process time selection remaining.
+
+## 2026-10-18 — Post-review cleanup
+
+- Removed the orphaned NetBeans `.form` files (`GianiResultsBrowser.form`,
+  `GianiResultsTable.form`) left behind when the results browser was retired in
+  F3; the empty `ResultsBrowser` package is gone.
+- Ignored JVM crash logs (`hs_err_pid*.log`, `replay_pid*.log`) in `.gitignore`
+  and deleted the stray `hs_err_pid24916.log` produced by the integration run.
+- Ignored `nb-configuration.xml` (local NetBeans project config, machine-specific,
+  previously untracked and repeatedly showing as noise).
+- Plan corrections: H3's open item "does `BioFormatsImg` expose `getSizeT`" is
+  marked resolved (v2.0.30 does); F3 notes the orphaned-form cleanup; the initial
+  state section flags the `ResultsBrowser` package as retired.
+- Version bumped `3.4.29` → `3.4.30` (`chore`), kept in sync across `pom.xml`,
+  `CITATION.cff`, and `docs/conf.py` (the latter had drifted to `3.4.27`).
+- `./mvnw test` green (10/10).
+- Left untracked-but-tracked as-is: `test_data/18.06.10_Experiment.lif_7.ome.tiff`
+  is a 33 MB LFS candidate but is currently a normal git blob; converting it is a
+  separate decision (rewriting history), not done here.

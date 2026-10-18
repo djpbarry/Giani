@@ -85,4 +85,4 @@ html_logo = 'overview/images/Icon.png'
 
 #release = '0.3.0'
 # Keep this version in sync with <version> in pom.xml and the version in CITATION.cff.
-version = '3.4.27'
+version = '3.4.30'
