@@ -80,6 +80,8 @@ public class GianiDefaultParams extends Properties {
     public static final String FOCI_MAXIMA_DETECT_HESSIAN_ABS = "Absolute Hessian Detection for Channel ";
     public static final String HELP_ERROR_MESSAGE = "Error: Can't open online help docs.";
     public static final String SPECIFIC_SERIES = "Specific Series";
+    public static final String TRACK_TIMELAPSE = "Track Timelapse";
+    public static final String TIME_SELECT = "Specific Timepoint";
     public static final String APP_TITLE = "GIANI";
     public static final String TITLE = getTitleWithVersion();
     public static final String NUC_GAUSS_FILTER_TITLE = "Gaussian Filtering to Suppress Noise in Nuclear Channel Prior to Segmentation";
@@ -173,6 +175,8 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(NUC_DETECT_MODE, NUC_MAXIMA_DETECT_BLOBS);
         this.setProperty(NUC_MAXIMA_DETECT_THRESHOLD, "false");
         this.setProperty(SPECIFIC_SERIES, "-1");
+        this.setProperty(TRACK_TIMELAPSE, "false");
+        this.setProperty(TIME_SELECT, "-1");
         this.setProperty(UNITS, String.format("%cm", IJ.micronSymbol));
         this.setProperty(ENABLE_TOP_HAT_FILTER, "true");
         this.setProperty(NUC_MAXIMA_DETECT_STARDIST, "false");
