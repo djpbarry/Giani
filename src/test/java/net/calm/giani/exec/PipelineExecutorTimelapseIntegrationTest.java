@@ -28,7 +28,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -82,5 +84,27 @@ class PipelineExecutorTimelapseIntegrationTest {
 
         List<String> csvLines = Files.readAllLines(csv.toPath(), StandardCharsets.ISO_8859_1);
         assertTrue(csvLines.size() >= 2, "expected a header row plus at least one measurement row");
+
+        String[] header = csvLines.get(0).split(",");
+        int timeIndex = -1;
+        int seriesIndex = -1;
+        for (int i = 0; i < header.length; i++) {
+            if ("Time".equals(header[i].trim())) {
+                timeIndex = i;
+            } else if ("Series".equals(header[i].trim())) {
+                seriesIndex = i;
+            }
+        }
+        assertTrue(timeIndex >= 0, "expected a Time column in header: " + csvLines.get(0));
+        assertTrue(seriesIndex >= 0, "expected a Series column in header: " + csvLines.get(0));
+
+        Set<String> times = new HashSet<>();
+        for (int i = 1; i < csvLines.size(); i++) {
+            String[] row = csvLines.get(i).split(",");
+            if (row.length > timeIndex) {
+                times.add(row[timeIndex].trim());
+            }
+        }
+        assertTrue(times.size() >= 2, "expected at least 2 distinct timepoints, got: " + times);
     }
 }
