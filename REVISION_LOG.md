@@ -488,3 +488,11 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   full pipeline end-to-end on the test image).
 - Version bumped `3.4.30` → `3.4.31` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, and `docs/conf.py`.
+
+## 2026-10-19 — Swept IAClassLibrary version references to `v2.2.1`
+
+- Corrected `DEVELOPMENT_PLAN.md` where the "current pin" still said `v2.0.30`
+  (or Phase F's "then-latest" said `v2.0.23`): overarching aim, upstream-pin
+  gotcha, Phase F status/F1, the H1 cross-repo note, and Proposed decision 4 now
+  reference `v2.2.1`.
+- Docs-only; no code or version change.
