@@ -496,3 +496,19 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   gotcha, Phase F status/F1, the H1 cross-repo note, and Proposed decision 4 now
   reference `v2.2.1`.
 - Docs-only; no code or version change.
+
+## 2026-10-19 — Planned H1 (headless timelapse loop) in detail
+
+- Recorded a concrete H1 implementation plan in `DEVELOPMENT_PLAN.md`:
+  - Library side is done in `v2.2.1` (`setTime(int)` + `SourceProcess.loadPixels`
+    loads `tBegin = tEnd = time`), so H1 needs no further IAClassLibrary work.
+  - GIANI adds a time loop in `PipelineExecutor.run()` (`nTime = getSizeT(s)`,
+    range `t0..tEnd` from `TIME_SELECT` / `TRACK_TIMELAPSE` / default `t=0`),
+    calling `process.setTime(t)` before each process.
+  - New `GianiDefaultParams` keys `TRACK_TIMELAPSE` ("Track Timelapse", default
+    `"false"`) and `TIME_SELECT` ("Specific Timepoint", default `"-1"`) — GIANI-level
+    params, no `propLabels` wiring.
+  - Resolved decision 2: `TRACK_TIMELAPSE` is explicit opt-in, not auto-detect.
+  - Flagged H2 coupling (`cells` reset + `Time` column) and the need for a 4D
+    (Z×T) fixture to test the loop end-to-end.
+- Docs-only; no code change.
