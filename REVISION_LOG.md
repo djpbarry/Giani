@@ -456,3 +456,18 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   independent of R2b.
 - Appended GIANI's reply to the end of `GIANI-process-params-note.md`.
 - Docs-only; no code or version change.
+
+## 2026-10-18 — Planned Phase I wizard simplification
+
+- Reviewed `GIANIUI`: the wizard assembles the fixed pipeline inline in
+  `initComponents()` and drives it with `addProcess()`/`removeProcess()` during
+  navigation, duplicating `buildFullPipeline` and creating the index-coupling
+  fragility. The pipeline is fixed, so the incremental build is unnecessary.
+- Recorded Phase I1 in `DEVELOPMENT_PLAN.md`: single source of truth
+  (`buildFullPipeline`), wizard as a parameter collector, decoupled on-demand
+  preview. TrackMate is a partial template (Settings/execution separation, typed
+  params via R2) but not its plugin extensibility. The guided wizard UX stays.
+- Decided H1 lands headless-first (executor time loop + params via properties
+  file, no GUI panel); the timelapse UI panel is deferred to I1.
+- Updated the M7 milestone to include the wizard simplification. Docs-only; no
+  code change.

@@ -552,6 +552,9 @@ still required.**
   `SPECIFIC_SERIES`) to `GianiDefaultParams`, wired via `propLabels` + a UI panel.
 - Keep the `getSizeZ(s) < 2` skip. Decide whether `TRACK_TIMELAPSE` is explicit
   or auto-detected from `getSizeT(s) > 1` (see decisions).
+- **Sequencing:** land H1 headless-first — the executor time loop + `TRACK_TIMELAPSE`
+  / `TIME_SELECT` params via a properties file, with **no GUI panel**. The
+  timelapse UI panel is deferred to the Phase I wizard simplification (I1).
 
 ### H2. Persist per-timepoint segmentations and measurements (not just the last one)
 
@@ -740,7 +743,37 @@ already-resolved decisions.
 ## Phase I — User-interface friendliness (the post-freeze priority)
 
 With feature development stopping after Phase H, the interface is where GIANI
-earns its place next to MIA. Concrete, low-risk items:
+earns its place next to MIA.
+
+### I1. Wizard architecture simplification
+
+The wizard is over-built. `GIANIUI.initComponents()` assembles the fixed pipeline
+inline (each `PipelineBuilder.getDefault…()` call creates a process) and wires
+each process into a panel for preview, while `nextButton`/`previousButton` call
+`addProcess()`/`removeProcess()` to grow/shrink a `ProcessPipeline` during
+navigation. That duplicates `buildFullPipeline` (headless) and is the source of the
+index-coupling fragility; the pipeline is fixed, so the incremental "build" is
+theatre, and the only real reason panels hold process instances is per-stage
+preview.
+
+Refactor to:
+
+1. **Single source of truth** — `PipelineBuilder.buildFullPipeline(props, cells)`
+   (or a thin `GianiSettings` wrapper) is the only place the pipeline is assembled.
+2. **Wizard as a parameter collector** — panels write into the shared config; no
+   `addProcess`/`removeProcess`, no inline pipeline in `initComponents`.
+3. **Decoupled preview** — a panel previews by constructing its stage on-demand
+   from the current config and running it, not by holding the shared pipeline's
+   process.
+
+This removes the `componentList` ↔ `ProcessPipeline` coupling and the
+`checkIfStarDist` re-wiring hack. TrackMate is a partial template: adopt the
+Settings/execution separation and (via R2a/R2b) typed parameters; do **not** adopt
+plugin-style extensibility, which is unnecessary for a fixed pipeline. The guided
+wizard UX stays — GIANI's niche is opinionated cell detection for non-experts.
+This is where the timelapse UI panel (H1, deferred) lands.
+
+### I2. Friendliness & polish
 
 - **Sensible, non-zero defaults** so that a first run with no configuration
   produces useful output: replace the hard-coded developer paths in
@@ -785,9 +818,10 @@ once the modernisation lands.
    depend on M2 (tests) and M4 (the re-pin, to fix the TrackMate version under
    `pom-scijava:45.1.0`) and are a separate, later increment.
 7. **M7 — Interface friendliness (Phase I):** the final milestone before the
-   feature freeze — friendlier wizard, sensible defaults, inline help, quick-start
-   docs. This is where GIANI differentiates itself from MIA, so it is a
-   first-class deliverable rather than an afterthought.
+   feature freeze — wizard architecture simplification (I1), friendlier wizard,
+   sensible defaults, inline help, quick-start docs. This is where GIANI
+   differentiates itself from MIA, so it is a first-class deliverable rather than
+   an afterthought.
 
 Each milestone is independently shippable. **M1 and M2 are the immediate next
 steps** and unblock the risky M4 re-pin. **M7 is the last planned milestone:**
