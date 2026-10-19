@@ -165,4 +165,19 @@ public class PipelineExecutor extends Thread {
         }
     }
 
+    /**
+     * Resolves the inclusive-start / exclusive-end timepoint range for a series.
+     * A valid specific timepoint wins; otherwise timelapse mode spans all frames;
+     * otherwise a single frame ({@code t = 0}) is processed.
+     */
+    static int[] timeRange(int nTime, int timeSelect, boolean trackTimelapse) {
+        if (timeSelect >= 0 && timeSelect < nTime) {
+            return new int[]{timeSelect, timeSelect + 1};
+        }
+        if (trackTimelapse && nTime > 0) {
+            return new int[]{0, nTime};
+        }
+        return new int[]{0, 1};
+    }
+
 }
