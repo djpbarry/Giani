@@ -471,3 +471,20 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   file, no GUI panel); the timelapse UI panel is deferred to I1.
 - Updated the M7 milestone to include the wizard simplification. Docs-only; no
   code change.
+
+## 2026-10-19 — Re-pinned to IAClassLibrary v2.2.1; fixed missing MaximaFinder defaults
+
+- Re-pinned `com.github.djpbarry:IAClassLibrary` from `v2.0.30` to `v2.2.1`
+  (R2b typed params + R3 source/transform + R4a executor consolidation).
+- The re-pin surfaced a real gap via R2b's "bound-but-missing → fail loudly":
+  `GianiDefaultParams.initialise()` never set `NUC_DETECT_MODE` (`METHOD` slot)
+  or `NUC_MAXIMA_DETECT_THRESHOLD` (`THRESH_DETECT` slot), so the nuclear maxima
+  finder threw `IllegalStateException: Missing value for bound parameter
+  'thresh_detect'` in `PipelineExecutorIntegrationTest`.
+- Fixed by adding the two defaults: `NUC_DETECT_MODE` → the simple blob detector
+  (consistent with `NUC_MAXIMA_DETECT_BLOBS = "true"`) and
+  `NUC_MAXIMA_DETECT_THRESHOLD` → `"false"`.
+- `./mvnw test` green (10/10) and `./mvnw test -Pintegration` green (11/11;
+  full pipeline end-to-end on the test image).
+- Version bumped `3.4.30` → `3.4.31` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, and `docs/conf.py`.

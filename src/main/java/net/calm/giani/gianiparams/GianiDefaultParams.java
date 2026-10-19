@@ -170,6 +170,8 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(NUC_MAXIMA_DETECT_HESSIAN_START_SCALE, "0.0");
         this.setProperty(NUC_MAXIMA_SEG_THRESH_METHOD, "Default");
         this.setProperty(NUC_MAXIMA_DETECT_HESSIAN_ABS, "false");
+        this.setProperty(NUC_DETECT_MODE, NUC_MAXIMA_DETECT_BLOBS);
+        this.setProperty(NUC_MAXIMA_DETECT_THRESHOLD, "false");
         this.setProperty(SPECIFIC_SERIES, "-1");
         this.setProperty(UNITS, String.format("%cm", IJ.micronSymbol));
         this.setProperty(ENABLE_TOP_HAT_FILTER, "true");
