@@ -92,6 +92,13 @@ public class PipelineExecutor extends Thread {
             input = new File(input.getParent());
         }
         ExecutorService exec = Executors.newSingleThreadExecutor();
+        boolean trackTimelapse = Boolean.parseBoolean(props.getProperty(GianiDefaultParams.TRACK_TIMELAPSE));
+        int timeSelect = -1;
+        try {
+            timeSelect = Integer.parseInt(props.getProperty(GianiDefaultParams.TIME_SELECT));
+        } catch (NumberFormatException e) {
+            IJ.log("Specific timepoint not a parsable integer - ignoring.");
+        }
         while (files.size() > 0) {
             String file = files.get(0);
             try (BioFormatsImg img = new BioFormatsImg()) {
@@ -121,15 +128,20 @@ public class PipelineExecutor extends Thread {
                     }
                     props.setProperty(GianiDefaultParams.SERIES_SELECT_LABEL, String.valueOf(s));
                     props.setProperty(GianiDefaultParams.UNITS, img.getUnits(s));
-                    for (MultiThreadedProcess process : pipeline) {
-                        if (process != null) {
-                            IJ.log(String.format("%s Process %s", TimeAndDate.getCurrentTimeAndDate(), process.getClass().toString()));
-                            try {
-                                process.setup(img, props, process.getPropLabels());
-                                Future f = exec.submit(process, img);
-                                f.get();
-                            } catch (InterruptedException | ExecutionException e) {
-                                GenUtils.logError(e, String.format("Failed to execute process %s", process.getClass().toString()));
+                    int[] tRange = timeRange(img.getSizeT(s), timeSelect, trackTimelapse);
+                    for (int t = tRange[0]; t < tRange[1]; t++) {
+                        IJ.log(String.format("Analysing timepoint %d", t));
+                        for (MultiThreadedProcess process : pipeline) {
+                            if (process != null) {
+                                IJ.log(String.format("%s Process %s", TimeAndDate.getCurrentTimeAndDate(), process.getClass().toString()));
+                                try {
+                                    process.setTime(t);
+                                    process.setup(img, props, process.getPropLabels());
+                                    Future f = exec.submit(process, img);
+                                    f.get();
+                                } catch (InterruptedException | ExecutionException e) {
+                                    GenUtils.logError(e, String.format("Failed to execute process %s", process.getClass().toString()));
+                                }
                             }
                         }
                     }
