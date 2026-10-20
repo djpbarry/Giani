@@ -18,7 +18,7 @@ the plan's writing.
 **Modernise a ~7-year-old Fiji/ImageJ plugin whose heavy lifting lives in the
 upstream `IAClassLibrary`.** GIANI originally pinned that library at an untagged
 commit (`fe92f24c6e`) predating its modernisation; it is now pinned to the tagged
-release `v2.2.1` (Java 21, GPL-3.0-or-later, parent `pom-scijava:45.1.0`). The
+release `v2.3.0` (Java 21, GPL-3.0-or-later, parent `pom-scijava:45.1.0`). The
 library kept its `net.calm.iaclasslibrary` package (no rename), so aligning with
 it is **not** a package-breaking change; the remaining work (tests, hygiene, CI,
 docs) makes that pin safe and the plugin maintainable.
@@ -117,10 +117,10 @@ guided wizard, sensible defaults, and one CSV out.
   (`license.licenseName=gpl_v3`) with copyright owner **Francis Crick Institute**,
   matching `LICENSE` and the source headers (Phase B1).
 - **Upstream pin (resolved):** `IAClassLibrary` was pinned at commit `fe92f24c6e`;
-  it is now pinned to tagged release `v2.2.1` (`com.github.djpbarry:IAClassLibrary:v2.2.1`
+  it is now pinned to tagged release `v2.3.0` (`com.github.djpbarry:IAClassLibrary:v2.3.0`
   via JitPack). The library modernised to Java 21 and GPL-3.0-or-later but kept
   its `net.calm.iaclasslibrary` package (its own pom declares
-  `net.calm:iaclasslibrary:2.2.1`), so re-pinning was **not** package-breaking.
+  `net.calm:iaclasslibrary:2.3.0`), so re-pinning was **not** package-breaking.
   See Phase F.
 - **Hard-coded developer-specific paths:**
   - `GianiDefaultParams.initialise()` sets `INPUT_DIR_LABEL` to
@@ -445,7 +445,7 @@ separately (deferred).
 ## Phase F — Upstream coordination & re-pin
 
 **Status (2026-10-16): resolved — no package migration required (pin since moved
-to `v2.2.1`).** GIANI already pinned the then-latest `IAClassLibrary` release
+to `v2.3.0`).** GIANI already pinned the then-latest `IAClassLibrary` release
 `v2.0.23`. Investigation of
 `djpbarry/IAClassLibrary` shows `master` HEAD is the `v2.0.23` tag and the
 library has **not** renamed its package: its source is still
@@ -457,13 +457,13 @@ GPL-3.0-or-later, parent `pom-scijava:45.1.0`.
 
 ### F1. Re-pin `IAClassLibrary` to a tagged release — ✔ Done (2026-10-16)
 
-1. Confirm the target tag — `v2.0.23` was the latest at the time (since moved to `v2.2.1`).
+1. Confirm the target tag — `v2.0.23` was the latest at the time (since moved to `v2.3.0`).
 2. Migrate `net.calm.iaclasslibrary.*` imports — not needed; no rename occurred.
 3. Reconcile API changes — none at the same coordinate.
 4. Gate on `mvn verify` + the Phase C pipeline-wiring tests (10/10 green).
 
 Optional low-value cleanup: switch the dependency from the JitPack alias
-`com.github.djpbarry:IAClassLibrary:v2.2.1` to the library's real coordinate
+`com.github.djpbarry:IAClassLibrary:v2.3.0` to the library's real coordinate
 `net.calm:iaclasslibrary:2.2.1`, but only if that artifact is published to a
 real Maven repo (it currently is not). If a future `v3.x` performs the package
 rename, revisit this phase.
@@ -532,7 +532,8 @@ across-time lineage tracking of the segmented objects.
 
 ### H1. Treat each timepoint as an independent 3D stack
 
-**Status: library side done (v2.2.1); GIANI time loop pending.**
+**Status: done (headless; `IAClassLibrary v2.3.0`).** The timelapse GUI panel is
+deferred to I1.
 
 - **IAClassLibrary loader — done (v2.0.30):** `BioFormatsImg` has the 8-arg
   `loadPixelData(series, cBegin, cEnd, zBegin, zEnd, tBegin, tEnd, dimOrder)`,
@@ -542,21 +543,21 @@ across-time lineage tracking of the segmented objects.
   already loads `tBegin = tEnd = time`. `MaximaFinder` / `GaussianFilter` are
   sources using it; `TopHatFilter` is a transform (reads `inputs[0]`, no pixel
   load). Confirm once against the jar before relying on it.
-- **GIANI (headless):** nest a time loop in `PipelineExecutor.run()`. Inside the
-  series loop, after the `getSizeZ(s) < 2` skip and after setting
-  `SERIES_SELECT_LABEL` / `UNITS`, compute `nTime = img.getSizeT(s)` and the
-  range `t0..tEnd`:
-  - `TIME_SELECT` valid (`> -1 && < nTime`) → that single timepoint;
+- **GIANI (headless) — done:** `PipelineExecutor.run()` nests a time loop inside
+  the series loop. After the `getSizeZ(s) < 2` skip and setting
+  `SERIES_SELECT_LABEL` / `UNITS`, it computes `nTime = img.getSizeT(s)` and
+  resolves the range via the pure `timeRange(nTime, timeSelect, trackTimelapse)`
+  helper:
+  - `TIME_SELECT` valid (`>= 0 && < nTime`) → that single timepoint;
   - else `TRACK_TIMELAPSE == "true"` → `0..nTime`;
-  - else → `0..1` (current behaviour, `t = 0` only).
-  Then for each `t`, call `process.setTime(t)` before `setup(...)` / `submit` /
-  `get` per process. `series`/`channel` still come from props (`getInt`); `time`
-  comes from `setTime(t)` (harmless on transforms, consumed by sources via
-  `loadPixels`).
-- **Parameters:** add `TRACK_TIMELAPSE` ("Track Timelapse", boolean, default
-  `"false"`) and `TIME_SELECT` ("Specific Timepoint", int, default `"-1"`) to
-  `GianiDefaultParams`. They are GIANI-level params read by `PipelineExecutor`,
-  not process slots — no `propLabels` wiring.
+  - else → `0..1` (legacy behaviour, `t = 0` only).
+  For each `t` it calls `process.setTime(t)` before `setup(...)` / `submit` /
+  `get` per process. `series`/`channel` still come from props; `time` comes from
+  `setTime(t)` (harmless on transforms, consumed by sources via `loadPixels`).
+- **Parameters — done:** `TRACK_TIMELAPSE` ("Track Timelapse", boolean, default
+  `"false"`) and `TIME_SELECT` ("Specific Timepoint", int, default `"-1"`) are
+  now in `GianiDefaultParams`. They are GIANI-level params read by
+  `PipelineExecutor`, not process slots — no `propLabels` wiring.
 - **Decision:** `TRACK_TIMELAPSE` is **explicit** (opt-in), not auto-detected from
   `T > 1` — auto-detection would silently change output shape/runtime for
   existing 4D users (mirrors the `SPECIFIC_SERIES` precedent).
@@ -564,12 +565,15 @@ across-time lineage tracking of the segmented objects.
   `cells`-reset and `Time` column for correct, distinguishable output. Land the
   `cells`-reset + `Time`-column bits together with H1 (or keep the loop inert
   behind `TRACK_TIMELAPSE=false` until then).
-- **Testing:** unit-test the range logic (extract a pure
-  `timeRange(nTime, timeSelect, trackTimelapse)`); the existing integration test
-  covers the `T=1` regression; add a 4D (Z×T) fixture for a multi-timepoint
-  end-to-end test.
-- **Sequencing:** headless-first — executor time loop + params via a properties
-  file, **no GUI panel**. The timelapse UI panel is deferred to Phase I (I1).
+- **Testing — done:** `PipelineExecutorTest` unit-tests the pure
+  `timeRange(nTime, timeSelect, trackTimelapse)`; `TimelapseApiTest` guards
+  `MultiThreadedProcess.setTime(int)` / `BioFormatsImg.getSizeT(int)`; the
+  existing `PipelineExecutorIntegrationTest` covers the `T=1` regression; and
+  `TimelapseFixtureTest` + `PipelineExecutorTimelapseIntegrationTest` add a
+  multi-timepoint (Z×T) fixture end-to-end test (tagged `integration`).
+- **Sequencing — done (headless-first):** executor time loop + params via a
+  properties file landed with **no GUI panel**. The timelapse UI panel is
+  deferred to Phase I (I1).
 
 ### H2. Persist per-timepoint segmentations and measurements (not just the last one)
 
@@ -680,8 +684,9 @@ reinforces tracking **cells** as the primary lineage object:
 5. **Watershed `cells` reset** — verify, then decide fresh-vs-reset.
 
 Cross-repo consequence: v2.0.30 (loader) and v2.2.1 (process-level `setTime`) are
-released; GIANI is re-pinned to `v2.2.1`. No further IAClassLibrary work is
-required for H1.
+released, and GIANI re-pinned to `v2.3.0` to pick up the per-timepoint
+measurement output. H1 (the GIANI time loop) is now done; no further
+IAClassLibrary work is required for H1.
 
 ---
 
@@ -701,7 +706,7 @@ already-resolved decisions.
    Fiji's runtime, and TrackMate ≥ 8; `pom-scijava` bumped to `45.1.0` and
    `scijava.jvm.version=21` set.
 4. **Package namespace.** The library has **not** moved off `net.calm.*` (still
-   `net.calm.iaclasslibrary` at `v2.2.1`), so there is no library-import
+   `net.calm.iaclasslibrary` at `v2.3.0`), so there is no library-import
    migration to mirror. Any future rename of GIANI itself
    (`net.calm.giani` → `io.github.djpbarry.giani`) is an independent decision,
    not coupled to a library rename.

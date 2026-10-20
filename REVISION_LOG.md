@@ -512,3 +512,29 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   - Flagged H2 coupling (`cells` reset + `Time` column) and the need for a 4D
     (Z×T) fixture to test the loop end-to-end.
 - Docs-only; no code change.
+
+## 2026-10-19 — H1 implemented (headless timelapse time loop)
+
+- Added `TRACK_TIMELAPSE` ("Track Timelapse", default `"false"`) and
+  `TIME_SELECT` ("Specific Timepoint", default `"-1"`) to `GianiDefaultParams`
+  (GIANI-level params, no `propLabels` wiring).
+- `PipelineExecutor.run()` now nests a time loop inside the series loop: it
+  computes `nTime = img.getSizeT(s)`, resolves `[t0, t1)` via the new pure
+  `PipelineExecutor.timeRange(nTime, timeSelect, trackTimelapse)` helper, and
+  calls `process.setTime(t)` before each process's `setup(...)` / `submit` /
+  `get`.
+- `timeRange` semantics: a valid specific timepoint wins; otherwise timelapse
+  spans `0..nTime`; otherwise a single `t = 0` frame.
+- Re-pinned `IAClassLibrary` `v2.2.1` → `v2.3.0` (process-level `setTime` plus
+  per-timepoint measurement output).
+- Tests added: `PipelineExecutorTest` (7 unit tests for `timeRange`),
+  `TimelapseApiTest` (guards `MultiThreadedProcess.setTime(int)` and
+  `BioFormatsImg.getSizeT(int)`), `TimelapseFixtureTest` (fixture needs `Z>=2`
+  and `T>=2`), and `PipelineExecutorTimelapseIntegrationTest`
+  (`integration`-tagged; full pipeline over a `T=2` fixture with
+  `TRACK_TIMELAPSE=true`, asserting a `Time` column and at least 2 distinct
+  timepoints).
+- H2 remains open: per-timepoint `cells` reset and the `-T{time}` zip naming are
+  not yet explicit in GIANI code (the `Time` column is produced by the library).
+- No version bump in this commit range (still `3.4.31`), flagged against the
+  "bump on every change" convention.
