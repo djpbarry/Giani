@@ -236,13 +236,16 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         restartProcess();
         setVariables();
-        process.start();
-        try {
-            process.join();
-        } catch (InterruptedException e) {
-            return;
-        }
-        process.getOutput().show();
+        var preview = process;
+        new Thread(() -> {
+            preview.start();
+            try {
+                preview.join();
+            } catch (InterruptedException e) {
+                return;
+            }
+            javax.swing.SwingUtilities.invokeLater(() -> preview.getOutput().show());
+        }).start();
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed

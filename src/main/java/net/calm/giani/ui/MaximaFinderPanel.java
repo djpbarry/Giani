@@ -777,18 +777,23 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         restartProcess();
         setVariables();
-        process.start();
-        try {
-            process.join();
-        } catch (InterruptedException e) {
-            return;
-        }
-        if (Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT]))) {
-            showOutput(process.getOutput(), process.getOutput().getTitle());
-        } else {
-            showOutput(((MultiThreadedMaximaFinder) process).getMaxima(), process.getOutput().getTitle(),
-                    ((MultiThreadedMaximaFinder) process).getDetectedObjectsOutline());
-        }
+        MultiThreadedMaximaFinder preview = (MultiThreadedMaximaFinder) process;
+        new Thread(() -> {
+            preview.start();
+            try {
+                preview.join();
+            } catch (InterruptedException e) {
+                return;
+            }
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                if (Boolean.parseBoolean(props.getProperty(propLabels[MultiThreadedMaximaFinder.STARDIST_DETECT]))) {
+                    showOutput(preview.getOutput(), preview.getOutput().getTitle());
+                } else {
+                    showOutput(preview.getMaxima(), preview.getOutput().getTitle(),
+                            preview.getDetectedObjectsOutline());
+                }
+            });
+        }).start();
     }//GEN-LAST:event_previewButtonActionPerformed
 
     private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed

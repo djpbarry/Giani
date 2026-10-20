@@ -176,12 +176,16 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
     private void measurePreviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_measurePreviewButtonActionPerformed
         restartProcess();
         setVariables();
-        process.start();
-        try {
-            process.join();
-        } catch (InterruptedException e) {
-        }
-        Analyzer.getResultsTable().show("Measurements");
+        var preview = process;
+        new Thread(() -> {
+            preview.start();
+            try {
+                preview.join();
+            } catch (InterruptedException e) {
+                return;
+            }
+            javax.swing.SwingUtilities.invokeLater(() -> Analyzer.getResultsTable().show("Measurements"));
+        }).start();
     }//GEN-LAST:event_measurePreviewButtonActionPerformed
 
     private void channelListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_channelListMouseClicked

@@ -222,19 +222,24 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
         restartProcess();
         setVariables();
-        process.start();
-        try {
-            process.join();
-        } catch (InterruptedException e) {
-            return;
-        }
-        ImagePlus imp = process.getOutput();
-        String lutDir = IJ.getDirectory("luts");
-        if (lutDir != null) {
-            imp.setLut(LutLoader.openLut(lutDir + File.separator + "glasbey_on_dark.lut"));
-        }
-        imp.resetDisplayRange();
-        imp.show();
+        var preview = process;
+        new Thread(() -> {
+            preview.start();
+            try {
+                preview.join();
+            } catch (InterruptedException e) {
+                return;
+            }
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                ImagePlus imp = preview.getOutput();
+                String lutDir = IJ.getDirectory("luts");
+                if (lutDir != null) {
+                    imp.setLut(LutLoader.openLut(lutDir + File.separator + "glasbey_on_dark.lut"));
+                }
+                imp.resetDisplayRange();
+                imp.show();
+            });
+        }).start();
     }//GEN-LAST:event_previewButtonActionPerformed
 
     public void setupProcess() {
