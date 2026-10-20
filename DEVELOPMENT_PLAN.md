@@ -55,6 +55,12 @@ guided wizard, sensible defaults, and one CSV out.
   thing that justifies GIANI's continued existence next to MIA.
 - **Point users at MIA** for anything beyond that scope (custom pipelines,
   broader 5D workflows, extensive tracking). See Proposed decision 9.
+- **Retire the CALM suite.** GIANI historically shipped as the
+  `net.calm.calm.GIANI_` package inside the CALM plugin (`calm-3.0.6.jar`),
+  which also bundled BALM, FRAP, particle-analysis, and tracking tools. Most of
+  that suite is now redundant (covered by GIANI itself, MIA, or other modern
+  Fiji plugins), so CALM is retired entirely and GIANI ships as a standalone
+  plugin under `net.calm.giani`. (Decided 2026-10-20.)
 
 ## Initial state (2026-10-10, context for the plan)
 
@@ -758,6 +764,14 @@ already-resolved decisions.
       indefinitely for GIANI (acceptable given the feature freeze, decision 9).
     - The process-level `setTime(int)` request for Phase H1 must not be coupled
       to, or blocked by, R2b.
+11. **Retire the CALM suite; GIANI ships standalone.** ✔ Decided (2026-10-20).
+    GIANI originally lived inside CALM (`net.calm.calm.GIANI_` in
+    `calm-3.0.6.jar`), alongside BALM/FRAP/particle-analysis/tracking tools that
+    are now largely redundant (superseded by GIANI, MIA, or other modern Fiji
+    plugins). CALM is retired entirely; GIANI continues as the standalone
+    `net.calm.giani` plugin (already the case since it was extracted). No CALM
+    dependency or coexistence is required — old `calm-*.jar` /
+    `iaclasslibrary-1.0.37.jar` installs should be removed when upgrading.
 
 ---
 

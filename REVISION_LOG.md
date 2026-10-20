@@ -538,3 +538,19 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   not yet explicit in GIANI code (the `Time` column is produced by the library).
 - No version bump in this commit range (still `3.4.31`), flagged against the
   "bump on every change" convention.
+
+## 2026-10-20 — Decided to retire the CALM suite
+
+- Inspected the live Fiji: GIANI historically shipped inside CALM
+  (`calm-3.0.6.jar`, package `net.calm.calm.GIANI_`), which also bundles BALM,
+  FRAP, particle-analysis, tracking, and MicroManager tools via its
+  `plugins.config` (`Plugins>CALM>GIANI` menu entries + `GIANI Macro Extensions`
+  / `GIANI Results Browser`).
+- Decision (Proposed decision 11): retire CALM entirely — most of its tools are
+  redundant with GIANI, MIA, or other modern Fiji plugins. GIANI continues as a
+  standalone plugin (`net.calm.giani`); no CALM dependency or coexistence is
+  required.
+- Upgrade note: old `calm-*.jar` and `iaclasslibrary-1.0.37.jar` installs
+  should be removed when upgrading, to avoid `net.calm.iaclasslibrary`
+  classpath clashes with the new `IAClassLibrary` pin.
+- Docs-only; no code or version change.
