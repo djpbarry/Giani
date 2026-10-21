@@ -554,3 +554,20 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   should be removed when upgrading, to avoid `net.calm.iaclasslibrary`
   classpath clashes with the new `IAClassLibrary` pin.
 - Docs-only; no code or version change.
+
+## 2026-10-21 — Swapped timelapse fixture to real CTC data; async previews
+
+- Replaced the synthetic `18.06.10_Experiment.lif_7_time.ome.tiff` (a duplicated
+  Z-stack, `T=2`) with the real Cell Tracking Challenge `Fluo-N3DH-CHO.ome.tiff`
+  (`C=1, Z=5, T=10`, 5.7 MB) as the Phase H1 fixture. The timelapse integration
+  test now runs over 10 genuinely distinct timepoints and completes in ~80 s
+  (previously ~11 min over 2 identical frames).
+- `PipelineExecutorTimelapseIntegrationTest` channel params adjusted for the
+  single-channel nuclei dataset (`CELL_SEG_CHAN_SELECT=0`, `CHAN_FOR_MEASURE=1`);
+  the `Time`/`Series` column + `>=2` distinct-timepoints assertions pass.
+- Recorded the earlier async preview refactor (5 wizard panels now run previews
+  on a background thread and marshal results back via `SwingUtilities.invokeLater`,
+  a first step toward R4's drop-`Thread` / I1 decoupled preview).
+- Version bumped `3.4.31` → `3.5.0` (`feat`: headless timelapse + measurement
+  `Time`/`Series` columns), kept in sync across `pom.xml`, `CITATION.cff`, and
+  `docs/conf.py`.

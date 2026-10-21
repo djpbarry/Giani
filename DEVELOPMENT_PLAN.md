@@ -548,7 +548,7 @@ deferred to I1.
   `getTime()` live on `MultiThreadedProcess`, and `SourceProcess.loadPixels(...)`
   already loads `tBegin = tEnd = time`. `MaximaFinder` / `GaussianFilter` are
   sources using it; `TopHatFilter` is a transform (reads `inputs[0]`, no pixel
-  load). Confirm once against the jar before relying on it.
+  load). Verified against `v2.3.0`.
 - **GIANI (headless) — done:** `PipelineExecutor.run()` nests a time loop inside
   the series loop. After the `getSizeZ(s) < 2` skip and setting
   `SERIES_SELECT_LABEL` / `UNITS`, it computes `nTime = img.getSizeT(s)` and
@@ -567,16 +567,16 @@ deferred to I1.
 - **Decision:** `TRACK_TIMELAPSE` is **explicit** (opt-in), not auto-detected from
   `T > 1` — auto-detection would silently change output shape/runtime for
   existing 4D users (mirrors the `SPECIFIC_SERIES` precedent).
-- **H2 coupling:** the loop alone re-runs per timepoint but needs H2's
-  `cells`-reset and `Time` column for correct, distinguishable output. Land the
-  `cells`-reset + `Time`-column bits together with H1 (or keep the loop inert
-  behind `TRACK_TIMELAPSE=false` until then).
+- **H2 coupling — resolved:** the `cells`-reset and the `Time`/`Series` columns
+  land in `IAClassLibrary v2.3.0`, so the loop's output is correct and
+  distinguishable.
 - **Testing — done:** `PipelineExecutorTest` unit-tests the pure
   `timeRange(nTime, timeSelect, trackTimelapse)`; `TimelapseApiTest` guards
   `MultiThreadedProcess.setTime(int)` / `BioFormatsImg.getSizeT(int)`; the
   existing `PipelineExecutorIntegrationTest` covers the `T=1` regression; and
-  `TimelapseFixtureTest` + `PipelineExecutorTimelapseIntegrationTest` add a
-  multi-timepoint (Z×T) fixture end-to-end test (tagged `integration`).
+  `TimelapseFixtureTest` + `PipelineExecutorTimelapseIntegrationTest` run the
+  full pipeline over the real `Fluo-N3DH-CHO.ome.tiff` fixture (`C=1, Z=5,
+  `T=10`) with `TRACK_TIMELAPSE=true` (tagged `integration`).
 - **Sequencing — done (headless-first):** executor time loop + params via a
   properties file landed with **no GUI panel**. The timelapse UI panel is
   deferred to Phase I (I1).
@@ -587,13 +587,18 @@ The segmentation state is a single shared `Objects3DPopulation cells` created in
 `GIANI.run()` and passed through the pipeline; the measurement stage reads it.
 For timelapse each timepoint needs its own population:
 
-- Verify whether `MultiThreadedWatershed` resets `cells` at the start of each run
-  (the series loop already re-runs it with the same `cells` today). Then either
-  reset `cells` per timepoint or create a fresh one per timepoint.
-- Add a `Time` column to `GIANI_Output.csv` (preferred over per-timepoint CSVs)
-  so downstream consumers can group rows by frame.
-- Extend the `Objects3DPopulation` zip export name with a time index
-  (`-T{time}`).
+**Status: mostly done (2026-10-21).** `cells` reset and the `Time`/`Series`
+columns are in place via `IAClassLibrary v2.3.0`.
+
+- ~~Verify whether `MultiThreadedWatershed` resets `cells`~~ — done: the library's
+  `initialiseCellsWithNuclei(...)` empties `cells` before re-populating, so each
+  timepoint starts fresh (confirmed via bytecode; no GIANI change needed).
+- ~~Add a `Time` column~~ — done (`v2.3.0`): `MultiThreadedROIConstructor` emits
+  `Time` and `Series` columns; asserted by `PipelineExecutorTimelapseIntegrationTest`.
+- Extend the `Objects3DPopulation` zip export name with `-T{time}` — the library
+  already suffixes output image names with `_T{time}`, and `v2.3.0` added
+  time-aware `saveAllRois`/`saveAllMasks`; standalone zip naming is a minor
+  remaining nicety.
 
 ### H3. Tracking: use the TrackMate API *inside* GIANI (recommend option (b))
 
