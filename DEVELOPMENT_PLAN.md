@@ -625,31 +625,45 @@ export-and-track-in-TrackMate. Rationale grounded in the object model:
    nucleus centroids are more stable than whole-cell centroids). Attach GIANI's
    per-object measurements (intensity, morphology) as `Spot` features so they
    survive into the tracking and can gate/display tracks.
-2. Run one of TrackMate's **LAP trackers** (`SimpleFastLAPTracker`,
-   `SparseLAPTracker`) with the calibration from `img.getCalibration(series)` so
-   linking distances are in physical units, not pixels.
+2. Run TrackMate's **`SimpleFastLAPTracker`** (Brownian motion, default
+   linking/gap-closing penalties) with the calibration from
+   `img.getCalibration(series)` so linking distances are in physical units, not
+   pixels.
 3. Read back the `TrackModel`: each track ID is the **cell lineage**. Because
    cells↔nuclei are 1:1 and punctae already carry a `Cell ID`, the children
    (nucleus measurements, punctae) **inherit the parent cell's track ID** — no
    independent tracking of children required.
-4. Write a lineage table (track ID per cell per timepoint) alongside
-   `GIANI_Output.csv` (or as an extra column). There is no results browser, so
-   lineage is surfaced via the exported CSV (H4).
+4. Emit the lineage as a `Track ID` column in `GIANI_Output.csv` (building on the
+   R5 `Time`/`Series` columns); H4 writes the separate Ultrack `GIANI_tracks.csv`.
+   There is no results browser, so lineage is surfaced via the exported CSVs.
 
 **Note on punctae/spot tracking:** if the goal is to track punctae themselves as
 independent objects (rather than cell lineage), that is a separate, second
 TrackMate run over the punctae — but it should still happen inside GIANI using
 the same (b) pattern, retaining the `Cell ID`/`Track ID` association.
 
-**Open items to confirm before implementation:**
+**Resolved decisions (2026-10-21) and implementation plan:**
 
-- Target object for lineage: **cells** (recommended) vs nuclei vs both.
-- Tracking motion model (Brownian vs linear motion) and gap-closing/linking
-  penalties; expose as parameters or use sensible defaults.
-- ~~Whether `BioFormatsImg` already exposes `getSizeT`/time indexing~~ —
-  **resolved (2026-10-18):** `getSizeT(series)` and the 8-arg `loadPixelData`
-  exist in `IAClassLibrary v2.0.30`; only process-level time selection remains
-  (see H1).
+- **Lineage target = cells**, tracked via the **nucleus centroid + equivalent
+  radius** (more stable than whole-cell centroids). Cells↔nuclei are 1:1 in
+  GIANI's model, so there is no meaningful "cells vs nuclei" toggle; the only
+  genuinely different object type is punctae (`Track Spots`, deferred).
+- **Parameter:** `TRACK_LINEAGE` (boolean, default `"false"`), read by
+  `PipelineExecutor` — headless-first like H1; the GUI checkbox lands in I1.
+- **Spot collection:** extract each timepoint's per-cell nucleus centroid/radius
+  from the `cells` population *inside* the time loop (before the next frame
+  resets it). This passes the `cells` `Objects3DPopulation` into
+  `PipelineExecutor` (today only `buildFullPipeline` holds it).
+- **Tracker:** `SimpleFastLAPTracker` with Brownian motion and default
+  linking/gap-closing penalties, using `img.getCalibration(series)` so distances
+  are physical. Parameters stay defaults for the first cut (expose later).
+- **Output:** a `Track ID` column in `GIANI_Output.csv` (builds on the R5
+  `Time`/`Series` columns); H4 emits the Ultrack `GIANI_tracks.csv`.
+- **Dependency:** declare `sc.fiji:TrackMate:8.0.0` directly in `pom.xml`
+  (package `fiji.plugin.trackmate.*`) rather than relying on the transitive
+  pull via `IAClassLibrary`.
+- **Code shape:** a new `CellLineageTracker` (testable in isolation) collects
+  spots per frame and runs TrackMate; `PipelineExecutor` orchestrates it.
 
 ### H4. Export the lineage for inTRACKtive
 
@@ -690,9 +704,11 @@ reinforces tracking **cells** as the primary lineage object:
    added the process-level `setTime` selector.
 2. ~~**`TRACK_TIMELAPSE`**~~ — resolved (2026-10-19): explicit opt-in boolean
    (default `false`), not auto-detect `T > 1`.
-3. **Lineage target** — cells (recommended) vs nuclei vs both.
-4. **Output shape** — time column vs per-timepoint CSV.
-5. **Watershed `cells` reset** — verify, then decide fresh-vs-reset.
+3. ~~**Lineage target**~~ — resolved (2026-10-21): cells, via nucleus centroid.
+4. ~~**Output shape**~~ — resolved (2026-10-21): `Time`/`Series` columns (done in
+   `v2.3.0`) plus a `Track ID` column (H3).
+5. ~~**Watershed `cells` reset**~~ — resolved: the library's
+   `initialiseCellsWithNuclei(...)` empties `cells` per run (see H2).
 
 Cross-repo consequence: v2.0.30 (loader) and v2.2.1 (process-level `setTime`) are
 released, and GIANI re-pinned to `v2.3.0` to pick up the per-timepoint

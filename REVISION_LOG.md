@@ -571,3 +571,19 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
 - Version bumped `3.4.31` → `3.5.0` (`feat`: headless timelapse + measurement
   `Time`/`Series` columns), kept in sync across `pom.xml`, `CITATION.cff`, and
   `docs/conf.py`.
+
+## 2026-10-21 — Planned H3 (TrackMate lineage) and resolved its decisions
+
+- Recorded the H3 implementation plan in `DEVELOPMENT_PLAN.md` and resolved the
+  open decisions:
+  - Lineage target = **cells**, tracked via the **nucleus centroid + equivalent
+    radius**. Cells↔nuclei are 1:1, so a "cells vs nuclei" toggle is meaningless;
+    the only genuinely different object is punctae (`Track Spots`, deferred).
+  - `TRACK_LINEAGE` (boolean, default `"false"`), headless-first; GUI checkbox in I1.
+  - Spots extracted from the `cells` population inside the time loop (before reset);
+    `PipelineExecutor` gains access to `cells`.
+  - `SimpleFastLAPTracker`, Brownian motion, default penalties, physical units.
+  - Output: `Track ID` column in `GIANI_Output.csv` (H4 adds the Ultrack CSV).
+  - `sc.fiji:TrackMate:8.0.0` declared directly (package `fiji.plugin.trackmate.*`).
+  - New `CellLineageTracker` class; `PipelineExecutor` orchestrates.
+- Docs-only; no code or version change.
