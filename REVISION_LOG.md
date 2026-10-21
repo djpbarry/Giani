@@ -554,3 +554,15 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   should be removed when upgrading, to avoid `net.calm.iaclasslibrary`
   classpath clashes with the new `IAClassLibrary` pin.
 - Docs-only; no code or version change.
+
+## 2026-10-21 — Output review: drop ROI zips, consolidate masks (planned)
+
+- Reviewed the multi-timepoint output: per-object ROI-manager `*.zip` exports and
+  per-timepoint `*_T{n}_masks/` folders are emitted alongside the CSV.
+- Recorded two output-format changes in `DEVELOPMENT_PLAN.md` (H2):
+  (a) the ROI-manager zips are now superfluous — their only consumer (the
+  results browser) was retired in F3 — and should be dropped;
+  (b) masks should be written into a single folder per object type with Z/T
+  indices in the filenames, rather than one folder per timepoint, for easier
+  importing.
+- Docs-only; no code or version change.

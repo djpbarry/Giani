@@ -594,6 +594,13 @@ For timelapse each timepoint needs its own population:
   so downstream consumers can group rows by frame.
 - Extend the `Objects3DPopulation` zip export name with a time index
   (`-T{time}`).
+- **Output cleanup (observed 2026-10-21):** the per-object ROI-manager `*.zip`
+  exports are now superfluous — their only consumer (the results browser) was
+  retired in F3 — so drop them.
+- **Mask layout:** write each object type's masks into a single folder (e.g.
+  `Nucleus_masks/`) with the Z and T indices encoded in the filenames, rather
+  than a separate `*_T{n}_masks` folder per timepoint, to make importing
+  easier.
 
 ### H3. Tracking: use the TrackMate API *inside* GIANI (recommend option (b))
 
