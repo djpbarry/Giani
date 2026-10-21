@@ -654,14 +654,17 @@ the same (b) pattern, retaining the `Cell ID`/`Track ID` association.
   from the `cells` population *inside* the time loop (before the next frame
   resets it). This passes the `cells` `Objects3DPopulation` into
   `PipelineExecutor` (today only `buildFullPipeline` holds it).
-- **Tracker:** `SimpleFastLAPTracker` with Brownian motion and default
-  linking/gap-closing penalties, using `img.getCalibration(series)` so distances
-  are physical. Parameters stay defaults for the first cut (expose later).
+- **Tracker:** `SimpleFastLAPTracker` with default linking/gap-closing settings
+  and `allowTrackSplitting(true)` (to detect divisions for H4), using
+  `img.getCalibration(series)` so distances are physical. Parameters stay
+  defaults for the first cut (expose later).
 - **Output:** a `Track ID` column in `GIANI_Output.csv` (builds on the R5
-  `Time`/`Series` columns); H4 emits the Ultrack `GIANI_tracks.csv`.
-- **Dependency:** declare `sc.fiji:TrackMate:8.0.0` directly in `pom.xml`
-  (package `fiji.plugin.trackmate.*`) rather than relying on the transitive
-  pull via `IAClassLibrary`.
+  `Time`/`Series` columns); H4 separately exports the lineage in inTRACKtive's
+  Ultrack format (`GIANI_tracks.csv`).
+- **Dependency:** declare `sc.fiji:TrackMate` directly in `pom.xml` (package
+  `fiji.plugin.trackmate.*`), version left to `pom-scijava`'s dependency
+  management (currently `8.0.0`), rather than relying on the transitive pull via
+  `IAClassLibrary`.
 - **Code shape:** a new `CellLineageTracker` (testable in isolation) collects
   spots per frame and runs TrackMate; `PipelineExecutor` orchestrates it.
 

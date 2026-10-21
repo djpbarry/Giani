@@ -582,8 +582,10 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   - `TRACK_LINEAGE` (boolean, default `"false"`), headless-first; GUI checkbox in I1.
   - Spots extracted from the `cells` population inside the time loop (before reset);
     `PipelineExecutor` gains access to `cells`.
-  - `SimpleFastLAPTracker`, Brownian motion, default penalties, physical units.
-  - Output: `Track ID` column in `GIANI_Output.csv` (H4 adds the Ultrack CSV).
-  - `sc.fiji:TrackMate:8.0.0` declared directly (package `fiji.plugin.trackmate.*`).
+  - `SimpleFastLAPTracker`, default settings, `allowTrackSplitting(true)` for
+    divisions, physical units.
+  - Output: `Track ID` column in `GIANI_Output.csv` (H4 exports the inTRACKtive
+    Ultrack CSV).
+  - `sc.fiji:TrackMate` declared directly, version via `pom-scijava` (8.0.0).
   - New `CellLineageTracker` class; `PipelineExecutor` orchestrates.
 - Docs-only; no code or version change.
