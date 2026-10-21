@@ -583,24 +583,30 @@ deferred to I1.
 
 ### H2. Persist per-timepoint segmentations and measurements (not just the last one)
 
+**Status: core persistence done (via `IAClassLibrary v2.3.0`); output cleanup
+(a/b) pending in IAClassLibrary.**
+
 The segmentation state is a single shared `Objects3DPopulation cells` created in
 `GIANI.run()` and passed through the pipeline; the measurement stage reads it.
-For timelapse each timepoint needs its own population:
+Each timepoint is processed independently because the nuclear watershed's
+`initialiseCellsWithNuclei` clears `cells` at the start of each run (verified in
+`MultiThreadedWatershed`), so there is no cross-timepoint accumulation.
 
-- Verify whether `MultiThreadedWatershed` resets `cells` at the start of each run
-  (the series loop already re-runs it with the same `cells` today). Then either
-  reset `cells` per timepoint or create a fresh one per timepoint.
-- Add a `Time` column to `GIANI_Output.csv` (preferred over per-timepoint CSVs)
-  so downstream consumers can group rows by frame.
-- Extend the `Objects3DPopulation` zip export name with a time index
-  (`-T{time}`).
-- **Output cleanup (observed 2026-10-21):** the per-object ROI-manager `*.zip`
-  exports are now superfluous — their only consumer (the results browser) was
-  retired in F3 — so drop them.
-- **Mask layout:** write each object type's masks into a single folder (e.g.
-  `Nucleus_masks/`) with the Z and T indices encoded in the filenames, rather
-  than a separate `*_T{n}_masks` folder per timepoint, to make importing
-  easier.
+- ✔ `cells` reset per timepoint — handled by `initialiseCellsWithNuclei`
+  (clears the population before re-seeding from nuclei).
+- ✔ `Time` column in `GIANI_Output.csv` — written by
+  `MultiThreadedROIConstructor.processObjectPop` (groups rows by frame).
+- ✔ `-T{time}` index on the per-object exports — `saveAllRois`/`saveAllMasks`
+  append a time suffix when `getSizeT > 1`.
+- **Output cleanup (observed 2026-10-21, IAClassLibrary-side):**
+  - (a) the per-object ROI-manager `*.zip` exports are superfluous — their only
+    consumer (the results browser) was retired in F3 — so drop them
+    (`MultiThreadedROIConstructor.saveAllRois`).
+  - (b) write each object type's masks into a single folder with Z and T indices
+    in the filenames, instead of a `*_T{n}_masks` folder per timepoint
+    (`MultiThreadedROIConstructor.saveAllMasks`).
+  - Both require an IAClassLibrary change + re-pin (cross-repo), not a GIANI
+    change.
 
 ### H3. Tracking: use the TrackMate API *inside* GIANI (recommend option (b))
 
