@@ -312,6 +312,7 @@ public class PipelineBuilder {
         props.setProperty(propLabels[MultiThreadedMaximaFinder.ILASTIK_SMOOTHING], "0.0");
         props.setProperty(propLabels[MultiThreadedMaximaFinder.METHOD], props.getProperty(GianiDefaultParams.NUC_DETECT_MODE));
         props.setProperty(propLabels[MultiThreadedMaximaFinder.THRESH_METHOD], "Default");
+        props.setProperty(propLabels[MultiThreadedMaximaFinder.THRESH_DETECT], "false");
     }
 
     public static MultiThreadedMaximaFinder getDefaultFociMaximaFinder(Properties props, int i) {

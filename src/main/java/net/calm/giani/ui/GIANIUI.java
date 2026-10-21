@@ -405,14 +405,16 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         }
         addProcess();
         PipelineExecutor exec = new PipelineExecutor(pipeline, props);
-        exec.start();
         runButton.setEnabled(false);
-        try {
-            exec.join();
-        } catch (InterruptedException e) {
-            GenUtils.logError(e, "Failed to execute pipeline.");
-        }
-        runButton.setEnabled(true);
+        new Thread(() -> {
+            exec.start();
+            try {
+                exec.join();
+            } catch (InterruptedException e) {
+                GenUtils.logError(e, "Failed to execute pipeline.");
+            }
+            javax.swing.SwingUtilities.invokeLater(() -> runButton.setEnabled(true));
+        }).start();
     }//GEN-LAST:event_runButtonActionPerformed
 
     private void measurementPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_measurementPanelMouseClicked
