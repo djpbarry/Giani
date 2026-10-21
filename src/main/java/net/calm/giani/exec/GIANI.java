@@ -142,8 +142,9 @@ public class GIANI {
      */
     public void run(Properties props) {
         DebugTools.setRootLevel("WARN");
-        ProcessPipeline pipeline = (new PipelineBuilder()).buildFullPipeline(props, new Objects3DPopulation());
-        PipelineExecutor exec = new PipelineExecutor(pipeline, props);
+        Objects3DPopulation cells = new Objects3DPopulation();
+        ProcessPipeline pipeline = (new PipelineBuilder()).buildFullPipeline(props, cells);
+        PipelineExecutor exec = new PipelineExecutor(pipeline, props, cells);
         exec.start();
         try {
             exec.join();
