@@ -18,7 +18,7 @@ the plan's writing.
 **Modernise a ~7-year-old Fiji/ImageJ plugin whose heavy lifting lives in the
 upstream `IAClassLibrary`.** GIANI originally pinned that library at an untagged
 commit (`fe92f24c6e`) predating its modernisation; it is now pinned to the tagged
-release `v2.3.0` (Java 21, GPL-3.0-or-later, parent `pom-scijava:45.1.0`). The
+release `v2.4.0` (Java 21, GPL-3.0-or-later, parent `pom-scijava:45.1.0`). The
 library kept its `net.calm.iaclasslibrary` package (no rename), so aligning with
 it is **not** a package-breaking change; the remaining work (tests, hygiene, CI,
 docs) makes that pin safe and the plugin maintainable.
@@ -123,7 +123,7 @@ guided wizard, sensible defaults, and one CSV out.
   (`license.licenseName=gpl_v3`) with copyright owner **Francis Crick Institute**,
   matching `LICENSE` and the source headers (Phase B1).
 - **Upstream pin (resolved):** `IAClassLibrary` was pinned at commit `fe92f24c6e`;
-  it is now pinned to tagged release `v2.3.0` (`com.github.djpbarry:IAClassLibrary:v2.3.0`
+  it is now pinned to tagged release `v2.4.0` (`com.github.djpbarry:IAClassLibrary:v2.4.0`
   via JitPack). The library modernised to Java 21 and GPL-3.0-or-later but kept
   its `net.calm.iaclasslibrary` package (its own pom declares
   `net.calm:iaclasslibrary:2.3.0`), so re-pinning was **not** package-breaking.
@@ -451,7 +451,7 @@ separately (deferred).
 ## Phase F — Upstream coordination & re-pin
 
 **Status (2026-10-16): resolved — no package migration required (pin since moved
-to `v2.3.0`).** GIANI already pinned the then-latest `IAClassLibrary` release
+to `v2.4.0`).** GIANI already pinned the then-latest `IAClassLibrary` release
 `v2.0.23`. Investigation of
 `djpbarry/IAClassLibrary` shows `master` HEAD is the `v2.0.23` tag and the
 library has **not** renamed its package: its source is still
@@ -463,13 +463,13 @@ GPL-3.0-or-later, parent `pom-scijava:45.1.0`.
 
 ### F1. Re-pin `IAClassLibrary` to a tagged release — ✔ Done (2026-10-16)
 
-1. Confirm the target tag — `v2.0.23` was the latest at the time (since moved to `v2.3.0`).
+1. Confirm the target tag — `v2.0.23` was the latest at the time (since moved to `v2.4.0`).
 2. Migrate `net.calm.iaclasslibrary.*` imports — not needed; no rename occurred.
 3. Reconcile API changes — none at the same coordinate.
 4. Gate on `mvn verify` + the Phase C pipeline-wiring tests (10/10 green).
 
 Optional low-value cleanup: switch the dependency from the JitPack alias
-`com.github.djpbarry:IAClassLibrary:v2.3.0` to the library's real coordinate
+`com.github.djpbarry:IAClassLibrary:v2.4.0` to the library's real coordinate
 `net.calm:iaclasslibrary:2.2.1`, but only if that artifact is published to a
 real Maven repo (it currently is not). If a future `v3.x` performs the package
 rename, revisit this phase.
@@ -538,7 +538,7 @@ across-time lineage tracking of the segmented objects.
 
 ### H1. Treat each timepoint as an independent 3D stack
 
-**Status: done (headless; `IAClassLibrary v2.3.0`).** The timelapse GUI panel is
+**Status: done (headless; `IAClassLibrary v2.4.0`).** The timelapse GUI panel is
 deferred to I1.
 
 - **IAClassLibrary loader — done (v2.0.30):** `BioFormatsImg` has the 8-arg
@@ -583,8 +583,7 @@ deferred to I1.
 
 ### H2. Persist per-timepoint segmentations and measurements (not just the last one)
 
-**Status: core persistence done (via `IAClassLibrary v2.3.0`); output cleanup
-(a/b) pending in IAClassLibrary.**
+**Status: done (via `IAClassLibrary v2.4.0`).**
 
 The segmentation state is a single shared `Objects3DPopulation cells` created in
 `GIANI.run()` and passed through the pipeline; the measurement stage reads it.
@@ -598,15 +597,12 @@ Each timepoint is processed independently because the nuclear watershed's
   `MultiThreadedROIConstructor.processObjectPop` (groups rows by frame).
 - ✔ `-T{time}` index on the per-object exports — `saveAllRois`/`saveAllMasks`
   append a time suffix when `getSizeT > 1`.
-- **Output cleanup (observed 2026-10-21, IAClassLibrary-side):**
-  - (a) the per-object ROI-manager `*.zip` exports are superfluous — their only
-    consumer (the results browser) was retired in F3 — so drop them
+- ✔ Output cleanup (`IAClassLibrary v2.4.0`):
+  - (a) per-object ROI-manager `*.zip` exports dropped
     (`MultiThreadedROIConstructor.saveAllRois`).
-  - (b) write each object type's masks into a single folder with Z and T indices
-    in the filenames, instead of a `*_T{n}_masks` folder per timepoint
-    (`MultiThreadedROIConstructor.saveAllMasks`).
-  - Both require an IAClassLibrary change + re-pin (cross-repo), not a GIANI
-    change.
+  - (b) masks written into a single folder per object type with Z and T indices
+    in the filenames (`MultiThreadedROIConstructor.saveAllMasks`, now using
+    idempotent `Files.createDirectories`).
 
 ### H3. Tracking: use the TrackMate API *inside* GIANI (recommend option (b))
 
@@ -703,7 +699,7 @@ reinforces tracking **cells** as the primary lineage object:
 5. **Watershed `cells` reset** — verify, then decide fresh-vs-reset.
 
 Cross-repo consequence: v2.0.30 (loader) and v2.2.1 (process-level `setTime`) are
-released, and GIANI re-pinned to `v2.3.0` to pick up the per-timepoint
+released, and GIANI re-pinned to `v2.4.0` to pick up the per-timepoint
 measurement output. H1 (the GIANI time loop) is now done; no further
 IAClassLibrary work is required for H1.
 
@@ -725,7 +721,7 @@ already-resolved decisions.
    Fiji's runtime, and TrackMate ≥ 8; `pom-scijava` bumped to `45.1.0` and
    `scijava.jvm.version=21` set.
 4. **Package namespace.** The library has **not** moved off `net.calm.*` (still
-   `net.calm.iaclasslibrary` at `v2.3.0`), so there is no library-import
+   `net.calm.iaclasslibrary` at `v2.4.0`), so there is no library-import
    migration to mirror. Any future rename of GIANI itself
    (`net.calm.giani` → `io.github.djpbarry.giani`) is an independent decision,
    not coupled to a library rename.

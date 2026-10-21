@@ -566,3 +566,16 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   indices in the filenames, rather than one folder per timepoint, for easier
   importing.
 - Docs-only; no code or version change.
+
+## 2026-10-21 — Re-pinned to IAClassLibrary v2.4.0 (H2 output cleanup)
+
+- `IAClassLibrary` released the H2 output-cleanup changes requested in
+  `IAClassLibrary-output-cleanup-note.md`: (a) dropped the per-object ROI-manager
+  `*.zip` exports; (b) consolidated masks into one folder per object type with
+  Z/T indices in the filenames; (c) switched `saveAllMasks` to idempotent
+  `Files.createDirectories`.
+- GIANI re-pinned `v2.3.0` → `v2.4.0` (`pom.xml`). Build green; `./mvnw test`
+  passes (20 run, 0 fail, 1 skipped fixture).
+- Marked Phase H2 done in `DEVELOPMENT_PLAN.md`.
+- Bumped GIANI version `3.4.32` → `3.4.33` (chore), kept in sync across
+  `pom.xml`, `CITATION.cff`, and `docs/conf.py`.
