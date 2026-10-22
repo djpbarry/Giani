@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Tag("integration")
 class PipelineExecutorTimelapseIntegrationTest {
 
-    private static final String FIXTURE = "test_data/18.06.10_Experiment.lif_7_time.ome.tiff";
+    private static final String FIXTURE = "test_data/Fluo-N3DH-CHO.ome.tiff";
 
     @Test
     @Timeout(value = 25, unit = TimeUnit.MINUTES)
@@ -67,11 +67,11 @@ class PipelineExecutorTimelapseIntegrationTest {
         props.setProperty(GianiDefaultParams.NUC_DETECT_MODE, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN);
         props.setProperty(GianiDefaultParams.NUC_FILT_RAD_LABEL, "0.5");
         props.setProperty(GianiDefaultParams.CELL_FILT_RAD_LABEL, "1");
-        props.setProperty(GianiDefaultParams.CELL_SEG_CHAN_SELECT_LABEL, "1");
+        props.setProperty(GianiDefaultParams.CELL_SEG_CHAN_SELECT_LABEL, "0");
         props.setProperty(GianiDefaultParams.ENABLE_TOP_HAT_FILTER, "false");
         props.setProperty(GianiDefaultParams.NUC_SEG_THRESH_LABEL, "Li");
         props.setProperty(GianiDefaultParams.CELL_SEG_THRESH_LABEL, "Huang");
-        props.setProperty(GianiDefaultParams.CHAN_FOR_MEASURE, "2");
+        props.setProperty(GianiDefaultParams.CHAN_FOR_MEASURE, "1");
 
         new GIANI().run(props);
 

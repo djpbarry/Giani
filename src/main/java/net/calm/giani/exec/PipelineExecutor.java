@@ -22,6 +22,7 @@ import ij.plugin.filter.Analyzer;
 import ij.plugin.frame.RoiManager;
 import loci.common.DebugTools;
 import loci.formats.FormatException;
+import mcib3d.geom.Objects3DPopulation;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsFileLister;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
@@ -36,6 +37,7 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -52,15 +54,20 @@ public class PipelineExecutor extends Thread {
 
     private final ProcessPipeline pipeline;
     private final Properties props;
+    private final Objects3DPopulation cells;
+    private List<CellLineageTracker.CellTrack> lineageTracks = List.of();
 
     /**
-     * Construct an executor with the specified pipeline and properties
+     * Construct an executor with the specified pipeline, properties, and the
+     * shared cell population that the segmentation stage fills.
      * @param pipeline the {@link ProcessPipeline} to be executed
      * @param props the parameter-value pairs for every process in the pipeline
+     * @param cells the {@link Objects3DPopulation} that stores the segmentations
      */
-    public PipelineExecutor(ProcessPipeline pipeline, Properties props) {
+    public PipelineExecutor(ProcessPipeline pipeline, Properties props, Objects3DPopulation cells) {
         this.pipeline = pipeline;
         this.props = props;
+        this.cells = cells;
     }
 
     /**
@@ -93,6 +100,7 @@ public class PipelineExecutor extends Thread {
         }
         ExecutorService exec = Executors.newSingleThreadExecutor();
         boolean trackTimelapse = Boolean.parseBoolean(props.getProperty(GianiDefaultParams.TRACK_TIMELAPSE));
+        boolean trackLineage = Boolean.parseBoolean(props.getProperty(GianiDefaultParams.TRACK_LINEAGE));
         int timeSelect = -1;
         try {
             timeSelect = Integer.parseInt(props.getProperty(GianiDefaultParams.TIME_SELECT));
@@ -128,6 +136,7 @@ public class PipelineExecutor extends Thread {
                     }
                     props.setProperty(GianiDefaultParams.SERIES_SELECT_LABEL, String.valueOf(s));
                     props.setProperty(GianiDefaultParams.UNITS, img.getUnits(s));
+                    CellLineageTracker lineageTracker = trackLineage ? new CellLineageTracker() : null;
                     int[] tRange = timeRange(img.getSizeT(s), timeSelect, trackTimelapse);
                     for (int t = tRange[0]; t < tRange[1]; t++) {
                         IJ.log(String.format("Analysing timepoint %d", t));
@@ -144,6 +153,14 @@ public class PipelineExecutor extends Thread {
                                 }
                             }
                         }
+                        if (lineageTracker != null) {
+                            lineageTracker.addTimepoint(t, cells);
+                        }
+                    }
+                    if (lineageTracker != null) {
+                        lineageTracks = lineageTracker.track();
+                        IJ.log(String.format("Tracked %d cell observations across %d lineages", lineageTracks.size(),
+                                lineageTracks.stream().map(CellLineageTracker.CellTrack::trackId).distinct().count()));
                     }
                 }
                 updateFileList(img, files);

@@ -404,7 +404,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
             nextButtonActionPerformed(null);
         }
         addProcess();
-        PipelineExecutor exec = new PipelineExecutor(pipeline, props);
+        PipelineExecutor exec = new PipelineExecutor(pipeline, props, cells);
         runButton.setEnabled(false);
         new Thread(() -> {
             exec.start();

@@ -579,3 +579,38 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
 - Marked Phase H2 done in `DEVELOPMENT_PLAN.md`.
 - Bumped GIANI version `3.4.32` → `3.4.33` (chore), kept in sync across
   `pom.xml`, `CITATION.cff`, and `docs/conf.py`.
+
+## 2026-10-21 — Swapped timelapse fixture to real CTC data; async previews
+
+- Replaced the synthetic `18.06.10_Experiment.lif_7_time.ome.tiff` (a duplicated
+  Z-stack, `T=2`) with the real Cell Tracking Challenge `Fluo-N3DH-CHO.ome.tiff`
+  (`C=1, Z=5, T=10`, 5.7 MB) as the Phase H1 fixture. The timelapse integration
+  test now runs over 10 genuinely distinct timepoints and completes in ~80 s
+  (previously ~11 min over 2 identical frames).
+- `PipelineExecutorTimelapseIntegrationTest` channel params adjusted for the
+  single-channel nuclei dataset (`CELL_SEG_CHAN_SELECT=0`, `CHAN_FOR_MEASURE=1`);
+  the `Time`/`Series` column + `>=2` distinct-timepoints assertions pass.
+- Recorded the earlier async preview refactor (5 wizard panels now run previews
+  on a background thread and marshal results back via `SwingUtilities.invokeLater`,
+  a first step toward R4's drop-`Thread` / I1 decoupled preview).
+- Version bumped `3.4.31` → `3.5.0` (`feat`: headless timelapse + measurement
+  `Time`/`Series` columns), kept in sync across `pom.xml`, `CITATION.cff`, and
+  `docs/conf.py`.
+
+## 2026-10-21 — Planned H3 (TrackMate lineage) and resolved its decisions
+
+- Recorded the H3 implementation plan in `DEVELOPMENT_PLAN.md` and resolved the
+  open decisions:
+  - Lineage target = **cells**, tracked via the **nucleus centroid + equivalent
+    radius**. Cells↔nuclei are 1:1, so a "cells vs nuclei" toggle is meaningless;
+    the only genuinely different object is punctae (`Track Spots`, deferred).
+  - `TRACK_LINEAGE` (boolean, default `"false"`), headless-first; GUI checkbox in I1.
+  - Spots extracted from the `cells` population inside the time loop (before reset);
+    `PipelineExecutor` gains access to `cells`.
+  - `SimpleFastLAPTracker`, default settings, `allowTrackSplitting(true)` for
+    divisions, physical units.
+  - Output: `Track ID` column in `GIANI_Output.csv` (H4 exports the inTRACKtive
+    Ultrack CSV).
+  - `sc.fiji:TrackMate` declared directly, version via `pom-scijava` (8.0.0).
+  - New `CellLineageTracker` class; `PipelineExecutor` orchestrates.
+- Docs-only; no code or version change.
