@@ -48,11 +48,11 @@ class UltrackCsvWriterTest {
         List<String> lines = Files.readAllLines(csv, StandardCharsets.UTF_8);
         assertEquals(5, lines.size());
         assertEquals("track_id,t,z,y,x,parent_track_id,radius", lines.get(0));
-        // rows sorted by trackId, then time
-        assertEquals("1,0,12.000000,11.000000,10.000000,-1,2.000000", lines.get(1));
-        assertEquals("1,1,22.000000,21.000000,20.000000,-1,3.000000", lines.get(2));
-        assertEquals("2,0,42.000000,41.000000,40.000000,-1,4.000000", lines.get(3));
-        assertEquals("3,2,32.000000,31.000000,30.000000,-1,5.000000", lines.get(4));
+        // rows sorted by trackId, then time; track_id is offset by TRACK_LABEL_OFFSET (2)
+        assertEquals("3,0,12.000000,11.000000,10.000000,-1,2.000000", lines.get(1));
+        assertEquals("3,1,22.000000,21.000000,20.000000,-1,3.000000", lines.get(2));
+        assertEquals("4,0,42.000000,41.000000,40.000000,-1,4.000000", lines.get(3));
+        assertEquals("5,2,32.000000,31.000000,30.000000,-1,5.000000", lines.get(4));
     }
 
     @Test

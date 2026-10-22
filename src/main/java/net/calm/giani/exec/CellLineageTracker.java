@@ -42,6 +42,14 @@ import java.util.Map;
 public class CellLineageTracker {
 
     /**
+     * Public track label offset. In the exported CSVs and mask images, {@code 0}
+     * is background and {@code 1} is reserved for untracked cells, so a tracked
+     * cell is labelled {@code TRACK_LABEL_OFFSET + trackId}. Both the CSV and
+     * mask writers use this so they expose the same value.
+     */
+    public static final int TRACK_LABEL_OFFSET = 2;
+
+    /**
      * One cell's lineage assignment: which cell (by timepoint index) landed in
      * which TrackMate track, plus its calibrated centroid and equivalent radius
      * for export.

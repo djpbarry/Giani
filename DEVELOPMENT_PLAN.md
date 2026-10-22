@@ -676,8 +676,9 @@ the same (b) pattern, retaining the `Cell ID`/`Track ID` association.
 
 **Status: done (2026-10-22).** `UltrackCsvWriter` writes `GIANI_tracks.csv`
 (`track_id,t,z,y,x,parent_track_id,radius`) from `CellLineageTracker.CellTrack`,
-using TrackMate's raw track ID and `parent_track_id = -1` (lineage re-labelling
-deferred). Wired into `PipelineExecutor` after the time loop; unit-tested.
+using the public track label (`2 + TrackMate track ID`, shared with the H5
+masks) and `parent_track_id = -1` (lineage re-labelling deferred). Wired into
+`PipelineExecutor` after the time loop; unit-tested.
 
 `inTRACKtive` (royerlab/inTRACKtive) is a **browser-based** viewer for cell
 tracking data — not a Fiji plugin. It consumes the **Ultrack CSV format**,
@@ -686,11 +687,11 @@ attribute columns), converted to a Zarr bundle via `intracktive convert` /
 `intracktive open`. This is an easy, high-value target for the H3 lineage and
 reinforces tracking **cells** as the primary lineage object:
 
-- Emit a `GIANI_tracks.csv` in Ultrack format: `track_id` = TrackMate track ID
-  (integer, from 1), `t` = time index (continuous, 0-based), `z/y/x` = cell
-  centroid in calibrated physical units (`img.getCalibration(series)`),
-  `parent_track_id` = `-1` for now (division hierarchy deferred — see the
-  model-mapping note below).
+- Emit a `GIANI_tracks.csv` in Ultrack format: `track_id` = public track label
+  (`2 + TrackMate track ID`, matching the H5 track-labelled masks), `t` = time
+  index (continuous, 0-based), `z/y/x` = cell centroid in calibrated physical
+  units (`img.getCalibration(series)`), `parent_track_id` = `-1` for now
+  (division hierarchy deferred — see the model-mapping note below).
 - Optionally add a `radius` column (cell equivalent radius) and per-cell
   attributes (intensity, punctae count, etc.) so the viewer's `--add_radius` /
   `--add_attribute` can size/colour cells.
@@ -737,11 +738,12 @@ segmentation).
     the loop, then write all masks with track IDs after tracking. Cleaner output
     but holds `T` stacks in memory.
 - **Label scheme:** in `<type>_track_masks/`, `0` = background, `1` = untracked
-  cell (a reserved sentinel), and `2 + trackId` = tracked cell. Shifting track
-  IDs by 2 keeps background/untracked unambiguous; the per-timepoint object
-  labels remain available in `<type>_masks/` for distinguishing individual
-  objects. A dividing cell and its daughters share one label. (Note the offset
-  `mask label = trackId + 2` when correlating masks with `GIANI_tracks.csv`.)
+  cell (a reserved sentinel), and `2 + trackId` = tracked cell. The same public
+  label (`2 + trackId`) is used in `GIANI_tracks.csv`, so masks and CSV agree.
+  Shifting track IDs by 2 keeps background/untracked unambiguous; the
+  per-timepoint object labels remain available in `<type>_masks/` for
+  distinguishing individual objects. A dividing cell and its daughters share one
+  label.
 - **Future enhancement:** true **lineage IDs** — re-label each post-division
   branch as its own ID with a `parent_track_id` so divisions read as distinct
   lineages (the same translation H4 defers; TrackMate's

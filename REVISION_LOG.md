@@ -647,8 +647,11 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   `GIANI_tracks.csv` after the run when `TRACK_LINEAGE=true`.
 - Changed `TRACK_LINEAGE` default `"false"` → `"true"` so tracking output is
   visible by default (harmless for single-timepoint runs: no edges → no CSV).
-- `parent_track_id` is `-1` for now (TrackMate's raw track ID; lineage/division
-  re-labelling deferred — see H4/H5 in the plan).
+- `parent_track_id` is `-1` for now (lineage/division re-labelling deferred —
+  see H4/H5 in the plan).
+- Decided the `track_id` column uses the same public label as the H5 masks:
+  `TRACK_LABEL_OFFSET (2) + TrackMate track ID` (0 = background, 1 = untracked),
+  so the CSV and masks stay consistent.
 - `UltrackCsvWriterTest` added (2 tests: sorted output + empty-list skip).
   `./mvnw test` green (22/22).
 - Version bumped `3.5.1` → `3.6.0` (`feat`), kept in sync across `pom.xml`,
