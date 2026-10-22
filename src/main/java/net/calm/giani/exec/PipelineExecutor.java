@@ -181,6 +181,11 @@ public class PipelineExecutor extends Thread {
             GenUtils.logError(e, "Failed to save tracking CSV.");
         }
         try {
+            TrackMaskWriter.write(outputDir, lineageTracks);
+        } catch (IOException e) {
+            GenUtils.logError(e, "Failed to write track-labelled masks.");
+        }
+        try {
             PropertyWriter.saveProperties(props, outputDir.getAbsolutePath(), GianiDefaultParams.TITLE, true);
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to save property file.");

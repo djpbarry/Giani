@@ -656,3 +656,17 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   `./mvnw test` green (22/22).
 - Version bumped `3.5.1` → `3.6.0` (`feat`), kept in sync across `pom.xml`,
   `CITATION.cff`, and `docs/conf.py`.
+
+## 2026-10-22 — H5: track-labelled masks
+
+- Added `TrackMaskWriter` (`exec/`) which post-processes the Cell and Nucleus
+  mask PNGs into parallel `<type>_track_masks/` folders, relabelling each pixel
+  to `TRACK_LABEL_OFFSET (2) + trackId` (0 = background, 1 = untracked), matching
+  `GIANI_tracks.csv`.
+- `CellLineageTracker.CellTrack` gained the per-timepoint mask `label`
+  (`nucleus.getValue()`); `PipelineExecutor` runs the remap pass after tracking
+  when `TRACK_LINEAGE=true`.
+- `TrackMaskWriterTest` added (2 tests: per-timepoint remap + in-place pixel
+  remap). `./mvnw test` green (24/24).
+- Version bumped `3.6.0` → `3.7.0` (`feat`), kept in sync across `pom.xml`,
+  `CITATION.cff`, and `docs/conf.py`.

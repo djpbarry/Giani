@@ -714,7 +714,10 @@ reinforces tracking **cells** as the primary lineage object:
 
 ### H5. Track-labelled mask output (visualise the lineage)
 
-**Status: proposed (2026-10-22), not implemented.**
+**Status: done (2026-10-22).** `TrackMaskWriter` post-processes the Cell/Nucleus
+mask PNGs into parallel `<type>_track_masks/` folders, relabelling each pixel to
+`TRACK_LABEL_OFFSET (2) + trackId` (0 = background, 1 = untracked). Wired into
+`PipelineExecutor` after tracking; unit-tested (`buildRemap` + `remapPixels`).
 
 The H2 masks label each object by its per-timepoint index, so the same physical
 cell gets a different label in every timepoint. For tracking, the masks should

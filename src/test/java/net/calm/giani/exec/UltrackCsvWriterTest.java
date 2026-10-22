@@ -35,10 +35,10 @@ class UltrackCsvWriterTest {
     @Test
     void writesSortedUltrackCsv(@TempDir Path tmp) throws Exception {
         List<CellLineageTracker.CellTrack> tracks = List.of(
-                new CellLineageTracker.CellTrack(2, 0, 3, 30.0, 31.0, 32.0, 5.0),
-                new CellLineageTracker.CellTrack(0, 0, 1, 10.0, 11.0, 12.0, 2.0),
-                new CellLineageTracker.CellTrack(1, 1, 1, 20.0, 21.0, 22.0, 3.0),
-                new CellLineageTracker.CellTrack(0, 0, 2, 40.0, 41.0, 42.0, 4.0)
+                new CellLineageTracker.CellTrack(2, 0, 3, 30.0, 31.0, 32.0, 5.0, 1),
+                new CellLineageTracker.CellTrack(0, 0, 1, 10.0, 11.0, 12.0, 2.0, 2),
+                new CellLineageTracker.CellTrack(1, 1, 1, 20.0, 21.0, 22.0, 3.0, 3),
+                new CellLineageTracker.CellTrack(0, 0, 2, 40.0, 41.0, 42.0, 4.0, 4)
         );
 
         UltrackCsvWriter.write(tmp.toFile(), tracks);

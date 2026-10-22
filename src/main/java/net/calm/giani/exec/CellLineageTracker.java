@@ -54,10 +54,10 @@ public class CellLineageTracker {
      * which TrackMate track, plus its calibrated centroid and equivalent radius
      * for export.
      */
-    public record CellTrack(int time, int cellIndex, int trackId, double x, double y, double z, double radius) {
+    public record CellTrack(int time, int cellIndex, int trackId, double x, double y, double z, double radius, int label) {
     }
 
-    private record CellObservation(int time, int cellIndex, double x, double y, double z, double radius) {
+    private record CellObservation(int time, int cellIndex, double x, double y, double z, double radius, int label) {
     }
 
     private final SpotCollection spots = new SpotCollection();
@@ -78,7 +78,7 @@ public class CellLineageTracker {
             Spot spot = new Spot(centroid[0], centroid[1], centroid[2], radius, 1.0);
             spots.add(spot, time);
             Vector3D center = nucleus.getCenterAsVectorUnit();
-            spotCell.put(spot, new CellObservation(time, i, center.x, center.y, center.z, radius));
+            spotCell.put(spot, new CellObservation(time, i, center.x, center.y, center.z, radius, nucleus.getValue()));
         }
     }
 
@@ -100,7 +100,7 @@ public class CellLineageTracker {
             for (Spot spot : trackModel.trackSpots(trackId)) {
                 CellObservation obs = spotCell.get(spot);
                 if (obs != null) {
-                    result.add(new CellTrack(obs.time, obs.cellIndex, trackId, obs.x, obs.y, obs.z, obs.radius));
+                    result.add(new CellTrack(obs.time, obs.cellIndex, trackId, obs.x, obs.y, obs.z, obs.radius, obs.label));
                 }
             }
         }
