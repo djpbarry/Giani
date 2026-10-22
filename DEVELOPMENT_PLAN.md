@@ -684,21 +684,23 @@ reinforces tracking **cells** as the primary lineage object:
 - Emit a `GIANI_tracks.csv` in Ultrack format: `track_id` = TrackMate track ID
   (integer, from 1), `t` = time index (continuous, 0-based), `z/y/x` = cell
   centroid in calibrated physical units (`img.getCalibration(series)`),
-  `parent_track_id` from division events (`-1` when there is no parent).
+  `parent_track_id` = `-1` for now (division hierarchy deferred — see the
+  model-mapping note below).
 - Optionally add a `radius` column (cell equivalent radius) and per-cell
   attributes (intensity, punctae count, etc.) so the viewer's `--add_radius` /
   `--add_attribute` can size/colour cells.
 - **No inTRACKtive/Python dependency inside GIANI:** GIANI only writes the CSV;
   the user runs `intracktive open GIANI_tracks.csv` (or `convert`/`serve`) to
   view it. A bundled helper script is a later optional nicety.
-- **Model-mapping gotcha:** Ultrack uses a forest/tree model (each track is one
-  lineage; `parent_track_id` encodes division), whereas TrackMate uses a graph
-  (division = a spot with two successors; the daughters stay in the same
-  connected component unless re-labelled). H4 therefore needs a small
-  translation step — walk the `TrackModel`, detect division events (spots with
-  >1 successor, enabled via `Settings.setAllowTrackSplitting(true)`), and
-  re-label each post-division branch as its own `track_id` with the parent's
-  `track_id` as `parent_track_id`.
+- **Model-mapping (deferred):** Ultrack uses a forest/tree model (each track is
+  one lineage; `parent_track_id` encodes division), whereas TrackMate uses a
+  graph (division = a spot with two successors; the daughters stay in the same
+  connected component). For simplicity H4 emits TrackMate's raw track ID with
+  `parent_track_id = -1`, so a dividing cell and its daughters share one track
+  ID and no division hierarchy is captured. A future enhancement can walk the
+  `TrackModel` (spots with >1 successor via `allowTrackSplitting`) and re-label
+  each post-division branch as its own `track_id` + `parent_track_id` to produce
+  true lineage IDs (shared with H5).
 - **Hierarchy note:** inTRACKtive visualises one track type (the cell lineage);
   nuclei and punctae are not shown as separate objects, so their parent–child
   relationships stay in `GIANI_Output.csv` / `Spot_Data.csv` rather than
@@ -710,10 +712,11 @@ reinforces tracking **cells** as the primary lineage object:
 
 The H2 masks label each object by its per-timepoint index, so the same physical
 cell gets a different label in every timepoint. For tracking, the masks should
-instead be labelled by the cell's **lineage ID** so a tracked cell keeps the same
-label across all timepoints — making the lineage visually inspectable directly in
-Fiji (colour-by-label), complementing H4's `GIANI_tracks.csv` (which gives
-centroids/tracks, while these masks give the actual lineage-shaped segmentation).
+instead be labelled by the cell's **TrackMate track ID** so a tracked cell keeps
+the same label across all timepoints — making the tracking visually inspectable
+directly in Fiji (colour-by-label), complementing H4's `GIANI_tracks.csv` (which
+gives centroids/tracks, while these masks give the actual lineage-shaped
+segmentation).
 
 - **Scope:** only when `TRACK_LINEAGE=true`. With tracking off, masks keep their
   current per-timepoint labels (behaviour-preserving).
@@ -728,10 +731,14 @@ centroids/tracks, while these masks give the actual lineage-shaped segmentation)
   - **Defer writing:** snapshot each timepoint's label stack (or `cells`) during
     the loop, then write all masks with track IDs after tracking. Cleaner output
     but holds `T` stacks in memory.
-- **Label semantics:** use the post-division **lineage branch ID** (the same
-  re-labelling H4 needs for Ultrack), not TrackMate's raw track ID, so the masks,
-  the `Track ID` column in `GIANI_Output.csv`, and `GIANI_tracks.csv` all agree.
-  Untracked cells keep their per-timepoint index.
+- **Label semantics:** use TrackMate's raw **track ID** (connected component) as
+  the label, matching the `Track ID` column and `GIANI_tracks.csv`. A dividing
+  cell and its daughters share one label. Untracked cells keep their
+  per-timepoint index.
+- **Future enhancement:** true **lineage IDs** — re-label each post-division
+  branch as its own ID with a `parent_track_id` so divisions read as distinct
+  lineages (the same translation H4 defers; TrackMate's
+  `TimeDirectedNeighborIndex` / directed iterators provide the graph primitives).
 - **Hierarchy:** cell masks carry the lineage label; nucleus/punctae masks inherit
   the parent cell's track ID via the existing `Cell ID` association (same as H3).
 - **Output shape:** write to a parallel folder set (e.g. `<type>_track_masks/`)

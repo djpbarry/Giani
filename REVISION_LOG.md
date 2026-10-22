@@ -628,8 +628,10 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   conflicted. Added a "Git workflow" note to `AGENTS.md` (push at the end of each
   session; `fetch` + check `@{u}` before working; push before pull).
 - Added **Phase H5** to `DEVELOPMENT_PLAN.md` — track-labelled masks (label each
-  object by its lineage ID rather than per-timepoint index, so tracked cells keep
-  the same label across timepoints). Proposed as a post-tracking pass over the
-  written PNGs, `TRACK_LINEAGE=true` only, aligned with H4's Ultrack `track_id`.
+  object by its TrackMate track ID rather than per-timepoint index, so tracked
+  cells keep the same label across timepoints). Proposed as a post-tracking pass
+  over the written PNGs, `TRACK_LINEAGE=true` only. Decided (2026-10-22) to use
+  TrackMate's raw track ID for simplicity and defer true lineage IDs
+  (post-division branch re-labelling) as a future enhancement in both H4 and H5.
 - Version bumped `3.5.0` → `3.5.1` (`docs`), kept in sync across `pom.xml`,
   `CITATION.cff`, and `docs/conf.py`.
