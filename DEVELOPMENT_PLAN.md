@@ -665,6 +665,12 @@ the same (b) pattern, retaining the `Cell ID`/`Track ID` association.
 - **Output:** a `Track ID` column in `GIANI_Output.csv` (builds on the R5
   `Time`/`Series` columns); H4 separately exports the lineage in inTRACKtive's
   Ultrack format (`GIANI_tracks.csv`).
+- **Gap (flagged 2026-10-22):** the `Track ID` column is not yet written to
+  `GIANI_Output.csv` — track IDs live only in `GIANI_tracks.csv`, and neither CSV
+  carries a shared cell identifier, so the two can only be cross-referenced by
+  (time + centroid). Add a `Track ID` column to `GIANI_Output.csv` (and/or a
+  `Cell_Index`/label column to `GIANI_tracks.csv`) so the two are directly
+  linkable.
 - **Dependency:** declare `sc.fiji:TrackMate` directly in `pom.xml` (package
   `fiji.plugin.trackmate.*`), version left to `pom-scijava`'s dependency
   management (currently `8.0.0`), rather than relying on the transitive pull via

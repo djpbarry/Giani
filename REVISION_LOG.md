@@ -679,3 +679,15 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   and later expose tracking tuning (motion model, linking/gap-closing penalties,
   `Track Spots`).
 - Docs-only; no code change.
+
+## 2026-10-22 — Output review: CSV cross-referencing gap (planned)
+
+- Reviewed the multi-timepoint `GIANI-3.7.0_Output/`: `GIANI_tracks.csv` and the
+  `*_Cell_track_masks/` / `*_Nucleus_track_masks/` folders are correct.
+- Found the `Track ID` column is missing from `GIANI_Output.csv` (track IDs only
+  in `GIANI_tracks.csv`), and neither CSV carries a shared cell identifier — so
+  they can only be cross-referenced by (time + centroid).
+- Recorded as a gap in `DEVELOPMENT_PLAN.md` (H3): add a `Track ID` column to
+  `GIANI_Output.csv` (and/or a `Cell_Index`/label column to `GIANI_tracks.csv`)
+  so the two CSVs are directly linkable.
+- Docs-only; no code change.
