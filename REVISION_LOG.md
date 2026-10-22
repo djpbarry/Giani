@@ -614,3 +614,18 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   - `sc.fiji:TrackMate` declared directly, version via `pom-scijava` (8.0.0).
   - New `CellLineageTracker` class; `PipelineExecutor` orchestrates.
 - Docs-only; no code or version change.
+
+## 2026-10-22 — Merge of H2 re-pin + H3 lineage; git-workflow note
+
+- Merged two diverged lines on `development` (common ancestor `8904643`): the
+  local H2 output-cleanup re-pin (`IAClassLibrary v2.4.0`, `3.4.33`) and the
+  remote H3 lineage-tracking work (`CellLineageTracker`, `TRACK_LINEAGE`,
+  `TrackMate` dep, fixture swap, `3.5.0`). Conflicts resolved across `pom.xml`
+  (kept `v2.4.0` + TrackMate + `3.5.0`), `GIANIUI` (3-arg `PipelineExecutor` +
+  async run), `CITATION.cff`/`docs/conf.py` (`3.5.0`), and the plan/log.
+- Post-mortem: the local commits were never pushed at the end of the session,
+  while `origin/development` advanced independently, so the next `pull`
+  conflicted. Added a "Git workflow" note to `AGENTS.md` (push at the end of each
+  session; `fetch` + check `@{u}` before working; push before pull).
+- Version bumped `3.5.0` → `3.5.1` (`docs`), kept in sync across `pom.xml`,
+  `CITATION.cff`, and `docs/conf.py`.

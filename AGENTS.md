@@ -2,6 +2,21 @@
 
 Guidance for AI agents working in the GIANI repository.
 
+## Git workflow
+
+This repo's `development` branch is shared, so keep local and remote in sync at
+both ends of a session. The 2026-10-22 merge conflict happened because work
+committed locally was never pushed at the end of the day, while
+`origin/development` advanced independently (H2 output-cleanup vs H3
+lineage-tracking).
+
+- **Push at the end of each session** (`git push`) — this is the primary rule;
+  unpushed commits are what caused the divergence.
+- At the start of a session, `git fetch` then check `git status` and
+  `git log @{u}..` to see whether `origin/development` has moved ahead.
+- Push before pulling, or rebase onto the latest `origin/development`
+  frequently, so divergences stay small and conflicts are rare.
+
 ## Project overview
 
 GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](https://imagej.net/software/fiji/) plugin for batch analysis of 3D microscopy images: it reads proprietary image formats, segments nuclei and cells, measures morphology/fluorescence intensity, and lets users browse results.
