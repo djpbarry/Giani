@@ -7,7 +7,7 @@ abstract: >-
   and cells, and measures morphology and fluorescence intensity.
 type: software
 license: GPL-3.0-or-later
-version: 3.5.1
+version: 3.6.0
 date-released: "2019-01-01"
 repository-code: "https://github.com/djpbarry/Giani"
 url: "https://giani-docs.readthedocs.io"

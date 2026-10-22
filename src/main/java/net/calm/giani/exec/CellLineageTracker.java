@@ -25,6 +25,7 @@ import fiji.plugin.trackmate.tracking.TrackerKeys;
 import fiji.plugin.trackmate.tracking.jaqaman.SparseLAPTrackerFactory;
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Objects3DPopulation;
+import mcib3d.geom.Vector3D;
 import net.calm.iaclasslibrary.Cell3D.Cell3D;
 import net.calm.iaclasslibrary.Cell3D.Nucleus3D;
 
@@ -42,13 +43,17 @@ public class CellLineageTracker {
 
     /**
      * One cell's lineage assignment: which cell (by timepoint index) landed in
-     * which TrackMate track.
+     * which TrackMate track, plus its calibrated centroid and equivalent radius
+     * for export.
      */
-    public record CellTrack(int time, int cellIndex, int trackId) {
+    public record CellTrack(int time, int cellIndex, int trackId, double x, double y, double z, double radius) {
+    }
+
+    private record CellObservation(int time, int cellIndex, double x, double y, double z, double radius) {
     }
 
     private final SpotCollection spots = new SpotCollection();
-    private final Map<Spot, int[]> spotCell = new HashMap<>();
+    private final Map<Spot, CellObservation> spotCell = new HashMap<>();
 
     public void addTimepoint(int time, Objects3DPopulation cells) {
         for (int i = 0; i < cells.getNbObjects(); i++) {
@@ -64,7 +69,8 @@ public class CellLineageTracker {
             double radius = Math.cbrt(3.0 * nucleus.getVolumeUnit() / (4.0 * Math.PI));
             Spot spot = new Spot(centroid[0], centroid[1], centroid[2], radius, 1.0);
             spots.add(spot, time);
-            spotCell.put(spot, new int[]{time, i});
+            Vector3D center = nucleus.getCenterAsVectorUnit();
+            spotCell.put(spot, new CellObservation(time, i, center.x, center.y, center.z, radius));
         }
     }
 
@@ -84,9 +90,9 @@ public class CellLineageTracker {
         List<CellTrack> result = new ArrayList<>();
         for (Integer trackId : trackModel.trackIDs(true)) {
             for (Spot spot : trackModel.trackSpots(trackId)) {
-                int[] cell = spotCell.get(spot);
-                if (cell != null) {
-                    result.add(new CellTrack(cell[0], cell[1], trackId));
+                CellObservation obs = spotCell.get(spot);
+                if (obs != null) {
+                    result.add(new CellTrack(obs.time, obs.cellIndex, trackId, obs.x, obs.y, obs.z, obs.radius));
                 }
             }
         }

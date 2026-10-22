@@ -55,7 +55,7 @@ public class PipelineExecutor extends Thread {
     private final ProcessPipeline pipeline;
     private final Properties props;
     private final Objects3DPopulation cells;
-    private List<CellLineageTracker.CellTrack> lineageTracks = List.of();
+    private final List<CellLineageTracker.CellTrack> lineageTracks = new ArrayList<>();
 
     /**
      * Construct an executor with the specified pipeline, properties, and the
@@ -158,9 +158,10 @@ public class PipelineExecutor extends Thread {
                         }
                     }
                     if (lineageTracker != null) {
-                        lineageTracks = lineageTracker.track();
-                        IJ.log(String.format("Tracked %d cell observations across %d lineages", lineageTracks.size(),
-                                lineageTracks.stream().map(CellLineageTracker.CellTrack::trackId).distinct().count()));
+                        List<CellLineageTracker.CellTrack> tracks = lineageTracker.track();
+                        lineageTracks.addAll(tracks);
+                        IJ.log(String.format("Tracked %d cell observations across %d lineages", tracks.size(),
+                                tracks.stream().map(CellLineageTracker.CellTrack::trackId).distinct().count()));
                     }
                 }
                 updateFileList(img, files);
@@ -173,6 +174,11 @@ public class PipelineExecutor extends Thread {
             DataWriter.saveResultsTable(Analyzer.getResultsTable(), new File(String.format("%s%s%s_Output.csv", outputDir, File.separator, GianiDefaultParams.TITLE)), false, true);
         } catch (IOException e) {
             GenUtils.logError(e, "Failed to save results file.");
+        }
+        try {
+            UltrackCsvWriter.write(outputDir, lineageTracks);
+        } catch (IOException e) {
+            GenUtils.logError(e, "Failed to save tracking CSV.");
         }
         try {
             PropertyWriter.saveProperties(props, outputDir.getAbsolutePath(), GianiDefaultParams.TITLE, true);

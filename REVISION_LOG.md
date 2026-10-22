@@ -635,3 +635,19 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   (post-division branch re-labelling) as a future enhancement in both H4 and H5.
 - Version bumped `3.5.0` → `3.5.1` (`docs`), kept in sync across `pom.xml`,
   `CITATION.cff`, and `docs/conf.py`.
+
+## 2026-10-22 — H4: Ultrack lineage CSV export
+
+- Added `UltrackCsvWriter` (`exec/`) which writes `GIANI_tracks.csv` in
+  inTRACKtive's Ultrack format (`track_id,t,z,y,x,parent_track_id,radius`).
+- `CellLineageTracker.CellTrack` extended to carry the calibrated nucleus
+  centroid + equivalent radius (via `getCenterAsVectorUnit()` /
+  `getVolumeUnit()`), so the CSV holds physical units.
+- `PipelineExecutor` now accumulates `CellTrack`s across series and writes
+  `GIANI_tracks.csv` after the run when `TRACK_LINEAGE=true`.
+- `parent_track_id` is `-1` for now (TrackMate's raw track ID; lineage/division
+  re-labelling deferred — see H4/H5 in the plan).
+- `UltrackCsvWriterTest` added (2 tests: sorted output + empty-list skip).
+  `./mvnw test` green (22/22).
+- Version bumped `3.5.1` → `3.6.0` (`feat`), kept in sync across `pom.xml`,
+  `CITATION.cff`, and `docs/conf.py`.

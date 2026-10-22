@@ -674,6 +674,11 @@ the same (b) pattern, retaining the `Cell ID`/`Track ID` association.
 
 ### H4. Export the lineage for inTRACKtive
 
+**Status: done (2026-10-22).** `UltrackCsvWriter` writes `GIANI_tracks.csv`
+(`track_id,t,z,y,x,parent_track_id,radius`) from `CellLineageTracker.CellTrack`,
+using TrackMate's raw track ID and `parent_track_id = -1` (lineage re-labelling
+deferred). Wired into `PipelineExecutor` after the time loop; unit-tested.
+
 `inTRACKtive` (royerlab/inTRACKtive) is a **browser-based** viewer for cell
 tracking data — not a Fiji plugin. It consumes the **Ultrack CSV format**,
 `track_id, t, z, y, x, parent_track_id` (plus optional `radius` and arbitrary
