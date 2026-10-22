@@ -652,7 +652,7 @@ the same (b) pattern, retaining the `Cell ID`/`Track ID` association.
   radius** (more stable than whole-cell centroids). Cells↔nuclei are 1:1 in
   GIANI's model, so there is no meaningful "cells vs nuclei" toggle; the only
   genuinely different object type is punctae (`Track Spots`, deferred).
-- **Parameter:** `TRACK_LINEAGE` (boolean, default `"false"`), read by
+- **Parameter:** `TRACK_LINEAGE` (boolean, default `"true"`), read by
   `PipelineExecutor` — headless-first like H1; the GUI checkbox lands in I1.
 - **Spot collection:** extract each timepoint's per-cell nucleus centroid/radius
   from the `cells` population *inside* the time loop (before the next frame

@@ -645,6 +645,8 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   `getVolumeUnit()`), so the CSV holds physical units.
 - `PipelineExecutor` now accumulates `CellTrack`s across series and writes
   `GIANI_tracks.csv` after the run when `TRACK_LINEAGE=true`.
+- Changed `TRACK_LINEAGE` default `"false"` → `"true"` so tracking output is
+  visible by default (harmless for single-timepoint runs: no edges → no CSV).
 - `parent_track_id` is `-1` for now (TrackMate's raw track ID; lineage/division
   re-labelling deferred — see H4/H5 in the plan).
 - `UltrackCsvWriterTest` added (2 tests: sorted output + empty-list skip).

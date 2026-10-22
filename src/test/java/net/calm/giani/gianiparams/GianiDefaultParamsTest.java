@@ -39,7 +39,7 @@ class GianiDefaultParamsTest {
         assertEquals("-1", p.getProperty(GianiDefaultParams.SPECIFIC_SERIES));
         assertEquals("false", p.getProperty(GianiDefaultParams.TRACK_TIMELAPSE));
         assertEquals("-1", p.getProperty(GianiDefaultParams.TIME_SELECT));
-        assertEquals("false", p.getProperty(GianiDefaultParams.TRACK_LINEAGE));
+        assertEquals("true", p.getProperty(GianiDefaultParams.TRACK_LINEAGE));
         assertEquals("true", p.getProperty(GianiDefaultParams.ENABLE_TOP_HAT_FILTER));
         assertEquals("0.0", p.getProperty(GianiDefaultParams.NUC_FILT_RAD_LABEL));
         assertEquals("0.5", p.getProperty(GianiDefaultParams.NUC_DIST_WEIGHTING));

@@ -178,7 +178,7 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(SPECIFIC_SERIES, "-1");
         this.setProperty(TRACK_TIMELAPSE, "false");
         this.setProperty(TIME_SELECT, "-1");
-        this.setProperty(TRACK_LINEAGE, "false");
+        this.setProperty(TRACK_LINEAGE, "true");
         this.setProperty(UNITS, String.format("%cm", IJ.micronSymbol));
         this.setProperty(ENABLE_TOP_HAT_FILTER, "true");
         this.setProperty(NUC_MAXIMA_DETECT_STARDIST, "false");
