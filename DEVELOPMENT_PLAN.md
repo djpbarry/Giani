@@ -704,6 +704,40 @@ reinforces tracking **cells** as the primary lineage object:
   relationships stay in `GIANI_Output.csv` / `Spot_Data.csv` rather than
   inTRACKtive.
 
+### H5. Track-labelled mask output (visualise the lineage)
+
+**Status: proposed (2026-10-22), not implemented.**
+
+The H2 masks label each object by its per-timepoint index, so the same physical
+cell gets a different label in every timepoint. For tracking, the masks should
+instead be labelled by the cell's **lineage ID** so a tracked cell keeps the same
+label across all timepoints — making the lineage visually inspectable directly in
+Fiji (colour-by-label), complementing H4's `GIANI_tracks.csv` (which gives
+centroids/tracks, while these masks give the actual lineage-shaped segmentation).
+
+- **Scope:** only when `TRACK_LINEAGE=true`. With tracking off, masks keep their
+  current per-timepoint labels (behaviour-preserving).
+- **Ordering problem:** masks are written per-timepoint inside the time loop, but
+  TrackMate's LAP tracker only produces track IDs after all timepoints have been
+  seen. Labelling must therefore happen in a post-tracking pass.
+- **Two options:**
+  - **Post-process the written PNGs (preferred):** after `CellLineageTracker`
+    yields `(timepoint, Cell_Index) → track ID`, re-read each `*_masks/*.png`,
+    remap the label values, and re-write. Self-contained in GIANI, no
+    IAClassLibrary change, disk-bound and scalable to large `T`.
+  - **Defer writing:** snapshot each timepoint's label stack (or `cells`) during
+    the loop, then write all masks with track IDs after tracking. Cleaner output
+    but holds `T` stacks in memory.
+- **Label semantics:** use the post-division **lineage branch ID** (the same
+  re-labelling H4 needs for Ultrack), not TrackMate's raw track ID, so the masks,
+  the `Track ID` column in `GIANI_Output.csv`, and `GIANI_tracks.csv` all agree.
+  Untracked cells keep their per-timepoint index.
+- **Hierarchy:** cell masks carry the lineage label; nucleus/punctae masks inherit
+  the parent cell's track ID via the existing `Cell ID` association (same as H3).
+- **Output shape:** write to a parallel folder set (e.g. `<type>_track_masks/`)
+  rather than overwriting `<type>_masks/`, so the per-timepoint and track-labelled
+  views coexist.
+
 ### Phase H decisions to confirm
 
 1. ~~IAClassLibrary time-loading design~~ — resolved: v2.0.30 added the 8-arg
