@@ -736,10 +736,12 @@ segmentation).
   - **Defer writing:** snapshot each timepoint's label stack (or `cells`) during
     the loop, then write all masks with track IDs after tracking. Cleaner output
     but holds `T` stacks in memory.
-- **Label semantics:** use TrackMate's raw **track ID** (connected component) as
-  the label, matching the `Track ID` column and `GIANI_tracks.csv`. A dividing
-  cell and its daughters share one label. Untracked cells keep their
-  per-timepoint index.
+- **Label scheme:** in `<type>_track_masks/`, `0` = background, `1` = untracked
+  cell (a reserved sentinel), and `2 + trackId` = tracked cell. Shifting track
+  IDs by 2 keeps background/untracked unambiguous; the per-timepoint object
+  labels remain available in `<type>_masks/` for distinguishing individual
+  objects. A dividing cell and its daughters share one label. (Note the offset
+  `mask label = trackId + 2` when correlating masks with `GIANI_tracks.csv`.)
 - **Future enhancement:** true **lineage IDs** — re-label each post-division
   branch as its own ID with a `parent_track_id` so divisions read as distinct
   lineages (the same translation H4 defers; TrackMate's
