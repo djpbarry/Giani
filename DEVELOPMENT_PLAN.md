@@ -887,7 +887,11 @@ This removes the `componentList` ↔ `ProcessPipeline` coupling and the
 Settings/execution separation and (via R2a/R2b) typed parameters; do **not** adopt
 plugin-style extensibility, which is unnecessary for a fixed pipeline. The guided
 wizard UX stays — GIANI's niche is opinionated cell detection for non-experts.
-This is where the timelapse UI panel (H1, deferred) lands.
+This is where the timelapse UI panel (H1, deferred) and a **tracking parameters
+panel** (H3, deferred) land: surface `TRACK_TIMELAPSE` / `TRACK_LINEAGE` /
+`TIME_SELECT` as proper wizard controls (today only `Track Timelapse` has a
+checkbox, on the Select Input panel), and later expose tracking tuning (motion
+model, linking/gap-closing penalties, `Track Spots`).
 
 ### I2. Friendliness & polish
 

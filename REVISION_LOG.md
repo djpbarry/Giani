@@ -670,3 +670,12 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   remap). `./mvnw test` green (24/24).
 - Version bumped `3.6.0` → `3.7.0` (`feat`), kept in sync across `pom.xml`,
   `CITATION.cff`, and `docs/conf.py`.
+
+## 2026-10-22 — Planned a tracking parameters panel (Phase I1)
+
+- Noted in `DEVELOPMENT_PLAN.md` (I1) that the wizard should gain a dedicated
+  tracking parameters panel: surface `TRACK_TIMELAPSE` / `TRACK_LINEAGE` /
+  `TIME_SELECT` as proper controls (today only `Track Timelapse` has a checkbox),
+  and later expose tracking tuning (motion model, linking/gap-closing penalties,
+  `Track Spots`).
+- Docs-only; no code change.
