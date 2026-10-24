@@ -58,7 +58,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     private final Properties props = new GianiDefaultParams();
     private final LinkedList<LayerPanel> componentList = new LinkedList<>();
     private int layerIndex = 0;
-    private final ProcessPipeline pipeline;
     private ArrayList<MaximaFinderPanel> maximaFinderPanels;
     private LocalisationPanel localisationPanel;
     private final Objects3DPopulation cells;
@@ -72,7 +71,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     public GIANIUI() {
         DebugTools.setRootLevel("WARN");
         img = new BioFormatsImg();
-        pipeline = new ProcessPipeline();
         cells = new Objects3DPopulation();
         this.info = new GIANIParamInfos();
         initComponents();
@@ -362,7 +360,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
-        addProcess();
         layerIndex++;
         while (!updateLayer()) {
             layerIndex++;
@@ -371,7 +368,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
     private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
         layerIndex--;
-        removeProcess();
         while (!updateLayer()) {
             layerIndex--;
         }
@@ -436,9 +432,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }//GEN-LAST:event_selectInputPanelComponentShown
 
     boolean updateLayer() {
-//        if (checkIfStarDist()) {
-//            return false;
-//        }
         for (int i = 0; i < componentList.size(); i++) {
             if (i == layerIndex) {
                 componentList.get(i).setVisible(true);
@@ -451,19 +444,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         }
         checkLayerIndex();
         return true;
-    }
-
-    private boolean checkIfStarDist() {
-        if (Boolean.parseBoolean(props.getProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST))
-                && (componentList.get(layerIndex).equals(nuclearFilteringPanel)
-                || componentList.get(layerIndex).equals(nuclearTopHatFilterPanel)
-                || componentList.get(layerIndex).equals(nuclearSegmentationPanel))) {
-            if (componentList.get(layerIndex).equals(nuclearCentreFinderPanel)) {
-                nuclearCentreFinderPanel.getProcess().updateOutputDests(cellSegmentationPanel.getProcess());
-            }
-            return true;
-        }
-        return false;
     }
 
     void checkLayerIndex() {
@@ -496,21 +476,6 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
     void cleanUp() {
         this.dispose();
-    }
-
-    void addProcess() {
-        if (checkIfStarDist()) return;
-        componentList.get(layerIndex).setVariables();
-        MultiThreadedProcess process = componentList.get(layerIndex).getProcess();
-        if (process == null) {
-            return;
-        }
-        pipeline.addProcess(process, layerIndex - 1);
-    }
-
-    void removeProcess() {
-        if (checkIfStarDist()) return;
-        pipeline.removeProcesses(layerIndex);
     }
 
     protected boolean addAdditionalBlobDetectionPanels() {
