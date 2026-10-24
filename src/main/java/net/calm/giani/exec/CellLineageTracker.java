@@ -73,11 +73,10 @@ public class CellLineageTracker {
             if (nucleus == null) {
                 continue;
             }
-            double[] centroid = nucleus.getCentroid();
-            double radius = Math.cbrt(3.0 * nucleus.getVolumeUnit() / (4.0 * Math.PI));
-            Spot spot = new Spot(centroid[0], centroid[1], centroid[2], radius, 1.0);
-            spots.add(spot, time);
             Vector3D center = nucleus.getCenterAsVectorUnit();
+            double radius = Math.cbrt(3.0 * nucleus.getVolumeUnit() / (4.0 * Math.PI));
+            Spot spot = new Spot(center.x, center.y, center.z, radius, 1.0);
+            spots.add(spot, time);
             spotCell.put(spot, new CellObservation(time, i, center.x, center.y, center.z, radius, nucleus.getValue()));
         }
     }
