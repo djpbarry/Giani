@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -106,5 +108,36 @@ class PipelineExecutorTimelapseIntegrationTest {
             }
         }
         assertTrue(times.size() >= 2, "expected at least 2 distinct timepoints, got: " + times);
+
+        int trackIdIndex = -1;
+        for (int i = 0; i < header.length; i++) {
+            if ("Track ID".equals(header[i].trim())) {
+                trackIdIndex = i;
+                break;
+            }
+        }
+        assertTrue(trackIdIndex >= 0, "expected a Track ID column in header: " + csvLines.get(0));
+
+        Set<Double> outputTrackIds = new HashSet<>();
+        for (int i = 1; i < csvLines.size(); i++) {
+            String[] row = csvLines.get(i).split(",");
+            if (row.length > trackIdIndex) {
+                double trackId = Double.parseDouble(row[trackIdIndex].trim());
+                if (trackId != 0.0) {
+                    outputTrackIds.add(trackId);
+                }
+            }
+        }
+        assertFalse(outputTrackIds.isEmpty(), "expected at least one tracked cell");
+
+        File tracksCsv = outputDir.resolve("GIANI_tracks.csv").toFile();
+        assertTrue(tracksCsv.isFile(), "expected tracks CSV: " + tracksCsv);
+        List<String> trackLines = Files.readAllLines(tracksCsv.toPath(), StandardCharsets.UTF_8);
+        assertTrue(trackLines.size() >= 2, "expected a tracks header plus at least one row");
+        Set<Double> trackIds = new HashSet<>();
+        for (int i = 1; i < trackLines.size(); i++) {
+            trackIds.add(Double.parseDouble(trackLines.get(i).split(",")[0].trim()));
+        }
+        assertEquals(outputTrackIds, trackIds);
     }
 }
