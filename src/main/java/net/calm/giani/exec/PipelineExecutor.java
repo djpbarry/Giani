@@ -37,7 +37,9 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -56,6 +58,7 @@ public class PipelineExecutor extends Thread {
     private final Properties props;
     private final Objects3DPopulation cells;
     private final List<CellLineageTracker.CellTrack> lineageTracks = new ArrayList<>();
+    private final Map<String, Integer> trackIdByCell = new HashMap<>();
 
     /**
      * Construct an executor with the specified pipeline, properties, and the
@@ -160,6 +163,9 @@ public class PipelineExecutor extends Thread {
                     if (lineageTracker != null) {
                         List<CellLineageTracker.CellTrack> tracks = lineageTracker.track();
                         lineageTracks.addAll(tracks);
+                        for (CellLineageTracker.CellTrack track : tracks) {
+                            trackIdByCell.put(trackKey(s, track.time(), track.label()), track.trackId() + CellLineageTracker.TRACK_LABEL_OFFSET);
+                        }
                         IJ.log(String.format("Tracked %d cell observations across %d lineages", tracks.size(),
                                 tracks.stream().map(CellLineageTracker.CellTrack::trackId).distinct().count()));
                     }
@@ -170,6 +176,9 @@ public class PipelineExecutor extends Thread {
             }
         }
         exec.shutdown();
+        if (!trackIdByCell.isEmpty()) {
+            annotateTrackIds(Analyzer.getResultsTable(), trackIdByCell);
+        }
         try {
             DataWriter.saveResultsTable(Analyzer.getResultsTable(), new File(String.format("%s%s%s_Output.csv", outputDir, File.separator, GianiDefaultParams.TITLE)), false, true);
         } catch (IOException e) {
@@ -218,6 +227,19 @@ public class PipelineExecutor extends Thread {
             return new int[]{0, nTime};
         }
         return new int[]{0, 1};
+    }
+
+    static String trackKey(int series, int time, int cellIndex) {
+        return series + ":" + time + ":" + cellIndex;
+    }
+
+    static void annotateTrackIds(ResultsTable rt, Map<String, Integer> trackIdByCell) {
+        for (int row = 0; row < rt.getCounter(); row++) {
+            int series = (int) rt.getValue("Series", row);
+            int time = (int) rt.getValue("Time", row);
+            int cellIndex = (int) rt.getValue("Cell_Index", row);
+            rt.setValue("Track ID", row, trackIdByCell.getOrDefault(trackKey(series, time, cellIndex), 0));
+        }
     }
 
 }
