@@ -45,7 +45,6 @@ public class SelectInputPanel extends LayerPanel {
 
     private File inputDirectory;
     private final GIANIParamInfos info;
-    private javax.swing.JToggleButton trackTimelapseToggleButton;
 
     /**
      * Default constructor
@@ -78,24 +77,6 @@ public class SelectInputPanel extends LayerPanel {
         initComponents();
         this.info = new GIANIParamInfos();
         setToolTips();
-        initTimelapseControl();
-    }
-
-    private void initTimelapseControl() {
-        trackTimelapseToggleButton = new javax.swing.JToggleButton();
-        trackTimelapseToggleButton.setText(GianiDefaultParams.TRACK_TIMELAPSE);
-        trackTimelapseToggleButton.setSelected(Boolean.parseBoolean(props.getProperty(GianiDefaultParams.TRACK_TIMELAPSE)));
-        trackTimelapseToggleButton.setToolTipText("Process every timepoint in the selected file.");
-        java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 6;
-        gbc.gridwidth = 2;
-        gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gbc.anchor = java.awt.GridBagConstraints.LINE_START;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(trackTimelapseToggleButton, gbc);
     }
 
     /**

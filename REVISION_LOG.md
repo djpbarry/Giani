@@ -705,3 +705,13 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   match the value it carries (`CellTrack.label()` / the `Cell_Index` column),
   distinct from `CellTrack.cellIndex()` (the 0-based population position).
 - No behavioural change.
+
+## 2026-10-25 — Tracking parameters panel (Phase I1)
+
+- Added a dedicated `TrackingPanel` to the wizard, surfaced immediately after
+  input selection, exposing `TRACK_TIMELAPSE`, `TRACK_LINEAGE`, and
+  `TIME_SELECT` as proper controls (two toggles + a specific-timepoint field).
+- Moved the `Track Timelapse` toggle off `SelectInputPanel` onto the new panel,
+  so all three tracking settings live in one place and bind through the same
+  `PropertyExtractor` label/field mechanism.
+- No headless behaviour change; the parameters are unchanged.

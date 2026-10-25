@@ -55,6 +55,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     private int layerIndex = 0;
     private ArrayList<MaximaFinderPanel> maximaFinderPanels;
     private LocalisationPanel localisationPanel;
+    private TrackingPanel trackingPanel;
     private final Objects3DPopulation cells;
     private final GIANIParamInfos info;
 
@@ -69,6 +70,10 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         cells = new Objects3DPopulation();
         this.info = new GIANIParamInfos();
         initComponents();
+        trackingPanel = new TrackingPanel(props, img);
+        addPanel(trackingPanel);
+        componentList.remove(trackingPanel);
+        componentList.add(1, trackingPanel);
         setToolTips();
         UIMethods.centreContainer(this);
         setIcon();

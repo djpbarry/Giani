@@ -869,6 +869,14 @@ earns its place next to MIA.
 
 ### I1. Wizard architecture simplification
 
+**Status: mostly done (2026-10-22 / 2026-10-25).** The factory-based preview
+refactor landed (panels take a `Supplier<MultiThreadedProcess>`, and
+`PipelineBuilder.buildPreviewProcess`/`buildLocalisationProcess` are the single
+wiring source). A dedicated `TrackingPanel` now surfaces `TRACK_TIMELAPSE` /
+`TRACK_LINEAGE` / `TIME_SELECT` after input selection. Remaining: expose the
+tracking tuning controls (motion model, linking/gap-closing penalties,
+`Track Spots`), which are deferred to a later pass.
+
 The wizard is over-built. `GIANIUI.initComponents()` assembles the fixed pipeline
 inline (each `PipelineBuilder.getDefault…()` call creates a process) and wires
 each process into a panel for preview, while `nextButton`/`previousButton` call
