@@ -691,3 +691,17 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   `GIANI_Output.csv` (and/or a `Cell_Index`/label column to `GIANI_tracks.csv`)
   so the two CSVs are directly linkable.
 - Docs-only; no code change.
+
+## 2026-10-25 — Track ID cross-referencing: cytoplasm rows verified consistent
+
+- Verified that `annotateTrackIds` labels the cytoplasm measurement rows
+  correctly, not just the nucleus and cell rows. The cell watershed is built
+  with `remap=true` (`PipelineBuilder.getDefaultCellSegmenter`), so
+  IAClassLibrary's `MapPixels` remaps every cell label onto the nuclear
+  segmenter's label space. `cyto.getValue()` therefore equals
+  `nucleus.getValue()`, so the results-table `Cell_Index` is the same for all
+  three object rows.
+- Clarified the `trackKey` third argument, renamed `cellIndex` → `cellLabel` to
+  match the value it carries (`CellTrack.label()` / the `Cell_Index` column),
+  distinct from `CellTrack.cellIndex()` (the 0-based population position).
+- No behavioural change.
