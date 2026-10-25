@@ -17,6 +17,7 @@
 package net.calm.giani.exec;
 
 import ij.IJ;
+import ij.plugin.PlugIn;
 import loci.common.DebugTools;
 import mcib3d.geom.Objects3DPopulation;
 import net.calm.giani.gianiparams.GianiDefaultParams;
@@ -36,7 +37,19 @@ import java.util.Scanner;
  * @author Dave Barry
  * @since 1.0.0
  */
-public class GIANI {
+public class GIANI implements PlugIn {
+
+    /**
+     * Launches the interactive wizard. Invoked from the Fiji Plugins menu via
+     * {@code plugins.config}.
+     *
+     * @param arg unused; GIANI always opens the GUI when launched interactively
+     */
+    @Override
+    public void run(String arg) {
+        GIANIUI ui = new GIANIUI();
+        ui.setVisible(true);
+    }
 
     /**
      * Run GIANI using the specified list of arguments
