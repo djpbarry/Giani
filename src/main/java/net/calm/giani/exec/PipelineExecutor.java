@@ -229,16 +229,16 @@ public class PipelineExecutor extends Thread {
         return new int[]{0, 1};
     }
 
-    static String trackKey(int series, int time, int cellIndex) {
-        return series + ":" + time + ":" + cellIndex;
+    static String trackKey(int series, int time, int cellLabel) {
+        return series + ":" + time + ":" + cellLabel;
     }
 
     static void annotateTrackIds(ResultsTable rt, Map<String, Integer> trackIdByCell) {
         for (int row = 0; row < rt.getCounter(); row++) {
             int series = (int) rt.getValue("Series", row);
             int time = (int) rt.getValue("Time", row);
-            int cellIndex = (int) rt.getValue("Cell_Index", row);
-            rt.setValue("Track ID", row, trackIdByCell.getOrDefault(trackKey(series, time, cellIndex), 0));
+            int cellLabel = (int) rt.getValue("Cell_Index", row);
+            rt.setValue("Track ID", row, trackIdByCell.getOrDefault(trackKey(series, time, cellLabel), 0));
         }
     }
 

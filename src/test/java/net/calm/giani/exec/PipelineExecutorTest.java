@@ -65,7 +65,7 @@ class PipelineExecutorTest {
     }
 
     @Test
-    void trackKeyIsCompositeOfSeriesTimeAndCellIndex() {
+    void trackKeyIsCompositeOfSeriesTimeAndCellLabel() {
         assertEquals("0:3:7", PipelineExecutor.trackKey(0, 3, 7));
     }
 
