@@ -25,6 +25,7 @@ import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
@@ -38,6 +39,7 @@ import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.function.Supplier;
 
 /**
  * Blob detection (centroid estimation) panel in the {@link GIANIUI}
@@ -52,6 +54,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     int defaultChannel;
     private final String title;
     private final GIANIParamInfos info;
+    private final Supplier<MultiThreadedProcess> processFactory;
 
     /**
      * Default constructor
@@ -68,8 +71,8 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
      *                           with this panel will run
      * @param img                the image that the process associated with this panel will run
      *                           on
-     * @param process            the process that this panel is seeking user-specified
-     *                           parameters for
+     * @param processFactory     supplies a fresh process for previews; the panel does
+     *                           not retain a shared pipeline process
      * @param propLabels         the labels associated with the parameters that this
      *                           panel will display
      * @param allowChannelSelect set to true to include a dropdown menu allowing
@@ -80,8 +83,9 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
      *                           panel
      * @param title              description of what this panel does
      */
-    public MaximaFinderPanel(Properties props, BioFormatsImg img, MultiThreadedMaximaFinder process, String[] propLabels, boolean allowChannelSelect, int defaultChannel, URI helpURI, String title) {
-        super(props, img, process, propLabels, helpURI);
+    public MaximaFinderPanel(Properties props, BioFormatsImg img, Supplier<MultiThreadedProcess> processFactory, String[] propLabels, boolean allowChannelSelect, int defaultChannel, URI helpURI, String title) {
+        super(props, img, null, propLabels, helpURI);
+        this.processFactory = processFactory;
         this.allowChannelSelect = allowChannelSelect;
         this.defaultChannel = defaultChannel;
         this.title = title;
@@ -775,7 +779,6 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     }
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
-        restartProcess();
         setVariables();
         MultiThreadedMaximaFinder preview = (MultiThreadedMaximaFinder) process;
         new Thread(() -> {
@@ -875,7 +878,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
     }//GEN-LAST:event_ilastikDirButtonActionPerformed
 
     public void setupProcess() {
-
+        process = processFactory.get();
         process.setup(img, props, propLabels);
     }
 

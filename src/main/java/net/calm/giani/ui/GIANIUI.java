@@ -22,16 +22,11 @@ import net.calm.giani.exec.PipelineBuilder;
 import net.calm.giani.exec.PipelineExecutor;
 import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
-import net.calm.iaclasslibrary.Extrema.MultiThreadedMaximaFinder;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
 import net.calm.iaclasslibrary.IO.PropertyWriter;
 import net.calm.iaclasslibrary.Process.Colocalise.MultiThreadedColocalise;
-import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
-import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedTopHatFilter;
 import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
 import net.calm.iaclasslibrary.Process.ProcessPipeline;
-import net.calm.iaclasslibrary.Process.ROI.MultiThreadedROIConstructor;
-import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedWatershed;
 import net.calm.iaclasslibrary.UIClasses.*;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
 
@@ -108,81 +103,60 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                         GianiDefaultParams.PREVIEW_CHAN_SELECT_LABEL},
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Selecting-the-Input-Files"));
         componentList.add(selectInputPanel);
-        MultiThreadedMaximaFinder maximaFinder = PipelineBuilder.getDefaultMaximaFinder(props);
-        nuclearCentreFinderPanel = new MaximaFinderPanel(props, img, maximaFinder,
-                maximaFinder.getPropLabels(), true, -1,
+        nuclearCentreFinderPanel = new MaximaFinderPanel(props, img,
+                () -> buildPreviewProcess(PipelineBuilder.STAGE_NUC_MAXIMA),
+                buildPreviewProcess(PipelineBuilder.STAGE_NUC_MAXIMA).getPropLabels(),
+                true, -1,
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Estimating-the-centres-of-nuclei"),
                 GianiDefaultParams.NUC_CENTROID_LOCALISATION_TITLE);
         nuclearCentreFinderPanel.setVisible(false);
         componentList.add(nuclearCentreFinderPanel);
-        MultiThreadedGaussianFilter nucGaussFilter = PipelineBuilder.getDefaultNucFilteringProcess(props);
         nuclearFilteringPanel = new net.calm.giani.ui.FilteringPanel(props, img,
-                nucGaussFilter,
-                nucGaussFilter.getPropLabels(),
+                () -> buildPreviewProcess(PipelineBuilder.STAGE_NUC_FILTER),
+                buildPreviewProcess(PipelineBuilder.STAGE_NUC_FILTER).getPropLabels(),
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation"),
                 GianiDefaultParams.NUC_GAUSS_FILTER_TITLE);
         nuclearFilteringPanel.setVisible(false);
         componentList.add(nuclearFilteringPanel);
-        MultiThreadedTopHatFilter nucTopHatFilter = PipelineBuilder.getDefaultNucTopHatFilteringProcess(
-                props,
-                new MultiThreadedProcess[]{
-                        nuclearFilteringPanel.getProcess()
-                }
-        );
-        nuclearTopHatFilterPanel = new TopHatFilterPanel(props, img, nucTopHatFilter,
-                nucTopHatFilter.getPropLabels(),
+        nuclearTopHatFilterPanel = new TopHatFilterPanel(props, img,
+                () -> buildPreviewProcess(PipelineBuilder.STAGE_NUC_TOP_HAT),
+                buildPreviewProcess(PipelineBuilder.STAGE_NUC_TOP_HAT).getPropLabels(),
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Background-Subtraction-Prior-to-Nuclear-Segmentation"),
                 GianiDefaultParams.NUC_TOP_HAT_TITLE);
         nuclearTopHatFilterPanel.setVisible(false);
         componentList.add(nuclearTopHatFilterPanel);
-        MultiThreadedWatershed nucSeg = PipelineBuilder.getDefaultNucSegmenter(props, new MultiThreadedProcess[]{
-                nuclearCentreFinderPanel.getProcess(), nuclearTopHatFilterPanel.getProcess()}, cells);
         nuclearSegmentationPanel = new net.calm.giani.ui.SegmentationPanel(
                 props,
                 img,
-                nucSeg,
-                nucSeg.getPropLabels(),
+                () -> buildPreviewProcess(PipelineBuilder.STAGE_NUC_SEGMENT),
+                buildPreviewProcess(PipelineBuilder.STAGE_NUC_SEGMENT).getPropLabels(),
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Segmenting-Nuclei"),
                 GianiDefaultParams.NUC_SEG_TITLE
         );
         nuclearSegmentationPanel.setVisible(false);
         componentList.add(nuclearSegmentationPanel);
-        net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter cellGaussFilter = PipelineBuilder.getDefaultCellFilteringProcess(props);
-        cellFilteringPanel = new net.calm.giani.ui.FilteringPanel(props, img, cellGaussFilter,
-                cellGaussFilter.getPropLabels(),
+        cellFilteringPanel = new net.calm.giani.ui.FilteringPanel(props, img,
+                () -> buildPreviewProcess(PipelineBuilder.STAGE_CELL_FILTER),
+                buildPreviewProcess(PipelineBuilder.STAGE_CELL_FILTER).getPropLabels(),
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Cell-Segmentation"),
                 GianiDefaultParams.CELL_GAUSS_FILTER_TITLE);
         cellFilteringPanel.setVisible(false);
         componentList.add(cellFilteringPanel);
-        MultiThreadedWatershed cellSeg = PipelineBuilder.getDefaultCellSegmenter(
-                props,
-                new MultiThreadedProcess[]{
-                        nuclearSegmentationPanel.getProcess(),
-                        cellFilteringPanel.getProcess()
-                },
-                cells
-        );
         cellSegmentationPanel = new net.calm.giani.ui.SegmentationPanel(
                 props,
                 img,
-                cellSeg,
-                cellSeg.getPropLabels(),
+                () -> buildPreviewProcess(PipelineBuilder.STAGE_CELL_SEGMENT),
+                buildPreviewProcess(PipelineBuilder.STAGE_CELL_SEGMENT).getPropLabels(),
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Complete-Segmentation-of-Cells"),
                 GianiDefaultParams.CELL_SEG_TITLE
         );
         cellSegmentationPanel.setVisible(false);
         componentList.add(cellSegmentationPanel);
-        MultiThreadedROIConstructor process = PipelineBuilder.getDefaultMeasure(props,
-                new MultiThreadedProcess[]{
-                        nuclearSegmentationPanel.getProcess(),
-                        cellSegmentationPanel.getProcess()
-                },
-                cells);
         measurementPanel = new net.calm.giani.ui.MeasurementPanel(
                 props,
                 img,
-                process,
-                process.getPropLabels(),
+                () -> buildPreviewProcess(PipelineBuilder.STAGE_MEASURE),
+                buildPreviewProcess(PipelineBuilder.STAGE_MEASURE).getPropLabels(),
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Specifying-Channels-to-Measure")
         );
         measurementPanel.setVisible(false);
@@ -502,26 +476,21 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
             if ((channels & (int) Math.pow(2.0, i)) != 0) {
                 String[] propLabels = PipelineBuilder.getFociPropLabels(i);
                 PipelineBuilder.setDefaultFociParams(props, i);
-                MaximaFinderPanel mFP = new MaximaFinderPanel(props, img, new MultiThreadedMaximaFinder(null),
-                        propLabels, false, i, getHelpURI("https://github.com/djpbarry/Giani/wiki/Localising-Spots"),
-                        String.format("%s%d", GianiDefaultParams.FOCI_CENTROID_LOCALISATION_TITLE, i));
+                int channel = i;
+                MaximaFinderPanel mFP = new MaximaFinderPanel(props, img,
+                        () -> PipelineBuilder.getDefaultFociMaximaFinder(props, channel),
+                        propLabels, false, channel, getHelpURI("https://github.com/djpbarry/Giani/wiki/Localising-Spots"),
+                        String.format("%s%d", GianiDefaultParams.FOCI_CENTROID_LOCALISATION_TITLE, channel));
                 maximaFinderPanels.add(mFP);
                 addPanel(mFP);
             }
         }
-        int nInputs = maximaFinderPanels.size() + 2;
-        MultiThreadedProcess[] localisationInputs = new MultiThreadedProcess[nInputs];
-        for (int j = 0; j < maximaFinderPanels.size(); j++) {
-            localisationInputs[j] = maximaFinderPanels.get(j).getProcess();
-        }
-        localisationInputs[nInputs - 2] = cellSegmentationPanel.getProcess();
-        localisationInputs[nInputs - 1] = nuclearSegmentationPanel.getProcess();
         String[] localisationPropLabels = new String[MultiThreadedColocalise.N_PROP_LABELS];
         localisationPropLabels[MultiThreadedColocalise.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
         localisationPropLabels[MultiThreadedColocalise.CHANNELS_LABEL] = GianiDefaultParams.CHAN_FOR_MEASURE;
         localisationPropLabels[MultiThreadedColocalise.OUTPUT_LABEL] = GianiDefaultParams.OUTPUT_DIR_LABEL;
 
-        localisationPanel = new LocalisationPanel(props, img, new MultiThreadedColocalise(localisationInputs, cells), localisationPropLabels);
+        localisationPanel = new LocalisationPanel(props, img, this::buildLocalisationProcess, localisationPropLabels);
         addPanel(localisationPanel);
         updateUI();
         return true;
@@ -545,6 +514,14 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         gridBagConstraints.weighty = 0.8;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(panel, gridBagConstraints);
+    }
+
+    private MultiThreadedProcess buildPreviewProcess(int stage) {
+        return new PipelineBuilder().buildPreviewProcess(stage, props, cells);
+    }
+
+    private MultiThreadedProcess buildLocalisationProcess() {
+        return new PipelineBuilder().buildLocalisationProcess(props, cells);
     }
 
     private URI getHelpURI(String url) {

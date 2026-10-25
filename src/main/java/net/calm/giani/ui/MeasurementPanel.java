@@ -20,6 +20,7 @@ import ij.plugin.filter.Analyzer;
 import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
 import net.calm.iaclasslibrary.Process.ROI.MultiThreadedROIConstructor;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
@@ -27,6 +28,7 @@ import net.calm.iaclasslibrary.UIClasses.Updateable;
 import javax.swing.*;
 import java.net.URI;
 import java.util.Properties;
+import java.util.function.Supplier;
 
 /**
  * Panel to specify which channels fluorescence intensities should be measured in the {@link GIANIUI}
@@ -36,6 +38,7 @@ import java.util.Properties;
  */
 public class MeasurementPanel extends LayerPanel implements Updateable {
     private final GIANIParamInfos info;
+    private final Supplier<MultiThreadedProcess> processFactory;
 
     /**
      * Default constructor
@@ -49,12 +52,13 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
      *
      * @param props contains the parameters governing how the process associated with this panel will run
      * @param img the image that the process associated with this panel will run on
-     * @param process the process that this panel is seeking user-specified parameters for
+     * @param processFactory supplies a fresh process for previews; the panel does not retain a shared pipeline process
      * @param propLabels the labels associated with the parameters that this panel will display
      * @param helpURI link to an online help page describing how to use this panel
      */
-    public MeasurementPanel(Properties props, BioFormatsImg img, MultiThreadedROIConstructor process, String[] propLabels, URI helpURI) {
-        super(props, img, process, propLabels, helpURI);
+    public MeasurementPanel(Properties props, BioFormatsImg img, Supplier<MultiThreadedProcess> processFactory, String[] propLabels, URI helpURI) {
+        super(props, img, null, propLabels, helpURI);
+        this.processFactory = processFactory;
         this.info = new GIANIParamInfos();
         initComponents();
         setToolTips();
@@ -174,7 +178,6 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
     }
 
     private void measurePreviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_measurePreviewButtonActionPerformed
-        restartProcess();
         setVariables();
         var preview = process;
         new Thread(() -> {
@@ -201,6 +204,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
     }//GEN-LAST:event_helpButtonActionPerformed
 
     public void setupProcess() {
+        process = processFactory.get();
         process.setup(img, props, propLabels);
     }
 

@@ -17,10 +17,11 @@
 package net.calm.giani.ui;
 
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
-import net.calm.iaclasslibrary.Process.Colocalise.MultiThreadedColocalise;
+import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 
 import java.util.Properties;
+import java.util.function.Supplier;
 
 /**
  * Colocalisation panel in the {@link GIANIUI}
@@ -29,6 +30,8 @@ import java.util.Properties;
  * @since 1.0.0
  */
 public class LocalisationPanel extends LayerPanel {
+
+    private final Supplier<MultiThreadedProcess> processFactory;
 
     /**
      * Default constructor
@@ -42,15 +45,17 @@ public class LocalisationPanel extends LayerPanel {
      *
      * @param props contains the parameters governing how the process associated with this panel will run
      * @param img the image that the process associated with this panel will run on
-     * @param process the process that this panel is seeking user-specified parameters for
+     * @param processFactory supplies a fresh process for previews; the panel does not retain a shared pipeline process
      * @param propLabels the labels associated with the parameters that this panel will display
      */
-    public LocalisationPanel(Properties props, BioFormatsImg img, MultiThreadedColocalise process, String[] propLabels) {
-        super(props, img, process, propLabels, null);
+    public LocalisationPanel(Properties props, BioFormatsImg img, Supplier<MultiThreadedProcess> processFactory, String[] propLabels) {
+        super(props, img, null, propLabels, null);
+        this.processFactory = processFactory;
         initComponents();
     }
 
     public void setupProcess() {
+        process = processFactory.get();
         process.setup(img, props, propLabels);
     }
     

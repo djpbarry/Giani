@@ -20,6 +20,7 @@ import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
 import net.calm.iaclasslibrary.Process.Filtering.MultiThreadedGaussianFilter;
+import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
 import net.calm.iaclasslibrary.UIClasses.Updateable;
 
@@ -27,6 +28,7 @@ import javax.swing.*;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.function.Supplier;
 
 /**
  * Gaussian Filtering panel in the {@link GIANIUI}
@@ -39,6 +41,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
     private ArrayList<String> channelLabels;
     private final String title;
     private final GIANIParamInfos info;
+    private final Supplier<MultiThreadedProcess> processFactory;
 
     /**
      * Default constructor
@@ -52,11 +55,11 @@ public class FilteringPanel extends LayerPanel implements Updateable {
      *
      * @param props      contains the parameters governing how the process associated with this panel will run
      * @param img        the image that the process associated with this panel will run on
-     * @param process    the process that this panel is seeking user-specified parameters for
+     * @param processFactory supplies a fresh process for previews; the panel does not retain a shared pipeline process
      * @param propLabels the labels associated with the parameters that this panel will display
      */
-    public FilteringPanel(Properties props, BioFormatsImg img, MultiThreadedGaussianFilter process, String[] propLabels) {
-        this(props, img, process, propLabels, null, null);
+    public FilteringPanel(Properties props, BioFormatsImg img, Supplier<MultiThreadedProcess> processFactory, String[] propLabels) {
+        this(props, img, processFactory, propLabels, null, null);
     }
 
     /**
@@ -64,13 +67,14 @@ public class FilteringPanel extends LayerPanel implements Updateable {
      *
      * @param props      contains the parameters governing how the process associated with this panel will run
      * @param img        the image that the process associated with this panel will run on
-     * @param process    the process that this panel is seeking user-specified parameters for
+     * @param processFactory supplies a fresh process for previews; the panel does not retain a shared pipeline process
      * @param propLabels the labels associated with the parameters that this panel will display
      * @param helpURI    link to an online help page describing how to use this panel
      * @param title      description of what this panel does
      */
-    public FilteringPanel(Properties props, BioFormatsImg img, MultiThreadedGaussianFilter process, String[] propLabels, URI helpURI, String title) {
-        super(props, img, process, propLabels, helpURI);
+    public FilteringPanel(Properties props, BioFormatsImg img, Supplier<MultiThreadedProcess> processFactory, String[] propLabels, URI helpURI, String title) {
+        super(props, img, null, propLabels, helpURI);
+        this.processFactory = processFactory;
         this.title = title;
         this.info = new GIANIParamInfos();
         initComponents();
@@ -201,7 +205,6 @@ public class FilteringPanel extends LayerPanel implements Updateable {
     }
 
     private void previewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previewButtonActionPerformed
-        restartProcess();
         setVariables();
         var preview = process;
         new Thread(() -> {
@@ -223,6 +226,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
      * Initialises the process associated with this panel
      */
     public void setupProcess() {
+        process = processFactory.get();
         process.setup(img, props, propLabels);
     }
 

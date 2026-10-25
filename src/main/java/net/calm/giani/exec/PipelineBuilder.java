@@ -41,6 +41,19 @@ import java.util.Properties;
 public class PipelineBuilder {
 
     /**
+     * Pipeline stage indices. These mirror the order in which
+     * {@link #buildFullPipeline} adds its fixed stages, so wizard panels can ask
+     * for a fresh preview of a single stage without re-implementing the wiring.
+     */
+    public static final int STAGE_NUC_MAXIMA = 0;
+    public static final int STAGE_NUC_FILTER = 1;
+    public static final int STAGE_NUC_TOP_HAT = 2;
+    public static final int STAGE_NUC_SEGMENT = 3;
+    public static final int STAGE_CELL_FILTER = 4;
+    public static final int STAGE_CELL_SEGMENT = 5;
+    public static final int STAGE_MEASURE = 6;
+
+    /**
      * Returns the default blob detector process used by GIANI
      *
      * @param props the properties containing key-value parameter-setting pairs to be associated with the process
@@ -255,6 +268,35 @@ public class PipelineBuilder {
         pipeline.addProcess(getDefaultColocalisationProcess(props, localisationInputs, cells));
 
         return pipeline;
+    }
+
+    /**
+     * Builds a fresh process for a single fixed pipeline stage, including any
+     * upstream processes it depends on. Intended for wizard previews: the full
+     * pipeline remains the single source of wiring truth, and the caller extracts
+     * one stage from it.
+     *
+     * @param stage one of the {@code STAGE_*} constants
+     * @param props the parameters used to configure the process
+     * @param cells the segmentation-result container shared by the pipeline
+     * @return the requested stage's process with its upstream dependencies wired
+     */
+    public MultiThreadedProcess buildPreviewProcess(int stage, Properties props, Objects3DPopulation cells) {
+        return buildFullPipeline(props, cells).getProcess(stage);
+    }
+
+    /**
+     * Builds a fresh colocalisation process for the spot-localisation panel. The
+     * colocalisation stage is always the last stage of a full pipeline, so this
+     * reuses {@link #buildFullPipeline} and returns its final process.
+     *
+     * @param props the parameters used to configure the process
+     * @param cells the segmentation-result container shared by the pipeline
+     * @return the colocalisation process with its inputs wired
+     */
+    public MultiThreadedProcess buildLocalisationProcess(Properties props, Objects3DPopulation cells) {
+        ProcessPipeline pipeline = buildFullPipeline(props, cells);
+        return pipeline.getProcess(pipeline.getSize() - 1);
     }
 
     public static String[] getFociPropLabels(int i) {
