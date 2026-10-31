@@ -730,15 +730,58 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   is therefore misleading; a future pass should rename it (through
   `DeprecatedProps`) to something like "Process All Timepoints" and/or make
   `Track Lineage` imply multi-timepoint analysis.
-- **Found (uncommitted fixes in progress):**
-  - `TopHatFilterPanel` initialises its toggle with `setEnabled(...)` instead of
-    `setSelected(...)` (line 214), so the toggle's on/off state never reflects
-    `ENABLE_TOP_HAT_FILTER` and `PropertyExtractor` WRITE then persists the
-    inverted `isSelected()` value, silently flipping the property.
-  - Preview handlers each call only *their own* `setVariables()`, so a toggle
-    changed on one panel is ignored when previewing a *different* panel. A
-    reentrancy-guarded `collectPanelState()` (persist every panel before a
-    preview builds its fresh pipeline) is the intended fix.
-- Both toggle issues are the same class of `JToggleButton` `selected`↔`enabled`
-  / per-panel-state persistence bug; they will be finalised alongside the
-  general GUI revamp.
+- **Found and fixed (committed in `fc89226`):**
+  - `TopHatFilterPanel` initialises its toggle with `setSelected(...)` instead of
+    `setEnabled(...)` (line 214), so the toggle's on/off state reflects
+    `ENABLE_TOP_HAT_FILTER` correctly.
+  - Preview handlers now persist *every* panel's state via the reentrancy-guarded
+    `GIANIUI.collectPanelState()` before building a fresh preview pipeline, so a
+    toggle changed on one panel is visible when previewing a different panel.
+- Both toggle issues were the same class of `JToggleButton` `selected`↔`enabled`
+  / per-panel-state persistence bug; fixed ahead of the general GUI revamp.
+
+## 2026-10-31 — Consolidated CLAUDE.md into AGENTS.md (docs)
+
+- Deleted `CLAUDE.md` (two overlapping agent-guidance files). Merged its current,
+  accurate content into `AGENTS.md`: version/dependency corrections (`3.7.5`,
+  `IAClassLibrary v2.4.0`, direct `sc.fiji:TrackMate`), the `PlugIn`/`plugins.config`
+  correction, the `STAGE_*` constants table, the `TRACK_TIMELAPSE`-vs-`TRACK_LINEAGE`
+  distinction, the always-`clean` / silently-skipping-integration-test gotchas, and
+  the three-file version-sync + plan/log-sync conventions.
+- Fixed the three integration-test fixture paths for the relocated fixtures
+  (`test_data/single_timepoint/…`, `test_data/multiple_timepoints/…`), which were
+  silently skipping since the move.
+
+### Plan/log review — known drifts (recorded so they are not lost with CLAUDE.md)
+
+`DEVELOPMENT_PLAN.md` / `REVISION_LOG.md` still carry the following contradictions
+against source/output; left in place rather than rewritten:
+
+- H2 marked done, but `spot_summary_data.csv` still discards 9 of 10 timepoints of
+  punctae data (upstream `MultiThreadedColocalise`).
+- H3 names `SimpleFastLAPTracker`; the code uses `SparseLAPTrackerFactory`.
+- H3's calibration step is unimplemented — already-calibrated µm coordinates feed
+  TrackMate's unmodified defaults (15 µm linking/gap-closing/splitting limits).
+- `allowTrackSplitting(true)` + `parent_track_id = -1` is structurally wrong: both
+  daughters share one track label/ID, so divisions are invisible.
+- Punctae do not inherit track IDs (`spot_summary_data.csv` has no
+  `Time`/`Series`/`Track ID`).
+- I1's problem statement describes deleted `addProcess`/`removeProcess`/
+  `checkIfStarDist` code in the present tense.
+- B2's "no tags" is false — `v3.4.0`/`v3.4.29` exist; the real gap is ~45 bumps with
+  no release since `v3.4.29`.
+- `CITATION.cff` pairs a current version with a placeholder `date-released: 2019-01-01`.
+
+### Lessons for future projects
+
+1. Keep a short "Current state" block at the top of the plan, rewritten each pass;
+   treat narrative as historical only.
+2. "Done" must mean tested — "verified by reading upstream source" is PARTIAL.
+3. Integration tests that can skip must fail (or be run) in CI.
+4. Cross-check decisions made on different days against each other.
+5. Deferred items need a trigger + owner, or they silently expire.
+6. If you bump the version every commit, tag on a cadence (JitPack resolves tags).
+7. Don't describe code in the present tense in plan docs.
+
+- Version bumped `3.7.4` → `3.7.5` (`docs`), kept in sync across `pom.xml`,
+  `CITATION.cff`, and `docs/conf.py`.

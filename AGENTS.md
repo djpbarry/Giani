@@ -19,20 +19,24 @@ lineage-tracking).
 
 ## Project overview
 
-GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](https://imagej.net/software/fiji/) plugin for batch analysis of 3D microscopy images: it reads proprietary image formats, segments nuclei and cells, measures morphology/fluorescence intensity, and lets users browse results.
+GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](https://imagej.net/software/fiji/) plugin for batch analysis of 3D (and 4D) microscopy images: it reads proprietary image formats, segments nuclei and cells, measures morphology/fluorescence intensity, and optionally tracks lineages across time.
 
 - **Language/toolchain:** Java 21, Maven, Swing (NetBeans GUI forms), built as an ImageJ/Fiji plugin.
-- **Group/artifact:** `net.calm:giani`, version `3.4.27`.
+- **Group/artifact:** `net.calm:giani`, version `3.7.5`.
 - **Parent POM:** `org.scijava:pom-scijava:45.1.0` (SciJava build conventions).
-- **Core library dependency:** `com.github.djpbarry:IAClassLibrary:v2.0.23` (JitPack alias for `net.calm:iaclasslibrary:2.0.23`) provides the actual image-processing primitives (`MultiThreaded*` process classes, `BioFormatsImg`, `ProcessPipeline`, `PropertyWriter`, etc.). GIANI is mostly glue that wires these primitives into a pipeline and exposes UI/CLI/macro entry points.
+- **Core library dependency:** `com.github.djpbarry:IAClassLibrary:v2.4.0` (JitPack) provides the actual image-processing primitives (`MultiThreaded*` process classes, `BioFormatsImg`, `ProcessPipeline`, `PropertyWriter`, etc.). GIANI is mostly glue that wires these primitives into a pipeline and exposes UI/CLI/macro entry points.
 - **Transitive dependency:** `mcib3d-core` (via `IAClassLibrary`) provides `mcib3d.geom.Objects3DPopulation`/`Object3D`, the segmentation-result container threaded through the pipeline.
+- **Tracking dependency:** `sc.fiji:TrackMate` (declared directly; version managed by `pom-scijava` at 8.0.0) is used only for lineage tracking (`CellLineageTracker`).
 
 ## Build / run commands
 
 Tests live under `src/test/java` (JUnit 5, managed by `pom-scijava`). Run them with:
 
 ```bash
-./mvnw test
+./mvnw clean test                                      # always `clean` before a full run (see gotcha below)
+./mvnw test -Dtest=PipelineExecutorTest                 # single test class
+./mvnw test -Dtest=PipelineExecutorTest#methodName      # single test method
+./mvnw -Pintegration test                               # include the @Tag("integration") tests
 ```
 
 CI build (`.github/workflows/maven.yml`, JDK 21):
@@ -46,6 +50,8 @@ CI build (`.github/workflows/maven.yml`, JDK 21):
 - The POM declares Maven repos `central` (explicit, because `pom-scijava` ≥ 45 drops the implicit Maven Central), `scijava.public`, and `jitpack.io` for its dependencies. It targets **Java 21** via `scijava.jvm.version=21` (required to consume `IAClassLibrary` ≥ 2.0.x, which is compiled at Java 21).
 - `mvn_settings.xml` (GitHub Packages) is retained but **not used by CI**: no `pom.xml` dependency resolves from `maven.pkg.github.com`, so it is vestigial for building.
 - The `maven-dependency-plugin` is bound to the `package` phase to copy all runtime dependencies into `${project.build.directory}` (so the resulting JAR is runnable alongside its dependencies in a Fiji `plugins/` folder).
+- **Always `clean` before a full `test` run.** Surefire executes whatever `.class` files sit in `target/test-classes`, so a test deleted from `src/test/java` keeps running until you clean (a `-Dtest=` filter also sidesteps it).
+- **Integration tests silently skip.** `pom.xml` excludes the `integration` group by default; the `integration` profile clears it. Integration tests `Assumptions.assumeTrue(fixture.isFile())` on fixtures under `test_data/`, so a missing/moved fixture skips rather than fails — always check the skip count.
 
 Entry point (configured via `<main-class>` in the POM):
 
@@ -81,23 +87,28 @@ PipelineExecutor (extends Thread)  ->  iterates files/series, runs each process
 
 ### Pipeline stages
 
-`PipelineBuilder.buildFullPipeline` (in `src/main/java/net/calm/giani/exec/PipelineBuilder.java`) assembles stages in a **fixed, hard-coded order**:
+`PipelineBuilder.buildFullPipeline` (in `src/main/java/net/calm/giani/exec/PipelineBuilder.java`) assembles stages in a **fixed, hard-coded order**, named by the `STAGE_*` constants:
 
-1. `getDefaultMaximaFinder` — nuclear centroid/blob detection
-2. `getDefaultNucFilteringProcess` — Gaussian filter (nuclear channel)
-3. `getDefaultNucTopHatFilteringProcess` — top-hat background subtraction
-4. `getDefaultNucSegmenter` — watershed, `MultiThreadedWatershed.NUCLEI`
-5. `getDefaultCellFilteringProcess` — Gaussian filter (cell channel)
-6. `getDefaultCellSegmenter` — watershed, `MultiThreadedWatershed.CELLS`
-7. `getDefaultMeasure` — `MultiThreadedROIConstructor`, extracts measurements
-8. Optional: one `getDefaultFociMaximaFinder` per selected channel, then `getDefaultColocalisationProcess`
+| Index | Constant | Process |
+|---|---|---|
+| 0 | `STAGE_NUC_MAXIMA` | nuclear centroid/blob detection |
+| 1 | `STAGE_NUC_FILTER` | Gaussian filter, nuclear channel |
+| 2 | `STAGE_NUC_TOP_HAT` | top-hat background subtraction |
+| 3 | `STAGE_NUC_SEGMENT` | watershed, `MultiThreadedWatershed.NUCLEI` |
+| 4 | `STAGE_CELL_FILTER` | Gaussian filter, cell channel |
+| 5 | `STAGE_CELL_SEGMENT` | watershed, `MultiThreadedWatershed.CELLS` |
+| 6 | `STAGE_MEASURE` | `MultiThreadedROIConstructor`, extracts measurements |
+| 7+ | — | optional per-channel foci maxima finders, then colocalisation (last stage) |
 
-Each stage's inputs are referenced by **integer index** (`pipeline.getProcess(0)`, `(1)`, `(2)` …). This order is coupled across three places: `PipelineBuilder.buildFullPipeline`, `GIANIUI.initComponents`, and the wizard panel wiring. **Do not reorder stages without updating all three.**
+Each stage's inputs are referenced by **integer index** (`pipeline.getProcess(0)`, `(1)`, `(2)` …). Reordering a stage silently breaks the hard-coded input indices *and* `PipelineBuilderTest`, which pins the order. Change `buildFullPipeline`, the `STAGE_*` constants and the test together.
+
+The cell watershed is built with `remap=true`, so IAClassLibrary remaps cell labels onto the nuclear label space — nucleus, cell and cytoplasm rows therefore share a `Cell_Index` in the results table.
 
 ### Execution flow
 
-- `PipelineExecutor.run()` lists input files (via `BioFormatsFileLister`), opens each with `BioFormatsImg` (Bio-Formats), then for each series ≥ 2 Z-slices re-runs every process in the pipeline. Execution of a single process is submitted to a single-thread executor; parallelism happens *inside* each `MultiThreadedProcess`, not across files.
-- Results are written to `<output-dir>/GIANI_Output.csv` (`DataWriter.saveResultsTable`) and parameters to `<output-dir>/GIANI.xml` (`PropertyWriter.saveProperties`).
+- `PipelineExecutor.run()` lists input files (via `BioFormatsFileLister`), opens each with `BioFormatsImg` (Bio-Formats), then loops **file → series → timepoint → process**. Each process is submitted to a single-thread executor and joined; parallelism happens *inside* each `MultiThreadedProcess`, not across files or stages. Every process is re-`setup()` per timepoint with `process.setTime(t)`.
+- Timepoint range comes from `PipelineExecutor.timeRange(nTime, timeSelect, trackTimelapse)`: a valid `TIME_SELECT` wins; else `TRACK_TIMELAPSE` spans all frames; else just `t = 0`.
+- Results are written to `<output-dir>/GIANI_Output.csv` (`DataWriter.saveResultsTable`) and parameters to `<output-dir>/properties.xml` (`PropertyWriter.saveProperties`).
 
 ## Code organization
 
@@ -108,16 +119,17 @@ src/main/java/net/calm/giani/
   gianiparams/     parameter definitions, tooltips, deprecated-name migration
   macro/           ImageJ Macro Language extension (MacroExtension)
 src/main/resources/icon/icon.png      app icon
-src/main/resources/plugins.config     Fiji plugin config (registers the macro extension)
+src/main/resources/plugins.config     Fiji plugin config (registers the GUI + macro extension)
 ```
 
 ### Plugin discovery in Fiji
 
-- `src/main/resources/plugins.config` registers the macro extension
+- `src/main/resources/plugins.config` registers the GUI under `Plugins>CALM`
+  (`exec.GIANI`, which implements `ij.plugin.PlugIn`) and the macro extension
   (`GIANIMacroExecutor`), exposing `loadPropertiesFile` / `setProperty` /
   `getPropertyList` / `run` to ImageJ macros as `Ext.GIANI.<function>`.
 - The Swing GUI (`GIANIUI`) is launched from `GIANI.main()` (run the JAR with no
-  arguments) — it is **not** a `PlugIn`, so it has no `Plugins>`-menu entry.
+  arguments).
 
 ## Conventions and patterns
 
@@ -151,7 +163,7 @@ Each `.java` UI file has a paired `.form` (NetBeans Matisse) file. The `initComp
 
 and the field declarations are delimited by `//GEN-BEGIN:variables` … `//GEN-END:variables`. These are regenerated by the NetBeans Form Editor; edit them only through the form, not by hand. Custom logic goes in methods with `//GEN-FIRST:event_...` markers.
 
-Panels extend `net.calm.iaclasslibrary.UIClasses.LayerPanel` and implement `Updateable` where they need to refresh on wizard navigation. `GIANIUI` is a `LinkedList<LayerPanel>` wizard; `nextButton`/`previousButton` advance/retreat `layerIndex`, calling `addProcess()`/`removeProcess()` to add/remove the panel's process from the running `ProcessPipeline`.
+Panels extend `net.calm.iaclasslibrary.UIClasses.LayerPanel` and implement `Updateable` where they need to refresh on wizard navigation. `GIANIUI` is a `LinkedList<LayerPanel>` wizard; `nextButton`/`previousButton` advance/retreat `layerIndex` and toggle panel visibility (there is no incremental `addProcess()`/`removeProcess()` — the pipeline is assembled once from config). Each panel holds a `Supplier<MultiThreadedProcess>` factory that calls `GIANIUI.buildPreviewProcess(stage)` → `collectPanelState()` + `PipelineBuilder.buildPreviewProcess(...)`, so previews build a fresh pipeline per stage rather than reusing a long-lived process. `TrackingPanel` is hand-written (no `.form`) and is inserted at index 1 after `initComponents()`.
 
 ### Deprecated parameter migration
 
@@ -159,18 +171,24 @@ Panels extend `net.calm.iaclasslibrary.UIClasses.LayerPanel` and implement `Upda
 
 ## Gotchas and non-obvious details
 
-- **License mismatch:** the `LICENSE` file is GPL-3.0 and all source headers declare GPL-3.0, but `pom.xml` declares `Simplified BSD License` (`license.licenseName = bsd_2`). Treat the actual license as GPL-3.0 (the LICENSE file and headers agree with each other); the POM metadata is inconsistent.
-- **Hard-coded developer defaults:** `GianiDefaultParams.initialise()` sets `INPUT_DIR_LABEL` to a Dropbox path (`E:\Dropbox (The Francis Crick)\...`) and `ILASTIK_PROJECT_FILE`/`ILASTIK_DIRECTORY` to absolute Windows paths. These are debugging leftovers; do not rely on them and expect to override via a properties file.
+- **License:** GPL-3.0-or-later — `LICENSE`, all source headers, and `pom.xml` (`license.licenseName = gpl_v3`) now agree.
+- **Default paths:** `GianiDefaultParams.initialise()` uses `System.getProperty("user.home")` for the input dir (no more hard-coded Dropbox/ilastik paths); expect to override via a properties file for real runs.
 - **`GianiDefaultParams.TITLE` is derived from the JAR filename.** `getTitleWithVersion()` reads the code source location and requires the filename to start with `GIANI` (case-insensitive), otherwise falls back to `"GIANI"`. Output directory naming uses this title (`<parent>/<TITLE>_<label>`).
 - **Headless mode sets `java.awt.headless=true`** and logs via `ij.IJ.log` (not stdout). It calls `System.exit(0)` on completion and on several early-exit error paths.
 - **`DebugTools.setRootLevel("WARN")`** is called in both `GIANI.run()` and `PipelineExecutor.run()` to quiet Bio-Formats/loci logging. Keep this when adding new entry paths, or console output becomes extremely noisy.
 - **Series with fewer than 2 Z-slices are skipped** (`img.getSizeZ(s) < 2`) — 2D images are silently ignored.
 - **`.gitattributes` marks `*.zip` as Git LFS.** `assets/Test_Data.zip` is a ~335 MB LFS file; do not treat it as a normal tracked blob.
-- **`SelectInputPanel` and other panels keep `static` state** (e.g. `static File inputDirectory`), so there is shared state across panel instances.
+- **`TRACK_TIMELAPSE` ("Track Timelapse") does not track anything** — it only widens the time loop so every timepoint is analysed. `TRACK_LINEAGE` ("Track Lineage") is what runs TrackMate and produces the `Track ID` column, `GIANI_tracks.csv` and the `*_track_masks/` folders. The two flags are independent; at defaults (`TRACK_LINEAGE=true`, `TRACK_TIMELAPSE=false`) only `t=0` runs, so no tracking output is produced.
 - **No logging framework:** errors go through `GenUtils.logError(Throwable, String)` (IAClassLibrary utility), which typically routes to ImageJ's log.
+
+## Documentation conventions
+
+- **Keep `DEVELOPMENT_PLAN.md` and `REVISION_LOG.md` in sync with every repo change, in the same pass.** `REVISION_LOG.md` is the source of truth for what was actually done (dated entries); `DEVELOPMENT_PLAN.md` holds the phase plan. In practice both drift — **treat plan/log status markers as unverified and check against source** before acting on them.
+- **Bump `<version>` on every code change** in three files that must stay in sync: `pom.xml`, `docs/conf.py`, and `CITATION.cff` (`fix`/`refactor`/`chore`/`docs`/`test` → patch, `feat` → minor, breaking → major).
 
 ## What to verify after changes
 
-- `mvn verify` succeeds (with appropriate settings/token).
+- `./mvnw clean test` succeeds; if you touched the integration path, run `./mvnw -Pintegration test` and check the skip count.
 - If a parameter label changed, grep for its constant usage across `PipelineBuilder`, `GIANIUI`, and the relevant panel, and consider adding a `DeprecatedProps` entry.
-- If a pipeline stage was added/reordered/removed, update the integer indices in both `PipelineBuilder.buildFullPipeline` and `GIANIUI.initComponents`.
+- If a pipeline stage was added/reordered/removed, update the `STAGE_*` constants, `PipelineBuilder.buildFullPipeline`, `GIANIUI.initComponents`, and `PipelineBuilderTest` together.
+- Bump the version in `pom.xml`, `docs/conf.py`, and `CITATION.cff` (see Versioning).

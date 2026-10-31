@@ -45,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Tag("integration")
 class PipelineExecutorTimelapseIntegrationTest {
 
-    private static final String FIXTURE = "test_data/Fluo-N3DH-CHO.ome.tiff";
+    private static final String FIXTURE = "test_data/multiple_timepoints/Fluo-N3DH-CHO.ome.tiff";
 
     @Test
     @Timeout(value = 25, unit = TimeUnit.MINUTES)

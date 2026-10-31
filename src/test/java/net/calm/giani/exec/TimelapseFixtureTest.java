@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class TimelapseFixtureTest {
 
-    static final String FIXTURE = "test_data/Fluo-N3DH-CHO.ome.tiff";
+    static final String FIXTURE = "test_data/multiple_timepoints/Fluo-N3DH-CHO.ome.tiff";
 
     @Test
     void fixtureHasMultipleTimepointsAndZSlices() throws Exception {

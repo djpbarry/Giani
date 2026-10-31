@@ -886,12 +886,10 @@ tracking tuning controls (motion model, linking/gap-closing penalties,
   `Track Timelapse` (via `DeprecatedProps`) to e.g. "Process All Timepoints",
   and/or make `Track Lineage` imply multi-timepoint analysis, so the two flags
   can't be left in a state that silently produces no tracking output.
-- **Toggle-persistence bugs (same class):** (a) `TopHatFilterPanel` inits its
-  enable toggle with `setEnabled(...)` rather than `setSelected(...)`, inverting
-  `ENABLE_TOP_HAT_FILTER` on the next property write; (b) preview handlers persist
-  only their own panel, so a toggle changed elsewhere is ignored when previewing
-  a different stage — a `collectPanelState()` gather (reentrancy-guarded) is the
-  fix. Both land with the general GUI revamp rather than as one-off patches.
+- **Toggle-persistence bugs (same class) — fixed in `fc89226`:** (a) `TopHatFilterPanel`
+  inits its enable toggle with `setSelected(...)` so it reflects `ENABLE_TOP_HAT_FILTER`;
+  (b) `GIANIUI.collectPanelState()` (reentrancy-guarded) persists every panel's state
+  before a preview builds its fresh pipeline.
 
 The wizard is over-built. `GIANIUI.initComponents()` assembles the fixed pipeline
 inline (each `PipelineBuilder.getDefault…()` call creates a process) and wires

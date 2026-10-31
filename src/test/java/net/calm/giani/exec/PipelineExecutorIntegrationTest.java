@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Tag("integration")
 class PipelineExecutorIntegrationTest {
 
-    private static final String FIXTURE = "test_data/18.06.10_Experiment.lif_7.ome.tiff";
+    private static final String FIXTURE = "test_data/single_timepoint/18.06.10_Experiment.lif_7.ome.tiff";
 
     @Test
     @Timeout(value = 15, unit = TimeUnit.MINUTES)
