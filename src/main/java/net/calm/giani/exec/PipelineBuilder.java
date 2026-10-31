@@ -286,6 +286,29 @@ public class PipelineBuilder {
     }
 
     /**
+     * Builds a fresh process for a single fixed pipeline stage whose entire
+     * upstream chain is bound to the supplied {@code img}. During pipeline
+     * assembly every process is created with an empty {@link BioFormatsImg}, so
+     * a wizard preview must re-initialise the target stage and all of its inputs
+     * against the real image before running.
+     *
+     * @param stage one of the {@code STAGE_*} constants
+     * @param props the parameters used to configure the process
+     * @param cells the segmentation-result container shared by the pipeline
+     * @param img   the loaded image the preview should run against
+     * @return the requested stage's process with its upstream dependencies wired
+     *         and re-initialised against {@code img}
+     */
+    public MultiThreadedProcess buildPreviewProcess(int stage, Properties props, Objects3DPopulation cells, BioFormatsImg img) {
+        ProcessPipeline pipeline = buildFullPipeline(props, cells);
+        for (int i = 0; i <= stage; i++) {
+            MultiThreadedProcess process = pipeline.getProcess(i);
+            process.setup(img, props, process.getPropLabels());
+        }
+        return pipeline.getProcess(stage);
+    }
+
+    /**
      * Builds a fresh colocalisation process for the spot-localisation panel. The
      * colocalisation stage is always the last stage of a full pipeline, so this
      * reuses {@link #buildFullPipeline} and returns its final process.
@@ -296,6 +319,19 @@ public class PipelineBuilder {
      */
     public MultiThreadedProcess buildLocalisationProcess(Properties props, Objects3DPopulation cells) {
         ProcessPipeline pipeline = buildFullPipeline(props, cells);
+        return pipeline.getProcess(pipeline.getSize() - 1);
+    }
+
+    /**
+     * Builds a fresh colocalisation process whose entire pipeline (the
+     * colocalisation stage plus every upstream stage) is re-initialised against
+     * the supplied {@code img}, for use as a live wizard preview.
+     */
+    public MultiThreadedProcess buildLocalisationProcess(Properties props, Objects3DPopulation cells, BioFormatsImg img) {
+        ProcessPipeline pipeline = buildFullPipeline(props, cells);
+        for (MultiThreadedProcess process : pipeline) {
+            process.setup(img, props, process.getPropLabels());
+        }
         return pipeline.getProcess(pipeline.getSize() - 1);
     }
 

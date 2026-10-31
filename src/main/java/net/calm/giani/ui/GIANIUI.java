@@ -522,11 +522,11 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }
 
     private MultiThreadedProcess buildPreviewProcess(int stage) {
-        return new PipelineBuilder().buildPreviewProcess(stage, props, cells);
+        return new PipelineBuilder().buildPreviewProcess(stage, props, cells, img);
     }
 
     private MultiThreadedProcess buildLocalisationProcess() {
-        return new PipelineBuilder().buildLocalisationProcess(props, cells);
+        return new PipelineBuilder().buildLocalisationProcess(props, cells, img);
     }
 
     private URI getHelpURI(String url) {
