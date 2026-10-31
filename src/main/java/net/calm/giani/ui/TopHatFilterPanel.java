@@ -211,7 +211,7 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
         add(unitsLabel1, gridBagConstraints);
 
         topHatToggleButton.setText(propLabels[MultiThreadedTopHatFilter.ENABLE_FILTER_LABEL]);
-        topHatToggleButton.setEnabled(Boolean.parseBoolean(props.getProperty(GianiDefaultParams.ENABLE_TOP_HAT_FILTER)));
+        topHatToggleButton.setSelected(Boolean.parseBoolean(props.getProperty(GianiDefaultParams.ENABLE_TOP_HAT_FILTER)));
         topHatToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 topHatToggleButtonActionPerformed(evt);

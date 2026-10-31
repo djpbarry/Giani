@@ -56,6 +56,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     private ArrayList<MaximaFinderPanel> maximaFinderPanels;
     private LocalisationPanel localisationPanel;
     private TrackingPanel trackingPanel;
+    private boolean collectingPanelState;
     private final Objects3DPopulation cells;
     private final GIANIParamInfos info;
 
@@ -522,11 +523,35 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }
 
     private MultiThreadedProcess buildPreviewProcess(int stage) {
+        collectPanelState();
         return new PipelineBuilder().buildPreviewProcess(stage, props, cells, img);
     }
 
     private MultiThreadedProcess buildLocalisationProcess() {
+        collectPanelState();
         return new PipelineBuilder().buildLocalisationProcess(props, cells, img);
+    }
+
+    /**
+     * Persists every wizard panel's current UI state back into the shared
+     * {@code props} before a preview builds a fresh pipeline, so toggles and
+     * fields the user just changed are picked up without having to advance the
+     * wizard or start a run.
+     */
+    private void collectPanelState() {
+        if (collectingPanelState) {
+            return;
+        }
+        collectingPanelState = true;
+        try {
+            for (LayerPanel panel : componentList) {
+                if (panel != null) {
+                    panel.setVariables();
+                }
+            }
+        } finally {
+            collectingPanelState = false;
+        }
     }
 
     private URI getHelpURI(String url) {
