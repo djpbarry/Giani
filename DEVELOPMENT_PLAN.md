@@ -877,6 +877,22 @@ wiring source). A dedicated `TrackingPanel` now surfaces `TRACK_TIMELAPSE` /
 tracking tuning controls (motion model, linking/gap-closing penalties,
 `Track Spots`), which are deferred to a later pass.
 
+**Known UX / bug follow-ups (logged 2026-10-31):**
+
+- **`Track Timelapse` naming is misleading.** It only widens the per-series
+  `Time` loop (`PipelineExecutor.timeRange`) to analyse every timepoint; it does
+  not generate any tracking/linkage. `Track Lineage` independently runs TrackMate
+  and emits `GIANI_tracks.csv` + `*_track_masks`. A future pass should rename
+  `Track Timelapse` (via `DeprecatedProps`) to e.g. "Process All Timepoints",
+  and/or make `Track Lineage` imply multi-timepoint analysis, so the two flags
+  can't be left in a state that silently produces no tracking output.
+- **Toggle-persistence bugs (same class):** (a) `TopHatFilterPanel` inits its
+  enable toggle with `setEnabled(...)` rather than `setSelected(...)`, inverting
+  `ENABLE_TOP_HAT_FILTER` on the next property write; (b) preview handlers persist
+  only their own panel, so a toggle changed elsewhere is ignored when previewing
+  a different stage — a `collectPanelState()` gather (reentrancy-guarded) is the
+  fix. Both land with the general GUI revamp rather than as one-off patches.
+
 The wizard is over-built. `GIANIUI.initComponents()` assembles the fixed pipeline
 inline (each `PipelineBuilder.getDefault…()` call creates a process) and wires
 each process into a panel for preview, while `nextButton`/`previousButton` call

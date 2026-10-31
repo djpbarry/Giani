@@ -715,3 +715,30 @@ Narrative record of decisions, changes, and lessons for GIANI. Keep in sync with
   so all three tracking settings live in one place and bind through the same
   `PropertyExtractor` label/field mechanism.
 - No headless behaviour change; the parameters are unchanged.
+
+## 2026-10-31 — Tracking toggle semantics + toggle-persistence findings (Phase I1)
+
+- **UX mismatch (logged, deferred to the GUI revamp).** `Track Timelapse` only
+  means "analyse every timepoint" (it widens the `Time` loop via
+  `PipelineExecutor.timeRange`); it does *not* produce any tracking/linkage
+  output. `Track Lineage` is what runs TrackMate and emits `GIANI_tracks.csv`
+  (`UltrackCsvWriter`) and the `*_track_masks` folders (`TrackMaskWriter`).
+  Confirmed on a live run: with `Track Timelapse = true` and
+  `Track Lineage = false`, per-timepoint masks/`Time`/`Series` columns appear
+  but there is no `Track ID` column, no `GIANI_tracks.csv`, and no track masks —
+  both writers early-return on the empty track list. The label "Track Timelapse"
+  is therefore misleading; a future pass should rename it (through
+  `DeprecatedProps`) to something like "Process All Timepoints" and/or make
+  `Track Lineage` imply multi-timepoint analysis.
+- **Found (uncommitted fixes in progress):**
+  - `TopHatFilterPanel` initialises its toggle with `setEnabled(...)` instead of
+    `setSelected(...)` (line 214), so the toggle's on/off state never reflects
+    `ENABLE_TOP_HAT_FILTER` and `PropertyExtractor` WRITE then persists the
+    inverted `isSelected()` value, silently flipping the property.
+  - Preview handlers each call only *their own* `setVariables()`, so a toggle
+    changed on one panel is ignored when previewing a *different* panel. A
+    reentrancy-guarded `collectPanelState()` (persist every panel before a
+    preview builds its fresh pipeline) is the intended fix.
+- Both toggle issues are the same class of `JToggleButton` `selected`↔`enabled`
+  / per-panel-state persistence bug; they will be finalised alongside the
+  general GUI revamp.
