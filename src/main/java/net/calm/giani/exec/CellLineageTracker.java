@@ -88,6 +88,10 @@ public class CellLineageTracker {
         SparseLAPTrackerFactory factory = new SparseLAPTrackerFactory();
         Map<String, Object> settings = factory.getDefaultSettings();
         settings.put(TrackerKeys.KEY_ALLOW_TRACK_SPLITTING, true);
+        double linkingDistance = linkingDistance();
+        settings.put(TrackerKeys.KEY_LINKING_MAX_DISTANCE, linkingDistance);
+        settings.put(TrackerKeys.KEY_GAP_CLOSING_MAX_DISTANCE, linkingDistance);
+        settings.put(TrackerKeys.KEY_SPLITTING_MAX_DISTANCE, linkingDistance);
         SpotTracker tracker = factory.create(spots, settings);
         tracker.setNumThreads();
         if (!tracker.checkInput() || !tracker.process()) {
@@ -139,6 +143,24 @@ public class CellLineageTracker {
             }
         }
         return result;
+    }
+
+    /**
+     * Derives a defensible per-frame linking distance from the observed nucleus
+     * radii. The spot coordinates are already in physical units, so the linking
+     * distance should scale with the objects being tracked rather than using
+     * TrackMate's hard-coded {@link TrackerKeys#DEFAULT_LINKING_MAX_DISTANCE}.
+     */
+    private double linkingDistance() {
+        List<Double> radii = spotCell.values().stream()
+                .map(obs -> obs.radius)
+                .filter(r -> r > 0)
+                .sorted()
+                .toList();
+        if (radii.isEmpty()) {
+            return TrackerKeys.DEFAULT_LINKING_MAX_DISTANCE;
+        }
+        return 3.0 * radii.get(radii.size() / 2);
     }
 
     /**

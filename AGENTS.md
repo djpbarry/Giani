@@ -22,7 +22,7 @@ lineage-tracking).
 GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](https://imagej.net/software/fiji/) plugin for batch analysis of 3D (and 4D) microscopy images: it reads proprietary image formats, segments nuclei and cells, measures morphology/fluorescence intensity, and optionally tracks lineages across time.
 
 - **Language/toolchain:** Java 21, Maven, Swing (NetBeans GUI forms), built as an ImageJ/Fiji plugin.
-- **Group/artifact:** `net.calm:giani`, version `3.8.0`.
+- **Group/artifact:** `net.calm:giani`, version `3.8.1`.
 - **Parent POM:** `org.scijava:pom-scijava:45.1.0` (SciJava build conventions).
 - **Core library dependency:** `com.github.djpbarry:IAClassLibrary:v2.4.0` (JitPack) provides the actual image-processing primitives (`MultiThreaded*` process classes, `BioFormatsImg`, `ProcessPipeline`, `PropertyWriter`, etc.). GIANI is mostly glue that wires these primitives into a pipeline and exposes UI/CLI/macro entry points.
 - **Transitive dependency:** `mcib3d-core` (via `IAClassLibrary`) provides `mcib3d.geom.Objects3DPopulation`/`Object3D`, the segmentation-result container threaded through the pipeline.

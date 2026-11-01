@@ -837,3 +837,15 @@ against source/output; left in place rather than rewritten:
   parent-offset mapping.
 - Version bumped `3.7.7` → `3.8.0` (`feat`), kept in sync across `pom.xml`,
   `CITATION.cff`, and `docs/conf.py`.
+
+## 2026-11-01 — Derive tracking linking distance from the data (H3)
+
+- TrackMate was run with `factory.getDefaultSettings()`, leaving the
+  linking/gap-closing/splitting distance at the hard-coded 15 unit default even
+  though the spot coordinates are already in physical units.
+- `CellLineageTracker` now derives the distance from the median observed nucleus
+  radius (3×), so it scales with the objects being tracked instead of being a
+  fixed value; it falls back to TrackMate's default only when there are no spots.
+- Compile verified only; no Fiji reinstall (per user request).
+- Version bumped `3.8.0` → `3.8.1` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, and `docs/conf.py`.

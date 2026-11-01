@@ -658,10 +658,11 @@ the same (b) pattern, retaining the `Cell ID`/`Track ID` association.
   from the `cells` population *inside* the time loop (before the next frame
   resets it). This passes the `cells` `Objects3DPopulation` into
   `PipelineExecutor` (today only `buildFullPipeline` holds it).
-- **Tracker:** `SimpleFastLAPTracker` with default linking/gap-closing settings
-  and `allowTrackSplitting(true)` (to detect divisions for H4), using
-  `img.getCalibration(series)` so distances are physical. Parameters stay
-  defaults for the first cut (expose later).
+- **Tracker:** `SparseLAPTrackerFactory` (sparse LAP) with a data-derived
+  linking/gap-closing/splitting distance (3× median nucleus radius, 2026-11-01),
+  and `allowTrackSplitting(true)` (to detect divisions for H4). Spot coordinates
+  are already in physical units via `getCenterAsVectorUnit()`. Tracking-tuning
+  parameters remain to be exposed (Phase I1).
 - **Output:** a `Track ID` column in `GIANI_Output.csv` (builds on the R5
   `Time`/`Series` columns); H4 separately exports the lineage in inTRACKtive's
   Ultrack format (`GIANI_tracks.csv`).
