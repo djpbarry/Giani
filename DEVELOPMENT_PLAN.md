@@ -680,11 +680,12 @@ the same (b) pattern, retaining the `Cell ID`/`Track ID` association.
 
 ### H4. Export the lineage for inTRACKtive
 
-**Status: done (2026-10-22).** `UltrackCsvWriter` writes `GIANI_tracks.csv`
-(`track_id,t,z,y,x,parent_track_id,radius`) from `CellLineageTracker.CellTrack`,
-using the public track label (`2 + TrackMate track ID`, shared with the H5
-masks) and `parent_track_id = -1` (lineage re-labelling deferred). Wired into
-`PipelineExecutor` after the time loop; unit-tested.
+**Status: done (2026-10-22; lineage re-labelling 2026-11-01).** `UltrackCsvWriter`
+writes `GIANI_tracks.csv` (`track_id,t,z,y,x,parent_track_id,radius`) from
+`CellLineageTracker.CellTrack`, using the public lineage label
+(`2 + lineage id`, shared with the H5 masks); `parent_track_id` is the parent
+lineage's public label, or `-1` for roots. Wired into `PipelineExecutor` after the
+time loop; unit-tested.
 
 `inTRACKtive` (royerlab/inTRACKtive) is a **browser-based** viewer for cell
 tracking data — not a Fiji plugin. It consumes the **Ultrack CSV format**,
@@ -704,15 +705,13 @@ reinforces tracking **cells** as the primary lineage object:
 - **No inTRACKtive/Python dependency inside GIANI:** GIANI only writes the CSV;
   the user runs `intracktive open GIANI_tracks.csv` (or `convert`/`serve`) to
   view it. A bundled helper script is a later optional nicety.
-- **Model-mapping (deferred):** Ultrack uses a forest/tree model (each track is
-  one lineage; `parent_track_id` encodes division), whereas TrackMate uses a
-  graph (division = a spot with two successors; the daughters stay in the same
-  connected component). For simplicity H4 emits TrackMate's raw track ID with
-  `parent_track_id = -1`, so a dividing cell and its daughters share one track
-  ID and no division hierarchy is captured. A future enhancement can walk the
-  `TrackModel` (spots with >1 successor via `allowTrackSplitting`) and re-label
-  each post-division branch as its own `track_id` + `parent_track_id` to produce
-  true lineage IDs (shared with H5).
+- **Model-mapping (done 2026-11-01):** Ultrack uses a forest/tree model (each
+  track is one lineage; `parent_track_id` encodes division), whereas TrackMate
+  uses a graph (division = a spot with two successors; the daughters stay in the
+  same connected component). `CellLineageTracker` now walks the `TrackModel`
+  with `TimeDirectedNeighborIndex`: a spot with more than one successor is a
+  division, and each post-division branch is re-labelled as its own
+  `track_id` + `parent_track_id` to produce true lineage IDs (shared with H5).
 - **Hierarchy note:** inTRACKtive visualises one track type (the cell lineage);
   nuclei and punctae are not shown as separate objects, so their parent–child
   relationships stay in `GIANI_Output.csv` / `Spot_Data.csv` rather than
@@ -753,10 +752,10 @@ segmentation).
   per-timepoint object labels remain available in `<type>_masks/` for
   distinguishing individual objects. A dividing cell and its daughters share one
   label.
-- **Future enhancement:** true **lineage IDs** — re-label each post-division
-  branch as its own ID with a `parent_track_id` so divisions read as distinct
-  lineages (the same translation H4 defers; TrackMate's
-  `TimeDirectedNeighborIndex` / directed iterators provide the graph primitives).
+- **Done 2026-11-01:** true **lineage IDs** — re-label each post-division branch
+  as its own ID with a `parent_track_id` so divisions read as distinct lineages
+  (shared with H4; TrackMate's `TimeDirectedNeighborIndex` provides the graph
+  primitives).
 - **Hierarchy:** cell masks carry the lineage label; nucleus/punctae masks inherit
   the parent cell's track ID via the existing `Cell ID` association (same as H3).
 - **Output shape:** write to a parallel folder set (e.g. `<type>_track_masks/`)

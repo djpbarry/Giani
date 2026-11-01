@@ -819,3 +819,21 @@ against source/output; left in place rather than rewritten:
 - `./mvnw clean test` green (27/27).
 - Version bumped `3.7.6` → `3.7.7` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, and `docs/conf.py`.
+
+## 2026-11-01 — Lineage re-labelling: divisions now yield parent/child tracks (H4/H5)
+
+- `parent_track_id` was hard-coded `-1`, and with `allowTrackSplitting(true)` both
+  daughters of a division stayed in the mother's TrackMate track, so divisions
+  were invisible. Implemented the deferred lineage re-labelling.
+- `CellLineageTracker.track()` now walks each TrackMate track with
+  `TimeDirectedNeighborIndex`: a spot with more than one successor is a division,
+  and each daughter starts a fresh lineage whose parent is recorded. `CellTrack`
+  gained a `parentTrackId` field.
+- `UltrackCsvWriter` now emits the parent's public label (offset by
+  `TRACK_LABEL_OFFSET`) or `-1` for roots. The mask labels and the `Track ID`
+  column already shared the same offset, so divisions now read as distinct labels
+  everywhere.
+- `./mvnw clean test` green (27/27); `UltrackCsvWriterTest` updated to cover the
+  parent-offset mapping.
+- Version bumped `3.7.7` → `3.8.0` (`feat`), kept in sync across `pom.xml`,
+  `CITATION.cff`, and `docs/conf.py`.

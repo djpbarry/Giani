@@ -32,9 +32,9 @@ class TrackMaskWriterTest {
     @Test
     void buildRemapMapsLabelsPerTimepoint() {
         List<CellLineageTracker.CellTrack> tracks = List.of(
-                new CellLineageTracker.CellTrack(0, 0, 1, 0.0, 0.0, 0.0, 0.0, 10),
-                new CellLineageTracker.CellTrack(0, 1, 2, 0.0, 0.0, 0.0, 0.0, 20),
-                new CellLineageTracker.CellTrack(1, 0, 1, 0.0, 0.0, 0.0, 0.0, 30)
+                new CellLineageTracker.CellTrack(0, 0, 1, 0.0, 0.0, 0.0, 0.0, 10, -1),
+                new CellLineageTracker.CellTrack(0, 1, 2, 0.0, 0.0, 0.0, 0.0, 20, -1),
+                new CellLineageTracker.CellTrack(1, 0, 1, 0.0, 0.0, 0.0, 0.0, 30, -1)
         );
 
         assertEquals(Map.of(10, 3, 20, 4), TrackMaskWriter.buildRemap(tracks, 0));

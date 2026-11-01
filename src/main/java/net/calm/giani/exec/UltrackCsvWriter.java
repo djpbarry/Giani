@@ -28,11 +28,11 @@ import java.util.List;
  * Writes the GIANI cell lineage as a CSV in
  * <a href="https://github.com/royerlab/inTRACKtive">inTRACKtive</a>'s Ultrack
  * format: {@code track_id, t, z, y, x, parent_track_id} (plus a {@code radius}
- * column). The {@code track_id} is the public track label
- * ({@code CellLineageTracker.TRACK_LABEL_OFFSET + TrackMate track ID}), matching
- * the labels in the track-labelled masks (0 = background, 1 = untracked).
- * {@code parent_track_id} is always {@code -1} for now (lineage/division
- * re-labelling is deferred — see Phase H4/H5 in {@code DEVELOPMENT_PLAN.md}).
+ * column). The {@code track_id} is the public lineage label
+ * ({@code CellLineageTracker.TRACK_LABEL_OFFSET + lineage id}), matching the
+ * labels in the track-labelled masks (0 = background, 1 = untracked).
+ * {@code parent_track_id} is the public label of the lineage this track branched
+ * from (a division), or {@code -1} for a root lineage.
  */
 public final class UltrackCsvWriter {
 
@@ -58,8 +58,10 @@ public final class UltrackCsvWriter {
         try (BufferedWriter writer = Files.newBufferedWriter(csv.toPath(), StandardCharsets.UTF_8)) {
             writer.write("track_id,t,z,y,x,parent_track_id,radius\n");
             for (CellLineageTracker.CellTrack track : sorted) {
+                int parentTrackId = track.parentTrackId() < 0 ? -1
+                        : track.parentTrackId() + CellLineageTracker.TRACK_LABEL_OFFSET;
                 writer.write(String.format("%d,%d,%.6f,%.6f,%.6f,%d,%.6f%n",
-                        track.trackId() + CellLineageTracker.TRACK_LABEL_OFFSET, track.time(), track.z(), track.y(), track.x(), -1, track.radius()));
+                        track.trackId() + CellLineageTracker.TRACK_LABEL_OFFSET, track.time(), track.z(), track.y(), track.x(), parentTrackId, track.radius()));
             }
         }
     }

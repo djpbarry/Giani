@@ -20,6 +20,7 @@ import fiji.plugin.trackmate.Model;
 import fiji.plugin.trackmate.Spot;
 import fiji.plugin.trackmate.SpotCollection;
 import fiji.plugin.trackmate.TrackModel;
+import fiji.plugin.trackmate.graph.TimeDirectedNeighborIndex;
 import fiji.plugin.trackmate.tracking.SpotTracker;
 import fiji.plugin.trackmate.tracking.TrackerKeys;
 import fiji.plugin.trackmate.tracking.jaqaman.SparseLAPTrackerFactory;
@@ -30,9 +31,11 @@ import net.calm.iaclasslibrary.Cell3D.Cell3D;
 import net.calm.iaclasslibrary.Cell3D.Nucleus3D;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Builds a TrackMate lineage over the per-timepoint {@code cells} population.
@@ -54,7 +57,7 @@ public class CellLineageTracker {
      * which TrackMate track, plus its calibrated centroid and equivalent radius
      * for export.
      */
-    public record CellTrack(int time, int cellIndex, int trackId, double x, double y, double z, double radius, int label) {
+    public record CellTrack(int time, int cellIndex, int trackId, double x, double y, double z, double radius, int label, int parentTrackId) {
     }
 
     private record CellObservation(int time, int cellIndex, double x, double y, double z, double radius, int label) {
@@ -94,15 +97,73 @@ public class CellLineageTracker {
         model.setSpots(spots, false);
         model.setTracks(tracker.getResult(), true);
         TrackModel trackModel = model.getTrackModel();
+
+        // Re-label each TrackMate track (a connected component) into true lineage
+        // branches: a division (a spot with more than one successor) starts a
+        // fresh lineage for every daughter, recording the parent lineage so that
+        // parent_track_id is meaningful rather than always -1.
+        TimeDirectedNeighborIndex neighborIndex = trackModel.getDirectedNeighborIndex();
+        Map<Spot, Integer> spotLineage = new HashMap<>();
+        Map<Integer, Integer> lineageParent = new HashMap<>();
+        int[] nextLineage = {0};
+        List<Integer> trackIds = new ArrayList<>(trackModel.trackIDs(true));
+        Collections.sort(trackIds);
+        for (Integer trackId : trackIds) {
+            Set<Spot> trackSpots = trackModel.trackSpots(trackId);
+            List<Spot> roots = new ArrayList<>();
+            for (Spot spot : trackSpots) {
+                if (neighborIndex.predecessorsOf(spot).isEmpty()) {
+                    roots.add(spot);
+                }
+            }
+            if (roots.isEmpty()) {
+                trackSpots.stream().min(Spot.frameComparator).ifPresent(roots::add);
+            }
+            roots.sort(Spot.frameComparator);
+            for (Spot root : roots) {
+                int rootLineage = nextLineage[0]++;
+                lineageParent.put(rootLineage, -1);
+                assignLineage(root, rootLineage, neighborIndex, spotLineage, lineageParent, nextLineage);
+            }
+        }
+
         List<CellTrack> result = new ArrayList<>();
-        for (Integer trackId : trackModel.trackIDs(true)) {
+        for (Integer trackId : trackIds) {
             for (Spot spot : trackModel.trackSpots(trackId)) {
                 CellObservation obs = spotCell.get(spot);
                 if (obs != null) {
-                    result.add(new CellTrack(obs.time, obs.cellIndex, trackId, obs.x, obs.y, obs.z, obs.radius, obs.label));
+                    int lineage = spotLineage.getOrDefault(spot, 0);
+                    int parent = lineageParent.getOrDefault(lineage, -1);
+                    result.add(new CellTrack(obs.time, obs.cellIndex, lineage, obs.x, obs.y, obs.z, obs.radius, obs.label, parent));
                 }
             }
         }
         return result;
+    }
+
+    /**
+     * Assigns a lineage id to a spot and recurses through its descendants. A
+     * spot with a single successor (or none) continues its lineage; a spot with
+     * multiple successors is a division, and each daughter starts a new lineage
+     * whose parent is the current one.
+     */
+    private void assignLineage(Spot spot, int lineage, TimeDirectedNeighborIndex neighborIndex,
+                               Map<Spot, Integer> spotLineage, Map<Integer, Integer> lineageParent, int[] nextLineage) {
+        if (spotLineage.containsKey(spot)) {
+            return;
+        }
+        spotLineage.put(spot, lineage);
+        Set<Spot> successors = neighborIndex.successorsOf(spot);
+        if (successors.size() <= 1) {
+            for (Spot child : successors) {
+                assignLineage(child, lineage, neighborIndex, spotLineage, lineageParent, nextLineage);
+            }
+        } else {
+            for (Spot child : successors) {
+                int childLineage = nextLineage[0]++;
+                lineageParent.put(childLineage, lineage);
+                assignLineage(child, childLineage, neighborIndex, spotLineage, lineageParent, nextLineage);
+            }
+        }
     }
 }
