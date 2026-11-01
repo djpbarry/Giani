@@ -37,9 +37,11 @@ class GianiDefaultParamsTest {
         assertEquals("false", p.getProperty(GianiDefaultParams.LOCALISE_SPOTS));
         assertEquals("0", p.getProperty(GianiDefaultParams.CHAN_FOR_MEASURE));
         assertEquals("-1", p.getProperty(GianiDefaultParams.SPECIFIC_SERIES));
-        assertEquals("false", p.getProperty(GianiDefaultParams.TRACK_TIMELAPSE));
+        assertEquals("false", p.getProperty(GianiDefaultParams.PROCESS_ALL_TIMEPOINTS));
         assertEquals("-1", p.getProperty(GianiDefaultParams.TIME_SELECT));
         assertEquals("true", p.getProperty(GianiDefaultParams.TRACK_LINEAGE));
+        assertEquals("-1", p.getProperty(GianiDefaultParams.TRACK_LINKING_DISTANCE));
+        assertEquals("2", p.getProperty(GianiDefaultParams.TRACK_MAX_FRAME_GAP));
         assertEquals("true", p.getProperty(GianiDefaultParams.ENABLE_TOP_HAT_FILTER));
         assertEquals("0.0", p.getProperty(GianiDefaultParams.NUC_FILT_RAD_LABEL));
         assertEquals("0.5", p.getProperty(GianiDefaultParams.NUC_DIST_WEIGHTING));

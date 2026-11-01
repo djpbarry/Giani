@@ -865,3 +865,25 @@ against source/output; left in place rather than rewritten:
   test.
 - Version bumped `3.8.1` → `3.9.0` (`feat`), kept in sync across `pom.xml`,
   `CITATION.cff`, and `docs/conf.py`.
+
+## 2026-11-01 — Tracking panel: rename and surface tuning controls (Phase I1)
+
+- Renamed the misleading `Track Timelapse` parameter to
+  `Process All Timepoints` (new `GianiDefaultParams.PROCESS_ALL_TIMEPOINTS`,
+  default `false`); `DeprecatedProps` maps the old `"Track Timelapse"` key so
+  saved property files migrate transparently.
+- Added two tracking-tuning parameters, wired through `CellLineageTracker`:
+  - `Linking Distance` (`TRACK_LINKING_DISTANCE`, default `-1` = auto) overrides
+    the auto-derived `3 × median nucleus radius` value and applies to the linking,
+    gap-closing, and splitting max distances.
+  - `Max Frame Gap` (`TRACK_MAX_FRAME_GAP`, default `2`) controls
+    `KEY_GAP_CLOSING_MAX_FRAME_GAP` (how many frames a track may be missing).
+- `CellLineageTracker` now takes `(linkingDistance, maxFrameGap)` in its
+  constructor; `PipelineExecutor` parses the two new properties and passes them
+  through.
+- `TrackingPanel` re-laid out: `Process All Timepoints` toggle, `Specific
+  Timepoint`, `Track Lineage`, then `Linking Distance` / `Max Frame Gap`, with
+  explanatory tooltips. The motion-model and `Track Spots` tunings remain
+  deferred.
+- `./mvnw test` green (28/28).
+- No version bump yet (pending this commit's `feat`/`fix` classification).

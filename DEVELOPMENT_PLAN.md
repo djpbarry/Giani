@@ -869,13 +869,14 @@ earns its place next to MIA.
 
 ### I1. Wizard architecture simplification
 
-**Status: mostly done (2026-10-22 / 2026-10-25).** The factory-based preview
+**Status: mostly done (2026-10-22 / 2026-11-01).** The factory-based preview
 refactor landed (panels take a `Supplier<MultiThreadedProcess>`, and
 `PipelineBuilder.buildPreviewProcess`/`buildLocalisationProcess` are the single
-wiring source). A dedicated `TrackingPanel` now surfaces `TRACK_TIMELAPSE` /
-`TRACK_LINEAGE` / `TIME_SELECT` after input selection. Remaining: expose the
-tracking tuning controls (motion model, linking/gap-closing penalties,
-`Track Spots`), which are deferred to a later pass.
+wiring source). A dedicated `TrackingPanel` now surfaces `PROCESS_ALL_TIMEPOINTS`
+(renamed from `TRACK_TIMELAPSE`), `TRACK_LINEAGE`, `TIME_SELECT`, plus
+`TRACK_LINKING_DISTANCE` (auto by default) and `TRACK_MAX_FRAME_GAP` after input
+selection. Remaining: expose the motion model and `Track Spots` tunings, which
+are deferred to a later pass.
 
 **Known UX / bug follow-ups (logged 2026-10-31):**
 

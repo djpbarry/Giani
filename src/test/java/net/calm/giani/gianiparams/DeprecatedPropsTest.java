@@ -40,6 +40,8 @@ class DeprecatedPropsTest {
                 map.get(DeprecatedProps.NUC_SEG_THRESH_LABEL));
         assertEquals(GianiDefaultParams.CELL_SEG_THRESH_LABEL,
                 map.get(DeprecatedProps.CELL_SEG_THRESH_LABEL));
+        assertEquals(GianiDefaultParams.PROCESS_ALL_TIMEPOINTS,
+                map.get(DeprecatedProps.TRACK_TIMELAPSE));
     }
 
     @Test

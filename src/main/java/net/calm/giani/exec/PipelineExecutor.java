@@ -104,13 +104,25 @@ public class PipelineExecutor extends Thread {
             input = new File(input.getParent());
         }
         ExecutorService exec = Executors.newSingleThreadExecutor();
-        boolean trackTimelapse = Boolean.parseBoolean(props.getProperty(GianiDefaultParams.TRACK_TIMELAPSE));
+        boolean processAllTimepoints = Boolean.parseBoolean(props.getProperty(GianiDefaultParams.PROCESS_ALL_TIMEPOINTS));
         boolean trackLineage = Boolean.parseBoolean(props.getProperty(GianiDefaultParams.TRACK_LINEAGE));
         int timeSelect = -1;
         try {
             timeSelect = Integer.parseInt(props.getProperty(GianiDefaultParams.TIME_SELECT));
         } catch (NumberFormatException e) {
             IJ.log("Specific timepoint not a parsable integer - ignoring.");
+        }
+        double linkingDistance = -1;
+        try {
+            linkingDistance = Double.parseDouble(props.getProperty(GianiDefaultParams.TRACK_LINKING_DISTANCE));
+        } catch (NumberFormatException e) {
+            IJ.log("Linking distance not a parsable number - deriving from nucleus size.");
+        }
+        int maxFrameGap = 2;
+        try {
+            maxFrameGap = Integer.parseInt(props.getProperty(GianiDefaultParams.TRACK_MAX_FRAME_GAP));
+        } catch (NumberFormatException e) {
+            IJ.log("Max frame gap not a parsable integer - using default.");
         }
         while (files.size() > 0) {
             String file = files.get(0);
@@ -141,8 +153,8 @@ public class PipelineExecutor extends Thread {
                     }
                     props.setProperty(GianiDefaultParams.SERIES_SELECT_LABEL, String.valueOf(s));
                     props.setProperty(GianiDefaultParams.UNITS, img.getUnits(s));
-                    CellLineageTracker lineageTracker = trackLineage ? new CellLineageTracker() : null;
-                    int[] tRange = timeRange(img.getSizeT(s), timeSelect, trackTimelapse);
+                    CellLineageTracker lineageTracker = trackLineage ? new CellLineageTracker(linkingDistance, maxFrameGap) : null;
+                    int[] tRange = timeRange(img.getSizeT(s), timeSelect, processAllTimepoints);
                     for (int t = tRange[0]; t < tRange[1]; t++) {
                         IJ.log(String.format("Analysing timepoint %d", t));
                         for (MultiThreadedProcess process : pipeline) {
@@ -226,11 +238,11 @@ public class PipelineExecutor extends Thread {
      * A valid specific timepoint wins; otherwise timelapse mode spans all frames;
      * otherwise a single frame ({@code t = 0}) is processed.
      */
-    static int[] timeRange(int nTime, int timeSelect, boolean trackTimelapse) {
+    static int[] timeRange(int nTime, int timeSelect, boolean processAllTimepoints) {
         if (timeSelect >= 0 && timeSelect < nTime) {
             return new int[]{timeSelect, timeSelect + 1};
         }
-        if (trackTimelapse && nTime > 0) {
+        if (processAllTimepoints && nTime > 0) {
             return new int[]{0, nTime};
         }
         return new int[]{0, 1};

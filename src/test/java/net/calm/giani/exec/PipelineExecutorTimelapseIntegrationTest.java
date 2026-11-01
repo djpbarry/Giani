@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Phase H1 end-to-end smoke test: runs the full pipeline over a T=2 fixture with
- * {@code TRACK_TIMELAPSE=true}, proving the executor time loop processes every
+ * {@code PROCESS_ALL_TIMEPOINTS=true}, proving the executor time loop processes every
  * timepoint without error.
  */
 @Tag("integration")
@@ -60,7 +60,7 @@ class PipelineExecutorTimelapseIntegrationTest {
         props.setProperty(GianiDefaultParams.OUTPUT_DIR_LABEL, outputDir.toString());
         props.setProperty(GianiDefaultParams.SPECIFIC_SERIES, "0");
         props.setProperty(GianiDefaultParams.LOCALISE_SPOTS, "false");
-        props.setProperty(GianiDefaultParams.TRACK_TIMELAPSE, "true");
+        props.setProperty(GianiDefaultParams.PROCESS_ALL_TIMEPOINTS, "true");
 
         props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS, "false");
         props.setProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN, "true");

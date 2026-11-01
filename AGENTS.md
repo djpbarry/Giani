@@ -179,7 +179,7 @@ Panels extend `net.calm.iaclasslibrary.UIClasses.LayerPanel` and implement `Upda
 - **`DebugTools.setRootLevel("WARN")`** is called in both `GIANI.run()` and `PipelineExecutor.run()` to quiet Bio-Formats/loci logging. Keep this when adding new entry paths, or console output becomes extremely noisy.
 - **Series with fewer than 2 Z-slices are skipped** (`img.getSizeZ(s) < 2`) — 2D images are silently ignored.
 - **`.gitattributes` marks `*.zip` as Git LFS.** `assets/Test_Data.zip` is a ~335 MB LFS file; do not treat it as a normal tracked blob.
-- **`TRACK_TIMELAPSE` ("Track Timelapse") does not track anything** — it only widens the time loop so every timepoint is analysed. `TRACK_LINEAGE` ("Track Lineage") is what runs TrackMate and produces the `Track ID` column, `GIANI_tracks.csv` and the `*_track_masks/` folders. The two flags are independent; at defaults (`TRACK_LINEAGE=true`, `TRACK_TIMELAPSE=false`) only `t=0` runs, so no tracking output is produced.
+- **`PROCESS_ALL_TIMEPOINTS` ("Process All Timepoints", formerly `TRACK_TIMELAPSE`) does not track anything** — it only widens the time loop so every timepoint is analysed. `TRACK_LINEAGE` ("Track Lineage") is what runs TrackMate and produces the `Track ID` column, `GIANI_tracks.csv` and the `*_track_masks/` folders. The two flags are independent; at defaults (`TRACK_LINEAGE=true`, `PROCESS_ALL_TIMEPOINTS=false`) only `t=0` runs, so no tracking output is produced.
 - **No logging framework:** errors go through `GenUtils.logError(Throwable, String)` (IAClassLibrary utility), which typically routes to ImageJ's log.
 
 ## Documentation conventions

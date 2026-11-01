@@ -65,6 +65,20 @@ public class CellLineageTracker {
 
     private final SpotCollection spots = new SpotCollection();
     private final Map<Spot, CellObservation> spotCell = new HashMap<>();
+    private final double linkingDistance;
+    private final int maxFrameGap;
+
+    /**
+     * @param linkingDistance the max linking / gap-closing / splitting distance
+     *                        in physical units, or {@code <= 0} to derive it
+     *                        automatically from the observed nucleus radii
+     * @param maxFrameGap     the max number of frames a track may be missing
+     *                        before it is considered interrupted
+     */
+    public CellLineageTracker(double linkingDistance, int maxFrameGap) {
+        this.linkingDistance = linkingDistance;
+        this.maxFrameGap = maxFrameGap;
+    }
 
     public void addTimepoint(int time, Objects3DPopulation cells) {
         for (int i = 0; i < cells.getNbObjects(); i++) {
@@ -88,10 +102,11 @@ public class CellLineageTracker {
         SparseLAPTrackerFactory factory = new SparseLAPTrackerFactory();
         Map<String, Object> settings = factory.getDefaultSettings();
         settings.put(TrackerKeys.KEY_ALLOW_TRACK_SPLITTING, true);
-        double linkingDistance = linkingDistance();
-        settings.put(TrackerKeys.KEY_LINKING_MAX_DISTANCE, linkingDistance);
-        settings.put(TrackerKeys.KEY_GAP_CLOSING_MAX_DISTANCE, linkingDistance);
-        settings.put(TrackerKeys.KEY_SPLITTING_MAX_DISTANCE, linkingDistance);
+        settings.put(TrackerKeys.KEY_GAP_CLOSING_MAX_FRAME_GAP, maxFrameGap);
+        double distance = linkingDistance > 0 ? linkingDistance : autoLinkingDistance();
+        settings.put(TrackerKeys.KEY_LINKING_MAX_DISTANCE, distance);
+        settings.put(TrackerKeys.KEY_GAP_CLOSING_MAX_DISTANCE, distance);
+        settings.put(TrackerKeys.KEY_SPLITTING_MAX_DISTANCE, distance);
         SpotTracker tracker = factory.create(spots, settings);
         tracker.setNumThreads();
         if (!tracker.checkInput() || !tracker.process()) {
@@ -151,7 +166,7 @@ public class CellLineageTracker {
      * distance should scale with the objects being tracked rather than using
      * TrackMate's hard-coded {@link TrackerKeys#DEFAULT_LINKING_MAX_DISTANCE}.
      */
-    private double linkingDistance() {
+    private double autoLinkingDistance() {
         List<Double> radii = spotCell.values().stream()
                 .map(obs -> obs.radius)
                 .filter(r -> r > 0)

@@ -30,15 +30,19 @@ import java.awt.GridBagLayout;
 import java.util.Properties;
 
 /**
- * Tracking parameters panel in the {@link GIANIUI}: surfaces the timelapse,
- * lineage-tracking, and specific-timepoint settings as wizard controls.
+ * Tracking parameters panel in the {@link GIANIUI}: surfaces the timepoint,
+ * lineage-tracking, and tracking-tuning settings as wizard controls.
  */
 public class TrackingPanel extends LayerPanel {
 
-    private final JToggleButton trackTimelapseToggleButton;
+    private final JToggleButton processAllTimepointsToggleButton;
     private final JToggleButton trackLineageToggleButton;
     private final JLabel specificTimepointLabel;
     private final JTextField specificTimepointField;
+    private final JLabel linkingDistanceLabel;
+    private final JTextField linkingDistanceField;
+    private final JLabel maxFrameGapLabel;
+    private final JTextField maxFrameGapField;
 
     /**
      * Constructs a TrackingPanel bound to the supplied properties.
@@ -48,10 +52,14 @@ public class TrackingPanel extends LayerPanel {
      */
     public TrackingPanel(Properties props, BioFormatsImg img) {
         super(props, img, null, null, null);
-        trackTimelapseToggleButton = new JToggleButton(GianiDefaultParams.TRACK_TIMELAPSE);
+        processAllTimepointsToggleButton = new JToggleButton(GianiDefaultParams.PROCESS_ALL_TIMEPOINTS);
         trackLineageToggleButton = new JToggleButton(GianiDefaultParams.TRACK_LINEAGE);
         specificTimepointLabel = new JLabel(GianiDefaultParams.TIME_SELECT);
         specificTimepointField = new JTextField();
+        linkingDistanceLabel = new JLabel(GianiDefaultParams.TRACK_LINKING_DISTANCE);
+        linkingDistanceField = new JTextField();
+        maxFrameGapLabel = new JLabel(GianiDefaultParams.TRACK_MAX_FRAME_GAP);
+        maxFrameGapField = new JTextField();
         initComponents();
         setToolTips();
     }
@@ -60,32 +68,38 @@ public class TrackingPanel extends LayerPanel {
         setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         setLayout(new GridBagLayout());
 
-        trackTimelapseToggleButton.setSelected(Boolean.parseBoolean(props.getProperty(GianiDefaultParams.TRACK_TIMELAPSE)));
-        GridBagConstraints gbc = toggleConstraints(0);
-        add(trackTimelapseToggleButton, gbc);
+        processAllTimepointsToggleButton.setSelected(Boolean.parseBoolean(props.getProperty(GianiDefaultParams.PROCESS_ALL_TIMEPOINTS)));
+        add(processAllTimepointsToggleButton, toggleConstraints(0));
+
+        addLabelField(1, specificTimepointLabel, specificTimepointField, props.getProperty(GianiDefaultParams.TIME_SELECT));
 
         trackLineageToggleButton.setSelected(Boolean.parseBoolean(props.getProperty(GianiDefaultParams.TRACK_LINEAGE)));
-        add(trackLineageToggleButton, toggleConstraints(1));
+        add(trackLineageToggleButton, toggleConstraints(2));
 
-        specificTimepointLabel.setLabelFor(specificTimepointField);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(specificTimepointLabel, gbc);
+        addLabelField(3, linkingDistanceLabel, linkingDistanceField, props.getProperty(GianiDefaultParams.TRACK_LINKING_DISTANCE));
+        addLabelField(4, maxFrameGapLabel, maxFrameGapField, props.getProperty(GianiDefaultParams.TRACK_MAX_FRAME_GAP));
+    }
 
-        specificTimepointField.setText(props.getProperty(GianiDefaultParams.TIME_SELECT));
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.insets = new java.awt.Insets(10, 10, 10, 10);
-        add(specificTimepointField, gbc);
+    private void addLabelField(int gridy, JLabel label, JTextField field, String value) {
+        label.setLabelFor(field);
+        GridBagConstraints labelConstraints = new GridBagConstraints();
+        labelConstraints.gridx = 0;
+        labelConstraints.gridy = gridy;
+        labelConstraints.fill = GridBagConstraints.HORIZONTAL;
+        labelConstraints.weightx = 1.0;
+        labelConstraints.weighty = 1.0;
+        labelConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(label, labelConstraints);
+
+        field.setText(value);
+        GridBagConstraints fieldConstraints = new GridBagConstraints();
+        fieldConstraints.gridx = 1;
+        fieldConstraints.gridy = gridy;
+        fieldConstraints.fill = GridBagConstraints.HORIZONTAL;
+        fieldConstraints.weightx = 1.0;
+        fieldConstraints.weighty = 1.0;
+        fieldConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        add(field, fieldConstraints);
     }
 
     private GridBagConstraints toggleConstraints(int gridy) {
@@ -108,9 +122,13 @@ public class TrackingPanel extends LayerPanel {
 
     @Override
     protected void setToolTips() {
-        trackTimelapseToggleButton.setToolTipText("Process every timepoint in the selected file.");
-        trackLineageToggleButton.setToolTipText("Track cell lineages across timepoints using TrackMate.");
-        specificTimepointField.setToolTipText("Leave at -1 to process all timepoints (with Track Timelapse on) "
-                + "or the first frame (off); otherwise the 0-based timepoint index to process.");
+        processAllTimepointsToggleButton.setToolTipText("Analyse every timepoint in the selected file, not just the first.");
+        trackLineageToggleButton.setToolTipText("Track cell lineages across timepoints using TrackMate. "
+                + "Requires more than one timepoint to be analysed.");
+        specificTimepointField.setToolTipText("Leave at -1 to follow the Process All Timepoints setting; "
+                + "otherwise the 0-based timepoint index to analyse.");
+        linkingDistanceField.setToolTipText("Maximum allowed cell movement between consecutive frames, in physical units. "
+                + "Leave at -1 to derive it automatically from the median nucleus size.");
+        maxFrameGapField.setToolTipText("Maximum number of frames a track may be missing before it is considered interrupted.");
     }
 }
