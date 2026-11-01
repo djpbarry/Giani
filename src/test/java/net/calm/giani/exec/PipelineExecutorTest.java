@@ -17,8 +17,15 @@
 package net.calm.giani.exec;
 
 import ij.measure.ResultsTable;
+import net.calm.iaclasslibrary.IO.DataReader;
+import net.calm.iaclasslibrary.IO.DataWriter;
+import org.apache.commons.csv.CSVFormat;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -98,5 +105,27 @@ class PipelineExecutorTest {
         PipelineExecutor.annotateTrackIds(rt, Map.of());
 
         assertEquals(0.0, rt.getValue("Track ID", 0), 0.0);
+    }
+
+    @Test
+    void annotateSpotSummaryAddsTrackId(@TempDir Path tmp) throws Exception {
+        File csv = tmp.resolve("spot_summary_data.csv").toFile();
+        String[] headings = {"Cell_Index", "Number_of_Spots_C0", "Time", "Series"};
+        double[][] data = {
+                {1.0, 2.0, 0.0, 0.0},
+                {1.0, 3.0, 1.0, 0.0},
+                {2.0, 4.0, 0.0, 0.0}
+        };
+        DataWriter.saveValues(data, csv, headings, null, false);
+
+        PipelineExecutor.annotateSpotSummary(tmp.toFile(),
+                Map.of("0:0:1", 2, "0:1:1", 2, "0:0:2", 3));
+
+        ArrayList<String> colHeadings = new ArrayList<>();
+        double[][] out = DataReader.readCSVFile(csv, CSVFormat.EXCEL, colHeadings, null);
+        int trackCol = colHeadings.indexOf("Track ID");
+        assertEquals(2.0, out[0][trackCol], 0.0);
+        assertEquals(2.0, out[1][trackCol], 0.0);
+        assertEquals(3.0, out[2][trackCol], 0.0);
     }
 }

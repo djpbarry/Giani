@@ -849,3 +849,19 @@ against source/output; left in place rather than rewritten:
 - Compile verified only; no Fiji reinstall (per user request).
 - Version bumped `3.8.0` → `3.8.1` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, and `docs/conf.py`.
+
+## 2026-11-01 — Punctae inherit track IDs (re-pin IAClassLibrary v2.5.0)
+
+- `spot_summary_data.csv` previously had no `Time`/`Series` columns and was
+  overwritten per timepoint, so per-cell punctae summaries were time-blind and
+  could not be joined to lineage tracks.
+- Re-pinned `IAClassLibrary` to `v2.5.0` (upstream `MultiThreadedColocalise` now
+  writes `Time`/`Series` and accumulates rows across timepoints).
+- Added `PipelineExecutor.annotateSpotSummary`, which post-processes
+  `spot_summary_data.csv` after tracking to add a `Track ID` column, mapping each
+  row's `(series, time, cellIndex)` to its lineage track id (same mechanism as
+  `annotateTrackIds` for the main results table).
+- `./mvnw clean test` green (28/28), including a new `annotateSpotSummary` unit
+  test.
+- Version bumped `3.8.1` → `3.9.0` (`feat`), kept in sync across `pom.xml`,
+  `CITATION.cff`, and `docs/conf.py`.

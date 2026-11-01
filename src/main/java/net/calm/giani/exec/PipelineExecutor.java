@@ -26,12 +26,14 @@ import mcib3d.geom.Objects3DPopulation;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsFileLister;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
+import net.calm.iaclasslibrary.IO.DataReader;
 import net.calm.iaclasslibrary.IO.DataWriter;
 import net.calm.iaclasslibrary.IO.PropertyWriter;
 import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
 import net.calm.iaclasslibrary.Process.ProcessPipeline;
 import net.calm.iaclasslibrary.TimeAndDate.TimeAndDate;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
+import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
@@ -195,6 +197,11 @@ public class PipelineExecutor extends Thread {
             GenUtils.logError(e, "Failed to write track-labelled masks.");
         }
         try {
+            annotateSpotSummary(outputDir, trackIdByCell);
+        } catch (IOException e) {
+            GenUtils.logError(e, "Failed to annotate spot summary CSV.");
+        }
+        try {
             PropertyWriter.saveProperties(props, outputDir.getAbsolutePath(), GianiDefaultParams.TITLE, true);
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to save property file.");
@@ -240,6 +247,42 @@ public class PipelineExecutor extends Thread {
             int cellLabel = (int) rt.getValue("Cell_Index", row);
             rt.setValue("Track ID", row, trackIdByCell.getOrDefault(trackKey(series, time, cellLabel), 0));
         }
+    }
+
+    /**
+     * Adds a {@code Track ID} column to the per-cell spot summary CSV written by
+     * IAClassLibrary's colocalise stage, mapping each row's
+     * {@code (series, time, cellIndex)} to its lineage track id.
+     */
+    static void annotateSpotSummary(File outputDir, Map<String, Integer> trackIdByCell) throws IOException {
+        File csv = new File(outputDir, "spot_summary_data.csv");
+        if (!csv.isFile() || trackIdByCell.isEmpty()) {
+            return;
+        }
+        ArrayList<String> colHeadings = new ArrayList<>();
+        double[][] data = DataReader.readCSVFile(csv, CSVFormat.EXCEL, colHeadings, null);
+        int nRows = data.length;
+        int cellIndexCol = colHeadings.indexOf("Cell_Index");
+        int timeCol = colHeadings.indexOf("Time");
+        int seriesCol = colHeadings.indexOf("Series");
+        if (nRows == 0 || cellIndexCol < 0 || timeCol < 0 || seriesCol < 0) {
+            return;
+        }
+        int nCols = colHeadings.size();
+        double[][] annotated = new double[nRows][nCols + 1];
+        for (int r = 0; r < nRows; r++) {
+            System.arraycopy(data[r], 0, annotated[r], 0, nCols);
+            int series = (int) data[r][seriesCol];
+            int time = (int) data[r][timeCol];
+            int cellLabel = (int) data[r][cellIndexCol];
+            annotated[r][nCols] = trackIdByCell.getOrDefault(trackKey(series, time, cellLabel), 0);
+        }
+        String[] headings = new String[nCols + 1];
+        for (int c = 0; c < nCols; c++) {
+            headings[c] = colHeadings.get(c);
+        }
+        headings[nCols] = "Track ID";
+        DataWriter.saveValues(annotated, csv, headings, null, false);
     }
 
 }

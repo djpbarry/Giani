@@ -451,7 +451,7 @@ separately (deferred).
 ## Phase F — Upstream coordination & re-pin
 
 **Status (2026-10-16): resolved — no package migration required (pin since moved
-to `v2.4.0`).** GIANI already pinned the then-latest `IAClassLibrary` release
+to `v2.5.0`).** GIANI already pinned the then-latest `IAClassLibrary` release
 `v2.0.23`. Investigation of
 `djpbarry/IAClassLibrary` shows `master` HEAD is the `v2.0.23` tag and the
 library has **not** renamed its package: its source is still
@@ -463,7 +463,7 @@ GPL-3.0-or-later, parent `pom-scijava:45.1.0`.
 
 ### F1. Re-pin `IAClassLibrary` to a tagged release — ✔ Done (2026-10-16)
 
-1. Confirm the target tag — `v2.0.23` was the latest at the time (since moved to `v2.4.0`).
+1. Confirm the target tag — `v2.0.23` was the latest at the time (since moved to `v2.5.0`).
 2. Migrate `net.calm.iaclasslibrary.*` imports — not needed; no rename occurred.
 3. Reconcile API changes — none at the same coordinate.
 4. Gate on `mvn verify` + the Phase C pipeline-wiring tests (10/10 green).
