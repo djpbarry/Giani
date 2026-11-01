@@ -890,6 +890,12 @@ tracking tuning controls (motion model, linking/gap-closing penalties,
   inits its enable toggle with `setSelected(...)` so it reflects `ENABLE_TOP_HAT_FILTER`;
   (b) `GIANIUI.collectPanelState()` (reentrancy-guarded) persists every panel's state
   before a preview builds its fresh pipeline.
+- **Startup crash (eager preview build) — fixed 2026-11-01.** `initComponents()` built a
+  full preview pipeline per panel just to read `.getPropLabels()`, each running
+  `collectPanelState()` and persisting the unpopulated series combo's `"Item 1"` into
+  `SERIES_SELECT`, crashing the watershed. Fixed via `PipelineBuilder.getStagePropLabels(int)`
+  + per-stage `get*PropLabels()` helpers (the `getFociPropLabels` pattern), so panels no
+  longer build processes at startup.
 
 The wizard is over-built. `GIANIUI.initComponents()` assembles the fixed pipeline
 inline (each `PipelineBuilder.getDefault…()` call creates a process) and wires

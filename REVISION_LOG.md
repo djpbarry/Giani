@@ -785,3 +785,24 @@ against source/output; left in place rather than rewritten:
 
 - Version bumped `3.7.4` → `3.7.5` (`docs`), kept in sync across `pom.xml`,
   `CITATION.cff`, and `docs/conf.py`.
+
+## 2026-11-01 — Fixed GUI startup crash from eager preview build (Phase I1)
+
+- Launching `Plugins > CALM > GIANI` crashed with
+  `NumberFormatException: For input string: "Item 1"` in
+  `MultiThreadedWatershed.setup`. Root cause: `GIANIUI.initComponents()` built a
+  full preview pipeline per panel just to read `.getPropLabels()`, and each build
+  ran `collectPanelState()`, which persisted the unpopulated `SelectInputPanel`
+  series combo box's placeholder `"Item 1"` into `SERIES_SELECT`; the watershed
+  then parsed it as an int.
+- Fix (mirrors the existing `getFociPropLabels` pattern): added
+  `PipelineBuilder.getStagePropLabels(int)` plus per-stage `get*PropLabels()`
+  helpers (single source of truth), refactored the `getDefault*` builders to
+  delegate to them, and changed `initComponents` to call `getStagePropLabels(...)`
+  instead of building processes for labels.
+- Side benefit: removes the startup wart of ~7 eager full-pipeline builds (and 49
+  discarded process objects) per launch.
+- `./mvnw clean test` green (27/27); `TimelapseFixtureTest` now runs (not skipped)
+  against the relocated fixture.
+- Version bumped `3.7.5` → `3.7.6` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, and `docs/conf.py`.

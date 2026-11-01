@@ -111,7 +111,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         componentList.add(selectInputPanel);
         nuclearCentreFinderPanel = new MaximaFinderPanel(props, img,
                 () -> buildPreviewProcess(PipelineBuilder.STAGE_NUC_MAXIMA),
-                buildPreviewProcess(PipelineBuilder.STAGE_NUC_MAXIMA).getPropLabels(),
+                PipelineBuilder.getStagePropLabels(PipelineBuilder.STAGE_NUC_MAXIMA),
                 true, -1,
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Estimating-the-centres-of-nuclei"),
                 GianiDefaultParams.NUC_CENTROID_LOCALISATION_TITLE);
@@ -119,14 +119,14 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         componentList.add(nuclearCentreFinderPanel);
         nuclearFilteringPanel = new net.calm.giani.ui.FilteringPanel(props, img,
                 () -> buildPreviewProcess(PipelineBuilder.STAGE_NUC_FILTER),
-                buildPreviewProcess(PipelineBuilder.STAGE_NUC_FILTER).getPropLabels(),
+                PipelineBuilder.getStagePropLabels(PipelineBuilder.STAGE_NUC_FILTER),
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation"),
                 GianiDefaultParams.NUC_GAUSS_FILTER_TITLE);
         nuclearFilteringPanel.setVisible(false);
         componentList.add(nuclearFilteringPanel);
         nuclearTopHatFilterPanel = new TopHatFilterPanel(props, img,
                 () -> buildPreviewProcess(PipelineBuilder.STAGE_NUC_TOP_HAT),
-                buildPreviewProcess(PipelineBuilder.STAGE_NUC_TOP_HAT).getPropLabels(),
+                PipelineBuilder.getStagePropLabels(PipelineBuilder.STAGE_NUC_TOP_HAT),
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Background-Subtraction-Prior-to-Nuclear-Segmentation"),
                 GianiDefaultParams.NUC_TOP_HAT_TITLE);
         nuclearTopHatFilterPanel.setVisible(false);
@@ -135,7 +135,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 props,
                 img,
                 () -> buildPreviewProcess(PipelineBuilder.STAGE_NUC_SEGMENT),
-                buildPreviewProcess(PipelineBuilder.STAGE_NUC_SEGMENT).getPropLabels(),
+                PipelineBuilder.getStagePropLabels(PipelineBuilder.STAGE_NUC_SEGMENT),
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Segmenting-Nuclei"),
                 GianiDefaultParams.NUC_SEG_TITLE
         );
@@ -143,7 +143,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         componentList.add(nuclearSegmentationPanel);
         cellFilteringPanel = new net.calm.giani.ui.FilteringPanel(props, img,
                 () -> buildPreviewProcess(PipelineBuilder.STAGE_CELL_FILTER),
-                buildPreviewProcess(PipelineBuilder.STAGE_CELL_FILTER).getPropLabels(),
+                PipelineBuilder.getStagePropLabels(PipelineBuilder.STAGE_CELL_FILTER),
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Cell-Segmentation"),
                 GianiDefaultParams.CELL_GAUSS_FILTER_TITLE);
         cellFilteringPanel.setVisible(false);
@@ -152,7 +152,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 props,
                 img,
                 () -> buildPreviewProcess(PipelineBuilder.STAGE_CELL_SEGMENT),
-                buildPreviewProcess(PipelineBuilder.STAGE_CELL_SEGMENT).getPropLabels(),
+                PipelineBuilder.getStagePropLabels(PipelineBuilder.STAGE_CELL_SEGMENT),
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Complete-Segmentation-of-Cells"),
                 GianiDefaultParams.CELL_SEG_TITLE
         );
@@ -162,7 +162,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 props,
                 img,
                 () -> buildPreviewProcess(PipelineBuilder.STAGE_MEASURE),
-                buildPreviewProcess(PipelineBuilder.STAGE_MEASURE).getPropLabels(),
+                PipelineBuilder.getStagePropLabels(PipelineBuilder.STAGE_MEASURE),
                 getHelpURI("https://github.com/djpbarry/Giani/wiki/Specifying-Channels-to-Measure")
         );
         measurementPanel.setVisible(false);

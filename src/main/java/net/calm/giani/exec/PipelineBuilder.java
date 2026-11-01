@@ -54,12 +54,35 @@ public class PipelineBuilder {
     public static final int STAGE_MEASURE = 6;
 
     /**
-     * Returns the default blob detector process used by GIANI
+     * Returns the propLabels array for a single fixed pipeline stage without
+     * constructing a process. Used by the wizard to bind panel fields without
+     * building (and {@code setup()}-ing) a full preview pipeline at startup.
      *
-     * @param props the properties containing key-value parameter-setting pairs to be associated with the process
-     * @return a new {@link MultiThreadedMaximaFinder}
+     * @param stage one of the {@code STAGE_*} constants
+     * @return the {@code propLabels} array for that stage
      */
-    public static MultiThreadedMaximaFinder getDefaultMaximaFinder(Properties props) {
+    public static String[] getStagePropLabels(int stage) {
+        switch (stage) {
+            case STAGE_NUC_MAXIMA:
+                return getMaximaFinderPropLabels();
+            case STAGE_NUC_FILTER:
+                return getNucFilteringPropLabels();
+            case STAGE_NUC_TOP_HAT:
+                return getNucTopHatPropLabels();
+            case STAGE_NUC_SEGMENT:
+                return getNucSegmenterPropLabels();
+            case STAGE_CELL_FILTER:
+                return getCellFilteringPropLabels();
+            case STAGE_CELL_SEGMENT:
+                return getCellSegmenterPropLabels();
+            case STAGE_MEASURE:
+                return getMeasurePropLabels();
+            default:
+                throw new IllegalArgumentException("Unknown pipeline stage: " + stage);
+        }
+    }
+
+    public static String[] getMaximaFinderPropLabels() {
         String[] propLabels = new String[MultiThreadedMaximaFinder.N_PROP_LABELS];
         propLabels[MultiThreadedMaximaFinder.CHANNEL_SELECT] = GianiDefaultParams.BLOB_NUC_CHAN_SELECT_LABEL;
         propLabels[MultiThreadedMaximaFinder.BLOB_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_BLOBS;
@@ -86,6 +109,72 @@ public class PipelineBuilder {
         propLabels[MultiThreadedMaximaFinder.ILASTIK_SMOOTHING] = GianiDefaultParams.ILASTIK_SMOOTHING;
         propLabels[MultiThreadedMaximaFinder.THRESH_DETECT] = GianiDefaultParams.NUC_MAXIMA_DETECT_THRESHOLD;
         propLabels[MultiThreadedMaximaFinder.THRESH_METHOD] = GianiDefaultParams.NUC_MAXIMA_SEG_THRESH_METHOD;
+        return propLabels;
+    }
+
+    public static String[] getNucFilteringPropLabels() {
+        String[] propLabels = new String[MultiThreadedGaussianFilter.N_PROP_LABELS];
+        propLabels[MultiThreadedGaussianFilter.CHANNEL_LABEL] = GianiDefaultParams.NUC_SEG_CHAN_SELECT_LABEL;
+        propLabels[MultiThreadedGaussianFilter.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
+        propLabels[MultiThreadedGaussianFilter.FILT_RAD_LABEL] = GianiDefaultParams.NUC_FILT_RAD_LABEL;
+        return propLabels;
+    }
+
+    public static String[] getNucTopHatPropLabels() {
+        String[] propLabels = new String[MultiThreadedTopHatFilter.N_PROP_LABELS];
+        propLabels[MultiThreadedTopHatFilter.CHANNEL_LABEL] = GianiDefaultParams.NUC_SEG_CHAN_SELECT_LABEL;
+        propLabels[MultiThreadedTopHatFilter.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
+        propLabels[MultiThreadedTopHatFilter.FILT_RAD_LABEL] = GianiDefaultParams.NUC_TOP_HAT_FILT_RAD_LABEL;
+        propLabels[MultiThreadedTopHatFilter.RESIZE_FACTOR_LABEL] = GianiDefaultParams.NUC_TOP_HAT_DOWNSIZE_FACTOR_LABEL;
+        propLabels[MultiThreadedTopHatFilter.ENABLE_FILTER_LABEL] = GianiDefaultParams.ENABLE_TOP_HAT_FILTER;
+        return propLabels;
+    }
+
+    public static String[] getNucSegmenterPropLabels() {
+        String[] propLabels = new String[MultiThreadedWatershed.N_PROP_LABELS];
+        propLabels[MultiThreadedWatershed.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
+        propLabels[MultiThreadedWatershed.THRESHOLD_LABEL] = GianiDefaultParams.NUC_SEG_THRESH_LABEL;
+        propLabels[MultiThreadedWatershed.VOL_MARKER_LABEL] = GianiDefaultParams.NUC_VOL_MARKER;
+        propLabels[MultiThreadedWatershed.MEMB_MARKER_LABEL] = GianiDefaultParams.NUC_MEM_MARKER;
+        propLabels[MultiThreadedWatershed.LAMBDA_LABEL] = GianiDefaultParams.NUC_DIST_WEIGHTING;
+        return propLabels;
+    }
+
+    public static String[] getCellFilteringPropLabels() {
+        String[] propLabels = new String[MultiThreadedGaussianFilter.N_PROP_LABELS];
+        propLabels[MultiThreadedGaussianFilter.CHANNEL_LABEL] = GianiDefaultParams.CELL_SEG_CHAN_SELECT_LABEL;
+        propLabels[MultiThreadedGaussianFilter.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
+        propLabels[MultiThreadedGaussianFilter.FILT_RAD_LABEL] = GianiDefaultParams.CELL_FILT_RAD_LABEL;
+        return propLabels;
+    }
+
+    public static String[] getCellSegmenterPropLabels() {
+        String[] propLabels = new String[MultiThreadedWatershed.N_PROP_LABELS];
+        propLabels[MultiThreadedWatershed.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
+        propLabels[MultiThreadedWatershed.THRESHOLD_LABEL] = GianiDefaultParams.CELL_SEG_THRESH_LABEL;
+        propLabels[MultiThreadedWatershed.VOL_MARKER_LABEL] = GianiDefaultParams.CELL_VOL_MARKER;
+        propLabels[MultiThreadedWatershed.MEMB_MARKER_LABEL] = GianiDefaultParams.CELL_MEM_MARKER;
+        propLabels[MultiThreadedWatershed.LAMBDA_LABEL] = GianiDefaultParams.CELL_DIST_WEIGHTING;
+        return propLabels;
+    }
+
+    public static String[] getMeasurePropLabels() {
+        String[] propLabels = new String[MultiThreadedROIConstructor.N_PROP_LABELS];
+        propLabels[MultiThreadedROIConstructor.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
+        propLabels[MultiThreadedROIConstructor.CHANNELS_LABEL] = GianiDefaultParams.CHAN_FOR_MEASURE;
+        propLabels[MultiThreadedROIConstructor.LOCALISE_LABEL] = GianiDefaultParams.LOCALISE_SPOTS;
+        propLabels[MultiThreadedROIConstructor.OUTPUT_LABEL] = GianiDefaultParams.OUTPUT_DIR_LABEL;
+        return propLabels;
+    }
+
+    /**
+     * Returns the default blob detector process used by GIANI
+     *
+     * @param props the properties containing key-value parameter-setting pairs to be associated with the process
+     * @return a new {@link MultiThreadedMaximaFinder}
+     */
+    public static MultiThreadedMaximaFinder getDefaultMaximaFinder(Properties props) {
+        String[] propLabels = getMaximaFinderPropLabels();
         MultiThreadedMaximaFinder process = new MultiThreadedMaximaFinder(null);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
@@ -99,12 +188,7 @@ public class PipelineBuilder {
      * @return a new {@link MultiThreadedTopHatFilter}
      */
     public static MultiThreadedTopHatFilter getDefaultNucTopHatFilteringProcess(Properties props, MultiThreadedProcess[] inputs) {
-        String[] propLabels = new String[MultiThreadedTopHatFilter.N_PROP_LABELS];
-        propLabels[MultiThreadedTopHatFilter.CHANNEL_LABEL] = GianiDefaultParams.NUC_SEG_CHAN_SELECT_LABEL;
-        propLabels[MultiThreadedTopHatFilter.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
-        propLabels[MultiThreadedTopHatFilter.FILT_RAD_LABEL] = GianiDefaultParams.NUC_TOP_HAT_FILT_RAD_LABEL;
-        propLabels[MultiThreadedTopHatFilter.RESIZE_FACTOR_LABEL] = GianiDefaultParams.NUC_TOP_HAT_DOWNSIZE_FACTOR_LABEL;
-        propLabels[MultiThreadedTopHatFilter.ENABLE_FILTER_LABEL] = GianiDefaultParams.ENABLE_TOP_HAT_FILTER;
+        String[] propLabels = getNucTopHatPropLabels();
         MultiThreadedTopHatFilter process = new MultiThreadedTopHatFilter(inputs);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
@@ -117,10 +201,7 @@ public class PipelineBuilder {
      * @return a new {@link MultiThreadedGaussianFilter}
      */
     public static MultiThreadedGaussianFilter getDefaultNucFilteringProcess(Properties props) {
-        String[] propLabels = new String[MultiThreadedGaussianFilter.N_PROP_LABELS];
-        propLabels[MultiThreadedGaussianFilter.CHANNEL_LABEL] = GianiDefaultParams.NUC_SEG_CHAN_SELECT_LABEL;
-        propLabels[MultiThreadedGaussianFilter.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
-        propLabels[MultiThreadedGaussianFilter.FILT_RAD_LABEL] = GianiDefaultParams.NUC_FILT_RAD_LABEL;
+        String[] propLabels = getNucFilteringPropLabels();
         MultiThreadedGaussianFilter process = new MultiThreadedGaussianFilter(null);
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
@@ -135,12 +216,7 @@ public class PipelineBuilder {
      * @return a new {@link MultiThreadedWatershed}
      */
     public static MultiThreadedWatershed getDefaultNucSegmenter(Properties props, MultiThreadedProcess[] inputs, Objects3DPopulation cells) {
-        String[] propLabels = new String[MultiThreadedWatershed.N_PROP_LABELS];
-        propLabels[MultiThreadedWatershed.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
-        propLabels[MultiThreadedWatershed.THRESHOLD_LABEL] = GianiDefaultParams.NUC_SEG_THRESH_LABEL;
-        propLabels[MultiThreadedWatershed.VOL_MARKER_LABEL] = GianiDefaultParams.NUC_VOL_MARKER;
-        propLabels[MultiThreadedWatershed.MEMB_MARKER_LABEL] = GianiDefaultParams.NUC_MEM_MARKER;
-        propLabels[MultiThreadedWatershed.LAMBDA_LABEL] = GianiDefaultParams.NUC_DIST_WEIGHTING;
+        String[] propLabels = getNucSegmenterPropLabels();
         MultiThreadedWatershed process = new MultiThreadedWatershed(inputs,
                 "Nuclei",
                 false,
@@ -160,10 +236,7 @@ public class PipelineBuilder {
      */
     public static MultiThreadedGaussianFilter getDefaultCellFilteringProcess(Properties props) {
         MultiThreadedGaussianFilter process = new MultiThreadedGaussianFilter(null);
-        String[] propLabels = new String[MultiThreadedGaussianFilter.N_PROP_LABELS];
-        propLabels[MultiThreadedGaussianFilter.CHANNEL_LABEL] = GianiDefaultParams.CELL_SEG_CHAN_SELECT_LABEL;
-        propLabels[MultiThreadedGaussianFilter.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
-        propLabels[MultiThreadedGaussianFilter.FILT_RAD_LABEL] = GianiDefaultParams.CELL_FILT_RAD_LABEL;
+        String[] propLabels = getCellFilteringPropLabels();
         process.setup(new BioFormatsImg(), props, propLabels);
         return process;
     }
@@ -177,12 +250,7 @@ public class PipelineBuilder {
      * @return a new {@link MultiThreadedWatershed}
      */
     public static MultiThreadedWatershed getDefaultCellSegmenter(Properties props, MultiThreadedProcess[] inputs, Objects3DPopulation cells) {
-        String[] propLabels = new String[MultiThreadedWatershed.N_PROP_LABELS];
-        propLabels[MultiThreadedWatershed.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
-        propLabels[MultiThreadedWatershed.THRESHOLD_LABEL] = GianiDefaultParams.CELL_SEG_THRESH_LABEL;
-        propLabels[MultiThreadedWatershed.VOL_MARKER_LABEL] = GianiDefaultParams.CELL_VOL_MARKER;
-        propLabels[MultiThreadedWatershed.MEMB_MARKER_LABEL] = GianiDefaultParams.CELL_MEM_MARKER;
-        propLabels[MultiThreadedWatershed.LAMBDA_LABEL] = GianiDefaultParams.CELL_DIST_WEIGHTING;
+        String[] propLabels = getCellSegmenterPropLabels();
         MultiThreadedWatershed process = new MultiThreadedWatershed(
                 inputs,
                 "Cells",
@@ -205,11 +273,7 @@ public class PipelineBuilder {
      * @return a new {@link MultiThreadedWatershed}
      */
     public static MultiThreadedROIConstructor getDefaultMeasure(Properties props, MultiThreadedProcess[] inputs, Objects3DPopulation cells) {
-        String[] propLabels = new String[MultiThreadedROIConstructor.N_PROP_LABELS];
-        propLabels[MultiThreadedROIConstructor.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
-        propLabels[MultiThreadedROIConstructor.CHANNELS_LABEL] = GianiDefaultParams.CHAN_FOR_MEASURE;
-        propLabels[MultiThreadedROIConstructor.LOCALISE_LABEL] = GianiDefaultParams.LOCALISE_SPOTS;
-        propLabels[MultiThreadedROIConstructor.OUTPUT_LABEL] = GianiDefaultParams.OUTPUT_DIR_LABEL;
+        String[] propLabels = getMeasurePropLabels();
         MultiThreadedROIConstructor process = new MultiThreadedROIConstructor(
                 inputs,
                 cells
