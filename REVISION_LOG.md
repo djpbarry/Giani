@@ -806,3 +806,16 @@ against source/output; left in place rather than rewritten:
   against the relocated fixture.
 - Version bumped `3.7.5` → `3.7.6` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, and `docs/conf.py`.
+
+## 2026-11-01 — Fixed foci (spot) parameters not loading from property files
+
+- Loading a saved parameter file did not restore the sub-cellular spot
+  (foci/`MaximaFinderPanel`) parameters. Root cause: `addAdditionalBlobDetectionPanels`
+  calls `PipelineBuilder.setDefaultFociParams(props, i)`, which wrote every
+  per-channel default with unconditional `setProperty(...)`, clobbering the values
+  just loaded from the file.
+- Fix: `setDefaultFociParams` now uses `putIfAbsent(...)` so defaults only fill
+  keys that were not already present (loaded or previously configured).
+- `./mvnw clean test` green (27/27).
+- Version bumped `3.7.6` → `3.7.7` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, and `docs/conf.py`.
