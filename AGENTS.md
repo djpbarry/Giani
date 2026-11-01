@@ -61,6 +61,7 @@ net.calm.giani.exec.GIANI
 
 - **No arguments** → launches the Swing GUI (`GIANIUI`).
 - **With arguments** → headless batch mode. Flags: `-f <input file>`, `-o <output dir>`, `-l <job list file>`, `-p <properties file>`, `-n <job number>`, `-s <series>`. A `-p` (properties) and either `-f` or `-l` are required. Full usage is documented on the GitHub wiki (`Running-GIANI-on-a-HPC-Cluster`).
+- **Local Fiji install (GUI testing):** `C:\Users\barryd\fiji-latest-portable-nojava\Fiji` — a portable, no-bundled-Java build (launchers `fiji.bat` / `fiji-windows-x64.exe`; set `JAVA_HOME` to a JDK 21). To install a new build, copy `target/giani-<version>.jar` and `target/IAClassLibrary-v<version>.jar` into `plugins/`, after removing the previous `giani-*.jar`, `calm-*.jar` and `IAClassLibrary-*.jar` from both `plugins/` and `jars/`. Other runtime deps (TrackMate, mcib3d, ImageJ, commons-*) come from Fiji's own `jars/`/`plugins/`, not from `target/`.
 
 ## Versioning
 
@@ -124,8 +125,8 @@ src/main/resources/plugins.config     Fiji plugin config (registers the GUI + ma
 
 ### Plugin discovery in Fiji
 
-- `src/main/resources/plugins.config` registers the GUI under `Plugins>CALM`
-  (`exec.GIANI`, which implements `ij.plugin.PlugIn`) and the macro extension
+- `src/main/resources/plugins.config` registers the GUI directly on the
+  `Plugins` menu (`exec.GIANI`, which implements `ij.plugin.PlugIn`) and the macro extension
   (`GIANIMacroExecutor`), exposing `loadPropertiesFile` / `setProperty` /
   `getPropertyList` / `run` to ImageJ macros as `Ext.GIANI.<function>`.
 - The Swing GUI (`GIANIUI`) is launched from `GIANI.main()` (run the JAR with no
