@@ -930,11 +930,11 @@ model, linking/gap-closing penalties, `Track Spots`).
 
 ### I2. Friendliness & polish
 
-- **Sensible, non-zero defaults** so that a first run with no configuration
-  produces useful output: replace the hard-coded developer paths in
-  `GianiDefaultParams.initialise()` (the Dropbox/ilastik leftovers flagged in
-  D1) with safe, informative defaults, and give filter radii / detection
-  parameters sensible starting values rather than `"0.0"`.
+- **Sensible, non-zero defaults** ✔ Done (2026-11-02). The hard-coded developer
+  paths in `GianiDefaultParams.initialise()` were already replaced with
+  `user.home` (D1); the degenerate `"0.0"` filter/detection radii are now
+  biological starting values (nuclear/cell filter `1.0`, top-hat `10.0`, nuclear
+  radius `5.0`). The `"0.0"` quality thresholds remain as "detect all".
 - **Reduce the number of required decisions.** Many wizard steps exist for
   flexibility few users need; consider collapsing optional/advanced stages
   behind an "advanced" toggle, leaving a default path of: pick folder → pick

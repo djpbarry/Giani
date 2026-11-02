@@ -888,3 +888,19 @@ against source/output; left in place rather than rewritten:
 - `./mvnw test` green (28/28).
 - Version bumped `3.9.0` → `3.10.0` (`feat`), kept in sync across `pom.xml`,
   `CITATION.cff`, and `docs/conf.py`.
+
+## 2026-11-02 — Sensible non-zero defaults (Phase I2, step 1)
+
+- Replaced the degenerate `"0.0"` filter/detection radii in
+  `GianiDefaultParams.initialise()` with biological starting values so a
+  first run produces useful output without configuration:
+  - `NUC_FILT_RAD_LABEL` (nuclear Gaussian filter) `0.0` → `1.0`
+  - `CELL_FILT_RAD_LABEL` (cell Gaussian filter) `0.0` → `1.0`
+  - `NUC_TOP_HAT_FILT_RAD_LABEL` (top-hat background radius) `0.0` → `10.0`
+  - `BLOB_NUC_RAD_LABEL` (simple-detector nuclear radius) `0.0` → `5.0`
+  - `NUC_MAXIMA_DETECT_HESSIAN_START_SCALE` (advanced-detector min radius)
+    `0.0` → `5.0`
+- Left the `"0.0"` quality thresholds (noise tolerance, Hessian quality)
+  unchanged: `0.0` means "detect all" and is a reasonable default.
+- `GianiDefaultParamsTest` updated to assert the new defaults.
+- `./mvnw test` green (28/28).
