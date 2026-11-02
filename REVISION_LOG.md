@@ -920,3 +920,13 @@ against source/output; left in place rather than rewritten:
 - `./mvnw test` green (28/28).
 - Version bumped `3.10.0` → `3.11.0` (`feat`), kept in sync across `pom.xml`,
   `CITATION.cff`, and `docs/conf.py`.
+
+## 2026-11-02 — Validate input and surface errors in the UI (Phase I2, step 3)
+
+- Added `GIANIUI.validateInput()`, called at the start of the Run action: it
+  rejects a blank input path, a non-existent path, and a directory containing no
+  valid image files, showing a `GenUtils.error` dialog (beep + `IJ.error`) instead
+  of continuing to fail silently in the executor.
+- `./mvnw test` green (28/28).
+- Version bumped `3.11.0` → `3.12.0` (`feat`), kept in sync across `pom.xml`,
+  `CITATION.cff`, and `docs/conf.py`.

@@ -22,6 +22,7 @@ import net.calm.giani.exec.PipelineBuilder;
 import net.calm.giani.exec.PipelineExecutor;
 import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
+import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsFileLister;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
 import net.calm.iaclasslibrary.IO.PropertyWriter;
 import net.calm.iaclasslibrary.Process.Colocalise.MultiThreadedColocalise;
@@ -383,6 +384,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         for (LayerPanel panel : componentList) {
             panel.setVariables();
         }
+        if (!validateInput()) {
+            return;
+        }
         if (!GianiDefaultParams.setOutputDirectory(props, null, props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL))) {
             return;
         }
@@ -399,6 +403,31 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
             javax.swing.SwingUtilities.invokeLater(() -> runButton.setEnabled(true));
         }).start();
     }//GEN-LAST:event_runButtonActionPerformed
+
+    /**
+     * Validates the input selection before a run, surfacing a dialog for any
+     * problem rather than silently failing (or logging) downstream.
+     */
+    private boolean validateInput() {
+        String inputPath = props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL);
+        if (inputPath == null || inputPath.isBlank()) {
+            GenUtils.error("Please select an input directory or file before running.");
+            return false;
+        }
+        File input = new File(inputPath);
+        if (!input.exists()) {
+            GenUtils.error(String.format("The input path does not exist:%n%s", input.getAbsolutePath()));
+            return false;
+        }
+        if (input.isDirectory()) {
+            ArrayList<String> files = BioFormatsFileLister.obtainValidFileList(input);
+            if (files == null || files.isEmpty()) {
+                GenUtils.error(String.format("No valid image files found in:%n%s", input.getAbsolutePath()));
+                return false;
+            }
+        }
+        return true;
+    }
 
     private void measurementPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_measurementPanelMouseClicked
         addAdditionalBlobDetectionPanels();

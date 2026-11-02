@@ -940,8 +940,11 @@ model, linking/gap-closing penalties, `Track Spots`).
   panels (nuclear detection/filtering/top-hat/segmentation, cell filtering/
   segmentation, tracking) behind the default path of: pick folder → pick
   channels → run. Advanced mode still exposes the full pipeline.
-- **Validate input and explain failures in the UI**, rather than relying on
-  `GenUtils.logError` output to the ImageJ log (see D4).
+- **Validate input and explain failures in the UI.** ✔ Done (2026-11-02). The
+  wizard's Run action now calls `validateInput()` first: it checks the input path
+  exists (and, for a directory, that it contains valid image files) and surfaces
+  a `GenUtils.error` dialog on failure instead of falling through to log-only
+  errors.
 - **Inline help and tooltips** for every parameter (the `GIANIParamInfos`
   tooltip mechanism already exists; audit coverage on the wizard panels).
 - **A quick-start flow** in `README.md` (pick folder → channels → run → open
