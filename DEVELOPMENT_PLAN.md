@@ -18,7 +18,7 @@ the plan's writing.
 **Modernise a ~7-year-old Fiji/ImageJ plugin whose heavy lifting lives in the
 upstream `IAClassLibrary`.** GIANI originally pinned that library at an untagged
 commit (`fe92f24c6e`) predating its modernisation; it is now pinned to the tagged
-release `v2.4.0` (Java 21, GPL-3.0-or-later, parent `pom-scijava:45.1.0`). The
+release `v2.5.0` (Java 21, GPL-3.0-or-later, parent `pom-scijava:45.1.0`). The
 library kept its `net.calm.iaclasslibrary` package (no rename), so aligning with
 it is **not** a package-breaking change; the remaining work (tests, hygiene, CI,
 docs) makes that pin safe and the plugin maintainable.
@@ -123,10 +123,10 @@ guided wizard, sensible defaults, and one CSV out.
   (`license.licenseName=gpl_v3`) with copyright owner **Francis Crick Institute**,
   matching `LICENSE` and the source headers (Phase B1).
 - **Upstream pin (resolved):** `IAClassLibrary` was pinned at commit `fe92f24c6e`;
-  it is now pinned to tagged release `v2.4.0` (`com.github.djpbarry:IAClassLibrary:v2.4.0`
+  it is now pinned to tagged release `v2.5.0` (`com.github.djpbarry:IAClassLibrary:v2.5.0`
   via JitPack). The library modernised to Java 21 and GPL-3.0-or-later but kept
   its `net.calm.iaclasslibrary` package (its own pom declares
-  `net.calm:iaclasslibrary:2.3.0`), so re-pinning was **not** package-breaking.
+  `net.calm:iaclasslibrary:2.5.0`), so re-pinning was **not** package-breaking.
   See Phase F.
 - **Hard-coded developer-specific paths:**
   - `GianiDefaultParams.initialise()` sets `INPUT_DIR_LABEL` to
@@ -470,8 +470,8 @@ GPL-3.0-or-later, parent `pom-scijava:45.1.0`.
 4. Gate on `mvn verify` + the Phase C pipeline-wiring tests (10/10 green).
 
 Optional low-value cleanup: switch the dependency from the JitPack alias
-`com.github.djpbarry:IAClassLibrary:v2.4.0` to the library's real coordinate
-`net.calm:iaclasslibrary:2.2.1`, but only if that artifact is published to a
+`com.github.djpbarry:IAClassLibrary:v2.5.0` to the library's real coordinate
+`net.calm:iaclasslibrary:2.5.0`, but only if that artifact is published to a
 real Maven repo (it currently is not). If a future `v3.x` performs the package
 rename, revisit this phase.
 
@@ -800,7 +800,7 @@ already-resolved decisions.
    Fiji's runtime, and TrackMate ≥ 8; `pom-scijava` bumped to `45.1.0` and
    `scijava.jvm.version=21` set.
 4. **Package namespace.** The library has **not** moved off `net.calm.*` (still
-   `net.calm.iaclasslibrary` at `v2.4.0`), so there is no library-import
+   `net.calm.iaclasslibrary` at `v2.5.0`), so there is no library-import
    migration to mirror. Any future rename of GIANI itself
    (`net.calm.giani` → `io.github.djpbarry.giani`) is an independent decision,
    not coupled to a library rename.

@@ -904,6 +904,8 @@ against source/output; left in place rather than rewritten:
   unchanged: `0.0` means "detect all" and is a reasonable default.
 - `GianiDefaultParamsTest` updated to assert the new defaults.
 - `./mvnw test` green (28/28).
+- Version **not** bumped (left at `3.10.0`, contrary to the bump-every-change
+  convention); the next commit (`3.11.0`) covers it. Noted retrospectively.
 
 ## 2026-11-02 — "Advanced Options" toggle collapses the wizard (Phase I2, step 2)
 
@@ -971,4 +973,18 @@ against source/output; left in place rather than rewritten:
   and deferred.
 - `./mvnw clean package` green (29/29), with a new `titleFor` unit test.
 - Version bumped `3.13.1` → `3.13.2` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-02 — Plan/log housekeeping (docs)
+
+- `DEVELOPMENT_PLAN.md`: updated the statements of the *current* IAClassLibrary
+  pin from `v2.4.0` to `v2.5.0` (overarching aim, upstream-pin gotcha, F1
+  coordinate note, decision 4). The library's own coordinate at `v2.5.0` is
+  `net.calm:iaclasslibrary:2.5.0` (read from the JAR's `pom.properties`).
+  Historical references ("done in v2.3.0", "re-pinned to v2.4.0 to …") are left
+  as written.
+- `REVISION_LOG.md`: the "Sensible non-zero defaults" entry lacked a version
+  line; `git` shows that commit (`8b3826b`) did not bump the version (stayed
+  `3.10.0`), so this is recorded rather than back-filled with a fictitious bump.
+- Version bumped `3.13.2` → `3.13.3` (`docs`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
