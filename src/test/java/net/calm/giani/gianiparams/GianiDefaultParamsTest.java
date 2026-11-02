@@ -62,6 +62,13 @@ class GianiDefaultParamsTest {
     }
 
     @Test
+    void titleAppendsManifestVersion() {
+        assertEquals("GIANI-3.13.2", GianiDefaultParams.titleFor("3.13.2"));
+        assertEquals("GIANI", GianiDefaultParams.titleFor(null));
+        assertEquals("GIANI", GianiDefaultParams.titleFor("  "));
+    }
+
+    @Test
     void perChannelLabelsEndWithChannelAndSuffixWithNumber() {
         assertTrue(GianiDefaultParams.BLOB_CHAN_SELECT_LABEL.endsWith("Channel "));
         assertEquals("Detect Spots in Channel 3",

@@ -17,14 +17,10 @@
 package net.calm.giani.gianiparams;
 
 import ij.IJ;
-import net.calm.giani.ui.GIANIUI;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
-import org.apache.commons.io.FilenameUtils;
 
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Set;
@@ -236,17 +232,23 @@ public class GianiDefaultParams extends Properties {
         return true;
     }
 
+    /**
+     * Builds the versioned application title from the {@code Implementation-Version}
+     * entry that the build writes into the JAR manifest (via {@code pom-scijava}),
+     * so the title no longer depends on the JAR's filename. Falls back to
+     * {@link #APP_TITLE} when no manifest version is available (e.g. running from
+     * {@code target/classes} in tests or an IDE).
+     */
     protected static String getTitleWithVersion() {
-        try {
-            File gianiJar = new File(GIANIUI.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
-            String filename = FilenameUtils.getBaseName(gianiJar.getAbsolutePath());
-            if (!filename.toUpperCase().startsWith(APP_TITLE.toUpperCase())) {
-                throw new IOException();
-            }
-            return filename.toUpperCase();
-        } catch (IOException | URISyntaxException e) {
+        Package pkg = GianiDefaultParams.class.getPackage();
+        return titleFor(pkg == null ? null : pkg.getImplementationVersion());
+    }
+
+    static String titleFor(String version) {
+        if (version == null || version.isBlank()) {
             return APP_TITLE;
         }
+        return String.format("%s-%s", APP_TITLE, version.trim());
     }
 
     /**

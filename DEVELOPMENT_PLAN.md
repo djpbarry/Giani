@@ -357,7 +357,8 @@ had the same `static File inputDirectory` pattern, but it was retired in F3.
   panels (the panels already receive `props` in their constructors).
 - `SelectInputPanel.inputDirectory` (`static File`) → instance field.
 - `GianiDefaultParams.TITLE` is `static final` and fine, but its dependence on the
-  JAR filename is surprising; consider an explicit version source (see Decision 7).
+  JAR filename is surprising; consider an explicit version source (see Decision 7,
+  done 2026-11-02: now read from the manifest).
 
 ### D4. Normalise error handling & logging
 
@@ -810,9 +811,12 @@ already-resolved decisions.
 6. **Plugin framework — stay ImageJ 1.x.** Keep the Swing GUI + `PlugIn`-style
    model; establish the missing `plugins.config` (D5). A SciJava `Command`
    rewrite is out of scope.
-7. **Version source.** `GianiDefaultParams.TITLE` currently reads the JAR
-   filename; replace with a manifest/build-time version read (matching the
-   siblings) so the version and title are robust.
+7. **Version source.** ✔ Done (2026-11-02). `GianiDefaultParams.TITLE` now
+   reads `Implementation-Version` from the JAR manifest (already written by
+   `pom-scijava`) instead of the JAR filename, falling back to `"GIANI"` with no
+   manifest. Output file/folder names still embed the version; decoupling them
+   (stable `GIANI_Output` names + version recorded in `properties.xml`) was
+   considered and not adopted for now.
 8. **Timelapse tracking — TrackMate API in-process (option (b)).** For 4D
    datasets, treat each timepoint as an independent 3D stack and track the
    segmented **cells** (via their nucleus seeds) using the TrackMate API inside

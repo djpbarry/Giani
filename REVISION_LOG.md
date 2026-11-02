@@ -956,3 +956,19 @@ against source/output; left in place rather than rewritten:
 - Docs-only; no code change.
 - Version bumped `3.13.0` → `3.13.1` (`docs`), kept in sync across `pom.xml`,
   `CITATION.cff`, and `docs/conf.py`.
+
+## 2026-11-02 — Read the version from the JAR manifest (Decision 7)
+
+- `GianiDefaultParams.TITLE` was built from the JAR's filename (upper-cased,
+  required to start with `GIANI`), so a renamed JAR silently lost or misreported
+  the version. It now reads `Implementation-Version` from the manifest, which
+  `pom-scijava`'s jar config already writes, via a pure `titleFor(version)`
+  helper (`GIANI-<version>`, or `GIANI` when there is no manifest).
+- Verified with the packaged JAR: `TITLE=GIANI-3.13.2`, unchanged when the JAR
+  is renamed to `my-plugin.jar` (previously this fell back to `GIANI`).
+- Scope kept narrow: output folder/CSV names still embed the version. Stable
+  output names plus a version/commit entry in `properties.xml` were proposed
+  and deferred.
+- `./mvnw clean package` green (29/29), with a new `titleFor` unit test.
+- Version bumped `3.13.1` → `3.13.2` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

@@ -22,7 +22,7 @@ lineage-tracking).
 GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](https://imagej.net/software/fiji/) plugin for batch analysis of 3D (and 4D) microscopy images: it reads proprietary image formats, segments nuclei and cells, measures morphology/fluorescence intensity, and optionally tracks lineages across time.
 
 - **Language/toolchain:** Java 21, Maven, Swing (NetBeans GUI forms), built as an ImageJ/Fiji plugin.
-- **Group/artifact:** `net.calm:giani`, version `3.13.1`.
+- **Group/artifact:** `net.calm:giani`, version `3.13.2`.
 - **Parent POM:** `org.scijava:pom-scijava:45.1.0` (SciJava build conventions).
 - **Core library dependency:** `com.github.djpbarry:IAClassLibrary:v2.5.0` (JitPack) provides the actual image-processing primitives (`MultiThreaded*` process classes, `BioFormatsImg`, `ProcessPipeline`, `PropertyWriter`, etc.). GIANI is mostly glue that wires these primitives into a pipeline and exposes UI/CLI/macro entry points.
 - **Transitive dependency:** `mcib3d-core` (via `IAClassLibrary`) provides `mcib3d.geom.Objects3DPopulation`/`Object3D`, the segmentation-result container threaded through the pipeline.
@@ -174,7 +174,7 @@ Panels extend `net.calm.iaclasslibrary.UIClasses.LayerPanel` and implement `Upda
 
 - **License:** GPL-3.0-or-later — `LICENSE`, all source headers, and `pom.xml` (`license.licenseName = gpl_v3`) now agree.
 - **Default paths:** `GianiDefaultParams.initialise()` uses `System.getProperty("user.home")` for the input dir (no more hard-coded Dropbox/ilastik paths); expect to override via a properties file for real runs.
-- **`GianiDefaultParams.TITLE` is derived from the JAR filename.** `getTitleWithVersion()` reads the code source location and requires the filename to start with `GIANI` (case-insensitive), otherwise falls back to `"GIANI"`. Output directory naming uses this title (`<parent>/<TITLE>_<label>`).
+- **`GianiDefaultParams.TITLE` comes from the JAR manifest.** `getTitleWithVersion()` reads `Implementation-Version` (written by the `pom-scijava` jar config) and returns `GIANI-<version>`; with no manifest (tests, IDE, `target/classes`) it falls back to `"GIANI"`. Output directory and CSV naming use this title (`<parent>/<TITLE>_<label>`, `<TITLE>_Output.csv`).
 - **Headless mode sets `java.awt.headless=true`** and logs via `ij.IJ.log` (not stdout). It calls `System.exit(0)` on completion and on several early-exit error paths.
 - **`DebugTools.setRootLevel("WARN")`** is called in both `GIANI.run()` and `PipelineExecutor.run()` to quiet Bio-Formats/loci logging. Keep this when adding new entry paths, or console output becomes extremely noisy.
 - **Series with fewer than 2 Z-slices are skipped** (`img.getSizeZ(s) < 2`) — 2D images are silently ignored.
