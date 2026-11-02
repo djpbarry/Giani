@@ -85,6 +85,17 @@ public class GIANIParamInfos extends Properties {
         this.setProperty(GianiDefaultParams.LOCALISE_SPOTS, "Select to detect spots in the above-selected channels - click \"Next\" below " +
                 "to set parameters for each channel.");
         this.setProperty(GianiDefaultParams.HELP, "Click to read the online documentation.");
+        this.setProperty(GianiDefaultParams.ENABLE_TOP_HAT_FILTER, "Enable or disable background subtraction in the nuclear channel.");
+        this.setProperty(GianiDefaultParams.NUC_DETECT_MODE, "Choose a method for detection of nuclei centroids.");
+        this.setProperty(GianiDefaultParams.PROCESS_ALL_TIMEPOINTS, "Analyse every timepoint in the selected file, not just the first.");
+        this.setProperty(GianiDefaultParams.TIME_SELECT, "Leave at -1 to follow the Process All Timepoints setting; " +
+                "otherwise the 0-based timepoint index to analyse.");
+        this.setProperty(GianiDefaultParams.TRACK_LINEAGE, "Track cell lineages across timepoints using TrackMate. " +
+                "Requires more than one timepoint to be analysed.");
+        this.setProperty(GianiDefaultParams.TRACK_LINKING_DISTANCE, "Maximum allowed cell movement between consecutive frames, " +
+                "in physical units. Leave at -1 to derive it automatically from the median nucleus size.");
+        this.setProperty(GianiDefaultParams.TRACK_MAX_FRAME_GAP, "Maximum number of frames a track may be missing before it is " +
+                "considered interrupted.");
         for (int i = 0; i < MAX_CHAN; i++) {
             this.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_BLOBS, i), "Simple detection works " +
                     "well for regularly-shaped spots.");

@@ -16,6 +16,7 @@
  */
 package net.calm.giani.ui;
 
+import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
 import net.calm.iaclasslibrary.UIClasses.LayerPanel;
@@ -43,6 +44,7 @@ public class TrackingPanel extends LayerPanel {
     private final JTextField linkingDistanceField;
     private final JLabel maxFrameGapLabel;
     private final JTextField maxFrameGapField;
+    private final GIANIParamInfos info;
 
     /**
      * Constructs a TrackingPanel bound to the supplied properties.
@@ -60,6 +62,7 @@ public class TrackingPanel extends LayerPanel {
         linkingDistanceField = new JTextField();
         maxFrameGapLabel = new JLabel(GianiDefaultParams.TRACK_MAX_FRAME_GAP);
         maxFrameGapField = new JTextField();
+        this.info = new GIANIParamInfos();
         initComponents();
         setToolTips();
     }
@@ -122,13 +125,10 @@ public class TrackingPanel extends LayerPanel {
 
     @Override
     protected void setToolTips() {
-        processAllTimepointsToggleButton.setToolTipText("Analyse every timepoint in the selected file, not just the first.");
-        trackLineageToggleButton.setToolTipText("Track cell lineages across timepoints using TrackMate. "
-                + "Requires more than one timepoint to be analysed.");
-        specificTimepointField.setToolTipText("Leave at -1 to follow the Process All Timepoints setting; "
-                + "otherwise the 0-based timepoint index to analyse.");
-        linkingDistanceField.setToolTipText("Maximum allowed cell movement between consecutive frames, in physical units. "
-                + "Leave at -1 to derive it automatically from the median nucleus size.");
-        maxFrameGapField.setToolTipText("Maximum number of frames a track may be missing before it is considered interrupted.");
+        processAllTimepointsToggleButton.setToolTipText(info.getProperty(GianiDefaultParams.PROCESS_ALL_TIMEPOINTS));
+        trackLineageToggleButton.setToolTipText(info.getProperty(GianiDefaultParams.TRACK_LINEAGE));
+        specificTimepointField.setToolTipText(info.getProperty(GianiDefaultParams.TIME_SELECT));
+        linkingDistanceField.setToolTipText(info.getProperty(GianiDefaultParams.TRACK_LINKING_DISTANCE));
+        maxFrameGapField.setToolTipText(info.getProperty(GianiDefaultParams.TRACK_MAX_FRAME_GAP));
     }
 }

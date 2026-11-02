@@ -229,6 +229,7 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
     }// </editor-fold>//GEN-END:initComponents
 
     protected void setToolTips() {
+        topHatToggleButton.setToolTipText(info.getProperty(propLabels[MultiThreadedTopHatFilter.ENABLE_FILTER_LABEL]));
         filterRadiusXYTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedTopHatFilter.FILT_RAD_LABEL]));
         downSizeFactorTextField.setToolTipText(info.getProperty(propLabels[MultiThreadedTopHatFilter.RESIZE_FACTOR_LABEL]));
         previewButton.setToolTipText(info.getProperty(GianiDefaultParams.PREVIEW));

@@ -945,8 +945,13 @@ model, linking/gap-closing penalties, `Track Spots`).
   exists (and, for a directory, that it contains valid image files) and surfaces
   a `GenUtils.error` dialog on failure instead of falling through to log-only
   errors.
-- **Inline help and tooltips** for every parameter (the `GIANIParamInfos`
-  tooltip mechanism already exists; audit coverage on the wizard panels).
+- **Inline help and tooltips.** ✔ Done (2026-11-02). Audited the panels and filled
+  the gaps: added `GIANIParamInfos` entries for the tracking parameters
+  (`PROCESS_ALL_TIMEPOINTS`, `TIME_SELECT`, `TRACK_LINEAGE`,
+  `TRACK_LINKING_DISTANCE`, `TRACK_MAX_FRAME_GAP`), `ENABLE_TOP_HAT_FILTER`, and
+  `NUC_DETECT_MODE` (whose method combo had a null tooltip); switched
+  `TrackingPanel` to look up tooltips from `GIANIParamInfos`; and added the
+  missing tooltip to the top-hat enable toggle.
 - **A quick-start flow** in `README.md` (pick folder → channels → run → open
   results) alongside the existing overview, and a pointer to MIA for advanced
   needs.

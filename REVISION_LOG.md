@@ -930,3 +930,20 @@ against source/output; left in place rather than rewritten:
 - `./mvnw test` green (28/28).
 - Version bumped `3.11.0` → `3.12.0` (`feat`), kept in sync across `pom.xml`,
   `CITATION.cff`, and `docs/conf.py`.
+
+## 2026-11-02 — Audit and fill tooltip coverage (Phase I2, step 4)
+
+- Audited the wizard panels' tooltip coverage and filled the gaps:
+  - Added `GIANIParamInfos` entries for the tracking parameters
+    (`PROCESS_ALL_TIMEPOINTS`, `TIME_SELECT`, `TRACK_LINEAGE`,
+    `TRACK_LINKING_DISTANCE`, `TRACK_MAX_FRAME_GAP`), `ENABLE_TOP_HAT_FILTER`,
+    and `NUC_DETECT_MODE` (the method combo previously resolved to a null
+    tooltip because `GIANIParamInfos` only had `NUC_CENTROID_LOCALISATION_METHOD`).
+  - Switched `TrackingPanel` to look tooltips up from `GIANIParamInfos` instead
+    of hard-coded strings.
+  - Added the missing tooltip to the top-hat enable toggle in `TopHatFilterPanel`.
+- `LocalisationPanel` has no parameter controls (a single "click Run" label), so
+  its empty `setToolTips()` is left as-is.
+- `./mvnw test` green (28/28).
+- Version bumped `3.12.0` → `3.13.0` (`feat`), kept in sync across `pom.xml`,
+  `CITATION.cff`, and `docs/conf.py`.
