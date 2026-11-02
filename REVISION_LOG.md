@@ -886,4 +886,5 @@ against source/output; left in place rather than rewritten:
   explanatory tooltips. The motion-model and `Track Spots` tunings remain
   deferred.
 - `./mvnw test` green (28/28).
-- No version bump yet (pending this commit's `feat`/`fix` classification).
+- Version bumped `3.9.0` → `3.10.0` (`feat`), kept in sync across `pom.xml`,
+  `CITATION.cff`, and `docs/conf.py`.
