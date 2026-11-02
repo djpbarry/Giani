@@ -952,9 +952,10 @@ model, linking/gap-closing penalties, `Track Spots`).
   `NUC_DETECT_MODE` (whose method combo had a null tooltip); switched
   `TrackingPanel` to look up tooltips from `GIANIParamInfos`; and added the
   missing tooltip to the top-hat enable toggle.
-- **A quick-start flow** in `README.md` (pick folder → channels → run → open
-  results) alongside the existing overview, and a pointer to MIA for advanced
-  needs.
+- **A quick-start flow.** ✔ Done (2026-11-02). Added a "Quick Start" section to
+  `README.md` (launch → pick folder → pick channels → run → open results), plus a
+  note pointing at `Advanced Options` for parameter control and at MIA for
+  workflows beyond GIANI's focused scope.
 - **Preview fidelity:** the preview panels are the main differentiator over a
   config file; make sure defaults and previews make it obvious when a
   segmentation is wrong.

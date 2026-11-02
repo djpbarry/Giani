@@ -947,3 +947,12 @@ against source/output; left in place rather than rewritten:
 - `./mvnw test` green (28/28).
 - Version bumped `3.12.0` → `3.13.0` (`feat`), kept in sync across `pom.xml`,
   `CITATION.cff`, and `docs/conf.py`.
+
+## 2026-11-02 — Quick-start flow in README (Phase I2, step 5)
+
+- Added a "Quick Start" section to `README.md`: launch → pick folder → pick
+  channels → run → open results, with a pointer to `Advanced Options` for
+  parameter control and to MIA for workflows beyond GIANI's focused scope.
+- Docs-only; no code change.
+- Version bumped `3.13.0` → `3.13.1` (`docs`), kept in sync across `pom.xml`,
+  `CITATION.cff`, and `docs/conf.py`.

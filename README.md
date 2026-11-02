@@ -8,6 +8,16 @@ GIANI is a FIJI plugin designed to facilitate routine analysis of 3D cell biolog
 * Measure nuclear and cell morphology, together with fluorescence intensities within these regions.
 * Allow users to explore their results
 
+# Quick Start
+
+1. Launch GIANI from FIJI's `Plugins > GIANI` menu.
+2. **Pick a folder** containing your images, then choose a file/series/channel to preview.
+3. **Pick channels** to measure on the measurement step.
+4. **Run** — GIANI segments nuclei and cells and writes results to a new `_Output` folder next to your input.
+5. **Open the results** — `GIANI_Output.csv` (measurements), the `*_masks/` folders (segmentations), and for timelapse data `GIANI_tracks.csv` + `*_track_masks/`.
+
+For control over detection, segmentation, or tracking parameters, click `Advanced Options` in the wizard. For workflows beyond GIANI's focused cell-segmentation scope (custom pipelines, broader object types, advanced tracking), use [MIA](https://github.com/mianalysis/mia).
+
 # Segment Nuclei and Cells
 
 Nuclei locations are estimated using blob detection...
