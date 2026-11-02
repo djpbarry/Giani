@@ -988,3 +988,28 @@ against source/output; left in place rather than rewritten:
   `3.10.0`), so this is recorded rather than back-filled with a fictitious bump.
 - Version bumped `3.13.2` → `3.13.3` (`docs`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-02 — Skip unreadable input files instead of aborting the run
+
+- When `BioFormatsImg.setId` failed, `PipelineExecutor.run()` logged the error
+  but carried on with the uninitialised reader. Probing with a corrupt `.tif`
+  showed `getSeriesCount()` returns `-1` (series loop is a no-op) but
+  `getFileList()` throws `IllegalStateException` ("call setId(String) first").
+  `updateFileList` only caught `IOException`, so the exception escaped `run()`:
+  no results CSV, `properties.xml`, tracks or masks were written (including
+  results already accumulated for earlier files in a batch), and the CLI still
+  exited `0`.
+- Reachable via single-file input (`-f`, `-l` job lists, or a single file in
+  the GUI), which bypasses `BioFormatsFileLister.obtainValidFileList`; the
+  directory path is largely protected because the lister already rejects such
+  files (a header-valid but truncated file could plausibly still slip through —
+  untested).
+- Fix: on `setId` failure, log "… - skipping.", remove the file from the work
+  list and `continue` to the next file.
+- New `PipelineExecutorUnreadableInputTest` (non-integration): runs the
+  executor on a corrupt single file and asserts the run completes and saves
+  `properties.xml`. Confirmed it fails without the fix (the
+  `IllegalStateException` above) and passes with it.
+- `./mvnw clean test` green (30/30).
+- Version bumped `3.13.3` → `3.13.4` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

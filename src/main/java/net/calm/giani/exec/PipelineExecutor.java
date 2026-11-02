@@ -130,7 +130,11 @@ public class PipelineExecutor extends Thread {
                 try {
                     img.setId(String.format("%s%s%s", input, File.separator, file));
                 } catch (IOException | FormatException e) {
-                    GenUtils.logError(e, String.format("Failed to initialise %s", file));
+                    // An uninitialised reader cannot report its related files, so
+                    // drop just this file and carry on with the rest of the batch.
+                    GenUtils.logError(e, String.format("Failed to initialise %s - skipping.", file));
+                    files.remove(0);
+                    continue;
                 }
                 props.put(img.reformatFileName(), file);
                 IJ.log(String.format("Analysing file %s", FilenameUtils.getName(file)));

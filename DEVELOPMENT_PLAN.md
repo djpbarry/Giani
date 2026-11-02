@@ -948,7 +948,9 @@ model, linking/gap-closing penalties, `Track Spots`).
   wizard's Run action now calls `validateInput()` first: it checks the input path
   exists (and, for a directory, that it contains valid image files) and surfaces
   a `GenUtils.error` dialog on failure instead of falling through to log-only
-  errors.
+  errors. Follow-up (2026-11-02): `PipelineExecutor` now skips a file that
+  Bio-Formats cannot open instead of aborting the whole run (single-file inputs
+  bypass the directory validity check).
 - **Inline help and tooltips.** ✔ Done (2026-11-02). Audited the panels and filled
   the gaps: added `GIANIParamInfos` entries for the tracking parameters
   (`PROCESS_ALL_TIMEPOINTS`, `TIME_SELECT`, `TRACK_LINEAGE`,
