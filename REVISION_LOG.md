@@ -904,3 +904,19 @@ against source/output; left in place rather than rewritten:
   unchanged: `0.0` means "detect all" and is a reasonable default.
 - `GianiDefaultParamsTest` updated to assert the new defaults.
 - `./mvnw test` green (28/28).
+
+## 2026-11-02 — "Advanced Options" toggle collapses the wizard (Phase I2, step 2)
+
+- Added an `Advanced Options` button to the wizard's button bar. Off by default,
+  it reduces the wizard to the two essential panels — input selection and
+  channels-to-measure — giving a default path of *pick folder → pick channels →
+  run*. Toggling it reveals the full panel set (nuclear detection/filtering/
+  top-hat/segmentation, cell filtering/segmentation, tracking).
+- `GIANIUI` now tracks `showAdvanced` and a `corePanels` subset
+  (`selectInputPanel` + `measurementPanel`); `updateLayer()`/`checkLayerIndex()`
+  navigate the visible list rather than the full `componentList`. The toggle is a
+  plain `JButton` (not a `JToggleButton`) so `PropertyExtractor` does not treat it
+  as a pipeline property.
+- `./mvnw test` green (28/28).
+- Version bumped `3.10.0` → `3.11.0` (`feat`), kept in sync across `pom.xml`,
+  `CITATION.cff`, and `docs/conf.py`.

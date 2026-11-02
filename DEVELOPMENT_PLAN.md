@@ -935,10 +935,11 @@ model, linking/gap-closing penalties, `Track Spots`).
   `user.home` (D1); the degenerate `"0.0"` filter/detection radii are now
   biological starting values (nuclear/cell filter `1.0`, top-hat `10.0`, nuclear
   radius `5.0`). The `"0.0"` quality thresholds remain as "detect all".
-- **Reduce the number of required decisions.** Many wizard steps exist for
-  flexibility few users need; consider collapsing optional/advanced stages
-  behind an "advanced" toggle, leaving a default path of: pick folder → pick
-  channels → run.
+- **Reduce the number of required decisions.** ✔ Done (2026-11-02). An
+  "Advanced Options" toggle in the wizard's button bar collapses the fine-tuning
+  panels (nuclear detection/filtering/top-hat/segmentation, cell filtering/
+  segmentation, tracking) behind the default path of: pick folder → pick
+  channels → run. Advanced mode still exposes the full pipeline.
 - **Validate input and explain failures in the UI**, rather than relying on
   `GenUtils.logError` output to the ImageJ log (see D4).
 - **Inline help and tooltips** for every parameter (the `GIANIParamInfos`

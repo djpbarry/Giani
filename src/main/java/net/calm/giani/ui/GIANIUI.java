@@ -38,6 +38,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -57,6 +58,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     private LocalisationPanel localisationPanel;
     private TrackingPanel trackingPanel;
     private boolean collectingPanelState;
+    private boolean showAdvanced = false;
+    private final List<LayerPanel> corePanels = new ArrayList<>();
+    private javax.swing.JButton advancedToggleButton;
     private final Objects3DPopulation cells;
     private final GIANIParamInfos info;
 
@@ -75,6 +79,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         addPanel(trackingPanel);
         componentList.remove(trackingPanel);
         componentList.add(1, trackingPanel);
+        corePanels.add(selectInputPanel);
+        corePanels.add(measurementPanel);
+        addAdvancedToggle();
         setToolTips();
         UIMethods.centreContainer(this);
         setIcon();
@@ -412,14 +419,15 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }//GEN-LAST:event_selectInputPanelComponentShown
 
     boolean updateLayer() {
-        for (int i = 0; i < componentList.size(); i++) {
-            if (i == layerIndex) {
-                componentList.get(i).setVisible(true);
-                if (componentList.get(i) instanceof Updateable updateable) {
-                    updateable.update();
-                }
-            } else {
-                componentList.get(i).setVisible(false);
+        List<LayerPanel> visible = visiblePanels();
+        for (LayerPanel panel : componentList) {
+            panel.setVisible(false);
+        }
+        if (layerIndex >= 0 && layerIndex < visible.size()) {
+            LayerPanel current = visible.get(layerIndex);
+            current.setVisible(true);
+            if (current instanceof Updateable updateable) {
+                updateable.update();
             }
         }
         checkLayerIndex();
@@ -427,18 +435,46 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }
 
     void checkLayerIndex() {
-        if (layerIndex == 0) {
-            previousButton.setEnabled(false);
-        } else {
-            previousButton.setEnabled(true);
-        }
-        if (layerIndex == componentList.size() - 1) {
+        int size = visiblePanels().size();
+        previousButton.setEnabled(layerIndex > 0);
+        if (layerIndex >= size - 1) {
             nextButton.setEnabled(false);
             runButton.setEnabled(true);
         } else {
             nextButton.setEnabled(true);
             runButton.setEnabled(false);
         }
+    }
+
+    private List<LayerPanel> visiblePanels() {
+        return showAdvanced ? componentList : corePanels;
+    }
+
+    private void addAdvancedToggle() {
+        advancedToggleButton = new javax.swing.JButton();
+        updateAdvancedButtonText();
+        advancedToggleButton.setToolTipText("Show or hide advanced segmentation and tracking controls.");
+        advancedToggleButton.addActionListener(evt -> toggleAdvanced());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 3;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.insets = new Insets(10, 20, 10, 20);
+        buttonPanel.add(advancedToggleButton, gbc);
+    }
+
+    private void updateAdvancedButtonText() {
+        advancedToggleButton.setText(showAdvanced ? "Hide Advanced Options" : "Show Advanced Options");
+    }
+
+    private void toggleAdvanced() {
+        showAdvanced = !showAdvanced;
+        updateAdvancedButtonText();
+        layerIndex = 0;
+        updateLayer();
     }
 
     public boolean setVariables() {
