@@ -1013,3 +1013,17 @@ against source/output; left in place rather than rewritten:
 - `./mvnw clean test` green (30/30).
 - Version bumped `3.13.3` → `3.13.4` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+- Note: the `aaf94fa` commit omitted the new (untracked) test file; it was
+  added in the following commit.
+
+## 2026-11-03 — Documented two deferred robustness issues (docs)
+
+- Added a "Known issues (deferred)" section to `DEVELOPMENT_PLAN.md` (Phase I)
+  recording two problems found during the unreadable-input fix and deferred
+  until after release:
+  - header-valid but truncated files in a directory batch may still abort the
+    run (unverified; needs a truncated-file reproduction);
+  - the CLI always exits `0`, so failed HPC jobs report success.
+- Docs-only; no code change.
+- Version bumped `3.13.4` → `3.13.5` (`docs`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

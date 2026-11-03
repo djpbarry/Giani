@@ -969,6 +969,28 @@ model, linking/gap-closing penalties, `Track Spots`).
 This phase is deliberately broad and is expected to be driven by user feedback
 once the modernisation lands.
 
+### Known issues (deferred, logged 2026-11-03)
+
+Found while fixing the unreadable-input abort (3.13.4); judged lower priority
+than the release and deferred.
+
+- **Header-valid but truncated files in a directory batch (unverified).**
+  `BioFormatsFileLister.obtainValidFileList` rejects files Bio-Formats cannot
+  identify, but a file with a valid header and truncated/corrupt pixel data may
+  pass the lister and `setId`, then fail later in a process's
+  `loadPixelData`. Such failures surface as `ExecutionException`s that are
+  logged per process, but anything unchecked outside the process loop would
+  still escape `PipelineExecutor.run()` and abort the batch without writing
+  output. To do: reproduce with a deliberately truncated OME-TIFF, then decide
+  on per-file error isolation (catch per file, log, skip, keep going).
+- **CLI exit code is always `0`.** `GIANI.main` calls `System.exit(0)` after
+  `GIANI.init(...)` regardless of outcome, and an uncaught exception in the
+  `PipelineExecutor` thread only prints a stack trace before `join()` returns.
+  HPC schedulers therefore report failed jobs as successful. To do: have the
+  executor record success/failure (e.g. a status field or uncaught-exception
+  handler) and exit non-zero on failure; keep `0` for validation early-exits
+  only if that is the documented contract.
+
 ---
 
 ## Suggested sequencing & milestones
