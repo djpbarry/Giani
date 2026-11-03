@@ -1071,3 +1071,34 @@ against source/output; left in place rather than rewritten:
   Options is on; macro-extension activation is unverified.
 - Version bumped `3.13.5` → `3.13.6` (`docs`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-03 — Live 3.13.6 run reviewed; GUI label/control review planned (I3)
+
+- Installed 3.13.6 into the portable Fiji (removing `giani-3.13.0.jar` and a
+  stale CALM-era `iaclasslibrary-1.0.37.jar` from `plugins/`). A live
+  timelapse run (CHO fixture, all timepoints, tracking + spots on channel 0)
+  confirmed the manifest-derived title under Fiji (`GIANI-3.13.6_Output`) and
+  working tracking (77 observations, 8 lineages, `Track ID` in both CSVs).
+- The run and a follow-up code review surfaced bugs, to be fixed next:
+  - `updateDeprecatedProps` is only called from the GUI; headless and macro
+    property loading never migrate old parameter names.
+  - StarDist probability/overlap labels are swapped in `MaximaFinderPanel`
+    (`:382`/`:393`), so collecting panel state writes each value under the
+    other's key.
+  - `TrackMaskWriter` remaps every `*_masks` folder, including spot masks,
+    using the cell label → track map, producing meaningless
+    `*_Spot_track_masks`.
+  - `GianiDefaultParams.initialise()` stores the per-channel prefix constants
+    (e.g. `"Radius for Simple Spot Detection in Channel "`) as keys, leaving
+    unsuffixed junk entries in `properties.xml`.
+- Planned **I3** in `DEVELOPMENT_PLAN.md`: tracking panel redesign (replace the
+  `-1` sentinels with a *Timepoints to Analyse* dropdown and an *Automatic
+  Linking Distance* toggle; disable *Track Lineage* unless all timepoints are
+  analysed), shorter panel titles and small text fixes, and parameter renames
+  via `DeprecatedProps`. Recorded the key constraint (on-screen labels are the
+  `properties.xml` keys, via `PropertyExtractor`), the deferral of 1-based
+  channel/series numbering (needs IAClassLibrary), and two open output-format
+  questions (spot rows in the main CSV; inconsistent Cell `Label` values).
+- Docs-only; no code change.
+- Version bumped `3.13.6` → `3.13.7` (`docs`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

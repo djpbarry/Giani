@@ -975,6 +975,99 @@ model, linking/gap-closing penalties, `Track Spots`).
 This phase is deliberately broad and is expected to be driven by user feedback
 once the modernisation lands.
 
+### I3. GUI label and control review (planned 2026-11-03)
+
+Prompted by live testing of 3.13.6: sentinel defaults such as `Specific
+Timepoint = -1` and `Linking Distance = -1` are confusing, and many labels are
+jargon-heavy or over-long. Planned in three steps, to follow the bug fixes
+listed under "Prerequisite" below.
+
+**Key constraint.** On-screen labels *are* the parameter keys:
+IAClassLibrary's `PropertyExtractor` pairs each `JLabel` (via `setLabelFor`)
+or `JToggleButton` text with its control, and that text is the key written to
+`properties.xml` and accepted by `Ext.GIANI.setProperty`. Likewise, dropdown
+options are the stored values. Therefore:
+
+- Panel *titles* are display-only and can change freely.
+- Parameter *labels* can only change by renaming the key, with an old→new
+  `DeprecatedProps` entry so saved files and macros keep working.
+- Changing stored *values* (e.g. 1-based channel/series numbering to match
+  Fiji) is not GIANI-only: IAClassLibrary parses values such as `"0"`
+  directly. **Deferred**; cover with tooltips meanwhile.
+
+**Prerequisite (bug, fix first):** `updateDeprecatedProps` is only called by
+`GIANIUI.loadParameters`. Headless (`GIANI.init`) and macro
+(`GIANIMacroExecutor.loadPropertiesFile`) loading never migrate old names, so
+renames silently drop settings on those paths (already true for
+`Track Timelapse` → `Process All Timepoints`). `AGENTS.md` wrongly states
+otherwise.
+
+**Step 2 — Tracking panel redesign (change controls, not just wording).**
+
+- Replace the `Process All Timepoints` toggle + `Specific Timepoint` (`-1`)
+  field with one dropdown, **Timepoints to Analyse**: *First only* / *All* /
+  *Single…*, plus a **Timepoint** field (1-based; GIANI parses this value
+  itself, so 1-based display is feasible here) enabled only for *Single*.
+  `PipelineExecutor` keeps honouring the existing `PROCESS_ALL_TIMEPOINTS` /
+  `TIME_SELECT` keys so old files and headless runs still work.
+- Disable **Track Lineage** unless *All* is selected, removing the trap where
+  tracking silently produces no output.
+- Replace `Linking Distance = -1` with an **Automatic Linking Distance**
+  toggle (default on) + **Max Linking Distance (µm)** field enabled only when
+  automatic is off; show units (currently missing on this panel).
+- Rename `Max Frame Gap` → **Max Missing Timepoints**.
+- Update `GIANIParamInfos` tooltips, `docs/start/tracking.rst`, and the
+  `DeprecatedProps` map.
+
+**Step 3 — Panel titles and small text fixes (display-only, low risk).**
+
+| Current title | Proposed |
+|---|---|
+| Blob Detection to Approximate Locations of Nuclear Centroids | Find Nuclei |
+| Gaussian Filtering to Suppress Noise in Nuclear Channel Prior to Segmentation | Smooth Nuclear Channel |
+| Top Hat Filtering to Homogenise Background in Nuclear Channel Prior to Segmentation | Remove Background (Nuclear Channel) |
+| Segmentation of Nuclei Using Centroids as Seeds | Segment Nuclei |
+| Gaussian Filtering to Suppress Noise in Cell Channel Prior to Segmentation | Smooth Cell Channel |
+| Segmentation of Cells Using Nuclei as Seeds | Segment Cells |
+| Blob Detection to Approximate Locations of Spots in Channel N | Find Spots in Channel N |
+
+Also: "Specify Location" → "Browse…"; "Measure Preview" → "Preview
+Measurements"; consistent capitalisation of the ilastik labels. Caveats:
+`FilteringPanel`/`TopHatFilterPanel`/`SegmentationPanel` compare
+`this.title` against the `*_TITLE` constants (StarDist panel-disabling), so
+change the constants, not the call sites; and check
+`FOCI_CENTROID_LOCALISATION_TITLE`, which appears in `DeprecatedProps` (may
+double as a key) before renaming it.
+
+**Step 4 — Parameter renames (each needs a `DeprecatedProps` entry).**
+
+| Current key / label | Proposed |
+|---|---|
+| Nuclear Radius for Simple Centroid Detection | Approximate Nuclear Radius |
+| Quality of Simple / Advanced Nuclear Centroid Detections | Detection Threshold |
+| Minimum Nuclear Radius for Advanced Centroid Detection | Minimum Nuclear Radius |
+| Downsizing Factor for Top Hat Filter for Nuclear Channel | Downsampling Factor (speed-up) |
+| Localise Spots | Detect Spots |
+| Nuclear / Cell Volume Marker + Membrane Marker (two mutually exclusive toggles) | One dropdown, **Separate Touching Nuclei/Cells By**: *Distance Only* / *Distance + Intensity Edges*; disable *Distance Weighting* for *Distance Only* |
+| Detection Method options: Simple Nuclear Centroid Detector / Advanced Nuclear Centroid Detector / Grey Level Thresholding | Simple (fixed size) / Advanced (variable size) / Intensity Threshold |
+
+The detection-method options are the riskiest: the option strings double as
+boolean keys (`NUC_MAXIMA_DETECT_BLOBS` etc., reconciled by
+`DeprecatedProps.mapControlChanges`), so do them last. Per-channel spot
+labels (`... in Channel N`) follow the same renames. Decide before release how
+far step 4 goes, since it touches every saved parameter file.
+
+**Output-format questions raised by the same run (decide, not yet planned):**
+
+- Spot rows go into the main results CSV (3,455 of 3,686 rows in the
+  CHO test run), adding `Nuclear`/`Channel` columns that are blank for
+  nucleus/cell/cytoplasm rows, and each spot row inherits its cell's
+  `Track ID`. Spots already have `spot_summary_data.csv`; consider a separate
+  per-spot CSV.
+- `Label` values are inconsistent: Nucleus/Cytoplasm/Spot labels include
+  `_T<t>` but Cell labels do not (from IAClassLibrary), so Cell labels are not
+  unique without the `Time` column.
+
 ### Known issues (deferred, logged 2026-11-03)
 
 Found while fixing the unreadable-input abort (3.13.4); judged lower priority
