@@ -409,7 +409,8 @@ Determine and document how GIANI is discovered in Fiji:
 
 ### E1. Consolidate ReadTheDocs into this repo
 
-**Status: complete (content review deferred).** GIANI's user docs live in a separate repo
+**Status: complete; content review text done 2026-11-03, screenshots and two
+verifications outstanding (see step 3).** GIANI's user docs live in a separate repo
 (`djpbarry/giani-docs`), a Sphinx + ReadTheDocs project forked from
 `readthedocs/tutorial-template`. It contains `.rst` content under
 `docs/{overview,start,cells,nuclei,measure,cluster,complete,test}` plus PNG
@@ -434,7 +435,12 @@ Steps:
 3. **Content review (after the move).** The docs describe the wizard/installation
    and predate D5's `plugins.config` and the other modernisation; update the
    installation page (Fiji update-site screenshots) and any stale parameter/UI
-   text once the code settles.
+   text once the code settles. **Text done (2026-11-03).** Outstanding, marked
+   with `.. TODO(...)` comments in the `.rst` sources: (a) recapture the
+   v2.0-era screenshots and add new ones (Advanced Options, Tracking panel,
+   Grey Level Thresholding preview); (b) verify how the `Ext.GIANI` macro
+   extension is activated (`GIANIMacroExecutor` is registered under
+   `Extensions` in `plugins.config` but is not a `PlugIn`).
 4. **Repoint ReadTheDocs** from `djpbarry/giani-docs` to `djpbarry/Giani`
    (one-time RTD dashboard action). Done 2026-10-16; the `development` build
    succeeds at https://giani-docs.readthedocs.io/en/development/.

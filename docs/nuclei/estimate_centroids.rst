@@ -7,7 +7,7 @@ Overview
 This step aims to identify the approximate centres of each of the
 nuclei. These will be used in a subsequent step to “seed” the complete
 segmentation of the nuclei, so it’s critical that the correct number of
-nuclei is identified. There are four different methods available in the
+nuclei is identified. There are five different methods available in the
 *Detection Method* dropdown menu to perform this step. The output of
 each is slightly different, but the aim of each is the same - correctly
 identify the approximate location of each nucleus in the image. The
@@ -95,6 +95,26 @@ yellow circles are detected per nucleus.
 .. figure:: ../images/GIANI_Detect_Nuclei_Centres_Advanced_Preview.PNG
    :alt: GIANI Detect Nuclei Centres Preview
 
+Grey Level Thresholding
+=======================
+
+This method applies one of ImageJ's automatic
+`threshold methods <https://imagej.net/plugins/auto-threshold>`__ to the
+nuclear channel to separate nuclei from background, and uses the resulting
+objects to locate the nuclei. It works best when nuclei are well separated
+and clearly brighter than the background.
+
+.. _parameters-threshold:
+
+Parameters
+----------
+
+-  **Threshold Method for Nuclear Centroid Detection:** the automatic
+   thresholding method used to separate nuclei from background.
+
+.. TODO(screenshot): add a preview screenshot for Grey Level Thresholding
+   (suggested name ../images/GIANI_Detect_Nuclei_Centres_Threshold_Preview.PNG).
+
 Ilastik (Beta)
 ==============
 
@@ -175,9 +195,8 @@ Preview Output
 Unlike the other methods above, StarDist produces a complete
 segmentation of the nuclei - no subsequent steps for nuclear
 segmentation will be required (the next three panels in the GIANI wizard
-will be disabled). Skip straight to `Segmenting
-Cells <https://github.com/djpbarry/Giani/wiki/Segmenting-Cells>`__ for
-next steps.
+will be disabled). Skip straight to :doc:`../cells/index` for next
+steps.
 
 .. figure:: ../images/GIANI_Detect_Nuclei_Centres_StarDist_Preview.PNG
    :alt: GIANI Detect Nuclei Centres Preview

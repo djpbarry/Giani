@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'GIANI'
-copyright = '2019-2025, GIANI docs authors'
+copyright = '2019-2026, GIANI docs authors'
 author = 'Dave Barry'
 
 
@@ -85,4 +85,4 @@ html_logo = 'overview/images/Icon.png'
 
 #release = '0.3.0'
 # Keep this version in sync with <version> in pom.xml and the version in CITATION.cff.
-version = '3.13.5'
+version = '3.13.6'

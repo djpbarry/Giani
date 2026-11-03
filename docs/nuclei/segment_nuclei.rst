@@ -6,7 +6,7 @@ Segmenting Nuclei
 
 This panel completes the nuclear segmentation by watershed on the
 filtered image from the previous step, using the nuclear centres
-identified previously as seed points. The *Threshold for Nuclear
+identified previously as seed points. The *Threshold Method for Nuclear
 Segmentation* determines the intensity threshold that will be used to
 segment all nuclei from background. The nuclei are segmented from each
 other using one of two methods:
@@ -28,8 +28,8 @@ distance to the nearest seed points and the local intensity variations
 in the nuclear signal. In theory, the dividing lines constructed using
 this method should more closely align with sharp gradients between
 nuclei, if they exist. How much weighting is attributed to local
-intensity versus distance to seed points is tunable via the *Distance
-Weighting* parameter - a larger value will result in segmentations that
+intensity versus distance to seed points is tunable via the *Nuclear
+Distance Weighting* parameter (default ``0.5``) - a larger value will result in segmentations that
 are more heavily based on distance to seed points alone. This method is
 implemented using
 `MorphoLibJ <https://github.com/ijpb/MorphoLibJ>`__\ ’s
@@ -59,8 +59,6 @@ in-built `3D viewer <https://imagej.net/3D_Viewer>`__:
 
 --------------
 
-**Proceed to** `Segmenting
-Cells <https://github.com/djpbarry/Giani/wiki/Segmenting-Cells>`__
+**Proceed to** :doc:`../cells/index`
 
-**Go back to** `Background Subtraction Prior to Nuclear
-Segmentation <https://github.com/djpbarry/Giani/wiki/Background-Subrtraction-Prior-to-Nuclear-Segmentation>`__
+**Go back to** :doc:`background_subtraction`

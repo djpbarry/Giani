@@ -8,7 +8,8 @@ supplied to GIANI can contain a mixture of different file types,
 including multi-file image formats (a single image saved in multiple
 files) and/or multi-series formats (multiple images contained within a
 single file) - as long as the images are readable by Bio-Formats, they
-should be readable by GIANI.
+should be readable by GIANI. Any file in the input directory that
+Bio-Formats cannot open is skipped, with a message in the FIJI log.
 
 However, it should be remembered that different file formats likely
 indicates data that was acquired on different systems and, therefore,
@@ -22,18 +23,22 @@ the same system.
 Data Dimensionality
 -------------------
 
-At present, one of GIANI’s dependencies requires 3D input. Therefore, at
-this time, GIANI can only be run on 3D datasets - any 2D datasets that
-GIANI encounters will be skipped, accompanied by the following prompt:
+GIANI analyses 3D data. Any image series with fewer than two Z-slices
+(i.e. 2D data) is skipped, with the following message in the FIJI log:
 
-``No valid image series found in <filename>``
+``Only 2 dimensions - skipping.``
+
+Timelapse (3D + time) data is supported: each timepoint is analysed as an
+independent 3D stack. By default only the first timepoint of each series is
+analysed - see :doc:`../start/tracking` for how to analyse every timepoint
+and track cells over time.
 
 Converting Data
 ---------------
 
 If for some reason GIANI cannot read your data (correctly), it is
-suggested that you use Bio-Formats to convert your data to OME.TIFF
+suggested that you use Bio-Formats to convert your data to OME-TIFF
 format. This can be done using either the Bio-Formats plugin for
 ImageJ/FIJI, or using the Bio-Formats command line tools. Instructions
 on how to use Bio-Formats are available
-`here <https://docs.openmicroscopy.org/bio-formats/6.9.0/users/index.html>`__.
+`here <https://bio-formats.readthedocs.io/en/stable/users/index.html>`__.

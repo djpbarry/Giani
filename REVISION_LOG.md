@@ -1027,3 +1027,45 @@ against source/output; left in place rather than rewritten:
 - Docs-only; no code change.
 - Version bumped `3.13.4` → `3.13.5` (`docs`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-03 — User docs content review (E1 step 3, text)
+
+- Reviewed every `docs/` page against the code and real 3.9.0/3.13.0 output
+  folders; the content dated from ~v2.0. Rewrote/updated:
+  - **installation:** CALM update site retained (decision: reuse it for GIANI),
+    noting the retired CALM tools; fixed the broken inline site list; added an
+    "Upgrading from an older version" section (Java 21, stale
+    `calm-*`/`giani-*`/`IAClassLibrary-*` JARs).
+  - **about:** timelapse/tracking and spot localisation; MIA pointer; citation
+    now the J Cell Sci 2022 paper (was the 2020 bioRxiv preprint).
+  - **getting started:** GIANI is on `Plugins` directly; documented the
+    default path, *Advanced Options*, and *Load Parameters*.
+  - **new `start/tracking.rst`:** Tracking panel parameters, the
+    "Process All Timepoints must be on" trap, tracking outputs
+    (`Track ID`, `GIANI_tracks.csv`, `*_track_masks`), inTRACKtive viewing.
+  - **output (`complete/index`):** real folder naming (`GIANI-X.Y.Z_Output`,
+    `_(1)` suffix), ROI zips removed, per-type mask folders with `_T_Z`
+    names, `Series`/`Time`/`Cell_Index` columns, `spot_summary_data.csv`.
+  - **headless (`cluster/index`):** replaced `java -jar` with the Fiji launcher
+    form `fiji-windows-x64.exe --headless --main-class=net.calm.giani.exec.GIANI
+    -- -f … -p … -o …`, **verified** against the portable Fiji (3.13.0; exit 0,
+    full output). Earlier attempts without the `--` divider failed with exit
+    code 3 (launcher rejects unrecognized args; `allow-unrecognized-args =
+    false` in `config/jaunch/common.toml`). Removed `-h` (never parsed when
+    given alone). Added an ImageJ macro section (`Ext.GIANI.*`).
+  - **file formats:** correct 2D-skip message, timelapse support, unreadable
+    files skipped, current Bio-Formats docs link.
+  - **pipeline pages:** five detection methods (added Grey Level
+    Thresholding); single filter radius (not x/y/z); current parameter names
+    and defaults; *Enable Top Hat Filtering*; spot panels only appear with
+    Advanced Options; wiki cross-links replaced with `:doc:` links.
+  - `conf.py` copyright → 2019-2026; test-data page notes its outputs are old.
+- Not built locally (no Sphinx); internal `:doc:` links checked by script.
+  ReadTheDocs builds on push.
+- Outstanding (as `.. TODO(...)` comments in the sources): screenshot
+  recapture, and verifying macro-extension activation.
+- Findings for later code work: wizard help buttons (`getHelpURI`) still point
+  at the GitHub wiki; `GIANI -h` alone is never parsed; spot-detection panels
+  are hidden (defaults used) unless Advanced Options is on.
+- Version bumped `3.13.5` → `3.13.6` (`docs`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
