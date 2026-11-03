@@ -17,6 +17,7 @@
 package net.calm.giani.gianiparams;
 
 import ij.IJ;
+import net.calm.iaclasslibrary.IO.PropertyWriter;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
 
 import java.awt.*;
@@ -249,6 +250,23 @@ public class GianiDefaultParams extends Properties {
             return APP_TITLE;
         }
         return String.format("%s-%s", APP_TITLE, version.trim());
+    }
+
+    /**
+     * Loads a saved parameter file into {@code props} and migrates any
+     * deprecated parameter names to their current equivalents. Every loading
+     * path (GUI, headless CLI, macro) must use this rather than calling
+     * {@link PropertyWriter#loadProperties} directly, so old property files
+     * behave the same everywhere.
+     *
+     * @param props the properties to populate
+     * @param title the title passed through to {@link PropertyWriter}
+     * @param file  the saved parameter file (e.g. {@code properties.xml})
+     * @throws Exception if the file cannot be read or parsed
+     */
+    public static void loadProperties(Properties props, String title, File file) throws Exception {
+        PropertyWriter.loadProperties(props, title, file);
+        updateDeprecatedProps(props);
     }
 
     /**

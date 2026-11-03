@@ -995,8 +995,9 @@ options are the stored values. Therefore:
   Fiji) is not GIANI-only: IAClassLibrary parses values such as `"0"`
   directly. **Deferred**; cover with tooltips meanwhile.
 
-**Prerequisite (bug, fix first):** `updateDeprecatedProps` is only called by
-`GIANIUI.loadParameters`. Headless (`GIANI.init`) and macro
+**Prerequisite (bug, fix first) — ✔ Fixed 2026-11-03 (3.13.8):** all three
+paths now load via `GianiDefaultParams.loadProperties`. Previously,
+`updateDeprecatedProps` was only called by `GIANIUI.loadParameters`. Headless (`GIANI.init`) and macro
 (`GIANIMacroExecutor.loadPropertiesFile`) loading never migrate old names, so
 renames silently drop settings on those paths (already true for
 `Track Timelapse` → `Process All Timepoints`). `AGENTS.md` wrongly states

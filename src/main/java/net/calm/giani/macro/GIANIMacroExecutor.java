@@ -21,7 +21,6 @@ import ij.macro.ExtensionDescriptor;
 import ij.macro.MacroExtension;
 import net.calm.giani.exec.GIANI;
 import net.calm.giani.gianiparams.GianiDefaultParams;
-import net.calm.iaclasslibrary.IO.PropertyWriter;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
 
 import java.io.File;
@@ -80,7 +79,7 @@ public class GIANIMacroExecutor implements MacroExtension {
             return;
         }
         try {
-            PropertyWriter.loadProperties(props, null, new File((String) args[0]));
+            GianiDefaultParams.loadProperties(props, null, new File((String) args[0]));
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to load properties file.");
         }

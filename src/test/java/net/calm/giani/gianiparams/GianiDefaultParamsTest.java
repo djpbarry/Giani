@@ -17,6 +17,13 @@
 package net.calm.giani.gianiparams;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.nio.file.Path;
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -66,6 +73,28 @@ class GianiDefaultParamsTest {
         assertEquals("GIANI-3.13.2", GianiDefaultParams.titleFor("3.13.2"));
         assertEquals("GIANI", GianiDefaultParams.titleFor(null));
         assertEquals("GIANI", GianiDefaultParams.titleFor("  "));
+    }
+
+    /**
+     * Headless and macro runs load parameters through the same helper as the
+     * GUI, so a file saved before a parameter was renamed must still apply the
+     * old value under the new name (previously only the GUI migrated names).
+     */
+    @Test
+    void loadPropertiesMigratesDeprecatedNames(@TempDir Path tmp) throws Exception {
+        Properties saved = new Properties();
+        saved.setProperty(DeprecatedProps.TRACK_TIMELAPSE, "true");
+        File file = tmp.resolve("properties.xml").toFile();
+        try (OutputStream out = new FileOutputStream(file)) {
+            saved.storeToXML(out, "GIANI-3.8.0");
+        }
+
+        GianiDefaultParams props = new GianiDefaultParams();
+        assertEquals("false", props.getProperty(GianiDefaultParams.PROCESS_ALL_TIMEPOINTS));
+
+        GianiDefaultParams.loadProperties(props, null, file);
+
+        assertEquals("true", props.getProperty(GianiDefaultParams.PROCESS_ALL_TIMEPOINTS));
     }
 
     @Test

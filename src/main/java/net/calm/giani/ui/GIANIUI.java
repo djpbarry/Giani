@@ -24,7 +24,6 @@ import net.calm.giani.gianiparams.GIANIParamInfos;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsFileLister;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
-import net.calm.iaclasslibrary.IO.PropertyWriter;
 import net.calm.iaclasslibrary.Process.Colocalise.MultiThreadedColocalise;
 import net.calm.iaclasslibrary.Process.MultiThreadedProcess;
 import net.calm.iaclasslibrary.Process.ProcessPipeline;
@@ -368,8 +367,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     protected void loadParameters(String location) {
         String inputDirectory = props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL);
         try {
-            PropertyWriter.loadProperties(props, GianiDefaultParams.TITLE, new File(location));
-            GianiDefaultParams.updateDeprecatedProps(props);
+            GianiDefaultParams.loadProperties(props, GianiDefaultParams.TITLE, new File(location));
             props.setProperty(GianiDefaultParams.INPUT_DIR_LABEL, inputDirectory);
             updateProperties(props, this);
             measurementPanelMouseClicked(null);

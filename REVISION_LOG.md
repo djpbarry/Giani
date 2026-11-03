@@ -1102,3 +1102,24 @@ against source/output; left in place rather than rewritten:
 - Docs-only; no code change.
 - Version bumped `3.13.6` → `3.13.7` (`docs`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-03 — Migrate deprecated parameter names on every loading path
+
+- Only the GUI (`GIANIUI.loadParameters`) called
+  `GianiDefaultParams.updateDeprecatedProps` after loading a parameter file.
+  Headless runs (`GIANI.init`) and the macro extension
+  (`GIANIMacroExecutor.loadPropertiesFile`) loaded via
+  `PropertyWriter.loadProperties` directly and never migrated old names, so
+  e.g. a pre-3.10 file's `Track Timelapse=true` was silently ignored on HPC
+  (only `t=0` analysed). `AGENTS.md` wrongly claimed all paths migrated.
+- Fix: new `GianiDefaultParams.loadProperties(props, title, file)` loads and
+  then migrates; all three call sites use it, and the now-unused
+  `PropertyWriter` imports were removed. `AGENTS.md` updated to require this
+  helper for any future loading path.
+- New `GianiDefaultParamsTest.loadPropertiesMigratesDeprecatedNames` writes a
+  `properties.xml` containing only `Track Timelapse=true` and asserts
+  `Process All Timepoints` becomes `true` after loading. (It covers the helper;
+  the bug itself was the call sites bypassing it.)
+- `./mvnw clean test` green (31/31).
+- Version bumped `3.13.7` → `3.13.8` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

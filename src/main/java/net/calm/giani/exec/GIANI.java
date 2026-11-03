@@ -22,7 +22,6 @@ import loci.common.DebugTools;
 import mcib3d.geom.Objects3DPopulation;
 import net.calm.giani.gianiparams.GianiDefaultParams;
 import net.calm.giani.ui.GIANIUI;
-import net.calm.iaclasslibrary.IO.PropertyWriter;
 import net.calm.iaclasslibrary.Process.ProcessPipeline;
 import net.calm.iaclasslibrary.UtilClasses.GenUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -113,7 +112,7 @@ public class GIANI implements PlugIn {
         System.setProperty("java.awt.headless", "true");
         Properties props = new GianiDefaultParams();
         try {
-            PropertyWriter.loadProperties(props, null, inputProps);
+            GianiDefaultParams.loadProperties(props, null, inputProps);
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to load properties file.");
         }
