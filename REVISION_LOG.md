@@ -1064,8 +1064,10 @@ against source/output; left in place rather than rewritten:
   ReadTheDocs builds on push.
 - Outstanding (as `.. TODO(...)` comments in the sources): screenshot
   recapture, and verifying macro-extension activation.
-- Findings for later code work: wizard help buttons (`getHelpURI`) still point
-  at the GitHub wiki; `GIANI -h` alone is never parsed; spot-detection panels
-  are hidden (defaults used) unless Advanced Options is on.
+- Findings for later code work, recorded with root causes and next steps in
+  `DEVELOPMENT_PLAN.md` "Known issues (deferred)": wizard help buttons
+  (`getHelpURI`) still point at the GitHub wiki; `GIANI -h` alone is never
+  parsed; spot-detection panels are hidden (defaults used) unless Advanced
+  Options is on; macro-extension activation is unverified.
 - Version bumped `3.13.5` → `3.13.6` (`docs`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

@@ -997,6 +997,34 @@ than the release and deferred.
   handler) and exit non-zero on failure; keep `0` for validation early-exits
   only if that is the documented contract.
 
+Found during the docs content review (2026-11-03):
+
+- **Wizard help buttons point at the retired GitHub wiki.** Each panel's help
+  URI (`GIANIUI.getHelpURI(...)`, wired in `initComponents`/`GIANIUI.form`)
+  links to `github.com/djpbarry/Giani/wiki/...`; `GIANI -h` and the
+  `GIANI.main` Javadoc do the same. To do: repoint to the matching
+  ReadTheDocs pages (`giani-docs.readthedocs.io`). The panel URIs live in the
+  NetBeans form's custom-creation code, so edit via `GIANIUI.form`.
+- **`GIANI -h` on its own is never parsed.** The argument loop in
+  `GIANI.main` runs `i < args.length - 1` (it reads each flag's value from
+  `args[i + 1]`), so a lone `-h` is skipped and the run exits with "No valid
+  properties file specified". To do: handle `-h` before the loop (print usage
+  and exit). Removed from the user docs until fixed.
+- **Spot-detection panels are hidden unless Advanced Options is on.**
+  `addAdditionalBlobDetectionPanels` adds the per-channel spot panels only to
+  `componentList`, not `corePanels`, so on the default path *Localise Spots*
+  silently uses default detection settings (blob radius/threshold `0.0`).
+  Documented in `measure/localising_spots.rst`. To do: decide whether enabling
+  *Localise Spots* should reveal its panels on the default path, or give the
+  per-channel spot defaults sensible non-zero values (as I2 did for nuclei).
+- **Macro extension activation unverified.** `plugins.config` registers
+  `GIANIMacroExecutor` under `Extensions`, but the class implements only
+  `MacroExtension` (not `PlugIn`) and never calls
+  `Functions.registerExtensions`, so `Ext.GIANI.*` may not be reachable from a
+  macro. To do: test in Fiji; if broken, add a small `PlugIn` that registers
+  the extension (the usual ImageJ pattern) and document the activation line
+  in `docs/cluster/index.rst` (TODO marker there).
+
 ---
 
 ## Suggested sequencing & milestones
