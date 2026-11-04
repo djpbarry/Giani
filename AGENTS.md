@@ -22,7 +22,7 @@ lineage-tracking).
 GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](https://imagej.net/software/fiji/) plugin for batch analysis of 3D (and 4D) microscopy images: it reads proprietary image formats, segments nuclei and cells, measures morphology/fluorescence intensity, and optionally tracks lineages across time.
 
 - **Language/toolchain:** Java 21, Maven, Swing (NetBeans GUI forms), built as an ImageJ/Fiji plugin.
-- **Group/artifact:** `net.calm:giani`, version `3.13.8`.
+- **Group/artifact:** `net.calm:giani`, version `3.13.9`.
 - **Parent POM:** `org.scijava:pom-scijava:45.1.0` (SciJava build conventions).
 - **Core library dependency:** `com.github.djpbarry:IAClassLibrary:v2.5.0` (JitPack) provides the actual image-processing primitives (`MultiThreaded*` process classes, `BioFormatsImg`, `ProcessPipeline`, `PropertyWriter`, etc.). GIANI is mostly glue that wires these primitives into a pipeline and exposes UI/CLI/macro entry points.
 - **Transitive dependency:** `mcib3d-core` (via `IAClassLibrary`) provides `mcib3d.geom.Objects3DPopulation`/`Object3D`, the segmentation-result container threaded through the pipeline.
@@ -46,7 +46,7 @@ CI build (`.github/workflows/maven.yml`, JDK 21):
 ```
 
 - The **Maven wrapper** (`./mvnw`, pinned to Maven 3.9.16) is used — no system `mvn` required.
-- On Windows, ensure `JAVA_HOME` points to a **JDK 21** before running `./mvnw` (e.g. `JAVA_HOME="<jdk21>" cmd /c mvnw.cmd test`); the project targets Java 21 and `IAClassLibrary` is Java 21 bytecode.
+- On Windows, `JAVA_HOME` must point to a **JDK 21** (the project targets Java 21 and `IAClassLibrary` is Java 21 bytecode). Check the machine's existing value before overriding it — it is usually already correct, and a stale hard-coded path from an earlier JDK build fails with "The JAVA_HOME environment variable is not defined correctly". If you do need to set it, use PowerShell (`$env:JAVA_HOME = "..."; .\mvnw.cmd test`): an inline `JAVA_HOME="C:\..." ./mvnw` in Git Bash mangles the Windows path.
 - The POM declares Maven repos `central` (explicit, because `pom-scijava` ≥ 45 drops the implicit Maven Central), `scijava.public`, and `jitpack.io` for its dependencies. It targets **Java 21** via `scijava.jvm.version=21` (required to consume `IAClassLibrary` ≥ 2.0.x, which is compiled at Java 21).
 - `mvn_settings.xml` (GitHub Packages) is retained but **not used by CI**: no `pom.xml` dependency resolves from `maven.pkg.github.com`, so it is vestigial for building.
 - The `maven-dependency-plugin` is bound to the `package` phase to copy all runtime dependencies into `${project.build.directory}` (so the resulting JAR is runnable alongside its dependencies in a Fiji `plugins/` folder).
@@ -60,8 +60,30 @@ net.calm.giani.exec.GIANI
 ```
 
 - **No arguments** → launches the Swing GUI (`GIANIUI`).
-- **With arguments** → headless batch mode. Flags: `-f <input file>`, `-o <output dir>`, `-l <job list file>`, `-p <properties file>`, `-n <job number>`, `-s <series>`. A `-p` (properties) and either `-f` or `-l` are required. Full usage is documented on the GitHub wiki (`Running-GIANI-on-a-HPC-Cluster`).
-- **Local Fiji install (GUI testing):** `C:\Users\barryd\fiji-latest-portable-nojava\Fiji` — a portable, no-bundled-Java build (launchers `fiji.bat` / `fiji-windows-x64.exe`; set `JAVA_HOME` to a JDK 21). To install a new build, copy `target/giani-<version>.jar` and `target/IAClassLibrary-v<version>.jar` into `plugins/`, after removing the previous `giani-*.jar`, `calm-*.jar` and `IAClassLibrary-*.jar` from both `plugins/` and `jars/`. Other runtime deps (TrackMate, mcib3d, ImageJ, commons-*) come from Fiji's own `jars/`/`plugins/`, not from `target/`.
+- **With arguments** → headless batch mode. Flags: `-f <input file>`, `-o <output dir>`, `-l <job list file>`, `-p <properties file>`, `-n <job number>`, `-s <series>`. A `-p` (properties) and either `-f` or `-l` are required. Full usage is documented in `docs/cluster/index.rst` (published at `giani-docs.readthedocs.io`); the old GitHub wiki is retired. Note the known issue that a lone `-h` is never parsed.
+### Local Fiji install (GUI testing)
+
+The target Fiji is a portable, no-bundled-Java build (launchers `fiji.bat` / `fiji-windows-x64.exe`,
+which find Java 21 via `JAVA_HOME`). **Its location is machine-specific — never hard-code it here.**
+Each machine sets `FIJI_DIR` (and `JAVA_HOME`) in `bin/local-env.cmd`, which is gitignored; copy
+`bin/local-env.cmd.example` to create it. The `bin/` scripts all read it, and all accept a Fiji path as
+an overriding first argument:
+
+```cmd
+bin\install-to-fiji.cmd      rem build (-DskipTests clean package) and install into FIJI_DIR
+bin\run-fiji.cmd             rem launch Fiji for interactive testing
+bin\smoke-test-fiji.cmd      rem headless check that the GIANI classes load on Fiji's classpath
+```
+
+`install-to-fiji.cmd` puts `giani-<version>.jar` into `plugins/` and `IAClassLibrary-v<version>.jar`
+into `jars/`, deleting the previous copies first. Other runtime dependencies (TrackMate, mcib3d,
+ImageJ, commons-*) come from Fiji's own `jars/`/`plugins/`, not from `target/`.
+
+If installing by hand instead, remove any previous `giani-*.jar`, `calm-*.jar` and
+`iaclasslibrary-*.jar` / `IAClassLibrary-*.jar` from **both** `plugins/` and `jars/` first — stale
+CALM-era jars cause `net.calm.iaclasslibrary` classpath clashes. Note that manual installs have placed
+both jars in `plugins/` and worked; the scripts use the `plugins/` + `jars/` split above. Either is
+functional, but prefer the script so the layout stays consistent.
 
 ## Versioning
 
@@ -108,8 +130,8 @@ The cell watershed is built with `remap=true`, so IAClassLibrary remaps cell lab
 ### Execution flow
 
 - `PipelineExecutor.run()` lists input files (via `BioFormatsFileLister`), opens each with `BioFormatsImg` (Bio-Formats), then loops **file → series → timepoint → process**. Each process is submitted to a single-thread executor and joined; parallelism happens *inside* each `MultiThreadedProcess`, not across files or stages. Every process is re-`setup()` per timepoint with `process.setTime(t)`.
-- Timepoint range comes from `PipelineExecutor.timeRange(nTime, timeSelect, trackTimelapse)`: a valid `TIME_SELECT` wins; else `TRACK_TIMELAPSE` spans all frames; else just `t = 0`.
-- Results are written to `<output-dir>/GIANI_Output.csv` (`DataWriter.saveResultsTable`) and parameters to `<output-dir>/properties.xml` (`PropertyWriter.saveProperties`).
+- Timepoint range comes from `PipelineExecutor.timeRange(nTime, timeSelect, processAllTimepoints)`: a valid `TIME_SELECT` wins; else `PROCESS_ALL_TIMEPOINTS` spans all frames; else just `t = 0`.
+- Results are written to `<output-dir>/<TITLE>_Output.csv` (`DataWriter.saveResultsTable`) and parameters to `<output-dir>/properties.xml` (`PropertyWriter.saveProperties`). `<TITLE>` is manifest-derived, so a Fiji run writes `GIANI-<version>_Output.csv` while a test or IDE run (no manifest) writes `GIANI_Output.csv` — see the `TITLE` gotcha below.
 
 ## Code organization
 

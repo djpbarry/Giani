@@ -1123,3 +1123,58 @@ against source/output; left in place rather than rewritten:
 - `./mvnw clean test` green (31/31).
 - Version bumped `3.13.7` → `3.13.8` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-04 — AGENTS.md audit: fixed three defects; full suite verified green
+
+- Audited `AGENTS.md` against the code (the "treat status markers as unverified"
+  rule applied to `AGENTS.md` itself). Confirmed accurate: manifest-derived
+  `TITLE`, the `PROCESS_ALL_TIMEPOINTS` rename + `DeprecatedProps` mapping, all
+  three loading paths routed through `GianiDefaultParams.loadProperties`,
+  `plugins.config` registering the GUI at the `Plugins` root, 8 `.form` files
+  for 9 UI classes, and the 3.13.8 version sync across all four files.
+- **Fixed: self-contradictory output filename.** The "Execution flow" bullet
+  said results go to `<output-dir>/GIANI_Output.csv`, contradicting the `TITLE`
+  gotcha further down. Since 3.13.2 the title is manifest-derived, so a Fiji run
+  writes `GIANI-<version>_Output.csv` and only a test/IDE run (no manifest)
+  writes `GIANI_Output.csv`. Corrected to `<TITLE>_Output.csv` with both cases
+  spelled out.
+- **Fixed: a hard-coded machine-specific Fiji path.** The build section named
+  `C:\Users\barryd\fiji-latest-portable-nojava\Fiji` — the same class of
+  developer-specific absolute path that Phase D1 removed from the code, this
+  time in the docs; it does not exist on the current machine. Replaced with the
+  `FIJI_DIR` / `bin\local-env.cmd` mechanism that already exists for exactly
+  this purpose.
+- **Fixed: the `bin/` scripts were undocumented.** `AGENTS.md` had no mention of
+  `install-to-fiji.cmd` / `run-fiji.cmd` / `smoke-test-fiji.cmd`, and instead
+  documented a manual jar-copy procedure. Now documents the scripts first.
+  **Discrepancy recorded rather than silently resolved:** `install-to-fiji.cmd`
+  installs `IAClassLibrary` into `jars/` while the manual procedure (used for
+  the live 3.13.6 run on 2026-11-03) put both jars in `plugins/`. Both work; the
+  doc now prefers the script for consistency. Worth settling properly later.
+- **Fixed: two more stale references found while reviewing the diff.** The
+  "Execution flow" bullet still described `timeRange(nTime, timeSelect,
+  trackTimelapse)` and `TRACK_TIMELAPSE`, both renamed in 3.10.0 (the method
+  parameter is `processAllTimepoints`); and the CLI bullet still sent readers to
+  the retired GitHub wiki rather than `docs/cluster/index.rst`. Both corrected,
+  and the lone-`-h` known issue is now cross-referenced from the CLI bullet.
+- **Also corrected the `JAVA_HOME` guidance.** It suggested
+  `JAVA_HOME="<jdk21>" cmd /c mvnw.cmd test`; in Git Bash that mangles a
+  Windows path and fails with "JAVA_HOME ... not defined correctly". The note
+  now says to check the machine's existing value first (the local JDK has moved
+  to `21.0.13.9` and `JAVA_HOME` is already correct) and to use PowerShell if it
+  genuinely needs overriding.
+- **Full suite verified:** `./mvnw -o clean test -Pintegration` → **33/33, 0
+  failures, 0 skipped**, `BUILD SUCCESS`. Both integration tests now *execute*
+  (`PipelineExecutorIntegrationTest` 235 s, `PipelineExecutorTimelapseIntegrationTest`
+  63 s) rather than skipping — the fixture relocation under
+  `test_data/{single,multiple}_timepoint*/` is fully resolved.
+- Still outstanding (unchanged by this pass, logged for visibility): CI never
+  runs `-Pintegration` (`maven.yml` has no reference to it), so the two tests
+  above only ever run locally; no release tag since `v3.4.29` against a current
+  `3.13.9`; `CITATION.cff` `date-released` is still the `2019-01-01` placeholder;
+  the "Suggested sequencing & milestones" section still calls M1/M2 "the
+  immediate next steps" with M1–M7 done; and `.gitignore`'s
+  `test_data/GIANI*_Output/` does not match the now-nested
+  `test_data/<fixture>/GIANI-*_Output*/` directories, which show as untracked.
+- Docs-only; no code change. Version bumped `3.13.8` → `3.13.9` (`docs`), kept
+  in sync across `pom.xml`, `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
