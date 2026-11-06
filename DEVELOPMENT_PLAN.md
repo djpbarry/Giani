@@ -1176,6 +1176,31 @@ Found during the docs content review (2026-11-03):
   the extension (the usual ImageJ pattern) and document the activation line
   in `docs/cluster/index.rst` (TODO marker there).
 
+Found during the 3.14.0 live test (2026-11-06):
+
+- **Deprecated-name migration leaves the old key behind, and the stale key
+  overrides the user's choice on reload.** `GianiDefaultParams.updateDeprecatedProps`
+  copies each deprecated key's value onto its replacement but never removes the
+  deprecated key. So after loading a legacy file the stale key is carried into
+  every `properties.xml` saved afterwards (the 3.14.0 test output still held
+  `Track Timelapse=true` alongside `Process All Timepoints=true`). Worse, because
+  `GianiDefaultParams` pre-populates every current key with its default before a
+  file is merged, the migration always overwrites it, so a stale key beats an
+  explicit user choice: probed against the real classes, a file with
+  `Track Timelapse=true` and `Process All Timepoints=false` reloads as `true`.
+  The file never heals, since the stale key is rewritten on each save. This
+  predates I3 and affects every `DeprecatedProps` entry (all matched by
+  `startsWith`), not just this one. Step 2 widens the impact, because
+  *Track Lineage* is now gated on the timepoint mode, so a silently reverted
+  mode can silently re-enable tracking. To do: remove the deprecated key after
+  migrating it, so legacy files behave as now and polluted files heal on their
+  next save, and add tests for both cases (a legacy-only file; a file holding
+  both keys).
+- **Division re-labelling not exercised by the live test.** All 8 lineages in the
+  3.14.0 CHO run have `parent_track_id = -1` (linking distance 20, 10 frames), so
+  no division occurred and the 3.8.0 branch re-labelling path was not covered.
+  Worth a run on dividing data or with a tighter linking distance.
+
 ---
 
 ## Suggested sequencing & milestones

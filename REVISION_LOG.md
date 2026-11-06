@@ -1422,3 +1422,38 @@ tracking output.
 - `./mvnw -o clean test` → **59/59, 0 skipped**.
 - Version bumped `3.13.14` → `3.14.0` (`feat`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-06 — 3.14.0 live test passed; deprecated-key migration bug logged
+
+Built and installed 3.14.0 with `bin\install-to-fiji.cmd`. It replaced
+`giani-3.9.0.jar` in `plugins/`, `IAClassLibrary-v2.5.0.jar` was already in
+`jars/`, and there were no duplicates or stale CALM jars. The headless smoke
+test loaded `GIANI`, `GIANIUI` and `GIANIMacroExecutor`. A live timelapse run on
+the CHO fixture (all timepoints, lineage tracking, manual linking distance 20)
+wrote `test_data/multiple_timepoints/GIANI-3.14.0_Output/`.
+
+- **The redesign held.** Time 0–9 across 225 rows; a `Track ID` column; 8
+  lineages (ids 2–9) in `GIANI_tracks.csv`; Cell, Cytoplasm and Nucleus track
+  masks; `Linking Distance=20` round-tripped; `Max Frame Gap` stored as the
+  renamed `Max Missing Timepoints=2`. The check that mattered most passed:
+  `properties.xml` contains none of the new UI vocabulary (`Timepoints to
+  Analyse`, `Timepoint`, `Max Linking Distance`), so the unbound-control design
+  left the stored format untouched and the CLI and macro API are unaffected.
+- **Found: `properties.xml` still held `Track Timelapse=true`**, the key renamed
+  in 3.10.0. `updateDeprecatedProps` copies the old value onto the new key but
+  never removes the old one. Probed against the real classes: a file with both
+  `Track Timelapse=true` and `Process All Timepoints=false` reloads with
+  `Process All Timepoints=true`, so the stale key silently overrides the user's
+  explicit choice, and the file never heals because the stale key is rewritten
+  on every save. This predates I3 and affects every `DeprecatedProps` entry;
+  Step 2 enlarges the impact because *Track Lineage* is now gated on the mode.
+  **Logged only, not fixed**, as the maintainer chose. Recorded under "Known
+  issues" with the intended fix (remove the deprecated key after migrating it,
+  plus tests for both a legacy-only file and a file holding both keys).
+- **Not covered:** every lineage has `parent_track_id = -1`, so no division
+  occurred and the 3.8.0 division re-labelling path was not exercised.
+- **Log accuracy:** the 2026-11-03 entry says 3.13.6 was installed into this
+  Fiji, but `giani-3.9.0.jar` was what was there. That install evidently went
+  elsewhere or was rolled back; nothing depended on it.
+- Docs-only; no code change. Version bumped `3.14.0` → `3.14.1` (`docs`), kept in
+  sync across `pom.xml`, `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
