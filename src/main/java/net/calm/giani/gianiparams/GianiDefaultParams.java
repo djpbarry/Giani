@@ -81,7 +81,19 @@ public class GianiDefaultParams extends Properties {
     public static final String TIME_SELECT = "Specific Timepoint";
     public static final String TRACK_LINEAGE = "Track Lineage";
     public static final String TRACK_LINKING_DISTANCE = "Linking Distance";
-    public static final String TRACK_MAX_FRAME_GAP = "Max Frame Gap";
+    public static final String TRACK_MAX_FRAME_GAP = "Max Missing Timepoints";
+    /*
+     * Display-only labels for the TrackingPanel's unbound controls. Unlike every
+     * other constant here these are NOT parameter keys: the controls they label
+     * are deliberately hidden from PropertyExtractor, and TrackingPanel maps
+     * them onto PROCESS_ALL_TIMEPOINTS / TIME_SELECT / TRACK_LINKING_DISTANCE.
+     * They live here so GIANIParamInfos can key its tooltips off them without
+     * the gianiparams package depending on the ui package.
+     */
+    public static final String TIMEPOINTS_MODE_LABEL = "Timepoints to Analyse";
+    public static final String TIMEPOINT_LABEL = "Timepoint";
+    public static final String LINKING_MODE_LABEL = "Linking Distance";
+    public static final String LINKING_VALUE_LABEL = "Max Linking Distance";
     public static final String APP_TITLE = "GIANI";
     public static final String TITLE = getTitleWithVersion();
     public static final String NUC_GAUSS_FILTER_TITLE = "Gaussian Filtering to Suppress Noise in Nuclear Channel Prior to Segmentation";

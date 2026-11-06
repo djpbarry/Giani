@@ -1377,3 +1377,48 @@ failure is invisible exactly where runs are unattended.
   separate decision.
 - Version bumped `3.13.13` → `3.13.14` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-06 — I3 Step 2: tracking panel redesigned
+
+The panel exposed raw storage: `Specific Timepoint = -1` and
+`Linking Distance = -1` sentinels, a 0-based timepoint index, and two
+independent toggles whose default combination (`Track Lineage=true`,
+`Process All Timepoints=false`) analysed `t=0` only and silently produced no
+tracking output.
+
+- **Controls now:** *Timepoints to Analyse* (*First timepoint only* / *All
+  timepoints* / *A single timepoint*) with a 1-based *Timepoint* field enabled
+  only for the third; *Track Lineage*, available only when analysing all
+  timepoints; *Linking Distance* (*Automatic* / *Specify below*) with a *Max
+  Linking Distance* field and a units suffix taken from `UNITS`; and
+  `Max Frame Gap` renamed *Max Missing Timepoints*.
+- **Storage is unchanged.** `PROCESS_ALL_TIMEPOINTS`, `TIME_SELECT` (still
+  0-based, `-1` unset) and `TRACK_LINKING_DISTANCE` (`-1` automatic) keep their
+  meanings, so existing parameter files, the headless CLI and
+  `Ext.GIANI.setProperty` are untouched. Only the renamed key needed a
+  `DeprecatedProps` entry.
+- **Two mechanism findings drove the design** (both now in
+  `DEVELOPMENT_PLAN.md` I3 Step 2):
+  - The new controls are deliberately **unbound** from `PropertyExtractor` —
+    their labels do not call `setLabelFor`, so it ignores them. Binding them
+    would not work anyway: `PropertyExtractor` recurses into a panel *after*
+    calling its `update()`, so a raw read of a bound control always clobbers
+    what `update()` just derived. Keeping them unbound also means none of the
+    friendlier vocabulary leaks into `properties.xml` — no new keys at all.
+  - **Disabling *Track Lineage* does not close the trap.** `PropertyExtractor`
+    harvests disabled controls too (its `isEnabled()` guard is commented out in
+    the library), so a disabled-but-selected toggle would still write
+    `Track Lineage=true`. The panel *deselects* it whenever the mode cannot
+    produce tracking, in both `update()` and `setVariables()`, so the correction
+    applies whether or not the user ever visits the panel.
+- **Deliberately not changed:** the shipped defaults still pair
+  `PROCESS_ALL_TIMEPOINTS=false` with `TRACK_LINEAGE=true`. The GUI reconciles
+  them at run time, but flipping the stored default would silently disable
+  tracking for headless/HPC users who set only `PROCESS_ALL_TIMEPOINTS`.
+- `TrackingPanelMappingTest` (19 tests) pins the mapping in both directions,
+  including the round trips, the sentinel handling, the 0↔1-based conversion,
+  and that the legacy default combination can no longer request tracking. The
+  mapping is pure static methods so it is testable without a GUI.
+- `./mvnw -o clean test` → **59/59, 0 skipped**.
+- Version bumped `3.13.14` → `3.14.0` (`feat`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

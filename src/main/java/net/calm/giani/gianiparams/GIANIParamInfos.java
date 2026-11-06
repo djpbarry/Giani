@@ -91,11 +91,16 @@ public class GIANIParamInfos extends Properties {
         this.setProperty(GianiDefaultParams.TIME_SELECT, "Leave at -1 to follow the Process All Timepoints setting; " +
                 "otherwise the 0-based timepoint index to analyse.");
         this.setProperty(GianiDefaultParams.TRACK_LINEAGE, "Track cell lineages across timepoints using TrackMate. " +
-                "Requires more than one timepoint to be analysed.");
-        this.setProperty(GianiDefaultParams.TRACK_LINKING_DISTANCE, "Maximum allowed cell movement between consecutive frames, " +
-                "in physical units. Leave at -1 to derive it automatically from the median nucleus size.");
-        this.setProperty(GianiDefaultParams.TRACK_MAX_FRAME_GAP, "Maximum number of frames a track may be missing before it is " +
-                "considered interrupted.");
+                "Only available when analysing all timepoints, since tracking needs more than one.");
+        this.setProperty(GianiDefaultParams.TRACK_MAX_FRAME_GAP, "How many consecutive timepoints a cell may go undetected " +
+                "before its track is treated as ended.");
+        this.setProperty(GianiDefaultParams.TIMEPOINTS_MODE_LABEL, "Analyse only the first timepoint, every timepoint, or one " +
+                "timepoint of your choosing. Lineage tracking requires all timepoints.");
+        this.setProperty(GianiDefaultParams.TIMEPOINT_LABEL, "Which single timepoint to analyse, counting from 1.");
+        this.setProperty(GianiDefaultParams.LINKING_MODE_LABEL, "Automatic derives the maximum cell movement between consecutive " +
+                "timepoints from the median nucleus size, which suits most data.");
+        this.setProperty(GianiDefaultParams.LINKING_VALUE_LABEL, "Maximum distance a cell may move between consecutive timepoints. " +
+                "Too small and tracks break; too large and nearby cells get swapped.");
         for (int i = 0; i < MAX_CHAN; i++) {
             this.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_BLOBS, i), "Simple detection works " +
                     "well for regularly-shaped spots.");

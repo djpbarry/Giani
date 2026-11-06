@@ -15,31 +15,43 @@ input selection when *Show Advanced Options* is enabled (see
 .. TODO(screenshot): add a screenshot of the Tracking panel (suggested name
    images/GIANI_Tracking_Panel.png).
 
-.. important:: By default, GIANI only analyses the **first** timepoint of each
-   series, so no tracking output is produced. To track cells, you must enable
-   both *Process All Timepoints* and *Track Lineage*.
+.. important:: By default, GIANI analyses only the **first** timepoint of each
+   series, so no tracking output is produced. To track cells, set *Timepoints
+   to Analyse* to **All timepoints** and switch on *Track Lineage*.
 
 Parameters
 ==========
 
--  **Process All Timepoints:** analyse every timepoint of each series. When
-   off (the default), only the first timepoint is analysed. This setting does
-   not track anything by itself - it only controls which timepoints are
-   analysed.
--  **Specific Timepoint:** analyse only this timepoint (numbered from 0).
-   A value of ``-1`` (the default) disables this option. When set to a valid
-   timepoint, it overrides *Process All Timepoints*.
+-  **Timepoints to Analyse:** choose *First timepoint only* (the default),
+   *All timepoints*, or *A single timepoint*. This controls which timepoints
+   are analysed; it does not track anything by itself.
+-  **Timepoint:** which single timepoint to analyse, counting from **1**.
+   Only available when *A single timepoint* is selected.
 -  **Track Lineage:** link the segmented cells across timepoints into
-   lineages. Each cell is represented by the centre of its nucleus. Has no
-   effect unless more than one timepoint is analysed.
--  **Linking Distance:** the maximum distance (in calibrated units, e.g.
-   microns) a cell may move between consecutive timepoints and still be
-   linked. The same value limits gap-closing and division detection. A value
-   of ``-1`` (the default) sets it automatically to three times the median
-   nuclear radius.
--  **Max Frame Gap:** the maximum number of consecutive timepoints a cell may
-   be missing (e.g. due to a failed segmentation) and still be linked back
-   into the same track. The default is ``2``.
+   lineages. Each cell is represented by the centre of its nucleus. Because
+   tracking needs more than one timepoint, this is **only available when
+   analysing all timepoints** - selecting any other mode switches it off.
+-  **Linking Distance:** *Automatic* (the default) sets the maximum distance a
+   cell may move between consecutive timepoints to three times the median
+   nuclear radius, which suits most data. Choose *Specify below* to set it
+   yourself.
+-  **Max Linking Distance:** the distance used when *Linking Distance* is set
+   to *Specify below*, in calibrated units (e.g. microns). The same value
+   limits gap-closing and division detection. Too small and tracks break; too
+   large and nearby cells get swapped.
+-  **Max Missing Timepoints:** the maximum number of consecutive timepoints a
+   cell may be missing (e.g. due to a failed segmentation) and still be linked
+   back into the same track. The default is ``2``.
+
+.. note:: These controls are a friendlier view of the parameters stored in
+   ``properties.xml``, which are unchanged: *Timepoints to Analyse* and
+   *Timepoint* map onto ``Process All Timepoints`` and ``Specific Timepoint``
+   (which remains 0-based, with ``-1`` meaning unset), and *Linking Distance* /
+   *Max Linking Distance* map onto ``Linking Distance`` (``-1`` meaning
+   automatic). Existing parameter files, the :doc:`command line
+   <../cluster/index>` and ``Ext.GIANI.setProperty`` are unaffected.
+   ``Max Frame Gap`` was renamed to ``Max Missing Timepoints``; old files are
+   migrated automatically.
 
 .. _tracking-output:
 

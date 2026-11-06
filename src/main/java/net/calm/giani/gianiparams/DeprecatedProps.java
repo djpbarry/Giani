@@ -54,6 +54,7 @@ public class DeprecatedProps {
     public static final String NUC_MAXIMA_DETECT_HESSIAN_SCALE_STEP = String.format("Radius Step Size for Advanced Nuclear Centroid Detection (%cm)", IJ.micronSymbol);
     public static final String FOCI_MAXIMA_DETECT_FILTER_RAD = String.format("Filter Radius (%cm) for EDM Detector for Channel ", IJ.micronSymbol);
     public static final String TRACK_TIMELAPSE = "Track Timelapse";
+    public static final String TRACK_MAX_FRAME_GAP = "Max Frame Gap";
 
     protected static HashMap<String, String> getDepMap() {
         HashMap<String, String> map = new HashMap<>();
@@ -77,6 +78,7 @@ public class DeprecatedProps {
         map.put(DeprecatedProps.CELL_FILT_RAD_LABEL, GianiDefaultParams.CELL_FILT_RAD_LABEL);
         map.put(DeprecatedProps.NUC_MAXIMA_DETECT_HESSIAN_START_SCALE, GianiDefaultParams.NUC_MAXIMA_DETECT_HESSIAN_START_SCALE);
         map.put(DeprecatedProps.TRACK_TIMELAPSE, GianiDefaultParams.PROCESS_ALL_TIMEPOINTS);
+        map.put(DeprecatedProps.TRACK_MAX_FRAME_GAP, GianiDefaultParams.TRACK_MAX_FRAME_GAP);
         return map;
     }
 

@@ -1036,22 +1036,36 @@ renames silently drop settings on those paths (already true for
 `Track Timelapse` → `Process All Timepoints`). `AGENTS.md` wrongly states
 otherwise.
 
-**Step 2 — Tracking panel redesign (change controls, not just wording).**
+**Step 2 — Tracking panel redesign — ✔ Done (2026-11-06, 3.14.0).**
 
-- Replace the `Process All Timepoints` toggle + `Specific Timepoint` (`-1`)
-  field with one dropdown, **Timepoints to Analyse**: *First only* / *All* /
-  *Single…*, plus a **Timepoint** field (1-based; GIANI parses this value
-  itself, so 1-based display is feasible here) enabled only for *Single*.
-  `PipelineExecutor` keeps honouring the existing `PROCESS_ALL_TIMEPOINTS` /
-  `TIME_SELECT` keys so old files and headless runs still work.
-- Disable **Track Lineage** unless *All* is selected, removing the trap where
-  tracking silently produces no output.
-- Replace `Linking Distance = -1` with an **Automatic Linking Distance**
-  toggle (default on) + **Max Linking Distance (µm)** field enabled only when
-  automatic is off; show units (currently missing on this panel).
-- Rename `Max Frame Gap` → **Max Missing Timepoints**.
-- Update `GIANIParamInfos` tooltips, `docs/start/tracking.rst`, and the
-  `DeprecatedProps` map.
+As planned: a **Timepoints to Analyse** dropdown (*First timepoint only* / *All
+timepoints* / *A single timepoint*) plus a 1-based **Timepoint** field; **Track
+Lineage** unavailable unless *All* is selected; **Linking Distance** as
+*Automatic* / *Specify below* with a **Max Linking Distance** field and a units
+suffix; `Max Frame Gap` → **Max Missing Timepoints** (with a `DeprecatedProps`
+entry). Tooltips and `docs/start/tracking.rst` updated. Storage is unchanged —
+`PROCESS_ALL_TIMEPOINTS`, `TIME_SELECT` (still 0-based, `-1` unset) and
+`TRACK_LINKING_DISTANCE` (`-1` automatic) — so old files, the CLI and the macro
+API are unaffected.
+
+Two implementation findings worth keeping:
+
+- **The new controls are deliberately *unbound* from `PropertyExtractor`** (their
+  labels do not `setLabelFor`), and `TrackingPanel` maps them to and from the
+  stored keys itself. Binding them cannot work: `PropertyExtractor` recurses into
+  a panel *after* calling its `update()`, so a raw read of a bound control always
+  overwrites whatever `update()` derived. This also keeps the friendlier
+  vocabulary out of `properties.xml` entirely, so no new keys were introduced.
+- **Disabling *Track Lineage* is not sufficient** to close the trap:
+  `PropertyExtractor` harvests disabled controls too (its `isEnabled` check is
+  commented out), so a disabled-but-selected toggle would still write
+  `Track Lineage=true`. The panel therefore *deselects* it whenever the mode
+  cannot produce tracking, in both `update()` and `setVariables()`.
+
+**Not changed:** the shipped defaults remain `PROCESS_ALL_TIMEPOINTS=false` with
+`TRACK_LINEAGE=true`. The GUI now reconciles that pair at run time, but changing
+the stored default would silently disable tracking for headless/HPC users who
+set only `PROCESS_ALL_TIMEPOINTS`.
 
 **Step 3 — Panel titles and small text fixes (display-only, low risk).**
 
