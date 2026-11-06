@@ -1203,3 +1203,59 @@ against source/output; left in place rather than rewritten:
   the `properties.xml` key.
 - Version bumped `3.13.9` → `3.13.10` (`chore`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-06 — Closed the CI integration gap (A2.4); three more AGENTS.md fixes
+
+**AGENTS.md fixes.**
+
+- **The version-bump rule contradicted itself, in the drift-causing direction.**
+  "Versioning" correctly listed four files (`pom.xml`, `CITATION.cff`,
+  `docs/conf.py`, `AGENTS.md`), but "Documentation conventions" and "What to
+  verify after changes" both said *three* and omitted `AGENTS.md` — the one file
+  whose staleness we keep having to fix. Both corrected to four.
+- **The `TrackingPanel` note was wrong after 3.13.10.** It said the panel "has no
+  `initComponents()`-style generated layout", but `TrackingPanel.java:70` defines
+  `initComponents()`, and now that the `.form` files are gone all nine UI classes
+  are hand-maintained with one. Reworded so the historical point survives without
+  implying a distinction that no longer exists.
+- **"Integration tests silently skip" was stale framing.** Skipping is now the
+  exception, not the norm; the bullet documents the new `requireFixtures` flag and
+  records the current 33/33-zero-skips baseline so a future skip reads as a
+  regression.
+
+**CI integration gap (Phase A2 item 4).**
+
+- `maven.yml` gains an `integration` job (`needs: build`, `timeout-minutes: 45`)
+  running `./mvnw --batch-mode -Pintegration -Dgiani.requireFixtures=true verify`,
+  so the end-to-end tests run on every push instead of only by hand. Added a
+  `workflow_dispatch` trigger and an `always()` upload of
+  `target/surefire-reports/` so a CI failure can be diagnosed without a re-run.
+  Kept as a *separate* job so `build` still gives fast feedback.
+- New `net.calm.giani.TestFixtures.require(path)` replaces the three copies of
+  `Assumptions.assumeTrue(fixture.isFile(), ...)`. Default behaviour is unchanged
+  (skip, so a developer without the 33 MB images can still run the suite); with
+  `-Dgiani.requireFixtures=true` a missing fixture **fails**. Wired through
+  surefire `<systemPropertyVariables>` with a `false` default in `<properties>`
+  rather than relying on implicit command-line propagation.
+- `TestFixturesTest` (3 tests) guards the guard — a helper that silently failed
+  open is precisely what let the relocation go unnoticed.
+- **Both behaviours verified by experiment**, not by reading: with the CHO
+  fixture temporarily moved aside, `-Dgiani.requireFixtures=true` gave
+  `BUILD FAILURE` / "test fixture not present ... so this fails rather than
+  skips" (exit 1), and the same run without the flag gave `BUILD SUCCESS` with
+  `Skipped: 1` (exit 0). Fixture restored; `git status` clean.
+- `./mvnw -o clean test` → 34/34, 0 skipped. The CI-equivalent
+  `-Pintegration -Dgiani.requireFixtures=true verify` was also run locally.
+- **Not yet proven on a real runner.** The job has never executed on
+  GitHub-hosted hardware; the unknowns are the 4 GB surefire heap on a
+  16 GB runner and whether the ~5 min local runtime stays inside the tests'
+  own `@Timeout` (15 and 25 min) when the runner is slower. Watch the first
+  push.
+- Still outstanding, unchanged: no tag since `v3.4.29` (now against `3.13.11`);
+  `CITATION.cff` `date-released` is still the `2019-01-01` placeholder; the
+  milestone section still calls M1/M2 "the immediate next steps" (the phrase
+  wraps across a line, which is why greps keep missing it); `.gitignore`'s
+  `test_data/GIANI*_Output/` still does not match the nested
+  `test_data/<fixture>/GIANI-*_Output*/` dirs, five of which remain untracked.
+- Version bumped `3.13.10` → `3.13.11` (`chore`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

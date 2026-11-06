@@ -204,8 +204,18 @@ Pin a reproducible toolchain by committing `mvnw`/`mvnw.cmd` + `.mvn/wrapper/`
 ✔ Done (2026-10-10), items 1–3. CI now uses `./mvnw` (the wrapper), caches
 Maven deps via `setup-java`'s built-in `cache: 'maven'`, and pins JDK 21 with
 `distribution: 'temurin'` on `actions/checkout@v5` + `actions/setup-java@v5`
-(matching the `ADAPT` workflow). Item 4 (split `build`/`test` jobs) is deferred
-until Phase C lands.
+(matching the `ADAPT` workflow).
+
+✔ **Item 4 done (2026-11-06, 3.13.11)** — deferred since 2026-10-10 "until Phase
+C lands", which it did on 2026-10-17; the deferral then expired unnoticed for
+seven weeks, so the `integration`-tagged tests (the only end-to-end coverage)
+ran nowhere automated. `maven.yml` now has a second `integration` job
+(`needs: build`, `timeout-minutes: 45`) running
+`./mvnw --batch-mode -Pintegration -Dgiani.requireFixtures=true verify`, plus a
+`workflow_dispatch` trigger and a surefire-report artifact upload. The new
+`-Dgiani.requireFixtures=true` flag (see `net.calm.giani.TestFixtures`) makes a
+missing fixture **fail** instead of skip, closing the hole that let the
+2026-11-01 fixture relocation break both integration tests silently.
 
 `.github/workflows/maven.yml` currently runs a single `mvn verify` on JDK 11 with
 `--settings mvn_settings.xml` and a `PAT` secret.

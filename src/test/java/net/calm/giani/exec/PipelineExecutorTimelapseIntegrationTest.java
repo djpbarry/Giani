@@ -16,8 +16,8 @@
  */
 package net.calm.giani.exec;
 
+import net.calm.giani.TestFixtures;
 import net.calm.giani.gianiparams.GianiDefaultParams;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -50,8 +50,7 @@ class PipelineExecutorTimelapseIntegrationTest {
     @Test
     @Timeout(value = 25, unit = TimeUnit.MINUTES)
     void timelapseRunWritesOutput(@TempDir Path outputDir) throws IOException {
-        File fixture = new File(FIXTURE);
-        Assumptions.assumeTrue(fixture.isFile(), "test fixture not present: " + FIXTURE);
+        File fixture = TestFixtures.require(FIXTURE);
 
         System.setProperty("java.awt.headless", "true");
 

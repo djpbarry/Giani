@@ -13,7 +13,7 @@
 
     <groupId>net.calm</groupId>
     <artifactId>giani</artifactId>
-    <version>3.13.10</version>
+    <version>3.13.11</version>
 
     <build>
         <plugins>
@@ -43,6 +43,11 @@
                 <configuration>
                     <argLine>@{argLine} -Xmx4g</argLine>
                     <excludedGroups>${excludedGroups}</excludedGroups>
+                    <systemPropertyVariables>
+                        <!-- true => a missing test_data fixture fails instead of
+                             skipping; the integration CI job sets it. -->
+                        <giani.requireFixtures>${giani.requireFixtures}</giani.requireFixtures>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>
@@ -122,6 +127,7 @@
         <license.licenseName>gpl_v3</license.licenseName>
         <license.copyrightOwners>Francis Crick Institute</license.copyrightOwners>
         <excludedGroups>integration</excludedGroups>
+        <giani.requireFixtures>false</giani.requireFixtures>
     </properties>
 
     <repositories>

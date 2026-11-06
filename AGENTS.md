@@ -22,7 +22,7 @@ lineage-tracking).
 GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](https://imagej.net/software/fiji/) plugin for batch analysis of 3D (and 4D) microscopy images: it reads proprietary image formats, segments nuclei and cells, measures morphology/fluorescence intensity, and optionally tracks lineages across time.
 
 - **Language/toolchain:** Java 21, Maven, Swing (hand-maintained; originally NetBeans-designed), built as an ImageJ/Fiji plugin.
-- **Group/artifact:** `net.calm:giani`, version `3.13.10`.
+- **Group/artifact:** `net.calm:giani`, version `3.13.11`.
 - **Parent POM:** `org.scijava:pom-scijava:45.1.0` (SciJava build conventions).
 - **Core library dependency:** `com.github.djpbarry:IAClassLibrary:v2.5.0` (JitPack) provides the actual image-processing primitives (`MultiThreaded*` process classes, `BioFormatsImg`, `ProcessPipeline`, `PropertyWriter`, etc.). GIANI is mostly glue that wires these primitives into a pipeline and exposes UI/CLI/macro entry points.
 - **Transitive dependency:** `mcib3d-core` (via `IAClassLibrary`) provides `mcib3d.geom.Objects3DPopulation`/`Object3D`, the segmentation-result container threaded through the pipeline.
@@ -39,11 +39,19 @@ Tests live under `src/test/java` (JUnit 5, managed by `pom-scijava`). Run them w
 ./mvnw -Pintegration test                               # include the @Tag("integration") tests
 ```
 
-CI build (`.github/workflows/maven.yml`, JDK 21):
+CI (`.github/workflows/maven.yml`, JDK 21) runs two jobs on every push, and can
+also be triggered manually via **workflow_dispatch**:
 
 ```bash
+# job `build` — fast feedback, unit tests only
 ./mvnw --batch-mode --update-snapshots verify
+
+# job `integration` — needs: build; the end-to-end pipeline run (~5 min)
+./mvnw --batch-mode -Pintegration -Dgiani.requireFixtures=true verify
 ```
+
+The `integration` job uploads `target/surefire-reports/` as an artifact so a
+failure can be diagnosed without re-running it.
 
 - The **Maven wrapper** (`./mvnw`, pinned to Maven 3.9.16) is used — no system `mvn` required.
 - On Windows, `JAVA_HOME` must point to a **JDK 21** (the project targets Java 21 and `IAClassLibrary` is Java 21 bytecode). Check the machine's existing value before overriding it — it is usually already correct, and a stale hard-coded path from an earlier JDK build fails with "The JAVA_HOME environment variable is not defined correctly". If you do need to set it, use PowerShell (`$env:JAVA_HOME = "..."; .\mvnw.cmd test`): an inline `JAVA_HOME="C:\..." ./mvnw` in Git Bash mangles the Windows path.
@@ -51,7 +59,7 @@ CI build (`.github/workflows/maven.yml`, JDK 21):
 - `mvn_settings.xml` (GitHub Packages) is retained but **not used by CI**: no `pom.xml` dependency resolves from `maven.pkg.github.com`, so it is vestigial for building.
 - The `maven-dependency-plugin` is bound to the `package` phase to copy all runtime dependencies into `${project.build.directory}` (so the resulting JAR is runnable alongside its dependencies in a Fiji `plugins/` folder).
 - **Always `clean` before a full `test` run.** Surefire executes whatever `.class` files sit in `target/test-classes`, so a test deleted from `src/test/java` keeps running until you clean (a `-Dtest=` filter also sidesteps it).
-- **Integration tests silently skip.** `pom.xml` excludes the `integration` group by default; the `integration` profile clears it. Integration tests `Assumptions.assumeTrue(fixture.isFile())` on fixtures under `test_data/`, so a missing/moved fixture skips rather than fails — always check the skip count.
+- **Integration tests skip locally when a fixture is missing.** `pom.xml` excludes the `integration` group by default; the `integration` profile clears it. The fixture-backed tests resolve their image via `net.calm.giani.TestFixtures.require(...)`, which *skips* when the file is absent so the suite still runs without the (33 MB) images — so always check the skip count, not just the pass count. Passing `-Dgiani.requireFixtures=true` turns a missing fixture into a failure instead; the integration CI job sets it, because the fixtures are tracked in git and must be there. As of 3.13.11 a full `-Pintegration` run is **33/33 with zero skips**, so any skip is a regression.
 
 Entry point (configured via `<main-class>` in the POM):
 
@@ -190,7 +198,7 @@ Remember that on-screen label text doubles as the `properties.xml` key (see
 "Parameters are `Properties` keyed by human-readable strings" and
 `DeprecatedProps`), so changing a label's text is a parameter rename.
 
-Panels extend `net.calm.iaclasslibrary.UIClasses.LayerPanel` and implement `Updateable` where they need to refresh on wizard navigation. `GIANIUI` is a `LinkedList<LayerPanel>` wizard; `nextButton`/`previousButton` advance/retreat `layerIndex` and toggle panel visibility (there is no incremental `addProcess()`/`removeProcess()` — the pipeline is assembled once from config). Each panel holds a `Supplier<MultiThreadedProcess>` factory that calls `GIANIUI.buildPreviewProcess(stage)` → `collectPanelState()` + `PipelineBuilder.buildPreviewProcess(...)`, so previews build a fresh pipeline per stage rather than reusing a long-lived process. `TrackingPanel` (written without the designer, so it has no `initComponents()`-style generated layout) is inserted at index 1 after `initComponents()`.
+Panels extend `net.calm.iaclasslibrary.UIClasses.LayerPanel` and implement `Updateable` where they need to refresh on wizard navigation. `GIANIUI` is a `LinkedList<LayerPanel>` wizard; `nextButton`/`previousButton` advance/retreat `layerIndex` and toggle panel visibility (there is no incremental `addProcess()`/`removeProcess()` — the pipeline is assembled once from config). Each panel holds a `Supplier<MultiThreadedProcess>` factory that calls `GIANIUI.buildPreviewProcess(stage)` → `collectPanelState()` + `PipelineBuilder.buildPreviewProcess(...)`, so previews build a fresh pipeline per stage rather than reusing a long-lived process. `TrackingPanel` is inserted at index 1 after `initComponents()`. (It was the one panel never built with the designer, but since 3.13.10 removed the `.form` files that is no longer a distinction — all nine UI classes are hand-maintained and all define an `initComponents()`.)
 
 ### Deprecated parameter migration
 
@@ -211,11 +219,11 @@ Panels extend `net.calm.iaclasslibrary.UIClasses.LayerPanel` and implement `Upda
 ## Documentation conventions
 
 - **Keep `DEVELOPMENT_PLAN.md` and `REVISION_LOG.md` in sync with every repo change, in the same pass.** `REVISION_LOG.md` is the source of truth for what was actually done (dated entries); `DEVELOPMENT_PLAN.md` holds the phase plan. In practice both drift — **treat plan/log status markers as unverified and check against source** before acting on them.
-- **Bump `<version>` on every code change** in three files that must stay in sync: `pom.xml`, `docs/conf.py`, and `CITATION.cff` (`fix`/`refactor`/`chore`/`docs`/`test` → patch, `feat` → minor, breaking → major).
+- **Bump `<version>` on every code change** in the **four** files that must stay in sync: `pom.xml`, `docs/conf.py`, `CITATION.cff`, and this file's "Group/artifact" line (`fix`/`refactor`/`chore`/`docs`/`test` → patch, `feat` → minor, breaking → major).
 
 ## What to verify after changes
 
 - `./mvnw clean test` succeeds; if you touched the integration path, run `./mvnw -Pintegration test` and check the skip count.
 - If a parameter label changed, grep for its constant usage across `PipelineBuilder`, `GIANIUI`, and the relevant panel, and consider adding a `DeprecatedProps` entry.
 - If a pipeline stage was added/reordered/removed, update the `STAGE_*` constants, `PipelineBuilder.buildFullPipeline`, `GIANIUI.initComponents`, and `PipelineBuilderTest` together.
-- Bump the version in `pom.xml`, `docs/conf.py`, and `CITATION.cff` (see Versioning).
+- Bump the version in all four of `pom.xml`, `docs/conf.py`, `CITATION.cff`, and `AGENTS.md` (see Versioning).

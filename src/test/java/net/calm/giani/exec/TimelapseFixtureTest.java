@@ -16,8 +16,8 @@
  */
 package net.calm.giani.exec;
 
+import net.calm.giani.TestFixtures;
 import net.calm.iaclasslibrary.IO.BioFormats.BioFormatsImg;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -33,8 +33,7 @@ class TimelapseFixtureTest {
 
     @Test
     void fixtureHasMultipleTimepointsAndZSlices() throws Exception {
-        File file = new File(FIXTURE);
-        Assumptions.assumeTrue(file.isFile(), "test fixture not present: " + FIXTURE);
+        File file = TestFixtures.require(FIXTURE);
         try (BioFormatsImg img = new BioFormatsImg()) {
             img.setId(file.getAbsolutePath());
             System.out.println("Timelapse fixture series=" + img.getSeriesCount()
