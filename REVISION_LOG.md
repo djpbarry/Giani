@@ -1259,3 +1259,44 @@ against source/output; left in place rather than rewritten:
   `test_data/<fixture>/GIANI-*_Output*/` dirs, five of which remain untracked.
 - Version bumped `3.13.10` → `3.13.11` (`chore`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-06 — CI integration job verified on a real runner; job now self-evidencing
+
+- **First real run (42213967190, 3.13.11) was green: 36 tests, 0 skipped**, both
+  integration tests genuinely executed. `build` 1m 43s, `integration` 1m 59s.
+- **Correcting the previous entry's caveat.** That entry warned the 4 GB heap and
+  the per-test `@Timeout`s might not survive a slower runner. The opposite is
+  true: the runner is **4–6× faster** than this local Windows checkout on the
+  segmentation-heavy tests — `PipelineExecutorIntegrationTest` 59.5 s on CI vs
+  229–389 s locally, `PipelineExecutorTimelapseIntegrationTest` 20.4 s vs
+  71–100 s. The 15- and 25-minute `@Timeout`s use ~7% of their budget; no change
+  needed. Per-push cost is ~2 min, so there is no reason to narrow the trigger.
+- **Lesson worth keeping: the 1m 59s duration was initially misread as proof the
+  tests had *not* run.** The reasoning calibrated runner speed off the `build`
+  job (1m 43s), but `build` is almost entirely fixed overhead — 38 MB fixture
+  checkout, JDK setup, dependency resolution, compile, package, jacoco — with
+  only ~3 s of unit tests inside it, so it says nothing about CPU throughput on
+  the heavy tests. Settling it needed the downloaded surefire artifact. Do not
+  infer what a CI job did from its wall-clock duration.
+- **Hardening that followed from it (the real gap).** `requireFixtures` protects
+  against a missing *fixture*, but not against the tagged tests failing to be
+  *selected*: if `-Pintegration` ever stopped activating, they would be excluded,
+  the job would stay green, and the uploaded reports would look much the same —
+  which is exactly why the green tick was ambiguous. The job now has a
+  "Verify the integration tests actually ran" step asserting both
+  `net.calm.giani.exec.PipelineExecutor*IntegrationTest.txt` reports exist and
+  match `Tests run: N, Failures: 0, Errors: 0, Skipped: 0`, emitting
+  `::error::` annotations otherwise. Logic tested both ways against the real
+  downloaded artifact (passes) and an empty directory (fails as intended).
+- Bumped `actions/upload-artifact` `v4` → `v5`; the run logged a deprecation
+  warning that v4 targets Node 20. (`actions/checkout` and `setup-java` were
+  already on v5.)
+- Still outstanding, unchanged: no tag since `v3.4.29` (now against `3.13.12`);
+  `CITATION.cff` `date-released` still the `2019-01-01` placeholder; the
+  milestone section still calls M1/M2 "the immediate next steps"; `.gitignore`'s
+  `test_data/GIANI*_Output/` still misses the nested
+  `test_data/<fixture>/GIANI-*_Output*/` dirs. A downloaded
+  `integration-surefire-reports/` folder is also sitting untracked in the repo
+  root.
+- Version bumped `3.13.11` → `3.13.12` (`chore`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

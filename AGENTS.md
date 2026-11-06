@@ -22,7 +22,7 @@ lineage-tracking).
 GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](https://imagej.net/software/fiji/) plugin for batch analysis of 3D (and 4D) microscopy images: it reads proprietary image formats, segments nuclei and cells, measures morphology/fluorescence intensity, and optionally tracks lineages across time.
 
 - **Language/toolchain:** Java 21, Maven, Swing (hand-maintained; originally NetBeans-designed), built as an ImageJ/Fiji plugin.
-- **Group/artifact:** `net.calm:giani`, version `3.13.11`.
+- **Group/artifact:** `net.calm:giani`, version `3.13.12`.
 - **Parent POM:** `org.scijava:pom-scijava:45.1.0` (SciJava build conventions).
 - **Core library dependency:** `com.github.djpbarry:IAClassLibrary:v2.5.0` (JitPack) provides the actual image-processing primitives (`MultiThreaded*` process classes, `BioFormatsImg`, `ProcessPipeline`, `PropertyWriter`, etc.). GIANI is mostly glue that wires these primitives into a pipeline and exposes UI/CLI/macro entry points.
 - **Transitive dependency:** `mcib3d-core` (via `IAClassLibrary`) provides `mcib3d.geom.Objects3DPopulation`/`Object3D`, the segmentation-result container threaded through the pipeline.
@@ -50,8 +50,18 @@ also be triggered manually via **workflow_dispatch**:
 ./mvnw --batch-mode -Pintegration -Dgiani.requireFixtures=true verify
 ```
 
-The `integration` job uploads `target/surefire-reports/` as an artifact so a
-failure can be diagnosed without re-running it.
+The `integration` job then asserts that the two integration tests actually
+produced surefire reports with `Skipped: 0`, because a green Maven run alone
+does not prove the `integration` profile selected them. It uploads
+`target/surefire-reports/` as an artifact (`if: always()`) so a failure can be
+diagnosed without re-running it.
+
+Measured on a GitHub-hosted runner (3.13.11, run 42213967190): `build` 1m 43s,
+`integration` 1m 59s, 36 tests, 0 skipped. The runner is roughly 4–6× **faster**
+than a typical local Windows checkout on the segmentation-heavy tests
+(`PipelineExecutorIntegrationTest` 59.5 s on CI vs 229–389 s locally), so the
+per-test `@Timeout`s (15 and 25 min) have ample headroom — do not "fix" them
+based on local timings alone.
 
 - The **Maven wrapper** (`./mvnw`, pinned to Maven 3.9.16) is used — no system `mvn` required.
 - On Windows, `JAVA_HOME` must point to a **JDK 21** (the project targets Java 21 and `IAClassLibrary` is Java 21 bytecode). Check the machine's existing value before overriding it — it is usually already correct, and a stale hard-coded path from an earlier JDK build fails with "The JAVA_HOME environment variable is not defined correctly". If you do need to set it, use PowerShell (`$env:JAVA_HOME = "..."; .\mvnw.cmd test`): an inline `JAVA_HOME="C:\..." ./mvnw` in Git Bash mangles the Windows path.

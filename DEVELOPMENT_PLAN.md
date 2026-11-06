@@ -217,6 +217,18 @@ ran nowhere automated. `maven.yml` now has a second `integration` job
 missing fixture **fail** instead of skip, closing the hole that let the
 2026-11-01 fixture relocation break both integration tests silently.
 
+**Verified on a real runner (2026-11-06, run 42213967190, 3.13.11):** 36 tests,
+0 skipped, both jobs green; `build` 1m 43s, `integration` 1m 59s. The runner is
+4–6× faster than a local Windows checkout on the segmentation-heavy tests, so
+the per-test `@Timeout`s have ample headroom and the per-push cost is ~2 min.
+
+**Hardened (3.13.12):** `requireFixtures` guards a missing *fixture*, but not
+the tests failing to be *selected* — if `-Pintegration` ever stopped activating,
+the tagged tests would simply be excluded and the job would still go green. The
+job now asserts both integration surefire reports exist with `Skipped: 0`, so it
+evidences its own work rather than relying on the exit code. Also bumped
+`actions/upload-artifact` v4 → v5 (v4 targets the deprecated Node 20).
+
 `.github/workflows/maven.yml` currently runs a single `mvn verify` on JDK 11 with
 `--settings mvn_settings.xml` and a `PAT` secret.
 

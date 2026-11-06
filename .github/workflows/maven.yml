@@ -46,9 +46,32 @@ jobs:
         # broken fixture path shows up as a green build that tested nothing.
         run: ./mvnw --batch-mode -Pintegration -Dgiani.requireFixtures=true verify
 
+      - name: Verify the integration tests actually ran
+        # A green Maven run is NOT proof the `integration`-tagged tests were
+        # selected. If the profile ever failed to activate they would simply be
+        # excluded, the build would still pass, and the uploaded reports would
+        # look much the same — so assert the two reports exist and ran unskipped
+        # rather than inferring it from the job's exit code.
+        run: |
+          status=0
+          for t in PipelineExecutorIntegrationTest PipelineExecutorTimelapseIntegrationTest; do
+            report="target/surefire-reports/net.calm.giani.exec.$t.txt"
+            if [ ! -f "$report" ]; then
+              echo "::error::$t produced no surefire report — the integration profile did not select it"
+              status=1
+              continue
+            fi
+            if ! grep -q "Tests run: [1-9][0-9]*, Failures: 0, Errors: 0, Skipped: 0" "$report"; then
+              echo "::error::$t did not run cleanly:"
+              cat "$report"
+              status=1
+            fi
+          done
+          exit $status
+
       - name: Upload surefire reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: integration-surefire-reports
           path: target/surefire-reports/
