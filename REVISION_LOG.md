@@ -1300,3 +1300,80 @@ against source/output; left in place rather than rewritten:
   root.
 - Version bumped `3.13.11` → `3.13.12` (`chore`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-06 — Cleared four stale passages in DEVELOPMENT_PLAN.md
+
+Found while reading the plan to answer "what's next". All four were
+present-tense descriptions of work that had already landed — the drift mode this
+pairing is supposed to prevent, and which the "treat status markers as
+unverified" rule in `AGENTS.md` exists to catch.
+
+- **I1's `Track Timelapse` follow-up still said "a future pass should rename…
+  to e.g. Process All Timepoints".** That shipped in `bcfa31a` (3.10.0), with
+  the `DeprecatedProps` mapping. Rewritten as done — but deliberately *keeping*
+  the open half: the two flags are still independent, so at defaults tracking
+  still silently produces nothing. That is what I3 Step 2 closes, and it should
+  not disappear just because the rename happened.
+- **I1's problem statement still described `addProcess()`/`removeProcess()` and
+  the `checkIfStarDist` hack as current code.** All deleted (`f63b97b`,
+  `78d61b6`). Recast as "Original problem statement (2026-10-18) — resolved;
+  kept for rationale", with the three refactor goals marked ✔ and pointing at
+  what actually implements each. Flagged on 2026-10-31 and survived two passes
+  before this one.
+- **The "wizard help buttons" known issue told the reader to edit
+  `GIANIUI.form`** — impossible since 3.13.10 deleted the `.form` files. Now
+  points at `getHelpURI(...)` in `GIANIUI.initComponents()`, and says why the
+  old instruction is void.
+- **"Suggested sequencing & milestones" still ended "M1 and M2 are the immediate
+  next steps"** with M1–M6 long done. Replaced with a dated status: M7 (Phase I)
+  is the only milestone left, broken down by I1/I2/I3 with I3's step order, and
+  noting the deferred "Known issues" sit outside the milestones. This phrase
+  wraps across a line, which is why repeated greps for it kept missing it —
+  worth remembering when auditing.
+- Docs-only; no code change. Version bumped `3.13.12` → `3.13.13` (`docs`), kept
+  in sync across `pom.xml`, `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-06 — CLI now exits non-zero on failure (deferred known issue)
+
+Every headless path previously exited `0`, so an HPC scheduler reported failed
+jobs as successful — the worst of the deferred known issues, because the
+failure is invisible exactly where runs are unattended.
+
+- **Restructured for testability.** `main` now delegates to
+  `GIANI.runHeadless(String[])`, which *returns* `EXIT_SUCCESS` (0) or
+  `EXIT_FAILURE` (1) instead of calling `System.exit` internally; `main` makes
+  the single exit call. `init` returns a boolean. This is what let the failure
+  paths be unit-tested at all — previously any test would have killed the JVM.
+- **Pipeline failure is now detectable.** `PipelineExecutor` is a `Thread`, so
+  an exception escaping its `run()` only reached the default handler and
+  `join()` returned normally — the caller could not tell the pipeline had died.
+  `GIANI.run(Properties)` now installs an uncaught-exception handler and returns
+  `boolean`. (Signature changed from `void`; source-compatible for the existing
+  statement-position callers in `GIANIMacroExecutor` and the tests.)
+- **`Error` vs `Exception`.** The compiler caught that `GenUtils.logError` takes
+  an `Exception`, not a `Throwable` as `AGENTS.md` claimed. That matters here:
+  `OutOfMemoryError` is a realistic escape for 3D segmentation at `-Xmx4g`, so
+  a non-`Exception` is wrapped rather than narrowed. `AGENTS.md` corrected.
+- **Unreadable properties file is now fatal.** It was logged and the run
+  continued with *default* parameters — producing plausible-looking but wrong
+  output, which is worse than failing.
+- **Validation early-exits also return non-zero.** The plan left this open
+  ("keep `0` … only if that is the documented contract"); there was no such
+  documented contract, and a scheduler should see a bad invocation as a failed
+  job. Documented in `AGENTS.md` instead.
+- `GianiExitCodeTest` (6 tests) pins each failure path: missing properties,
+  missing input, job list without a job number, absent job list, job number not
+  present in the list (the `getJobDetails` → `null` → NPE path), and an
+  unparseable properties file. `./mvnw clean test` → **40/40, 0 skipped**.
+- Drive-by: the `-h` text and the `main` Javadoc pointed at the retired GitHub
+  wiki; both now point at ReadTheDocs. This is part of the "help buttons point
+  at the retired wiki" known issue — **the wizard panel URIs are still
+  unfixed**, as is the separate bug that a lone `-h` is never parsed.
+- **Deliberately left open and recorded under Known issues:** errors that
+  `PipelineExecutor` catches and logs internally (notably "Failed to save
+  results file") still do not mark the run as failed, so a job that writes no
+  CSV can exit `0`. Per-file skips inside a directory batch *should* stay
+  non-fatal; whether writing the primary output is a success condition is a
+  separate decision.
+- Version bumped `3.13.13` → `3.13.14` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

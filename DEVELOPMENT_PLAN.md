@@ -915,13 +915,16 @@ are deferred to a later pass.
 
 **Known UX / bug follow-ups (logged 2026-10-31):**
 
-- **`Track Timelapse` naming is misleading.** It only widens the per-series
-  `Time` loop (`PipelineExecutor.timeRange`) to analyse every timepoint; it does
-  not generate any tracking/linkage. `Track Lineage` independently runs TrackMate
-  and emits `GIANI_tracks.csv` + `*_track_masks`. A future pass should rename
-  `Track Timelapse` (via `DeprecatedProps`) to e.g. "Process All Timepoints",
-  and/or make `Track Lineage` imply multi-timepoint analysis, so the two flags
-  can't be left in a state that silently produces no tracking output.
+- **`Track Timelapse` naming was misleading — renamed in `bcfa31a` (3.10.0).**
+  It only widens the per-series `Time` loop (`PipelineExecutor.timeRange`) to
+  analyse every timepoint; it does not generate any tracking/linkage.
+  `Track Lineage` independently runs TrackMate and emits `GIANI_tracks.csv` +
+  `*_track_masks`. The key is now `PROCESS_ALL_TIMEPOINTS` ("Process All
+  Timepoints"), with a `DeprecatedProps` entry mapping the old label.
+  **The underlying trap is still open:** the two flags remain independent, so at
+  defaults (`TRACK_LINEAGE=true`, `PROCESS_ALL_TIMEPOINTS=false`) only `t=0` runs
+  and tracking silently produces no output. I3 Step 2 closes it by disabling
+  *Track Lineage* unless all timepoints are selected.
 - **Toggle-persistence bugs (same class) — fixed in `fc89226`:** (a) `TopHatFilterPanel`
   inits its enable toggle with `setSelected(...)` so it reflects `ENABLE_TOP_HAT_FILTER`;
   (b) `GIANIUI.collectPanelState()` (reentrancy-guarded) persists every panel's state
@@ -933,35 +936,40 @@ are deferred to a later pass.
   + per-stage `get*PropLabels()` helpers (the `getFociPropLabels` pattern), so panels no
   longer build processes at startup.
 
-The wizard is over-built. `GIANIUI.initComponents()` assembles the fixed pipeline
-inline (each `PipelineBuilder.getDefault…()` call creates a process) and wires
-each process into a panel for preview, while `nextButton`/`previousButton` call
-`addProcess()`/`removeProcess()` to grow/shrink a `ProcessPipeline` during
-navigation. That duplicates `buildFullPipeline` (headless) and is the source of the
-index-coupling fragility; the pipeline is fixed, so the incremental "build" is
-theatre, and the only real reason panels hold process instances is per-stage
-preview.
+**Original problem statement (2026-10-18) — resolved; kept for rationale.** The
+wizard was over-built: `GIANIUI.initComponents()` assembled the fixed pipeline
+inline (each `PipelineBuilder.getDefault…()` call creating a process) and wired
+each process into a panel for preview, while `nextButton`/`previousButton`
+called `addProcess()`/`removeProcess()` to grow and shrink a `ProcessPipeline`
+during navigation. That duplicated `buildFullPipeline` (headless) and was the
+source of the index-coupling fragility; the pipeline is fixed, so the
+incremental "build" was theatre, and the only real reason panels held process
+instances was per-stage preview.
 
-Refactor to:
+The three refactor goals have all landed:
 
-1. **Single source of truth** — `PipelineBuilder.buildFullPipeline(props, cells)`
-   (or a thin `GianiSettings` wrapper) is the only place the pipeline is assembled.
-2. **Wizard as a parameter collector** — panels write into the shared config; no
-   `addProcess`/`removeProcess`, no inline pipeline in `initComponents`.
-3. **Decoupled preview** — a panel previews by constructing its stage on-demand
-   from the current config and running it, not by holding the shared pipeline's
-   process.
+1. ✔ **Single source of truth** — `PipelineBuilder.buildFullPipeline(props, cells)`
+   is the only place the pipeline is assembled.
+2. ✔ **Wizard as a parameter collector** — `addProcess`/`removeProcess` and the
+   inline pipeline are gone; `nextButton`/`previousButton` only move
+   `layerIndex` and toggle panel visibility.
+3. ✔ **Decoupled preview** — each panel holds a `Supplier<MultiThreadedProcess>`
+   that builds its stage on demand from the current config
+   (`GIANIUI.buildPreviewProcess` → `collectPanelState()` +
+   `PipelineBuilder.buildPreviewProcess`), rather than holding a shared process.
+   Since 3.13.10 the prop-label arrays come from
+   `PipelineBuilder.getStagePropLabels(int)`, so no processes are built at
+   startup at all.
 
-This removes the `componentList` ↔ `ProcessPipeline` coupling and the
-`checkIfStarDist` re-wiring hack. TrackMate is a partial template: adopt the
-Settings/execution separation and (via R2a/R2b) typed parameters; do **not** adopt
-plugin-style extensibility, which is unnecessary for a fixed pipeline. The guided
-wizard UX stays — GIANI's niche is opinionated cell detection for non-experts.
-This is where the timelapse UI panel (H1, deferred) and a **tracking parameters
-panel** (H3, deferred) land: surface `TRACK_TIMELAPSE` / `TRACK_LINEAGE` /
-`TIME_SELECT` as proper wizard controls (today only `Track Timelapse` has a
-checkbox, on the Select Input panel), and later expose tracking tuning (motion
-model, linking/gap-closing penalties, `Track Spots`).
+The `componentList` ↔ `ProcessPipeline` coupling and the `checkIfStarDist`
+re-wiring hack are both removed. The guided wizard UX stays — GIANI's niche is
+opinionated cell detection for non-experts; TrackMate's Settings/execution
+separation was a partial template, but its plugin-style extensibility was
+deliberately not adopted for a fixed pipeline.
+
+The timelapse and tracking controls that H1/H3 deferred to this phase have also
+landed, as `TrackingPanel` (see the status note above). Still outstanding: the
+motion model and `Track Spots` tunings, and the control redesign in I3 Step 2.
 
 ### I2. Friendliness & polish
 
@@ -1108,13 +1116,21 @@ than the release and deferred.
   still escape `PipelineExecutor.run()` and abort the batch without writing
   output. To do: reproduce with a deliberately truncated OME-TIFF, then decide
   on per-file error isolation (catch per file, log, skip, keep going).
-- **CLI exit code is always `0`.** `GIANI.main` calls `System.exit(0)` after
-  `GIANI.init(...)` regardless of outcome, and an uncaught exception in the
-  `PipelineExecutor` thread only prints a stack trace before `join()` returns.
-  HPC schedulers therefore report failed jobs as successful. To do: have the
-  executor record success/failure (e.g. a status field or uncaught-exception
-  handler) and exit non-zero on failure; keep `0` for validation early-exits
-  only if that is the documented contract.
+- ~~**CLI exit code is always `0`.**~~ ✔ **Fixed 2026-11-06 (3.13.14).**
+  `main` now delegates to `GIANI.runHeadless(String[])`, which returns
+  `EXIT_SUCCESS`/`EXIT_FAILURE` and is unit-testable without killing the JVM;
+  `init` returns a boolean, and `run(Properties)` returns whether the pipeline
+  completed, using an uncaught-exception handler on the `PipelineExecutor`
+  thread (an `Error` such as `OutOfMemoryError` is wrapped, since
+  `GenUtils.logError` takes an `Exception`). Validation early-exits now return
+  non-zero too: a scheduler should see a bad invocation as a failed job.
+  Loading an unreadable properties file is now fatal rather than silently
+  continuing with defaults, which would have produced plausible-but-wrong
+  output. Six tests in `GianiExitCodeTest` pin the failure paths.
+  **Still open:** errors that `PipelineExecutor` catches and logs internally —
+  notably "Failed to save results file" — do not yet mark the run as failed, so
+  a job that produces no CSV can still exit `0`. Decide whether writing the
+  primary output should be a success condition.
 
 Found during the docs content review (2026-11-03):
 
@@ -1122,8 +1138,10 @@ Found during the docs content review (2026-11-03):
   URI (`GIANIUI.getHelpURI(...)`, wired in `initComponents`/`GIANIUI.form`)
   links to `github.com/djpbarry/Giani/wiki/...`; `GIANI -h` and the
   `GIANI.main` Javadoc do the same. To do: repoint to the matching
-  ReadTheDocs pages (`giani-docs.readthedocs.io`). The panel URIs live in the
-  NetBeans form's custom-creation code, so edit via `GIANIUI.form`.
+  ReadTheDocs pages (`giani-docs.readthedocs.io`). The URIs are passed to each
+  panel's constructor in `GIANIUI.initComponents()` via `getHelpURI(...)`; edit
+  `GIANIUI.java` directly (the `.form` files were deleted in 3.13.10, so the
+  earlier instruction to edit `GIANIUI.form` no longer applies).
 - **`GIANI -h` on its own is never parsed.** The argument loop in
   `GIANI.main` runs `i < args.length - 1` (it reads each flag's value from
   `args[i + 1]`), so a lone `-h` is skipped and the run exits with "No valid
@@ -1169,7 +1187,15 @@ Found during the docs content review (2026-11-03):
    differentiates itself from MIA, so it is a first-class deliverable rather than
    an afterthought.
 
-Each milestone is independently shippable. **M1 and M2 are the immediate next
-steps** and unblock the risky M4 re-pin. **M7 is the last planned milestone:**
-after it, GIANI is feature-complete and maintained, with new functionality
-directed to MIA.
+Each milestone is independently shippable.
+
+**Status (2026-11-06, 3.13.13): M1–M6 are done. M7 (Phase I) is the only one
+left**, and is the last planned milestone — after it, GIANI is feature-complete
+and maintained, with new functionality directed to MIA.
+
+Within M7: I1 is done bar the motion-model / `Track Spots` tunings; I2 is done
+bar "preview fidelity" (never given a concrete definition); I3 is planned and
+unblocked, sequenced Step 2 (tracking panel redesign) → Step 3 (panel titles,
+display-only) → Step 4 (parameter renames — decide scope before release, since
+it touches every saved `properties.xml`). The deferred items under "Known
+issues" below are not part of any milestone and are prioritised separately.

@@ -22,7 +22,7 @@ lineage-tracking).
 GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](https://imagej.net/software/fiji/) plugin for batch analysis of 3D (and 4D) microscopy images: it reads proprietary image formats, segments nuclei and cells, measures morphology/fluorescence intensity, and optionally tracks lineages across time.
 
 - **Language/toolchain:** Java 21, Maven, Swing (hand-maintained; originally NetBeans-designed), built as an ImageJ/Fiji plugin.
-- **Group/artifact:** `net.calm:giani`, version `3.13.12`.
+- **Group/artifact:** `net.calm:giani`, version `3.13.14`.
 - **Parent POM:** `org.scijava:pom-scijava:45.1.0` (SciJava build conventions).
 - **Core library dependency:** `com.github.djpbarry:IAClassLibrary:v2.5.0` (JitPack) provides the actual image-processing primitives (`MultiThreaded*` process classes, `BioFormatsImg`, `ProcessPipeline`, `PropertyWriter`, etc.). GIANI is mostly glue that wires these primitives into a pipeline and exposes UI/CLI/macro entry points.
 - **Transitive dependency:** `mcib3d-core` (via `IAClassLibrary`) provides `mcib3d.geom.Objects3DPopulation`/`Object3D`, the segmentation-result container threaded through the pipeline.
@@ -78,7 +78,7 @@ net.calm.giani.exec.GIANI
 ```
 
 - **No arguments** → launches the Swing GUI (`GIANIUI`).
-- **With arguments** → headless batch mode. Flags: `-f <input file>`, `-o <output dir>`, `-l <job list file>`, `-p <properties file>`, `-n <job number>`, `-s <series>`. A `-p` (properties) and either `-f` or `-l` are required. Full usage is documented in `docs/cluster/index.rst` (published at `giani-docs.readthedocs.io`); the old GitHub wiki is retired. Note the known issue that a lone `-h` is never parsed.
+- **With arguments** → headless batch mode. Flags: `-f <input file>`, `-o <output dir>`, `-l <job list file>`, `-p <properties file>`, `-n <job number>`, `-s <series>`. A `-p` (properties) and either `-f` or `-l` are required. **Exit code: `0` on success, `1` on any failure** (bad arguments, unreadable properties or job-list file, or a pipeline that did not complete) — before 3.13.14 every path exited `0`, so HPC schedulers saw failed jobs as successful. A per-file error inside a directory batch is still logged-and-skipped by design and does not on its own fail the run. `GIANI.runHeadless(String[])` returns the status without exiting, which is how it is tested. Full usage is documented in `docs/cluster/index.rst` (published at `giani-docs.readthedocs.io`); the old GitHub wiki is retired. Note the known issue that a lone `-h` is never parsed.
 ### Local Fiji install (GUI testing)
 
 The target Fiji is a portable, no-bundled-Java build (launchers `fiji.bat` / `fiji-windows-x64.exe`,
@@ -224,7 +224,7 @@ Panels extend `net.calm.iaclasslibrary.UIClasses.LayerPanel` and implement `Upda
 - **Series with fewer than 2 Z-slices are skipped** (`img.getSizeZ(s) < 2`) — 2D images are silently ignored.
 - **`.gitattributes` marks `*.zip` as Git LFS.** `assets/Test_Data.zip` is a ~335 MB LFS file; do not treat it as a normal tracked blob.
 - **`PROCESS_ALL_TIMEPOINTS` ("Process All Timepoints", formerly `TRACK_TIMELAPSE`) does not track anything** — it only widens the time loop so every timepoint is analysed. `TRACK_LINEAGE` ("Track Lineage") is what runs TrackMate and produces the `Track ID` column, `GIANI_tracks.csv` and the `*_track_masks/` folders. The two flags are independent; at defaults (`TRACK_LINEAGE=true`, `PROCESS_ALL_TIMEPOINTS=false`) only `t=0` runs, so no tracking output is produced.
-- **No logging framework:** errors go through `GenUtils.logError(Throwable, String)` (IAClassLibrary utility), which typically routes to ImageJ's log.
+- **No logging framework:** errors go through `GenUtils.logError(Exception, String)` (IAClassLibrary utility), which typically routes to ImageJ's log. Note it takes an `Exception`, not a `Throwable`, so an `Error` (e.g. `OutOfMemoryError`, realistic for 3D segmentation) must be wrapped before logging.
 
 ## Documentation conventions
 

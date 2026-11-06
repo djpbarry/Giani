@@ -38,6 +38,20 @@ import java.util.Scanner;
  */
 public class GIANI implements PlugIn {
 
+    /** Process exit code for a run that completed. */
+    static final int EXIT_SUCCESS = 0;
+
+    /**
+     * Process exit code for any failure — bad arguments, an unreadable
+     * properties or job-list file, or a pipeline that did not complete.
+     *
+     * <p>Before 3.13.14 every headless path exited {@code 0}, so HPC schedulers
+     * reported failed jobs as successful. Per-file errors inside a directory
+     * batch are still logged-and-skipped (deliberate, so one bad image does not
+     * abort the batch) and do not on their own make the run fail.
+     */
+    static final int EXIT_FAILURE = 1;
+
     /**
      * Launches the interactive wizard. Invoked from the Fiji Plugins menu via
      * {@code plugins.config}.
@@ -53,57 +67,76 @@ public class GIANI implements PlugIn {
     /**
      * Run GIANI using the specified list of arguments
      *
-     * @param args see https://github.com/djpbarry/Giani/wiki/Running-GIANI-on-a-HPC-Cluster
+     * <p>Exits {@link #EXIT_SUCCESS} if the run completed and
+     * {@link #EXIT_FAILURE} otherwise, so batch schedulers can detect a failed
+     * job.
+     *
+     * @param args see https://giani-docs.readthedocs.io/ (cluster section)
      */
     public static void main(String[] args) {
         if (args == null || args.length < 1) {
             GIANIUI ui = new GIANIUI();
             ui.setVisible(true);
         } else {
-            System.setProperty("java.awt.headless", "true");
-            File file = null;
-            File list = null;
-            File props = null;
-            File output = null;
-            int jobNumber = -1;
-            int series = 0;
-            try {
-                for (int i = 0; i < args.length - 1; i++) {
-                    switch (args[i]) {
-                        case "-f" -> file = new File(args[i + 1]);
-                        case "-o" -> output = new File(args[i + 1]);
-                        case "-l" -> list = new File(args[i + 1]);
-                        case "-p" -> props = new File(args[i + 1]);
-                        case "-n" -> jobNumber = Integer.parseInt(args[i + 1]);
-                        case "-s" -> series = Integer.parseInt(args[i + 1]);
-                        case "-h" -> IJ.log("For instructions on how to run GIANI from a command line or shell, " +
-                                "see here: https://github.com/djpbarry/Giani/wiki/Running-GIANI-on-a-HPC-Cluster");
-                        default -> {
-                        }
-                    }
-                }
-            } catch (NumberFormatException e) {
-                GenUtils.logError(e, "Invalid numeric argument - using default value.");
-            } catch (NullPointerException e) {
-                GenUtils.logError(e, "Invalid filename - aborting.");
-            }
-            if (props == null) {
-                IJ.log("No valid properties file specified - exiting.");
-                System.exit(0);
-            } else if (list == null && file == null) {
-                IJ.log("No valid input file or file list specified - exiting.");
-                System.exit(0);
-            }
-            if (list != null && jobNumber < 0) {
-                IJ.log("Invalid job number specified - exiting.");
-                System.exit(0);
-            }
-            GIANI.init(props, list, file, jobNumber, series, output);
-            System.exit(0);
+            System.exit(runHeadless(args));
         }
     }
 
-    private static void init(File inputProps, File jobListFile, File file, int jobNumber, int series, File outputDir) {
+    /**
+     * Headless entry point, split out of {@link #main} so the exit status can be
+     * asserted in tests without killing the JVM.
+     *
+     * @param args the command-line arguments
+     * @return {@link #EXIT_SUCCESS} or {@link #EXIT_FAILURE}
+     */
+    static int runHeadless(String[] args) {
+        System.setProperty("java.awt.headless", "true");
+        File file = null;
+        File list = null;
+        File props = null;
+        File output = null;
+        int jobNumber = -1;
+        int series = 0;
+        try {
+            for (int i = 0; i < args.length - 1; i++) {
+                switch (args[i]) {
+                    case "-f" -> file = new File(args[i + 1]);
+                    case "-o" -> output = new File(args[i + 1]);
+                    case "-l" -> list = new File(args[i + 1]);
+                    case "-p" -> props = new File(args[i + 1]);
+                    case "-n" -> jobNumber = Integer.parseInt(args[i + 1]);
+                    case "-s" -> series = Integer.parseInt(args[i + 1]);
+                    case "-h" -> IJ.log("For instructions on how to run GIANI from a command line or shell, " +
+                            "see here: https://giani-docs.readthedocs.io/");
+                    default -> {
+                    }
+                }
+            }
+        } catch (NumberFormatException e) {
+            GenUtils.logError(e, "Invalid numeric argument - using default value.");
+        } catch (NullPointerException e) {
+            GenUtils.logError(e, "Invalid filename - aborting.");
+            return EXIT_FAILURE;
+        }
+        if (props == null) {
+            IJ.log("No valid properties file specified - exiting.");
+            return EXIT_FAILURE;
+        } else if (list == null && file == null) {
+            IJ.log("No valid input file or file list specified - exiting.");
+            return EXIT_FAILURE;
+        }
+        if (list != null && jobNumber < 0) {
+            IJ.log("Invalid job number specified - exiting.");
+            return EXIT_FAILURE;
+        }
+        return GIANI.init(props, list, file, jobNumber, series, output)
+                ? EXIT_SUCCESS : EXIT_FAILURE;
+    }
+
+    /**
+     * @return {@code true} if the run completed, {@code false} on any failure
+     */
+    private static boolean init(File inputProps, File jobListFile, File file, int jobNumber, int series, File outputDir) {
         IJ.log(String.format("Properties File: %s", inputProps.getAbsolutePath()));
         if (jobListFile != null) {
             IJ.log(String.format("Job List: %s", jobListFile.getAbsolutePath()));
@@ -114,13 +147,16 @@ public class GIANI implements PlugIn {
         try {
             GianiDefaultParams.loadProperties(props, null, inputProps);
         } catch (Exception e) {
-            GenUtils.logError(e, "Failed to load properties file.");
+            // Continuing here would silently run with default parameters rather
+            // than the user's, producing plausible-looking but wrong output.
+            GenUtils.logError(e, "Failed to load properties file - aborting.");
+            return false;
         }
         String[] jobDetails;
         if (jobListFile != null) {
             if (!jobListFile.exists()) {
                 IJ.log(String.format("%s is not a valid job list file - exiting.", jobListFile.getAbsolutePath()));
-                return;
+                return false;
             }
             try {
                 jobDetails = getJobDetails(jobListFile, jobNumber);
@@ -128,10 +164,12 @@ public class GIANI implements PlugIn {
                 series = Integer.parseInt(jobDetails[1]);
             } catch (FileNotFoundException e) {
                 GenUtils.logError(e, "Job list file not found - aborting.");
-                return;
+                return false;
             } catch (IOException | NullPointerException e) {
+                // NullPointerException covers getJobDetails returning null, i.e.
+                // the job number is absent from the list.
                 GenUtils.logError(e, "Could not read job list file - aborting.");
-                return;
+                return false;
             }
         }
         props.setProperty(GianiDefaultParams.INPUT_DIR_LABEL, file.getAbsolutePath());
@@ -141,28 +179,49 @@ public class GIANI implements PlugIn {
             outputDir = new File(props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL));
         }
         if (!GianiDefaultParams.setOutputDirectory(props, label, outputDir.getAbsolutePath())) {
-            System.exit(0);
+            IJ.log("Could not create the output directory - aborting.");
+            return false;
         }
         IJ.log(String.format("Output Directory: %s", props.getProperty(GianiDefaultParams.OUTPUT_DIR_LABEL)));
-        (new GIANI()).run(props);
+        return (new GIANI()).run(props);
     }
 
     /**
-     * Run GIANI using the specified properties
+     * Run GIANI using the specified properties.
+     *
+     * <p>{@link PipelineExecutor} is a {@link Thread}, so an exception escaping
+     * its {@code run()} only reaches the default handler — {@link Thread#join()}
+     * then returns normally and the caller cannot tell the pipeline died. An
+     * uncaught-exception handler is installed to capture that.
      *
      * @param props contains parameter name-value pairs for all parameters necessary to run GIANI
+     * @return {@code true} if the pipeline completed without an uncaught error
      */
-    public void run(Properties props) {
+    public boolean run(Properties props) {
         DebugTools.setRootLevel("WARN");
         Objects3DPopulation cells = new Objects3DPopulation();
         ProcessPipeline pipeline = (new PipelineBuilder()).buildFullPipeline(props, cells);
         PipelineExecutor exec = new PipelineExecutor(pipeline, props, cells);
+        Throwable[] uncaught = new Throwable[1];
+        exec.setUncaughtExceptionHandler((thread, throwable) -> uncaught[0] = throwable);
         exec.start();
         try {
             exec.join();
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             GenUtils.logError(e, "Pipeline execution interrupted - aborting.");
+            return false;
         }
+        if (uncaught[0] != null) {
+            // GenUtils.logError takes an Exception, but what escapes may be an
+            // Error — OutOfMemoryError is realistic here, given the 3D
+            // segmentation working set — so wrap rather than narrow.
+            Throwable t = uncaught[0];
+            GenUtils.logError(t instanceof Exception e ? e : new RuntimeException(t),
+                    "Pipeline execution failed.");
+            return false;
+        }
+        return true;
     }
 
     private static String[] getJobDetails(File jobList, int jobNumber) throws FileNotFoundException, IOException {
