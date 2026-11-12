@@ -376,7 +376,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         stardistPanel.setMinimumSize(new java.awt.Dimension(136, 180));
         stardistPanel.setLayout(new java.awt.GridBagLayout());
 
-        starDistProbLabel.setText(propLabels[MultiThreadedMaximaFinder.STARDIST_OVERLAP]);
+        starDistProbLabel.setText(propLabels[MultiThreadedMaximaFinder.STARDIST_PROB]);
         starDistProbLabel.setLabelFor(starDistProbTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -387,7 +387,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         stardistPanel.add(starDistProbLabel, gridBagConstraints);
 
-        starDistOverlapLabel.setText(propLabels[MultiThreadedMaximaFinder.STARDIST_PROB]);
+        starDistOverlapLabel.setText(propLabels[MultiThreadedMaximaFinder.STARDIST_OVERLAP]);
         starDistOverlapLabel.setLabelFor(starDistOverlapTextField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;

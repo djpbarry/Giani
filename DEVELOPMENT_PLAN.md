@@ -1209,15 +1209,18 @@ Found during the 3.13.6 live test and review (2026-11-03), previously recorded
 only in `REVISION_LOG.md`; added here 2026-11-12 so they are tracked. All three
 verified still present in 3.14.1 source:
 
-- **StarDist probability/overlap labels are swapped.** In
-  `MaximaFinderPanel.initComponents()`, `starDistProbLabel` (paired by
-  `setLabelFor` with the probability field) is given the *overlap* key's text,
-  and `starDistOverlapLabel` the *probability* key's text (`:379` / `:390`).
+- ~~**StarDist probability/overlap labels are swapped.**~~ ✔ **Fixed 2026-11-12
+  (3.14.4).** In `MaximaFinderPanel.initComponents()`, `starDistProbLabel`
+  (paired by `setLabelFor` with the probability field) was given the *overlap*
+  key's text, and `starDistOverlapLabel` the *probability* key's text.
   `PropertyExtractor` pairs label text with field, so every collect of panel
-  state writes the probability value under `StarDist Overlap Threshold` and vice
-  versa (per channel too, via the spot panels). To do: swap the two `setText`
-  arguments and add a test, or at least a live check that both values survive a
-  save/load round trip.
+  state wrote the probability value under `StarDist Overlap Threshold` and vice
+  versa (per channel too, via the spot panels). The two `setText` arguments are
+  swapped back. **Behaviour change:** an untouched run previously used
+  probability 0.6 / overlap 0.75 rather than the documented 0.75 / 0.6, so
+  StarDist results at default settings will now differ. Covered by
+  `MaximaFinderPanelStarDistTest`, including a broad round-trip guard over every
+  text-field parameter of the panel.
 - **`TrackMaskWriter` remaps spot masks with the cell map.** It selects every
   `*_masks` folder (`listFiles` filter at `:59`), including
   `*_Channel_N_Spot_masks`, and relabels them with the cell label → track map.

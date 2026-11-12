@@ -1527,3 +1527,46 @@ Fixes the known issue logged on 2026-11-06 (3.14.0 live test).
 - `./mvnw clean test` → **62/62, 0 skipped**.
 - Version bumped `3.14.2` → `3.14.3` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-12 — StarDist probability/overlap labels un-crossed
+
+Fixes the first of the three bugs tracked on 2026-11-12 (3.14.2).
+
+- **Bug.** In `MaximaFinderPanel.initComponents()` the probability label was
+  given the overlap key's text and the overlap label the probability key's text,
+  while each text field was initialised from its own, correct, key.
+  `PropertyExtractor` writes a field's value under the key named by its label, so
+  the first collect of panel state stored each value under the other's key.
+- **Who it affected.** (a) Anyone running StarDist (beta) at untouched defaults:
+  the pipeline used probability 0.6 / overlap 0.75 instead of the documented
+  0.75 / 0.6, and the on-screen values sat beside the wrong labels. (b) The
+  per-channel spot panels, which are built *after* parameters may have been
+  loaded, so a user's saved per-channel thresholds were swapped on first
+  collect. Values a user typed into the panel after it was built were stored
+  consistently with the labels they saw, so those were unaffected.
+- **Fix.** The two `setText` arguments are swapped back (two lines). The on-screen
+  row order changes as a result: Probability now sits above Overlap.
+- **Behaviour change to expect.** StarDist runs at default settings will now give
+  different results from earlier versions, because the defaults are finally
+  applied the way they were documented. A `properties.xml` saved by an older
+  version holds the values the pipeline actually used, keyed correctly for the
+  pipeline, so reloading one reproduces that older analysis (reasoning from the
+  key semantics; not checked against a real StarDist run).
+- **Audited the sibling pairs.** Checked every label → key and field → key pairing
+  in `MaximaFinderPanel` (all 15 text-field parameters). Only the StarDist pair was
+  crossed. Other panels were not audited.
+- **Tests** (`MaximaFinderPanelStarDistTest`, 5): the two thresholds and the
+  shipped defaults survive a collect, for the nuclear and per-channel panels; and
+  a broad guard that gives every text-field parameter a distinct value and checks
+  each survives a collect, so any future crossed pair is caught. Run first against
+  the unfixed code: the three StarDist-specific tests failed with the values
+  trading places (`0.75` → `0.6`, `0.88` → `0.22`). The broad guard was added
+  after the fix, so it was checked separately by temporarily reverting the fix;
+  all 5 then failed, naming the crossed parameter.
+- `./mvnw clean test` → **67/67, 0 skipped**. The panel builds headless, so the
+  tests run on CI without a display.
+- Not verified live: no StarDist environment was run, only the panel's
+  property round trip. A live check that both values survive a save/load in the
+  real wizard is still worth doing.
+- Version bumped `3.14.3` → `3.14.4` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
