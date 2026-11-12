@@ -1201,6 +1201,35 @@ Found during the 3.14.0 live test (2026-11-06):
   no division occurred and the 3.8.0 branch re-labelling path was not covered.
   Worth a run on dividing data or with a tighter linking distance.
 
+Found during the 3.13.6 live test and review (2026-11-03), previously recorded
+only in `REVISION_LOG.md`; added here 2026-11-12 so they are tracked. All three
+verified still present in 3.14.1 source:
+
+- **StarDist probability/overlap labels are swapped.** In
+  `MaximaFinderPanel.initComponents()`, `starDistProbLabel` (paired by
+  `setLabelFor` with the probability field) is given the *overlap* key's text,
+  and `starDistOverlapLabel` the *probability* key's text (`:379` / `:390`).
+  `PropertyExtractor` pairs label text with field, so every collect of panel
+  state writes the probability value under `StarDist Overlap Threshold` and vice
+  versa (per channel too, via the spot panels). To do: swap the two `setText`
+  arguments and add a test, or at least a live check that both values survive a
+  save/load round trip.
+- **`TrackMaskWriter` remaps spot masks with the cell map.** It selects every
+  `*_masks` folder (`listFiles` filter at `:59`), including
+  `*_Channel_N_Spot_masks`, and relabels them with the cell label → track map.
+  Spot masks are labelled by spot index, so `*_Spot_track_masks` are
+  meaningless (seen in the 3.13.6 run; not exercised in the 3.14.0 run, which
+  had no spots). To do: restrict to the Cell, Nucleus and Cytoplasm mask folders
+  (cytoplasm shares the cell label via `remap=true`), with a unit test.
+- **Per-channel prefix constants are stored as keys.**
+  `GianiDefaultParams.initialise()` sets `BLOB_CHAN_SELECT_LABEL`,
+  `BLOB_CHAN_NOISE_TOL_LABEL` and `BLOB_CHAN_RAD_LABEL` (`:160`, `:166`,
+  `:167`), which are prefixes ending in `"Channel "`, not keys. The result is
+  junk unsuffixed entries in every `properties.xml` (e.g.
+  `Radius for Simple Spot Detection in Channel =0.0`). Real per-channel
+  defaults come from `PipelineBuilder.setDefaultFociParams`. To do: remove the
+  three lines, after checking that no code reads the unsuffixed keys.
+
 ---
 
 ## Suggested sequencing & milestones

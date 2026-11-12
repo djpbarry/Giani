@@ -1454,6 +1454,36 @@ wrote `test_data/multiple_timepoints/GIANI-3.14.0_Output/`.
   occurred and the 3.8.0 division re-labelling path was not exercised.
 - **Log accuracy:** the 2026-11-03 entry says 3.13.6 was installed into this
   Fiji, but `giani-3.9.0.jar` was what was there. That install evidently went
-  elsewhere or was rolled back; nothing depended on it.
+  elsewhere or was rolled back; nothing depended on it. *(Corrected
+  2026-11-12: neither — the two installs were into different Fiji instances on
+  different machines. See that day's entry.)*
 - Docs-only; no code change. Version bumped `3.14.0` → `3.14.1` (`docs`), kept in
+  sync across `pom.xml`, `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-12 — Log housekeeping: two-machine install record; three bugs tracked
+
+- **Corrected the 2026-11-06 "log accuracy" note.** It concluded the 2026-11-03
+  install of 3.13.6 "went elsewhere or was rolled back", because the 3.14.0
+  install found `giani-3.9.0.jar` in its Fiji. Checked directly: the Fiji at
+  this machine's `FIJI_DIR` still holds the untouched `giani-3.13.6.jar` from
+  2026-11-03 (and `IAClassLibrary-v2.5.0.jar` in `plugins/`), and its updater
+  database has no GIANI entries, so the Fiji updater did not overwrite it
+  either (a hypothesis raised and then disproved in this session). The 3.14.0
+  install and live test ran in a **different Fiji on a different machine**
+  (consistent with the 3.13.9 note that the old hard-coded path did not exist
+  on the machine used then). Both log entries were accurate about their own
+  machine. Practical consequence: this machine's Fiji is still on 3.13.6, and
+  each machine's `bin\local-env.cmd` decides which Fiji `install-to-fiji.cmd`
+  targets — always say which machine a live test ran on.
+- **Tracked three bugs in `DEVELOPMENT_PLAN.md` "Known issues".** Found on
+  2026-11-03 but until now recorded only in that day's log entry, so they were
+  invisible to anyone reading the plan for what's next. Each re-verified
+  against current (3.14.1) source:
+  - StarDist probability/overlap labels swapped in `MaximaFinderPanel`
+    (`:379`/`:390`), so saving swaps the two values;
+  - `TrackMaskWriter` relabels spot masks with the cell → track map,
+    producing meaningless `*_Spot_track_masks`;
+  - `GianiDefaultParams.initialise()` stores three per-channel prefix
+    constants as keys, leaving junk unsuffixed entries in `properties.xml`.
+- Docs-only; no code change. Version bumped `3.14.1` → `3.14.2` (`docs`), kept in
   sync across `pom.xml`, `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
