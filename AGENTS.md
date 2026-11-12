@@ -22,7 +22,7 @@ lineage-tracking).
 GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](https://imagej.net/software/fiji/) plugin for batch analysis of 3D (and 4D) microscopy images: it reads proprietary image formats, segments nuclei and cells, measures morphology/fluorescence intensity, and optionally tracks lineages across time.
 
 - **Language/toolchain:** Java 21, Maven, Swing (hand-maintained; originally NetBeans-designed), built as an ImageJ/Fiji plugin.
-- **Group/artifact:** `net.calm:giani`, version `3.14.2`.
+- **Group/artifact:** `net.calm:giani`, version `3.14.3`.
 - **Parent POM:** `org.scijava:pom-scijava:45.1.0` (SciJava build conventions).
 - **Core library dependency:** `com.github.djpbarry:IAClassLibrary:v2.5.0` (JitPack) provides the actual image-processing primitives (`MultiThreaded*` process classes, `BioFormatsImg`, `ProcessPipeline`, `PropertyWriter`, etc.). GIANI is mostly glue that wires these primitives into a pipeline and exposes UI/CLI/macro entry points.
 - **Transitive dependency:** `mcib3d-core` (via `IAClassLibrary`) provides `mcib3d.geom.Objects3DPopulation`/`Object3D`, the segmentation-result container threaded through the pipeline.
@@ -212,7 +212,9 @@ Panels extend `net.calm.iaclasslibrary.UIClasses.LayerPanel` and implement `Upda
 
 ### Deprecated parameter migration
 
-`GianiDefaultParams.updateDeprecatedProps` rewrites old parameter names to current ones using `DeprecatedProps.getDepMap()`, matched by `String.startsWith` (so per-channel suffixed names still match). All three loading paths (GUI `GIANIUI.loadParameters`, headless `GIANI.init`, macro `GIANIMacroExecutor.loadPropertiesFile`) load via `GianiDefaultParams.loadProperties(props, title, file)`, which calls it after loading — never call `PropertyWriter.loadProperties` directly, or that path will silently skip migration. When renaming a parameter, add the old→new mapping here rather than silently breaking old saved property files.
+`GianiDefaultParams.updateDeprecatedProps` rewrites old parameter names to current ones using `DeprecatedProps.getDepMap()`, matched by `String.startsWith` (so per-channel suffixed names still match). All three loading paths (GUI `GIANIUI.loadParameters`, headless `GIANI.init`, macro `GIANIMacroExecutor.loadPropertiesFile`) load via `GianiDefaultParams.loadProperties(props, title, file)` — never call `PropertyWriter.loadProperties` directly, or that path will silently skip migration. When renaming a parameter, add the old→new mapping here rather than silently breaking old saved property files.
+
+Migration semantics (since 3.14.3): `loadProperties` loads the file into an **empty** `Properties`, migrates that, and only then merges it over `props`. This ordering matters because `props` is normally pre-populated with defaults, so migrating after the merge cannot tell a user's explicit current-name value from a default. Within the file, a deprecated-only key moves to its current name; if the file holds **both**, the current name wins; and the deprecated key is **always removed**, so it is never saved back. Because migration deletes every key starting with a deprecated name, no current key may start with one — `GianiDefaultParamsTest.noCurrentKeyStartsWithADeprecatedName` enforces this, so pick a new name that is not an extension of an old one.
 
 ## Gotchas and non-obvious details
 

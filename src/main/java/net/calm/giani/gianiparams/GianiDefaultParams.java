@@ -23,8 +23,8 @@ import net.calm.iaclasslibrary.UtilClasses.GenUtils;
 import java.awt.*;
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 /**
  * Stores all parameter names and values needed to run an instance of GIANI
@@ -277,29 +277,51 @@ public class GianiDefaultParams extends Properties {
      * @throws Exception if the file cannot be read or parsed
      */
     public static void loadProperties(Properties props, String title, File file) throws Exception {
-        PropertyWriter.loadProperties(props, title, file);
-        updateDeprecatedProps(props);
+        // Migrate the file's own contents *before* merging them over props.
+        // props is usually pre-populated with defaults, so migrating after the
+        // merge cannot tell an explicit current-name value from a default, and
+        // a stale deprecated key would always win.
+        Properties loaded = new Properties();
+        PropertyWriter.loadProperties(loaded, title, file);
+        updateDeprecatedProps(loaded);
+        props.putAll(loaded);
+        DeprecatedProps.mapControlChanges(props);
     }
 
     /**
-     * Search for any deprecated parameter names in the specifed properties and
-     * update them
+     * Migrates deprecated parameter names in {@code props} to their current
+     * names, in place. Intended to be applied to the contents of a single saved
+     * file, before they are merged over defaults (see
+     * {@link #loadProperties}).
+     * <ul>
+     * <li>If only the deprecated name is present, its value moves to the
+     * current name.</li>
+     * <li>If both are present (a file saved by a version that migrated without
+     * removing the old key), the current name's value is kept: it is the one
+     * the user last saw and set.</li>
+     * <li>The deprecated key is always removed, so it is never written back
+     * into a saved file and cannot override the user's choice on a later
+     * load.</li>
+     * </ul>
+     * Deprecated names are matched as prefixes, so per-channel suffixed names
+     * (e.g. {@code "... in Channel 2"}) are migrated too.
      *
      * @param props the parameters to update
      */
     public static void updateDeprecatedProps(Properties props) {
         HashMap<String, String> map = DeprecatedProps.getDepMap();
-        Set<String> propNames = props.stringPropertyNames();
-        Set<String> deprecNames = map.keySet();
-        for (String propName : propNames) {
-            for (String deprecatedName : deprecNames) {
+        for (String propName : props.stringPropertyNames()) {
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                String deprecatedName = entry.getKey();
                 if (propName.startsWith(deprecatedName)) {
-                    String val = props.getProperty(propName);
-                    String updatedPropName = propName.replace(deprecatedName, map.get(deprecatedName));
-                    props.setProperty(updatedPropName, val);
+                    String updatedPropName = propName.replace(deprecatedName, entry.getValue());
+                    if (!props.containsKey(updatedPropName)) {
+                        props.setProperty(updatedPropName, props.getProperty(propName));
+                    }
+                    props.remove(propName);
+                    break;
                 }
             }
         }
-        DeprecatedProps.mapControlChanges(props);
     }
 }

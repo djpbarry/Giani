@@ -1178,7 +1178,11 @@ Found during the docs content review (2026-11-03):
 
 Found during the 3.14.0 live test (2026-11-06):
 
-- **Deprecated-name migration leaves the old key behind, and the stale key
+- **✔ Fixed 2026-11-12 (3.14.3)** — `loadProperties` now migrates the file's
+  own contents before merging them over defaults: a legacy-only key moves to its
+  current name, the current name wins when a file holds both, and the deprecated
+  key is always removed (so polluted files heal on their next save). Original
+  report: **Deprecated-name migration leaves the old key behind, and the stale key
   overrides the user's choice on reload.** `GianiDefaultParams.updateDeprecatedProps`
   copies each deprecated key's value onto its replacement but never removes the
   deprecated key. So after loading a legacy file the stale key is carried into

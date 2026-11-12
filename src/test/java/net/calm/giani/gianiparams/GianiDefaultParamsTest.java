@@ -16,6 +16,7 @@
  */
 package net.calm.giani.gianiparams;
 
+import net.calm.giani.exec.PipelineBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -84,10 +85,7 @@ class GianiDefaultParamsTest {
     void loadPropertiesMigratesDeprecatedNames(@TempDir Path tmp) throws Exception {
         Properties saved = new Properties();
         saved.setProperty(DeprecatedProps.TRACK_TIMELAPSE, "true");
-        File file = tmp.resolve("properties.xml").toFile();
-        try (OutputStream out = new FileOutputStream(file)) {
-            saved.storeToXML(out, "GIANI-3.8.0");
-        }
+        File file = writeXml(tmp, saved);
 
         GianiDefaultParams props = new GianiDefaultParams();
         assertEquals("false", props.getProperty(GianiDefaultParams.PROCESS_ALL_TIMEPOINTS));
@@ -95,6 +93,68 @@ class GianiDefaultParamsTest {
         GianiDefaultParams.loadProperties(props, null, file);
 
         assertEquals("true", props.getProperty(GianiDefaultParams.PROCESS_ALL_TIMEPOINTS));
+        assertFalse(props.containsKey(DeprecatedProps.TRACK_TIMELAPSE),
+                "deprecated key must be removed so it is never saved back");
+    }
+
+    /**
+     * A file saved by 3.10–3.14.1 holds both the deprecated and the current key,
+     * because migration used to copy without removing. The current key is the
+     * one the user last saw and set, so it must win; previously the stale key
+     * silently overrode it on every load.
+     */
+    @Test
+    void loadPropertiesPrefersCurrentNameWhenFileHoldsBoth(@TempDir Path tmp) throws Exception {
+        Properties saved = new Properties();
+        saved.setProperty(DeprecatedProps.TRACK_TIMELAPSE, "true");
+        saved.setProperty(GianiDefaultParams.PROCESS_ALL_TIMEPOINTS, "false");
+        File file = writeXml(tmp, saved);
+
+        GianiDefaultParams props = new GianiDefaultParams();
+        GianiDefaultParams.loadProperties(props, null, file);
+
+        assertEquals("false", props.getProperty(GianiDefaultParams.PROCESS_ALL_TIMEPOINTS));
+        assertFalse(props.containsKey(DeprecatedProps.TRACK_TIMELAPSE));
+    }
+
+    @Test
+    void loadPropertiesMigratesPerChannelSuffixedNames(@TempDir Path tmp) throws Exception {
+        Properties saved = new Properties();
+        saved.setProperty(DeprecatedProps.FOCI_MAXIMA_DETECT_BLOBS + "2", "false");
+        File file = writeXml(tmp, saved);
+
+        GianiDefaultParams props = new GianiDefaultParams();
+        GianiDefaultParams.loadProperties(props, null, file);
+
+        assertEquals("false", props.getProperty(GianiDefaultParams.FOCI_MAXIMA_DETECT_BLOBS + "2"));
+        assertFalse(props.containsKey(DeprecatedProps.FOCI_MAXIMA_DETECT_BLOBS + "2"));
+    }
+
+    /**
+     * Migration deletes every key that starts with a deprecated name, so a
+     * current key that happened to start with one would be silently deleted on
+     * every load. Guard against a future rename creating that overlap.
+     */
+    @Test
+    void noCurrentKeyStartsWithADeprecatedName() {
+        GianiDefaultParams current = new GianiDefaultParams();
+        for (int c = 0; c < GianiDefaultParams.MAX_CHANNELS; c++) {
+            PipelineBuilder.setDefaultFociParams(current, c);
+        }
+        for (String deprecatedName : DeprecatedProps.getDepMap().keySet()) {
+            for (String key : current.stringPropertyNames()) {
+                assertFalse(key.startsWith(deprecatedName),
+                        "current key '" + key + "' starts with deprecated name '" + deprecatedName + "'");
+            }
+        }
+    }
+
+    private static File writeXml(Path dir, Properties saved) throws Exception {
+        File file = dir.resolve("properties.xml").toFile();
+        try (OutputStream out = new FileOutputStream(file)) {
+            saved.storeToXML(out, "GIANI-3.8.0");
+        }
+        return file;
     }
 
     @Test

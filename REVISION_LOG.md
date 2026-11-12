@@ -1487,3 +1487,43 @@ wrote `test_data/multiple_timepoints/GIANI-3.14.0_Output/`.
     constants as keys, leaving junk unsuffixed entries in `properties.xml`.
 - Docs-only; no code change. Version bumped `3.14.1` → `3.14.2` (`docs`), kept in
   sync across `pom.xml`, `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-12 — Deprecated-name migration: remove the old key; current name wins
+
+Fixes the known issue logged on 2026-11-06 (3.14.0 live test).
+
+- **Bug.** `updateDeprecatedProps` copied each deprecated key's value onto its
+  current name but never removed the deprecated key, so it was saved back into
+  every `properties.xml`. And because it ran *after* the file had been merged
+  over a defaults-populated `GianiDefaultParams`, it could not tell a user's
+  explicit current-name value from a default: a stale key always won. A file
+  holding `Track Timelapse=true` and `Process All Timepoints=false` reloaded as
+  `true`, and never healed.
+- **Why removing the key alone was not enough.** The plan's to-do was "remove
+  the deprecated key after migrating it". That heals the file, but only after
+  the stale value has already overridden the user's choice once. The precedence
+  had to be fixed too.
+- **Fix.** `GianiDefaultParams.loadProperties` now loads the file into an empty
+  `Properties`, migrates *that*, merges it over `props`, then runs
+  `DeprecatedProps.mapControlChanges` on the merged result (as before).
+  `updateDeprecatedProps` now migrates in place: a deprecated-only key moves to
+  its current name; when both are present, the current name is kept; the
+  deprecated key is always removed.
+- **New hazard, guarded.** Migration now deletes every key that starts with a
+  deprecated name, so a current key that happened to extend an old name would
+  vanish on every load. `noCurrentKeyStartsWithADeprecatedName` checks every
+  current key (including the per-channel spot keys for all 10 channels) against
+  every deprecated name. `AGENTS.md` documents the rule.
+- **Tests** (`GianiDefaultParamsTest`): legacy-only file (old key removed),
+  file holding both keys (current wins), per-channel suffixed name, and the
+  guard above. Run against the old code first: three of the four failed,
+  including the exact reported bug (`expected: <false> but was: <true>`).
+  - Unexplained, not pursued: under the old code the per-channel case also read
+    back `true` rather than the migrated `false`. The old code should have
+    copied the value, so the `true` presumably comes from inside IAClassLibrary's
+    `PropertyWriter.loadProperties` when loading into a defaults-populated
+    object. The new code loads into an empty `Properties` and behaves
+    correctly; the test pins it against the real `PropertyWriter`.
+- `./mvnw clean test` → **62/62, 0 skipped**.
+- Version bumped `3.14.2` → `3.14.3` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
