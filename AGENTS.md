@@ -2,6 +2,10 @@
 
 Guidance for AI agents working in the GIANI repository.
 
+**Read `WORKING_AGREEMENT.md` too.** It sets out what Claude may do without
+asking, what needs a "yes" first, and what is never allowed; `.claude/settings.json`
+enforces the command-level parts of it.
+
 ## Git workflow
 
 This repo's `development` branch is shared, so keep local and remote in sync at
@@ -10,8 +14,11 @@ committed locally was never pushed at the end of the day, while
 `origin/development` advanced independently (H2 output-cleanup vs H3
 lineage-tracking).
 
-- **Push at the end of each session** (`git push`) — this is the primary rule;
-  unpushed commits are what caused the divergence.
+- **Make sure the session's work is pushed by the end of it** — this is the
+  primary rule; unpushed commits are what caused the divergence. Commits and
+  pushes are Dave's unless he asks Claude to make them (see
+  `WORKING_AGREEMENT.md`), so Claude's part is to flag anything uncommitted or
+  unpushed before the session ends.
 - At the start of a session, `git fetch` then check `git status` and
   `git log @{u}..` to see whether `origin/development` has moved ahead.
 - Push before pulling, or rebase onto the latest `origin/development`
@@ -22,7 +29,7 @@ lineage-tracking).
 GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](https://imagej.net/software/fiji/) plugin for batch analysis of 3D (and 4D) microscopy images: it reads proprietary image formats, segments nuclei and cells, measures morphology/fluorescence intensity, and optionally tracks lineages across time.
 
 - **Language/toolchain:** Java 21, Maven, Swing (hand-maintained; originally NetBeans-designed), built as an ImageJ/Fiji plugin.
-- **Group/artifact:** `net.calm:giani`, version `3.14.5`.
+- **Group/artifact:** `net.calm:giani`, version `3.14.6`.
 - **Parent POM:** `org.scijava:pom-scijava:45.1.0` (SciJava build conventions).
 - **Core library dependency:** `com.github.djpbarry:IAClassLibrary:v2.5.0` (JitPack) provides the actual image-processing primitives (`MultiThreaded*` process classes, `BioFormatsImg`, `ProcessPipeline`, `PropertyWriter`, etc.). GIANI is mostly glue that wires these primitives into a pipeline and exposes UI/CLI/macro entry points.
 - **Transitive dependency:** `mcib3d-core` (via `IAClassLibrary`) provides `mcib3d.geom.Objects3DPopulation`/`Object3D`, the segmentation-result container threaded through the pipeline.
@@ -108,7 +115,7 @@ functional, but prefer the script so the layout stays consistent.
 The repo follows the sibling-repo convention (IAClassLibrary / ADAPT):
 
 - `pom.xml` `<version>` is a plain `X.Y.Z` with **no `-SNAPSHOT`** suffix.
-- Bump `<version>` on **every** code change: `fix`/`refactor`/`chore`/`docs`/`test` → patch, `feat` → minor, breaking change → major. The assistant does this automatically in the same pass (no confirmation needed), keeping `pom.xml`, `CITATION.cff`, `docs/conf.py`, and `AGENTS.md` in sync.
+- Bump `<version>` on **every** code change: `fix`/`refactor`/`chore`/`docs`/`test` → patch, `feat` → minor, breaking change → major. The assistant does this automatically in the same pass (no confirmation needed; agreed in `WORKING_AGREEMENT.md` §5), keeping `pom.xml`, `CITATION.cff`, `docs/conf.py`, and `AGENTS.md` in sync.
 - Commit messages use [Conventional Commits](https://www.conventionalcommits.org/) (`fix:`, `feat:`, `chore:`, `refactor:`, `docs:`, `test:`; `BREAKING CHANGE:`/`!` for breaking changes).
 - Releases are tagged `vX.Y.Z` (e.g. `v3.4.10`).
 

@@ -1590,3 +1590,26 @@ Fixes the first of the three bugs tracked on 2026-11-12 (3.14.2).
 - No code change; `DEVELOPMENT_PLAN.md` has no item affected.
 - Version bumped `3.14.4` → `3.14.5` (`docs`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-26 — Working agreement adapted to GIANI (3.14.6)
+
+- `WORKING_AGREEMENT.md` and `.claude/settings.json` had been copied from a
+  Python/pixi project. Replaced the pixi and `.py` specifics with GIANI's:
+  - Agreed with Dave: Claude may edit Java under `src/`, edit `pom.xml` (the
+    version bump; dependency changes still need a "yes"), and run the unit
+    tests (`./mvnw clean test`, `-Dtest=…`) without asking.
+  - Ask first: `-Pintegration` runs, `bin\install-to-fiji.cmd` /
+    `bin\run-fiji.cmd`, `.mvn/`, `bin/local-env.cmd`, dependency changes.
+  - Never hand-edit `assets/` (LFS) or `test_data/` fixtures (also `deny` rules).
+  - WebFetch allow-list switched from PyPI to Maven Central, JitPack, SciJava
+    javadoc, imagej.net and giani-docs.
+  - Generic sections 1–4 now point to §5 for project specifics, so they stay
+    copyable.
+- `AGENTS.md` now points to `WORKING_AGREEMENT.md` (nothing loaded it before),
+  and its "push at the end of each session" rule is reconciled with "Dave commits
+  and pushes": Claude flags unpushed work rather than pushing.
+- `.gitignore`: added `.claude/settings.local.json`.
+- No code change; `DEVELOPMENT_PLAN.md` has no item affected. Not run: the new
+  permission patterns were checked by reading only, not by triggering each one.
+- Version bumped `3.14.5` → `3.14.6` (`chore`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

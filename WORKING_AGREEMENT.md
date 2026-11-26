@@ -19,18 +19,18 @@ Sections 1–4 are generic and meant to be copied to other repos (or to `~/.clau
 
 - **Reading**: any file in the repo; searching (Glob / Grep); `git status`, `log`, `diff`, `show`, `branch` (listing), `fetch`, `check-ignore`, `ls-files`, `rev-parse`.
 - **Editing code and docs in the repo** once Dave has asked for the change (see "Planning is not permission"). No new edits after the requested change is done without checking.
-- **Python files (`.py`) in the repo: OK to create or edit without asking** (added 2026-11-21), while working on something Dave has asked for. This covers the code itself; "Planning is not permission" still applies to *starting* new work.
+- **Source files in the repo: OK to create or edit without asking** while working on something Dave has asked for. This covers the code itself; "Planning is not permission" still applies to *starting* new work. Which files count is listed in §5.
 - **Markdown files (`.md`) in the repo: OK to create or edit without asking** (added 2026-11-21), e.g. `CLAUDE.md`, `AGENTS.md`, `README.md`, `docs/*.md`: recording findings, test results, plans, notes and doc updates. Still say what changed. **Exception: this file (`WORKING_AGREEMENT.md`)**: changing its rules needs a "yes" first (see §3), except recording a rule Dave has just stated.
 - **Scratch work**: writing and running throwaway scripts, test data and outputs in the session's scratchpad directory (never in the repo).
-- **Checks**: compiling (`python -m py_compile`) and running small local test scripts in the existing environments without installing anything (`pixi run --no-install …`).
-- **Web lookups**: reading documentation and package pages (PyPI, GitHub, project docs) to check APIs.
+- **Checks**: compiling and running the project's unit tests in the existing environment without installing anything new (the exact commands are in §5).
+- **Web lookups**: reading documentation and package pages (package registries, GitHub, project docs) to check APIs.
 - **Memory**: saving or updating Claude's memory notes about how we work.
 
 ## 3. Ask first
 
 - **Git that changes state**: `add`, `commit`, `push`, `pull`, `switch` / `checkout`, `merge`, `rebase`, `stash`, creating a branch, tagging.
   - Before switching branches, check `git status` and stop if there are uncommitted changes or untracked files that would be overwritten or carried along.
-- **Environments and dependencies**: `pixi install` / `lock` / `add` / `remove` / `update` / `clean`, editing `pixi.toml`, or anything else that downloads and installs packages.
+- **Environments and dependencies**: adding, removing or re-versioning a dependency, changing the build tooling, or anything else that downloads and installs packages (project specifics in §5).
 - **Moving, renaming or deleting files in the repo**, including untracked ones (e.g. a stray `pixi.lock`). Back up to the scratchpad rather than deleting, and say so.
 - **Long or heavy runs**: the project's main pipeline or entry point, or anything expected to take more than a few minutes, or to use a lot of memory or disk.
 - **Anything outward-facing**: publishing (Artifacts, docs, gists), posting to GitHub (issues, PRs, comments), sending anything to an external service, or contacting servers on Dave's behalf (e.g. data servers or remote APIs).
@@ -40,12 +40,26 @@ Sections 1–4 are generic and meant to be copied to other repos (or to `~/.clau
 
 - `git push --force` / `-f`, `git reset --hard`, `git clean`, `git branch -d` / `-D`, rewriting published history (`rebase` / `commit --amend` on pushed commits).
 - Recursive or bulk deletes (`rm -rf`, `Remove-Item -Recurse`), or deleting anything outside the scratchpad.
-- Hand-editing generated files (`pixi.lock`).
+- Hand-editing generated files or binary test data (project specifics in §5).
 - Disabling safety checks: `--no-verify`, skipping hooks, turning off TLS verification to get round certificate errors.
 - Putting credentials on a command line or in files; use an existing login session or credential store.
 - Changing another user's state on a shared service (e.g. their session, group or permissions).
 
 ## 5. This project
 
-- **Local machine**: Windows (`win-64` is the only platform in `pixi.toml`). The pixi environment is `idr-training`; use `pixi run --no-install …` for local checks. Dave runs installs.
+GIANI is a Java 21 / Maven Fiji plugin; build, architecture and conventions are in `AGENTS.md`.
+
+- **Local machine**: Windows. `JAVA_HOME` must point to a JDK 21 and is normally already set; the Fiji location is in the gitignored `bin/local-env.cmd`. Builds use the Maven wrapper (`./mvnw` / `.\mvnw.cmd`); no system Maven.
+- **OK without asking**:
+  - Editing Java under `src/main/java` and `src/test/java` (agreed 2026-11-26).
+  - Editing `pom.xml`, including the version bump on every change that `AGENTS.md` requires, along with `CITATION.cff`, `docs/conf.py` and the `docs/**/*.rst` user docs. Dependency changes in `pom.xml` still need a "yes" (§3).
+  - Running the unit tests: `./mvnw clean test`, or one class or method with `-Dtest=…` (about 2 min for the full suite, agreed 2026-11-26).
+  - `bin\smoke-test-fiji.cmd` (a read-only classpath check).
+- **Ask first**:
+  - `./mvnw -Pintegration …`: the end-to-end pipeline, about 4–6 min locally.
+  - `bin\install-to-fiji.cmd`, which writes into the Fiji install outside the repo, and `bin\run-fiji.cmd`, which launches the GUI.
+  - Changing `.mvn/` (wrapper pin), `bin/local-env.cmd` or `JAVA_HOME`.
+  - Dependency changes in `pom.xml` (IAClassLibrary, TrackMate, parent POM, repositories, plugins).
+- **Never hand-edit**: `assets/Test_Data.zip` (Git LFS) or the `test_data/` fixtures that the integration tests depend on.
+- **Commit and push**: `development` is shared, and `AGENTS.md` asks that each session's work be pushed. Claude prepares the changes and, at the end of a session, reminds Dave of anything uncommitted or unpushed (or asks to commit and push it).
 - **Output locations**: temporary files go in the scratchpad, not the repo.
