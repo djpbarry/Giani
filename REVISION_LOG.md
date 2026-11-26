@@ -1760,7 +1760,10 @@ Fixes the first of the three bugs tracked on 2026-11-12 (3.14.2).
   `GIANI.run(...)` returns `true`, covering the success path on real data.
 - Docs: new "Exit status" section in `docs/cluster/index.rst`; `AGENTS.md`
   exit-code note updated.
-- `./mvnw clean test` → **83/83, 0 skipped**. Integration suite not yet re-run
-  with the new assertions.
+- `./mvnw clean test` → **83/83, 0 skipped**. Then
+  `-Pintegration -Dgiani.requireFixtures=true` → **85/85, 0 skipped**: both
+  real-data runs report success through the new check
+  (`PipelineExecutorIntegrationTest` 257 s, `…TimelapseIntegrationTest` 38 s,
+  the latter writing `GIANI_tracks.csv`).
 - Version bumped `3.14.10` → `3.14.11` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
