@@ -68,9 +68,10 @@ When tracking is enabled, the following are added to the
   (``track_id, t, z, y, x, parent_track_id, radius``). When a cell divides,
   each daughter starts a new track whose ``parent_track_id`` is the mother's
   track; ``-1`` marks a track with no parent.
-* ``*_track_masks`` folders alongside the ordinary mask folders, in which each
-  cell is labelled with its track ID instead of its per-timepoint index, so a
-  tracked cell keeps the same label over time. ``0`` is background and ``1``
+* ``*_track_masks`` folders alongside the nucleus, cell and cytoplasm mask
+  folders, in which each object is labelled with its cell's track ID instead of
+  its per-timepoint index, so a tracked cell keeps the same label over time.
+  Spot masks are not given track masks: spots are not tracked themselves. ``0`` is background and ``1``
   is a cell that was not tracked. Open these in FIJI with a label lookup table
   (e.g. *glasbey*) to inspect the tracking visually.
 

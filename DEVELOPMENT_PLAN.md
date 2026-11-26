@@ -1228,7 +1228,11 @@ verified still present in 3.14.1 source:
   StarDist results at default settings will now differ. Covered by
   `MaximaFinderPanelStarDistTest`, including a broad round-trip guard over every
   text-field parameter of the panel.
-- **`TrackMaskWriter` remaps spot masks with the cell map.** It selects every
+- ✔ **Fixed 2026-11-26 (3.14.10)** — `TrackMaskWriter` now only processes
+  folders ending `_Nucleus_masks`, `_Cell_masks` or `_Cytoplasm_masks`
+  (`isTrackableMaskDir`), so spot masks are left alone; two tests in
+  `TrackMaskWriterTest`, one writing real PNGs. Original report:
+  **`TrackMaskWriter` remaps spot masks with the cell map.** It selects every
   `*_masks` folder (`listFiles` filter at `:59`), including
   `*_Channel_N_Spot_masks`, and relabels them with the cell label → track map.
   Spot masks are labelled by spot index, so `*_Spot_track_masks` are

@@ -1699,3 +1699,29 @@ Fixes the first of the three bugs tracked on 2026-11-12 (3.14.2).
   that a new non-per-channel key must not end in `"Channel "`.
 - Version bumped `3.14.8` → `3.14.9` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-26 — Track masks no longer made from spot masks (3.14.10)
+
+- `TrackMaskWriter.write` relabelled every `*_masks` folder with the cell label
+  → track map, including `*_Channel_N_Spot_masks`. Spot masks are labelled by
+  spot index, so the resulting `*_Spot_track_masks` were meaningless (seen in
+  the 3.13.6 run).
+- The writer now only processes folders ending `_Nucleus_masks`, `_Cell_masks`
+  or `_Cytoplasm_masks` (`TRACKABLE_MASK_SUFFIXES` / `isTrackableMaskDir`).
+  Those three share the cell label space because the cell watershed uses
+  `remap=true`. Suffixes checked against real output folders in `time_test/`
+  and `docs/complete/index.rst`. The explicit allow-list also excludes the
+  writer's own `*_track_masks` output, which the old filter had to special-case.
+- **Tests** (`TrackMaskWriterTest`, +2): folder classification (the three
+  object types are trackable, spot and track-mask folders are not); and an
+  end-to-end `write` over a temp dir with real PNGs, checking the cell mask is
+  relabelled (`10` → `TRACK_LABEL_OFFSET + trackId`) and no spot track folder
+  is created. My first version of that test expected the wrong label (it took
+  the wrong constructor argument as the track ID); corrected to match the
+  existing `buildRemap` test.
+- `./mvnw clean test` → **78/78, 0 skipped**. Integration tests not run yet
+  (they exercise this writer but assert nothing about mask folders).
+- Docs: `docs/start/tracking.rst` now says track masks cover nucleus, cell and
+  cytoplasm, not spots; `AGENTS.md` notes the same.
+- Version bumped `3.14.9` → `3.14.10` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

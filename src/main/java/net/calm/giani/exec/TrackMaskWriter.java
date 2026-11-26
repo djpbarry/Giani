@@ -30,23 +30,33 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Post-processes the per-timepoint Cell and Nucleus mask PNGs into parallel
- * {@code <type>_track_masks/} folders, relabelling each pixel from its
+ * Post-processes the per-timepoint Nucleus, Cell and Cytoplasm mask PNGs into
+ * parallel {@code <type>_track_masks/} folders, relabelling each pixel from its
  * per-timepoint object label to {@code CellLineageTracker.TRACK_LABEL_OFFSET +
  * trackId} so a tracked cell keeps the same label across timepoints. In the
  * track-labelled masks {@code 0} is background and {@code 1} is reserved for
  * untracked cells, matching the labels in {@code GIANI_tracks.csv}.
+ *
+ * <p>Only those three object types share the cell label space (the cell
+ * watershed is built with {@code remap=true}, and cytoplasm is derived from
+ * cell and nucleus). Spot masks ({@code *_Channel_N_Spot_masks}) are labelled
+ * by spot index, so applying the cell map to them produced meaningless output
+ * before 3.14.10; they are now left alone.
  */
 public final class TrackMaskWriter {
 
     private static final Pattern TIME_FILE_PATTERN = Pattern.compile("_T(\\d+)_Z\\d+\\.png$");
 
+    /** Suffixes of the mask folders whose labels are cell labels. */
+    static final List<String> TRACKABLE_MASK_SUFFIXES =
+            List.of("_Nucleus_masks", "_Cell_masks", "_Cytoplasm_masks");
+
     private TrackMaskWriter() {
     }
 
     /**
-     * Remaps every {@code *_masks} PNG in {@code outputDir} into a parallel
-     * {@code *_track_masks} folder.
+     * Remaps every Nucleus, Cell and Cytoplasm mask PNG in {@code outputDir}
+     * into a parallel {@code *_track_masks} folder.
      *
      * @param outputDir the output directory holding the {@code *_masks} folders
      * @param tracks    the tracked cell observations
@@ -56,15 +66,21 @@ public final class TrackMaskWriter {
         if (tracks == null || tracks.isEmpty() || outputDir == null || !outputDir.isDirectory()) {
             return;
         }
-        File[] maskDirs = outputDir.listFiles(f -> f.isDirectory()
-                && f.getName().endsWith("_masks")
-                && !f.getName().endsWith("_track_masks"));
+        File[] maskDirs = outputDir.listFiles(f -> f.isDirectory() && isTrackableMaskDir(f.getName()));
         if (maskDirs == null) {
             return;
         }
         for (File maskDir : maskDirs) {
             writeTrackMasks(maskDir, tracks);
         }
+    }
+
+    /**
+     * @return {@code true} for a Nucleus, Cell or Cytoplasm mask folder; this
+     * excludes spot masks and the {@code *_track_masks} folders themselves
+     */
+    static boolean isTrackableMaskDir(String dirName) {
+        return TRACKABLE_MASK_SUFFIXES.stream().anyMatch(dirName::endsWith);
     }
 
     private static void writeTrackMasks(File maskDir, List<CellLineageTracker.CellTrack> tracks) throws IOException {
