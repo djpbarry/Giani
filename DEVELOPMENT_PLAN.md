@@ -1181,9 +1181,41 @@ Found during the docs content review (2026-11-03):
   `addAdditionalBlobDetectionPanels` adds the per-channel spot panels only to
   `componentList`, not `corePanels`, so on the default path *Localise Spots*
   silently uses default detection settings (blob radius/threshold `0.0`).
-  Documented in `measure/localising_spots.rst`. To do: decide whether enabling
-  *Localise Spots* should reveal its panels on the default path, or give the
-  per-channel spot defaults sensible non-zero values (as I2 did for nuclei).
+  Documented in `measure/localising_spots.rst`.
+  **Investigated 2026-11-26 — worse than "default settings":** a radius of `0`
+  makes TrackMate's `LogDetector` (called exactly as
+  `MultiThreadedMaximaFinder.run` does, radius in calibrated units) return
+  **every voxel as a spot**, whatever the threshold. Probe on a synthetic
+  64×64×16 stack (0.2 µm pixels, noise plus three ~0.5 µm spots):
+
+  | radius | threshold | spots found |
+  |---|---|---|
+  | 0.0 | 0 | 65,536 (every voxel) |
+  | 0.0 | 50 | 65,536 |
+  | 0.5 µm | 0 | 626 (mostly noise) |
+  | 0.5 µm | 50 | 3 (correct) |
+
+  So *Localise Spots* on the default path currently produces meaningless spot
+  data (and is likely slow and memory-hungry on real stacks; not run on real
+  data). The threshold has no universal default, since it depends on image
+  intensity, so the user must see a preview.
+  **Decided (Dave, 2026-11-26), not yet implemented:**
+  1. Show the per-channel spot panels (with Preview) on the default path
+     whenever *Localise Spots* is ticked, not only with Advanced Options on
+     (add them to `corePanels` after the measurement panel). UI only.
+  2. Default spot radius `0.5` µm instead of `0.0` in
+     `PipelineBuilder.setDefaultFociParams` (`putIfAbsent`, so saved files keep
+     their values and old analyses stay reproducible). Threshold default stays
+     `0`; the visible panel and preview cover it.
+  3. Refuse to run when a channel using the simple (LoG) spot detector has a
+     radius ≤ 0: a dialog in the GUI (`validateInput`), and a logged error plus
+     exit `1` headless. This catches old `properties.xml` files that store
+     `0.0` explicitly, which today silently produce every-voxel spots.
+
+  Update `measure/localising_spots.rst` (drop the "default settings" note) and
+  the tooltip, and add tests: default radius, validation for each detector
+  method (Hessian/StarDist/ilastik/thresholding must not be blocked by a 0
+  blob radius), and panel visibility.
 - **Macro extension activation unverified.** `plugins.config` registers
   `GIANIMacroExecutor` under `Extensions`, but the class implements only
   `MacroExtension` (not `PlugIn`) and never calls

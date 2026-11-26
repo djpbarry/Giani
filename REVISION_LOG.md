@@ -1767,3 +1767,18 @@ Fixes the first of the three bugs tracked on 2026-11-12 (3.14.2).
   the latter writing `GIANI_tracks.csv`).
 - Version bumped `3.14.10` → `3.14.11` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-26 — Plan: spot detection on the default path (decided, not implemented)
+
+- Investigated the known issue that the spot panels are hidden unless Advanced
+  Options is on, so *Localise Spots* runs with spot radius and threshold `0.0`.
+- Probe (scratch program, not in the repo): TrackMate 8 `LogDetector`, called as
+  `MultiThreadedMaximaFinder.run` calls it, on a synthetic 64×64×16 stack with
+  0.2 µm pixels, Gaussian noise and three ~0.5 µm spots. Radius `0` returned
+  **65,536 spots, i.e. every voxel**, at threshold 0 and 50 alike; radius
+  0.5 µm returned 626 at threshold 0 and exactly 3 at threshold 50. So the
+  default path produces meaningless spot data today. Not checked on real data.
+- Decided with Dave (recorded in `DEVELOPMENT_PLAN.md`, Known issues): show the
+  spot panels whenever *Localise Spots* is ticked; default radius 0.5 µm; refuse
+  to run with a LoG spot radius ≤ 0 (GUI dialog / headless exit `1`). Deferred
+  for implementation; plan only, so no version bump.
