@@ -1729,3 +1729,38 @@ Fixes the first of the three bugs tracked on 2026-11-12 (3.14.2).
   cytoplasm, not spots; `AGENTS.md` notes the same.
 - Version bumped `3.14.9` → `3.14.10` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-26 — A results or tracks CSV that cannot be saved fails the run (3.14.11)
+
+- **Decision (Dave):** failing to write either CSV, the results CSV or
+  `GIANI_tracks.csv`, fails the run. Rationale: on HPC the realistic cause is a
+  full disk or exceeded quota, nobody reads the logs of hundreds of jobs, and
+  schedulers/workflow managers only see the exit code; a run with no CSV has
+  produced nothing usable. This completes what 3.13.14's exit codes set out to
+  do.
+- `PipelineExecutor.saveCsvOutputs` writes both CSVs, attempting the second even
+  if the first fails, logs which file could NOT be saved (with its full path),
+  and returns whether both succeeded. The tracks CSV is only required when
+  tracking produced tracks. The run still writes the remaining outputs (track
+  masks, spot-summary annotation, `properties.xml`); those stay log-only. The
+  final log line reads `FAILED …` instead of `Done …`. `GIANI.run` returns
+  `exec.csvOutputsSaved()`, so headless exits `1`. GUI behaviour is unchanged
+  apart from the clearer log messages; the macro path ignores the return value
+  as before.
+- **Found while testing:** `DataWriter.saveResultsTable` (IAClassLibrary,
+  `DataWriter.java:141`) returns without writing anything when the table has
+  no rows. So a run that measured nothing has no CSV and still exits `0`, and
+  an end-to-end failure test via an unreadable input could not work (nothing is
+  written, so a blocked path is never touched). Recorded as an open question in
+  the plan; a test pins today's behaviour.
+- **Tests** (`PipelineExecutorCsvOutputTest`, 5): both saved → true; results
+  path blocked by a directory → false, tracks still written; tracks path
+  blocked → false, results still written; no tracks → tracks CSV not required;
+  the empty-run behaviour above. Both integration tests now assert
+  `GIANI.run(...)` returns `true`, covering the success path on real data.
+- Docs: new "Exit status" section in `docs/cluster/index.rst`; `AGENTS.md`
+  exit-code note updated.
+- `./mvnw clean test` → **83/83, 0 skipped**. Integration suite not yet re-run
+  with the new assertions.
+- Version bumped `3.14.10` → `3.14.11` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

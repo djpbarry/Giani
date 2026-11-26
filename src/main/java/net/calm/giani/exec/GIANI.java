@@ -223,6 +223,7 @@ public class GIANI implements PlugIn {
      *
      * @param props contains parameter name-value pairs for all parameters necessary to run GIANI
      * @return {@code true} if the pipeline completed without an uncaught error
+     * and saved its results CSV (and tracks CSV, if tracking produced tracks)
      */
     public boolean run(Properties props) {
         DebugTools.setRootLevel("WARN");
@@ -248,7 +249,10 @@ public class GIANI implements PlugIn {
                     "Pipeline execution failed.");
             return false;
         }
-        return true;
+        // A run that could not save its results CSV (or tracks CSV) produced
+        // nothing usable, so it must not exit 0. The executor has already
+        // logged which file failed.
+        return exec.csvOutputsSaved();
     }
 
     private static String[] getJobDetails(File jobList, int jobNumber) throws FileNotFoundException, IOException {

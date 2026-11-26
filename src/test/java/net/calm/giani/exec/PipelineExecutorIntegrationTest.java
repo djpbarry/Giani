@@ -73,7 +73,9 @@ class PipelineExecutorIntegrationTest {
         props.setProperty(GianiDefaultParams.CELL_SEG_THRESH_LABEL, "Huang");
         props.setProperty(GianiDefaultParams.CHAN_FOR_MEASURE, "2");
 
-        new GIANI().run(props);
+        // run() is what the CLI's exit code comes from; a good run must not be
+        // reported as failed (e.g. by the CSV-save check added in 3.14.11).
+        assertTrue(new GIANI().run(props), "GIANI.run should report success");
 
         File csv = outputDir.resolve(GianiDefaultParams.TITLE + "_Output.csv").toFile();
         File properties = outputDir.resolve("properties.xml").toFile();

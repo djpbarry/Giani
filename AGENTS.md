@@ -29,7 +29,7 @@ lineage-tracking).
 GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](https://imagej.net/software/fiji/) plugin for batch analysis of 3D (and 4D) microscopy images: it reads proprietary image formats, segments nuclei and cells, measures morphology/fluorescence intensity, and optionally tracks lineages across time.
 
 - **Language/toolchain:** Java 21, Maven, Swing (hand-maintained; originally NetBeans-designed), built as an ImageJ/Fiji plugin.
-- **Group/artifact:** `net.calm:giani`, version `3.14.10`.
+- **Group/artifact:** `net.calm:giani`, version `3.14.11`.
 - **Parent POM:** `org.scijava:pom-scijava:45.1.0` (SciJava build conventions).
 - **Core library dependency:** `com.github.djpbarry:IAClassLibrary:v2.5.0` (JitPack) provides the actual image-processing primitives (`MultiThreaded*` process classes, `BioFormatsImg`, `ProcessPipeline`, `PropertyWriter`, etc.). GIANI is mostly glue that wires these primitives into a pipeline and exposes UI/CLI/macro entry points.
 - **Transitive dependency:** `mcib3d-core` (via `IAClassLibrary`) provides `mcib3d.geom.Objects3DPopulation`/`Object3D`, the segmentation-result container threaded through the pipeline.
@@ -85,7 +85,7 @@ net.calm.giani.exec.GIANI
 ```
 
 - **No arguments** → launches the Swing GUI (`GIANIUI`).
-- **With arguments** → headless batch mode. Flags: `-f <input file>`, `-o <output dir>`, `-l <job list file>`, `-p <properties file>`, `-n <job number>`, `-s <series>`. A `-p` (properties) and either `-f` or `-l` are required. **Exit code: `0` on success, `1` on any failure** (bad arguments, unreadable properties or job-list file, or a pipeline that did not complete) — before 3.13.14 every path exited `0`, so HPC schedulers saw failed jobs as successful. A per-file error inside a directory batch is still logged-and-skipped by design and does not on its own fail the run. `GIANI.runHeadless(String[])` returns the status without exiting, which is how it is tested. Full usage is documented in `docs/cluster/index.rst` (published at `giani-docs.readthedocs.io`); the old GitHub wiki is retired. `-h`/`--help` anywhere in the arguments prints `GIANI.USAGE` and exits `0` without running anything (since 3.14.8); keep `USAGE` and the docs' parameter list in step when adding a flag.
+- **With arguments** → headless batch mode. Flags: `-f <input file>`, `-o <output dir>`, `-l <job list file>`, `-p <properties file>`, `-n <job number>`, `-s <series>`. A `-p` (properties) and either `-f` or `-l` are required. **Exit code: `0` on success, `1` on any failure** (bad arguments, unreadable properties or job-list file, a pipeline that did not complete, or — since 3.14.11 — a results CSV or tracks CSV that could not be saved; other outputs failing is log-only, see `PipelineExecutor.csvOutputsSaved()`) — before 3.13.14 every path exited `0`, so HPC schedulers saw failed jobs as successful. A per-file error inside a directory batch is still logged-and-skipped by design and does not on its own fail the run. `GIANI.runHeadless(String[])` returns the status without exiting, which is how it is tested. Full usage is documented in `docs/cluster/index.rst` (published at `giani-docs.readthedocs.io`); the old GitHub wiki is retired. `-h`/`--help` anywhere in the arguments prints `GIANI.USAGE` and exits `0` without running anything (since 3.14.8); keep `USAGE` and the docs' parameter list in step when adding a flag.
 ### Local Fiji install (GUI testing)
 
 The target Fiji is a portable, no-bundled-Java build (launchers `fiji.bat` / `fiji-windows-x64.exe`,

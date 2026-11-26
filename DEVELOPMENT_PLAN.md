@@ -1141,10 +1141,19 @@ than the release and deferred.
   Loading an unreadable properties file is now fatal rather than silently
   continuing with defaults, which would have produced plausible-but-wrong
   output. Six tests in `GianiExitCodeTest` pin the failure paths.
-  **Still open:** errors that `PipelineExecutor` catches and logs internally —
-  notably "Failed to save results file" — do not yet mark the run as failed, so
-  a job that produces no CSV can still exit `0`. Decide whether writing the
-  primary output should be a success condition.
+  ~~**Still open:** errors that `PipelineExecutor` catches and logs internally
+  do not mark the run as failed.~~ ✔ **Decided and fixed 2026-11-26
+  (3.14.11):** failing to save the results CSV, or `GIANI_tracks.csv` when
+  tracking produced tracks, now fails the run (exit `1`); the other outputs are
+  still attempted. Masks, `properties.xml` and the spot-summary annotation stay
+  log-only. `PipelineExecutor.saveCsvOutputs` / `csvOutputsSaved()`, checked by
+  `GIANI.run`; five tests in `PipelineExecutorCsvOutputTest`, and both
+  integration tests now assert `GIANI.run` returns `true`.
+  **New open question (found while testing):** `DataWriter.saveResultsTable`
+  writes nothing for an empty results table, so a run that measured nothing
+  (every input unreadable, or no objects found) has no CSV and still exits
+  `0`. Decide whether that should fail, or at least write a header-only CSV;
+  `runThatMeasuredNothingWritesNoCsvAndStillSucceeds` pins today's behaviour.
 
 Found during the docs content review (2026-11-03):
 

@@ -74,7 +74,9 @@ class PipelineExecutorTimelapseIntegrationTest {
         props.setProperty(GianiDefaultParams.CELL_SEG_THRESH_LABEL, "Huang");
         props.setProperty(GianiDefaultParams.CHAN_FOR_MEASURE, "1");
 
-        new GIANI().run(props);
+        // run() is what the CLI's exit code comes from; a good run, which here
+        // also writes GIANI_tracks.csv, must not be reported as failed.
+        assertTrue(new GIANI().run(props), "GIANI.run should report success");
 
         File csv = outputDir.resolve(GianiDefaultParams.TITLE + "_Output.csv").toFile();
         File properties = outputDir.resolve("properties.xml").toFile();

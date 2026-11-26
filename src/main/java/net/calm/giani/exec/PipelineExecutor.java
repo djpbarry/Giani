@@ -61,6 +61,9 @@ public class PipelineExecutor extends Thread {
     private final Objects3DPopulation cells;
     private final List<CellLineageTracker.CellTrack> lineageTracks = new ArrayList<>();
     private final Map<String, Integer> trackIdByCell = new HashMap<>();
+    // Written by this thread, read by the caller after join(), which
+    // guarantees visibility.
+    private boolean csvOutputsSaved = false;
 
     /**
      * Construct an executor with the specified pipeline, properties, and the
@@ -197,16 +200,10 @@ public class PipelineExecutor extends Thread {
         if (!trackIdByCell.isEmpty()) {
             annotateTrackIds(Analyzer.getResultsTable(), trackIdByCell);
         }
-        try {
-            DataWriter.saveResultsTable(Analyzer.getResultsTable(), new File(String.format("%s%s%s_Output.csv", outputDir, File.separator, GianiDefaultParams.TITLE)), false, true);
-        } catch (IOException e) {
-            GenUtils.logError(e, "Failed to save results file.");
-        }
-        try {
-            UltrackCsvWriter.write(outputDir, lineageTracks);
-        } catch (IOException e) {
-            GenUtils.logError(e, "Failed to save tracking CSV.");
-        }
+        // The remaining outputs are still attempted if a CSV fails, so whatever
+        // can be saved is available for diagnosis; the run is reported as
+        // failed afterwards (see csvOutputsSaved).
+        csvOutputsSaved = saveCsvOutputs(outputDir, Analyzer.getResultsTable(), lineageTracks);
         try {
             TrackMaskWriter.write(outputDir, lineageTracks);
         } catch (IOException e) {
@@ -222,7 +219,51 @@ public class PipelineExecutor extends Thread {
         } catch (Exception e) {
             GenUtils.logError(e, "Failed to save property file.");
         }
-        IJ.log(String.format("Done %s", TimeAndDate.getCurrentTimeAndDate()));
+        if (csvOutputsSaved) {
+            IJ.log(String.format("Done %s", TimeAndDate.getCurrentTimeAndDate()));
+        } else {
+            IJ.log(String.format("FAILED %s: one or more results CSV files could not be saved (see errors above).",
+                    TimeAndDate.getCurrentTimeAndDate()));
+        }
+    }
+
+    /**
+     * @return {@code false} if the results CSV, or the tracks CSV when tracking
+     * produced any tracks, could not be saved. Those are the run's primary
+     * outputs, so the headless CLI exits non-zero when this is {@code false}
+     * (otherwise a job that wrote no CSV, e.g. on a full disk or exceeded
+     * quota, would look successful to a batch scheduler). Masks,
+     * {@code properties.xml} and the spot-summary annotation are secondary:
+     * a failure there is logged but does not fail the run. Only meaningful
+     * once the thread has finished.
+     */
+    public boolean csvOutputsSaved() {
+        return csvOutputsSaved;
+    }
+
+    /**
+     * Saves the results CSV and, when there are lineage tracks, the tracks CSV.
+     * Both are attempted even if the first fails.
+     *
+     * @return {@code true} only if every CSV that should be written was written
+     */
+    static boolean saveCsvOutputs(File outputDir, ResultsTable results, List<CellLineageTracker.CellTrack> tracks) {
+        boolean saved = true;
+        File resultsCsv = new File(outputDir, String.format("%s_Output.csv", GianiDefaultParams.TITLE));
+        try {
+            DataWriter.saveResultsTable(results, resultsCsv, false, true);
+        } catch (IOException e) {
+            GenUtils.logError(e, String.format("Results could NOT be saved to %s.", resultsCsv.getAbsolutePath()));
+            saved = false;
+        }
+        try {
+            UltrackCsvWriter.write(outputDir, tracks);
+        } catch (IOException e) {
+            GenUtils.logError(e, String.format("Lineage tracks could NOT be saved to %s.",
+                    new File(outputDir, "GIANI_tracks.csv").getAbsolutePath()));
+            saved = false;
+        }
+        return saved;
     }
 
     private void updateFileList(BioFormatsImg img, ArrayList<String> files) {
