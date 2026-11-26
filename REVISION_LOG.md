@@ -1669,3 +1669,33 @@ Fixes the first of the three bugs tracked on 2026-11-12 (3.14.2).
   users won't find by searching for "GIANI", although CALM is retired. Left as a
   decision in J3.
 - Plan only, no code change, so no version bump.
+
+## 2026-11-26 — No more bare per-channel keys in `properties.xml` (3.14.9)
+
+- `GianiDefaultParams.initialise()` set `BLOB_CHAN_SELECT_LABEL`,
+  `BLOB_CHAN_NOISE_TOL_LABEL` and `BLOB_CHAN_RAD_LABEL`, which are per-channel
+  *prefixes* ending in `"Channel "`, so every saved `properties.xml` held junk
+  entries such as `Radius for Simple Spot Detection in Channel =0.0`.
+- Checked first: nothing reads the unsuffixed keys. `PipelineBuilder`,
+  `GIANIParamInfos` and the UI always append a channel number, and
+  `PipelineBuilder.setDefaultFociParams` gives the numbered keys the same
+  defaults (`0`, `0.0`, `0.0`). The three lines are removed, so behaviour is
+  unchanged.
+- **Healing old files:** existing files carry the junk (older ones under
+  deprecated names, which migration maps onto the current prefixes), and
+  loading one would write it straight back. `loadProperties` now drops any key
+  ending in `"Channel "` from the loaded file, after migration and before the
+  merge, the same pattern 3.14.3 used for stale deprecated keys. Every
+  `"Channel "`-ending constant is a per-channel prefix, and a test pins that no
+  complete key ends that way.
+- **Tests** (`GianiDefaultParamsTest`, +2): fresh defaults plus all ten
+  channels' spot defaults hold no bare key; a file holding the three bare keys
+  plus a deprecated bare key loses them all on load, while a numbered value
+  (`… in Channel 1` = `2.5`) survives. Both fail against the old code by
+  construction (not re-run against it).
+- `./mvnw clean test` → **76/76, 0 skipped**. Integration tests not run: they
+  only check that `properties.xml` exists, and no numbered key or value changed.
+- `AGENTS.md`: per-channel section now says never to store a bare prefix, and
+  that a new non-per-channel key must not end in `"Channel "`.
+- Version bumped `3.14.8` → `3.14.9` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

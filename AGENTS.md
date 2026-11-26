@@ -29,7 +29,7 @@ lineage-tracking).
 GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](https://imagej.net/software/fiji/) plugin for batch analysis of 3D (and 4D) microscopy images: it reads proprietary image formats, segments nuclei and cells, measures morphology/fluorescence intensity, and optionally tracks lineages across time.
 
 - **Language/toolchain:** Java 21, Maven, Swing (hand-maintained; originally NetBeans-designed), built as an ImageJ/Fiji plugin.
-- **Group/artifact:** `net.calm:giani`, version `3.14.8`.
+- **Group/artifact:** `net.calm:giani`, version `3.14.9`.
 - **Parent POM:** `org.scijava:pom-scijava:45.1.0` (SciJava build conventions).
 - **Core library dependency:** `com.github.djpbarry:IAClassLibrary:v2.5.0` (JitPack) provides the actual image-processing primitives (`MultiThreaded*` process classes, `BioFormatsImg`, `ProcessPipeline`, `PropertyWriter`, etc.). GIANI is mostly glue that wires these primitives into a pipeline and exposes UI/CLI/macro entry points.
 - **Transitive dependency:** `mcib3d-core` (via `IAClassLibrary`) provides `mcib3d.geom.Objects3DPopulation`/`Object3D`, the segmentation-result container threaded through the pipeline.
@@ -197,7 +197,7 @@ Each `MultiThreadedProcess` subclass defines integer constants (e.g. `MultiThrea
 
 ### Per-channel parameters use `%s%d` suffixes
 
-Spot/foci parameters are per-channel: the label constant ends in `"Channel "` and a numeric suffix is appended at runtime, e.g. `String.format("%s%d", GianiDefaultParams.BLOB_CHAN_RAD_LABEL, i)`. Channel selection is stored as an integer bitmask string in `CHAN_FOR_MEASURE`; `buildFullPipeline` iterates bits `0..MAX_CHANNELS-1` (max 10 channels). Keep `MAX_CHANNELS` in sync with `GIANIParamInfos.MAX_CHAN`.
+Spot/foci parameters are per-channel: the label constant ends in `"Channel "` and a numeric suffix is appended at runtime, e.g. `String.format("%s%d", GianiDefaultParams.BLOB_CHAN_RAD_LABEL, i)`. Channel selection is stored as an integer bitmask string in `CHAN_FOR_MEASURE`; `buildFullPipeline` iterates bits `0..MAX_CHANNELS-1` (max 10 channels). Keep `MAX_CHANNELS` in sync with `GIANIParamInfos.MAX_CHAN`. Never store a bare prefix as a key: per-channel defaults belong in `PipelineBuilder.setDefaultFociParams`, and since 3.14.9 `loadProperties` drops any key ending in `"Channel "` (`GianiDefaultParams.isBarePerChannelKey`), so a new non-per-channel key must not end that way.
 
 ### Swing UI: plain hand-maintained Swing
 

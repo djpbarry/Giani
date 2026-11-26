@@ -149,6 +149,48 @@ class GianiDefaultParamsTest {
         }
     }
 
+    /**
+     * The defaults used to store three per-channel prefixes with no channel
+     * number (e.g. {@code "Radius for Simple Spot Detection in Channel "}), which
+     * nothing reads and which ended up in every saved file. This also guards the
+     * rule {@code isBarePerChannelKey} relies on: no complete key ends in
+     * {@code "Channel "}.
+     */
+    @Test
+    void defaultsHoldNoBarePerChannelKey() {
+        GianiDefaultParams current = new GianiDefaultParams();
+        for (int c = 0; c < GianiDefaultParams.MAX_CHANNELS; c++) {
+            PipelineBuilder.setDefaultFociParams(current, c);
+        }
+        for (String key : current.stringPropertyNames()) {
+            assertFalse(GianiDefaultParams.isBarePerChannelKey(key), "bare per-channel key: '" + key + "'");
+        }
+    }
+
+    /**
+     * A file saved before 3.14.9 carries the bare keys, some under deprecated
+     * names. Loading must drop them (so the file heals on its next save) while
+     * keeping the real, numbered per-channel values.
+     */
+    @Test
+    void loadPropertiesDropsBarePerChannelKeysButKeepsNumberedOnes(@TempDir Path tmp) throws Exception {
+        Properties saved = new Properties();
+        saved.setProperty(GianiDefaultParams.BLOB_CHAN_SELECT_LABEL, "0");
+        saved.setProperty(GianiDefaultParams.BLOB_CHAN_NOISE_TOL_LABEL, "0.0");
+        saved.setProperty(GianiDefaultParams.BLOB_CHAN_RAD_LABEL, "0.0");
+        saved.setProperty(DeprecatedProps.BLOB_CHAN_RAD_LABEL, "0.0");
+        saved.setProperty(GianiDefaultParams.BLOB_CHAN_RAD_LABEL + "1", "2.5");
+        File file = writeXml(tmp, saved);
+
+        GianiDefaultParams props = new GianiDefaultParams();
+        GianiDefaultParams.loadProperties(props, null, file);
+
+        for (String key : props.stringPropertyNames()) {
+            assertFalse(GianiDefaultParams.isBarePerChannelKey(key), "bare per-channel key survived load: '" + key + "'");
+        }
+        assertEquals("2.5", props.getProperty(GianiDefaultParams.BLOB_CHAN_RAD_LABEL + "1"));
+    }
+
     private static File writeXml(Path dir, Properties saved) throws Exception {
         File file = dir.resolve("properties.xml").toFile();
         try (OutputStream out = new FileOutputStream(file)) {

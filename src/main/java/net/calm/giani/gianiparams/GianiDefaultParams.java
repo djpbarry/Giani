@@ -157,14 +157,14 @@ public class GianiDefaultParams extends Properties {
         this.setProperty(INPUT_FILE_LABEL, "0");
         this.setProperty(PREVIEW_CHAN_SELECT_LABEL, "0");
         this.setProperty(BLOB_NUC_CHAN_SELECT_LABEL, "0");
-        this.setProperty(BLOB_CHAN_SELECT_LABEL, "0");
+        // Per-channel spot defaults are not set here: those constants are key
+        // *prefixes* ("... in Channel "), and the real per-channel keys get
+        // their defaults from PipelineBuilder.setDefaultFociParams.
         this.setProperty(NUC_FILT_RAD_LABEL, "1.0");
         this.setProperty(NUC_TOP_HAT_FILT_RAD_LABEL, "10.0");
         this.setProperty(NUC_TOP_HAT_DOWNSIZE_FACTOR_LABEL, "1.0");
         this.setProperty(BLOB_NUC_NOISE_TOL_LABEL, "0.0");
         this.setProperty(BLOB_NUC_RAD_LABEL, "5.0");
-        this.setProperty(BLOB_CHAN_NOISE_TOL_LABEL, "0.0");
-        this.setProperty(BLOB_CHAN_RAD_LABEL, "0.0");
         this.setProperty(NUC_SEG_THRESH_LABEL, "Default");
         this.setProperty(NUC_SEG_CHAN_SELECT_LABEL, "0");
         this.setProperty(CELL_FILT_RAD_LABEL, "1.0");
@@ -284,8 +284,35 @@ public class GianiDefaultParams extends Properties {
         Properties loaded = new Properties();
         PropertyWriter.loadProperties(loaded, title, file);
         updateDeprecatedProps(loaded);
+        removeBarePerChannelKeys(loaded);
         props.putAll(loaded);
         DeprecatedProps.mapControlChanges(props);
+    }
+
+    /**
+     * Removes keys that are a per-channel prefix with no channel number, such
+     * as {@code "Radius for Simple Spot Detection in Channel "}. Before 3.14.9
+     * the defaults stored three of these, so every saved {@code properties.xml}
+     * carries them (some under deprecated names, which migration maps onto
+     * the current prefix). Nothing reads them, since every per-channel key has
+     * its channel number appended, so dropping them on load lets an old file
+     * heal on its next save.
+     *
+     * @param props the parameters to clean, in place
+     */
+    static void removeBarePerChannelKeys(Properties props) {
+        props.stringPropertyNames().stream()
+                .filter(GianiDefaultParams::isBarePerChannelKey)
+                .forEach(props::remove);
+    }
+
+    /**
+     * @return {@code true} if {@code key} is a per-channel prefix with no
+     * channel number. All per-channel prefixes end in {@code "Channel "};
+     * {@code GianiDefaultParamsTest} checks no complete key does.
+     */
+    static boolean isBarePerChannelKey(String key) {
+        return key.endsWith("Channel ");
     }
 
     /**

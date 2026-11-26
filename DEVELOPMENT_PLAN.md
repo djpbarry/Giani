@@ -1235,7 +1235,12 @@ verified still present in 3.14.1 source:
   meaningless (seen in the 3.13.6 run; not exercised in the 3.14.0 run, which
   had no spots). To do: restrict to the Cell, Nucleus and Cytoplasm mask folders
   (cytoplasm shares the cell label via `remap=true`), with a unit test.
-- **Per-channel prefix constants are stored as keys.**
+- ✔ **Fixed 2026-11-26 (3.14.9)** — the three `setProperty` lines are removed
+  (only numbered keys are ever read, and `setDefaultFociParams` gives them the
+  same defaults), and `loadProperties` now drops any bare key ending in
+  `"Channel "` from a loaded file, so old `properties.xml` files heal on their
+  next save. Two tests in `GianiDefaultParamsTest`. Original report:
+  **Per-channel prefix constants are stored as keys.**
   `GianiDefaultParams.initialise()` sets `BLOB_CHAN_SELECT_LABEL`,
   `BLOB_CHAN_NOISE_TOL_LABEL` and `BLOB_CHAN_RAD_LABEL` (`:160`, `:166`,
   `:167`), which are prefixes ending in `"Channel "`, not keys. The result is
