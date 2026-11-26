@@ -1570,3 +1570,23 @@ Fixes the first of the three bugs tracked on 2026-11-12 (3.14.2).
   real wizard is still worth doing.
 - Version bumped `3.14.3` → `3.14.4` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-26 — AGENTS.md accuracy fixes (3.14.5)
+
+- Reviewed `AGENTS.md` against source and fixed four stale or contradictory
+  statements:
+  - The headless gotcha still said `System.exit(0)` on completion and on
+    early-exit error paths, contradicting the entry-point notes. Since 3.13.14
+    there is a single `System.exit(runHeadless(args))` exiting `0`/`1`; the
+    gotcha now says so and that new failure paths should return
+    `EXIT_FAILURE` rather than exit.
+  - Removed the pinned test counts ("36 tests" in the CI timings, "33/33" in
+    the fixture bullet), which disagreed with each other and predated several
+    test classes. The zero-skip rule is kept; counts are left to this log.
+  - `DebugTools.setRootLevel("WARN")` is called in three places, not two —
+    added the `GIANIUI` constructor.
+  - The integration job's "~5 min" is now "~2 min on CI, ~5 min locally",
+    matching the measured 1m 59s.
+- No code change; `DEVELOPMENT_PLAN.md` has no item affected.
+- Version bumped `3.14.4` → `3.14.5` (`docs`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

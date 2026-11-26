@@ -22,7 +22,7 @@ lineage-tracking).
 GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](https://imagej.net/software/fiji/) plugin for batch analysis of 3D (and 4D) microscopy images: it reads proprietary image formats, segments nuclei and cells, measures morphology/fluorescence intensity, and optionally tracks lineages across time.
 
 - **Language/toolchain:** Java 21, Maven, Swing (hand-maintained; originally NetBeans-designed), built as an ImageJ/Fiji plugin.
-- **Group/artifact:** `net.calm:giani`, version `3.14.4`.
+- **Group/artifact:** `net.calm:giani`, version `3.14.5`.
 - **Parent POM:** `org.scijava:pom-scijava:45.1.0` (SciJava build conventions).
 - **Core library dependency:** `com.github.djpbarry:IAClassLibrary:v2.5.0` (JitPack) provides the actual image-processing primitives (`MultiThreaded*` process classes, `BioFormatsImg`, `ProcessPipeline`, `PropertyWriter`, etc.). GIANI is mostly glue that wires these primitives into a pipeline and exposes UI/CLI/macro entry points.
 - **Transitive dependency:** `mcib3d-core` (via `IAClassLibrary`) provides `mcib3d.geom.Objects3DPopulation`/`Object3D`, the segmentation-result container threaded through the pipeline.
@@ -46,7 +46,7 @@ also be triggered manually via **workflow_dispatch**:
 # job `build` — fast feedback, unit tests only
 ./mvnw --batch-mode --update-snapshots verify
 
-# job `integration` — needs: build; the end-to-end pipeline run (~5 min)
+# job `integration` — needs: build; the end-to-end pipeline run (~2 min on CI, ~5 min locally)
 ./mvnw --batch-mode -Pintegration -Dgiani.requireFixtures=true verify
 ```
 
@@ -57,7 +57,7 @@ does not prove the `integration` profile selected them. It uploads
 diagnosed without re-running it.
 
 Measured on a GitHub-hosted runner (3.13.11, run 42213967190): `build` 1m 43s,
-`integration` 1m 59s, 36 tests, 0 skipped. The runner is roughly 4–6× **faster**
+`integration` 1m 59s. The runner is roughly 4–6× **faster**
 than a typical local Windows checkout on the segmentation-heavy tests
 (`PipelineExecutorIntegrationTest` 59.5 s on CI vs 229–389 s locally), so the
 per-test `@Timeout`s (15 and 25 min) have ample headroom — do not "fix" them
@@ -69,7 +69,7 @@ based on local timings alone.
 - `mvn_settings.xml` (GitHub Packages) is retained but **not used by CI**: no `pom.xml` dependency resolves from `maven.pkg.github.com`, so it is vestigial for building.
 - The `maven-dependency-plugin` is bound to the `package` phase to copy all runtime dependencies into `${project.build.directory}` (so the resulting JAR is runnable alongside its dependencies in a Fiji `plugins/` folder).
 - **Always `clean` before a full `test` run.** Surefire executes whatever `.class` files sit in `target/test-classes`, so a test deleted from `src/test/java` keeps running until you clean (a `-Dtest=` filter also sidesteps it).
-- **Integration tests skip locally when a fixture is missing.** `pom.xml` excludes the `integration` group by default; the `integration` profile clears it. The fixture-backed tests resolve their image via `net.calm.giani.TestFixtures.require(...)`, which *skips* when the file is absent so the suite still runs without the (33 MB) images — so always check the skip count, not just the pass count. Passing `-Dgiani.requireFixtures=true` turns a missing fixture into a failure instead; the integration CI job sets it, because the fixtures are tracked in git and must be there. As of 3.13.11 a full `-Pintegration` run is **33/33 with zero skips**, so any skip is a regression.
+- **Integration tests skip locally when a fixture is missing.** `pom.xml` excludes the `integration` group by default; the `integration` profile clears it. The fixture-backed tests resolve their image via `net.calm.giani.TestFixtures.require(...)`, which *skips* when the file is absent so the suite still runs without the (33 MB) images — so always check the skip count, not just the pass count. Passing `-Dgiani.requireFixtures=true` turns a missing fixture into a failure instead; the integration CI job sets it, because the fixtures are tracked in git and must be there. A full `-Pintegration` run should report **zero skips**, so any skip is a regression. (The test count grows with each release, so it is deliberately not pinned here — compare against the latest `REVISION_LOG.md` entry instead.)
 
 Entry point (configured via `<main-class>` in the POM):
 
@@ -221,8 +221,8 @@ Migration semantics (since 3.14.3): `loadProperties` loads the file into an **em
 - **License:** GPL-3.0-or-later — `LICENSE`, all source headers, and `pom.xml` (`license.licenseName = gpl_v3`) now agree.
 - **Default paths:** `GianiDefaultParams.initialise()` uses `System.getProperty("user.home")` for the input dir (no more hard-coded Dropbox/ilastik paths); expect to override via a properties file for real runs.
 - **`GianiDefaultParams.TITLE` comes from the JAR manifest.** `getTitleWithVersion()` reads `Implementation-Version` (written by the `pom-scijava` jar config) and returns `GIANI-<version>`; with no manifest (tests, IDE, `target/classes`) it falls back to `"GIANI"`. Output directory and CSV naming use this title (`<parent>/<TITLE>_<label>`, `<TITLE>_Output.csv`).
-- **Headless mode sets `java.awt.headless=true`** and logs via `ij.IJ.log` (not stdout). It calls `System.exit(0)` on completion and on several early-exit error paths.
-- **`DebugTools.setRootLevel("WARN")`** is called in both `GIANI.run()` and `PipelineExecutor.run()` to quiet Bio-Formats/loci logging. Keep this when adding new entry paths, or console output becomes extremely noisy.
+- **Headless mode sets `java.awt.headless=true`** and logs via `ij.IJ.log` (not stdout). `GIANI.main()` has a single `System.exit(runHeadless(args))`, so it exits `0` on success and `1` on any failure (see the entry-point notes above); `runHeadless` itself never exits, so new early-exit paths should `return EXIT_FAILURE`, not call `System.exit`.
+- **`DebugTools.setRootLevel("WARN")`** is called in `GIANI.run()`, `PipelineExecutor.run()` and the `GIANIUI` constructor to quiet Bio-Formats/loci logging. Keep this when adding new entry paths, or console output becomes extremely noisy.
 - **Series with fewer than 2 Z-slices are skipped** (`img.getSizeZ(s) < 2`) — 2D images are silently ignored.
 - **`.gitattributes` marks `*.zip` as Git LFS.** `assets/Test_Data.zip` is a ~335 MB LFS file; do not treat it as a normal tracked blob.
 - **`PROCESS_ALL_TIMEPOINTS` ("Process All Timepoints", formerly `TRACK_TIMELAPSE`) does not track anything** — it only widens the time loop so every timepoint is analysed. `TRACK_LINEAGE` ("Track Lineage") is what runs TrackMate and produces the `Track ID` column, `GIANI_tracks.csv` and the `*_track_masks/` folders. The two flags are independent; at defaults (`TRACK_LINEAGE=true`, `PROCESS_ALL_TIMEPOINTS=false`) only `t=0` runs, so no tracking output is produced.
