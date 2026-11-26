@@ -1655,3 +1655,17 @@ Fixes the first of the three bugs tracked on 2026-11-12 (3.14.2).
   launcher.
 - Version bumped `3.14.7` → `3.14.8` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-26 — Plan: Phase J, release & discoverability
+
+- Added **Phase J** and milestone **M8** to `DEVELOPMENT_PLAN.md`, at Dave's
+  request: once the release is ready, make GIANI easy to find when people ask
+  search engines or AI assistants questions like "Can I analyse 3D cells in
+  ImageJ/Fiji?". Covers GitHub metadata (description, topics, website, social
+  preview, a proper Release), a README rewritten around those questions,
+  listings outside GitHub (update site, imagej.net, image.sc, bio.tools / BIII,
+  Zenodo DOI, RTD default version), and a before/after check.
+- Noted while drafting: GIANI still ships on the **CALM** update site, which
+  users won't find by searching for "GIANI", although CALM is retired. Left as a
+  decision in J3.
+- Plan only, no code change, so no version bump.

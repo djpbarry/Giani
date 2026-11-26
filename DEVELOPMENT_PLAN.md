@@ -1246,6 +1246,76 @@ verified still present in 3.14.1 source:
 
 ---
 
+## Phase J — Release & discoverability (added 2026-11-26)
+
+**Goal:** when someone asks a search engine or an AI assistant (Claude, ChatGPT
+and so on) "Can I analyse 3D cells in ImageJ/Fiji?" or "Is there a Fiji plugin
+for analysing 3D data?", GIANI should come up, described accurately. Assistants
+answer from what they were trained on and from live web search, so the facts
+need to appear, in the words people actually use, in the places those sources
+index: the GitHub repo page, the docs, imagej.net, the image.sc forum,
+software registries and the paper. Do this **once the release is ready** (after
+M7), so the descriptions match the shipped version. Every step is
+outward-facing, so Dave makes or approves each one.
+
+### J1. GitHub repository metadata
+
+- **Description** (the one line shown in search results): say what it is and
+  for whom in plain terms, e.g. "Fiji/ImageJ plugin for automated batch
+  analysis of 3D and 4D microscopy images: segments nuclei and cells, measures
+  morphology and intensity, and tracks cell lineages over time."
+- **Website**: the ReadTheDocs docs.
+- **Topics** (GitHub search and indexing use these), e.g. `fiji`, `imagej`,
+  `fiji-plugin`, `imagej-plugin`, `bioimage-analysis`, `microscopy`,
+  `image-analysis`, `3d`, `3d-segmentation`, `cell-segmentation`,
+  `nuclei-segmentation`, `cell-tracking`, `lineage-tracking`, `time-lapse`,
+  `bio-formats`, `stardist`, `java`.
+- **Social preview image** (shown when the link is shared): the GIANI icon or a
+  segmentation screenshot.
+- A **GitHub Release** for the tag (`vX.Y.Z`) with readable release notes, not
+  just the tag.
+
+### J2. README
+
+- Make the first paragraph answer the target questions directly, using the
+  search terms: Fiji/ImageJ plugin, 3D (z-stack) and 4D (time-lapse),
+  nucleus and cell segmentation, batch processing, proprietary formats via
+  Bio-Formats, lineage tracking, no coding needed.
+- A short "What can GIANI do?" list and one or two screenshots (wizard and
+  segmentation result).
+- Installation via the Fiji update site, as numbered steps.
+- A "Which tool should I use?" note naming the neighbours (MIA for custom
+  pipelines, TrackMate for tracking alone, 3D ImageJ Suite for 3D object
+  tools), so GIANI is recommended for the cases it actually fits (see "Scope &
+  positioning").
+- Keep the citation (J Cell Sci 2022) and the docs link prominent.
+
+### J3. Listings outside GitHub (these carry the most weight)
+
+- **Fiji update site.** GIANI currently ships on the **CALM** update site
+  (`docs/overview/installation.rst`), so a user searching the update-site list
+  for "GIANI" won't find it, and the CALM suite is retired. Decide whether to
+  register a `GIANI` update site, or at least rename or re-describe the existing
+  one.
+- **imagej.net plugin page** (`imagej.net/plugins/...`): the place assistants
+  and users look first for Fiji plugins. Create or refresh it, linking to the
+  docs, the paper and the update site.
+- **image.sc forum**: a release announcement under the existing `giani` tag.
+- **Registries**: bio.tools and BIII (biii.eu) entries; a Zenodo DOI per release
+  via the GitHub–Zenodo integration (add it to `CITATION.cff`).
+- **Docs site**: make the RTD default version a current build. `latest` is
+  currently stale (see the help-link known issue), and the bare docs URL is
+  what README, `GIANI -h` and external links point to.
+
+### J4. Check that it worked
+
+Before and a few weeks after release, ask several assistants and search
+engines the target questions (both with and without web search) and record in
+`REVISION_LOG.md` whether GIANI is named, and whether it is described
+correctly.
+
+---
+
 ## Suggested sequencing & milestones
 
 1. **M1 — Foundations (low risk, high value):** `.gitignore`, Maven wrapper, CI
@@ -1268,12 +1338,18 @@ verified still present in 3.14.1 source:
    sensible defaults, inline help, quick-start docs. This is where GIANI
    differentiates itself from MIA, so it is a first-class deliverable rather than
    an afterthought.
+8. **M8 — Release & discoverability (Phase J):** once M7 is done: tag and
+   publish the release, then update the GitHub metadata and README and the
+   external listings (update site, imagej.net, image.sc, registries) so GIANI
+   is easy to find. Mostly outward-facing, so done or approved by Dave.
 
 Each milestone is independently shippable.
 
 **Status (2026-11-06, 3.13.13): M1–M6 are done. M7 (Phase I) is the only one
-left**, and is the last planned milestone — after it, GIANI is feature-complete
-and maintained, with new functionality directed to MIA.
+left** for development, and is the last planned *development* milestone — after
+it, GIANI is feature-complete and maintained, with new functionality directed
+to MIA. M8 (Phase J, added 2026-11-26) is release and discoverability work
+with no new features.
 
 Within M7: I1 is done bar the motion-model / `Track Spots` tunings; I2 is done
 bar "preview fidelity" (never given a concrete definition); I3 is planned and
