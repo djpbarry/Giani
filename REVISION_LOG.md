@@ -1613,3 +1613,24 @@ Fixes the first of the three bugs tracked on 2026-11-12 (3.14.2).
   permission patterns were checked by reading only, not by triggering each one.
 - Version bumped `3.14.5` → `3.14.6` (`chore`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-26 — Wizard help links repointed to ReadTheDocs (3.14.7)
+
+- The nine wizard help buttons linked to the retired GitHub wiki. They now open
+  the matching `docs/` page on `giani-docs.readthedocs.io/en/development/`.
+  `GIANIUI` holds one `DOCS_BASE_URL` plus a `HELP_*` constant per page, and
+  `getHelpURI(page)` builds the URL (now `static`).
+- **Why `development`, not `latest`:** checked the live site. `latest` (the RTD
+  default, where the bare root redirects) is a stale build of the retired
+  giani-docs repo, with `docs/`-prefixed paths and no tracking page; the new
+  paths 404 there and on `stable`. Master has no `docs/` folder, so
+  `development` is the only current build. Switching later is a one-line change.
+- **Tests** (`GIANIUIHelpPagesTest`, 3): every `HELP_*` page has a
+  `docs/<page>.rst` source; each URI is `DOCS_BASE_URL + page + ".html"`; and
+  `GIANIUI.java` contains no wiki link.
+- `./mvnw clean test` → **70/70, 0 skipped**. Not checked in the running GUI
+  (the help buttons were not clicked in Fiji).
+- Still open (recorded in the plan): the stale `latest` default on RTD, and no
+  help link on `TrackingPanel`.
+- Version bumped `3.14.6` → `3.14.7` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

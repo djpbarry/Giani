@@ -64,6 +64,26 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     private final Objects3DPopulation cells;
     private final GIANIParamInfos info;
 
+    /**
+     * Base URL of the user docs that the panels' help buttons open. Only the
+     * {@code development} build matches the current {@code docs/} layout: the
+     * site's default {@code latest} build is a stale copy of the retired
+     * giani-docs repository, so its page paths differ.
+     */
+    static final String DOCS_BASE_URL = "https://giani-docs.readthedocs.io/en/development/";
+
+    // Help pages, as paths under docs/ without the .rst extension.
+    // GIANIUIHelpPagesTest checks that each one exists.
+    static final String HELP_INPUT = "start/input";
+    static final String HELP_NUC_CENTROIDS = "nuclei/estimate_centroids";
+    static final String HELP_NUC_FILTER = "nuclei/filter_nuclei";
+    static final String HELP_NUC_BACKGROUND = "nuclei/background_subtraction";
+    static final String HELP_NUC_SEGMENT = "nuclei/segment_nuclei";
+    static final String HELP_CELL_FILTER = "cells/filter_cells";
+    static final String HELP_CELL_SEGMENT = "cells/segment_cells";
+    static final String HELP_MEASURE = "measure/specifying_channels";
+    static final String HELP_SPOTS = "measure/localising_spots";
+
 //    private final ExecutorService exec = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     /**
@@ -111,27 +131,27 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                         GianiDefaultParams.INPUT_FILE_LABEL,
                         GianiDefaultParams.SERIES_SELECT_LABEL,
                         GianiDefaultParams.PREVIEW_CHAN_SELECT_LABEL},
-                getHelpURI("https://github.com/djpbarry/Giani/wiki/Selecting-the-Input-Files"));
+                getHelpURI(HELP_INPUT));
         componentList.add(selectInputPanel);
         nuclearCentreFinderPanel = new MaximaFinderPanel(props, img,
                 () -> buildPreviewProcess(PipelineBuilder.STAGE_NUC_MAXIMA),
                 PipelineBuilder.getStagePropLabels(PipelineBuilder.STAGE_NUC_MAXIMA),
                 true, -1,
-                getHelpURI("https://github.com/djpbarry/Giani/wiki/Estimating-the-centres-of-nuclei"),
+                getHelpURI(HELP_NUC_CENTROIDS),
                 GianiDefaultParams.NUC_CENTROID_LOCALISATION_TITLE);
         nuclearCentreFinderPanel.setVisible(false);
         componentList.add(nuclearCentreFinderPanel);
         nuclearFilteringPanel = new net.calm.giani.ui.FilteringPanel(props, img,
                 () -> buildPreviewProcess(PipelineBuilder.STAGE_NUC_FILTER),
                 PipelineBuilder.getStagePropLabels(PipelineBuilder.STAGE_NUC_FILTER),
-                getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Nuclear-Segmentation"),
+                getHelpURI(HELP_NUC_FILTER),
                 GianiDefaultParams.NUC_GAUSS_FILTER_TITLE);
         nuclearFilteringPanel.setVisible(false);
         componentList.add(nuclearFilteringPanel);
         nuclearTopHatFilterPanel = new TopHatFilterPanel(props, img,
                 () -> buildPreviewProcess(PipelineBuilder.STAGE_NUC_TOP_HAT),
                 PipelineBuilder.getStagePropLabels(PipelineBuilder.STAGE_NUC_TOP_HAT),
-                getHelpURI("https://github.com/djpbarry/Giani/wiki/Background-Subtraction-Prior-to-Nuclear-Segmentation"),
+                getHelpURI(HELP_NUC_BACKGROUND),
                 GianiDefaultParams.NUC_TOP_HAT_TITLE);
         nuclearTopHatFilterPanel.setVisible(false);
         componentList.add(nuclearTopHatFilterPanel);
@@ -140,7 +160,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 img,
                 () -> buildPreviewProcess(PipelineBuilder.STAGE_NUC_SEGMENT),
                 PipelineBuilder.getStagePropLabels(PipelineBuilder.STAGE_NUC_SEGMENT),
-                getHelpURI("https://github.com/djpbarry/Giani/wiki/Segmenting-Nuclei"),
+                getHelpURI(HELP_NUC_SEGMENT),
                 GianiDefaultParams.NUC_SEG_TITLE
         );
         nuclearSegmentationPanel.setVisible(false);
@@ -148,7 +168,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         cellFilteringPanel = new net.calm.giani.ui.FilteringPanel(props, img,
                 () -> buildPreviewProcess(PipelineBuilder.STAGE_CELL_FILTER),
                 PipelineBuilder.getStagePropLabels(PipelineBuilder.STAGE_CELL_FILTER),
-                getHelpURI("https://github.com/djpbarry/Giani/wiki/Filtering-Prior-to-Cell-Segmentation"),
+                getHelpURI(HELP_CELL_FILTER),
                 GianiDefaultParams.CELL_GAUSS_FILTER_TITLE);
         cellFilteringPanel.setVisible(false);
         componentList.add(cellFilteringPanel);
@@ -157,7 +177,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 img,
                 () -> buildPreviewProcess(PipelineBuilder.STAGE_CELL_SEGMENT),
                 PipelineBuilder.getStagePropLabels(PipelineBuilder.STAGE_CELL_SEGMENT),
-                getHelpURI("https://github.com/djpbarry/Giani/wiki/Complete-Segmentation-of-Cells"),
+                getHelpURI(HELP_CELL_SEGMENT),
                 GianiDefaultParams.CELL_SEG_TITLE
         );
         cellSegmentationPanel.setVisible(false);
@@ -167,7 +187,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 img,
                 () -> buildPreviewProcess(PipelineBuilder.STAGE_MEASURE),
                 PipelineBuilder.getStagePropLabels(PipelineBuilder.STAGE_MEASURE),
-                getHelpURI("https://github.com/djpbarry/Giani/wiki/Specifying-Channels-to-Measure")
+                getHelpURI(HELP_MEASURE)
         );
         measurementPanel.setVisible(false);
         componentList.add(measurementPanel);
@@ -545,7 +565,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 int channel = i;
                 MaximaFinderPanel mFP = new MaximaFinderPanel(props, img,
                         () -> PipelineBuilder.getDefaultFociMaximaFinder(props, channel),
-                        propLabels, false, channel, getHelpURI("https://github.com/djpbarry/Giani/wiki/Localising-Spots"),
+                        propLabels, false, channel, getHelpURI(HELP_SPOTS),
                         String.format("%s%d", GianiDefaultParams.FOCI_CENTROID_LOCALISATION_TITLE, channel));
                 maximaFinderPanels.add(mFP);
                 addPanel(mFP);
@@ -614,14 +634,18 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         }
     }
 
-    private URI getHelpURI(String url) {
-        URI helpURI;
+    /**
+     * @param page a docs page, as a path under {@code docs/} without the
+     *             {@code .rst} extension (one of the {@code HELP_*} constants)
+     * @return the page's URL on the published docs, or {@code null} if it
+     * cannot be formed (the panel then shows no help link)
+     */
+    static URI getHelpURI(String page) {
         try {
-            helpURI = new URI(url);
+            return new URI(DOCS_BASE_URL + page + ".html");
         } catch (URISyntaxException e) {
             return null;
         }
-        return helpURI;
     }
 
 

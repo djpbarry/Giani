@@ -1148,14 +1148,19 @@ than the release and deferred.
 
 Found during the docs content review (2026-11-03):
 
-- **Wizard help buttons point at the retired GitHub wiki.** Each panel's help
-  URI (`GIANIUI.getHelpURI(...)`, wired in `initComponents`/`GIANIUI.form`)
-  links to `github.com/djpbarry/Giani/wiki/...`; `GIANI -h` and the
-  `GIANI.main` Javadoc do the same. To do: repoint to the matching
-  ReadTheDocs pages (`giani-docs.readthedocs.io`). The URIs are passed to each
-  panel's constructor in `GIANIUI.initComponents()` via `getHelpURI(...)`; edit
-  `GIANIUI.java` directly (the `.form` files were deleted in 3.13.10, so the
-  earlier instruction to edit `GIANIUI.form` no longer applies).
+- ~~**Wizard help buttons point at the retired GitHub wiki.**~~ ✔ **Fixed
+  2026-11-26 (3.14.7).** The nine help links now open
+  `giani-docs.readthedocs.io/en/development/<page>.html`, built from a single
+  `GIANIUI.DOCS_BASE_URL` and per-panel `HELP_*` page constants;
+  `GIANIUIHelpPagesTest` checks each page exists under `docs/` and that no wiki
+  link remains. (`GIANI -h` and the `GIANI.main` Javadoc had already moved to
+  the RTD root.) **Still open:** the site's default `latest` build (which the RTD
+  root redirects to) is a stale copy of the retired giani-docs repo, with
+  `docs/`-prefixed paths and no tracking page; master has no `docs/` folder, so
+  only `development` is current. Either set the RTD default version to
+  `development` (dashboard) or switch `DOCS_BASE_URL` once master/stable carries
+  the docs. `TrackingPanel` has no help link yet (`docs/start/tracking.rst`
+  exists).
 - **`GIANI -h` on its own is never parsed.** The argument loop in
   `GIANI.main` runs `i < args.length - 1` (it reads each flag's value from
   `args[i + 1]`), so a lone `-h` is skipped and the run exits with "No valid
