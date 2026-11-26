@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Every headless failure path used to exit {@code 0}, so HPC schedulers
@@ -84,6 +85,36 @@ class GianiExitCodeTest {
         Files.writeString(image.toPath(), "not an image", StandardCharsets.UTF_8);
         assertEquals(GIANI.EXIT_FAILURE, GIANI.runHeadless(new String[]{
                 "-p", props.getAbsolutePath(), "-f", image.getAbsolutePath(), "-x"}));
+    }
+
+    // A lone -h used to be skipped by the flag loop (which reads args[i + 1]),
+    // so it failed with "No valid properties file specified".
+
+    @Test
+    void loneHelpFlagSucceeds() {
+        assertTrue(GIANI.isHelpRequested(new String[]{"-h"}));
+        assertEquals(GIANI.EXIT_SUCCESS, GIANI.runHeadless(new String[]{"-h"}));
+    }
+
+    @Test
+    void longHelpFlagSucceeds() {
+        assertEquals(GIANI.EXIT_SUCCESS, GIANI.runHeadless(new String[]{"--help"}));
+    }
+
+    @Test
+    void helpWinsOverOtherArgumentsAndRunsNothing() {
+        // Without -h this invocation fails (no properties file), so success
+        // shows the help path returned before any validation or run.
+        assertEquals(GIANI.EXIT_SUCCESS,
+                GIANI.runHeadless(new String[]{"-f", "some-image.tiff", "-h"}));
+    }
+
+    @Test
+    void usageDocumentsEveryFlag() {
+        for (String flag : new String[]{"-p", "-f", "-s", "-o", "-l", "-n", "-h", "--help"}) {
+            assertTrue(GIANI.USAGE.contains(flag + " ") || GIANI.USAGE.contains(flag + ","),
+                    "usage text does not mention " + flag);
+        }
     }
 
     private static File writeProperties(Path dir) throws IOException {

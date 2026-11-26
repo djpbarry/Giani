@@ -1161,11 +1161,13 @@ Found during the docs content review (2026-11-03):
   `development` (dashboard) or switch `DOCS_BASE_URL` once master/stable carries
   the docs. `TrackingPanel` has no help link yet (`docs/start/tracking.rst`
   exists).
-- **`GIANI -h` on its own is never parsed.** The argument loop in
-  `GIANI.main` runs `i < args.length - 1` (it reads each flag's value from
-  `args[i + 1]`), so a lone `-h` is skipped and the run exits with "No valid
-  properties file specified". To do: handle `-h` before the loop (print usage
-  and exit). Removed from the user docs until fixed.
+- ~~**`GIANI -h` on its own is never parsed.**~~ ✔ **Fixed 2026-11-26
+  (3.14.8).** The argument loop runs `i < args.length - 1` (it reads each
+  flag's value from `args[i + 1]`), so a lone `-h` was skipped and the run
+  failed with "No valid properties file specified". `runHeadless` now checks
+  for `-h`/`--help` anywhere before the loop, logs `GIANI.USAGE` (a flag
+  summary) and exits `0` without running anything. Four tests in
+  `GianiExitCodeTest`; `-h` is back in `docs/cluster/index.rst`.
 - **Spot-detection panels are hidden unless Advanced Options is on.**
   `addAdditionalBlobDetectionPanels` adds the per-channel spot panels only to
   `componentList`, not `corePanels`, so on the default path *Localise Spots*

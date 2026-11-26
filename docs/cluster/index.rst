@@ -35,6 +35,7 @@ The full list of parameters that can be passed to GIANI (after the ``--``) is as
 * ``-p``: The full path to the ``properties.xml`` file.
 * ``-s``: If the input image file contains multiple image series, the series you wish to analyse (numbered from 0). If not specified, the first series (``0``) is analysed.
 * ``-o``: The directory where you wish outputs to be saved. If not specified, GIANI creates an output folder next to the input file. The output folder is named ``GIANI-X.Y.Z_<image file name>_S<series>_Output``.
+* ``-h`` (or ``--help``): Print a summary of these parameters and exit without analysing anything. It takes priority over any other parameters given with it. (As with progress messages, the Windows FIJI launcher may not show this text in the terminal.)
 
 Deprecated parameters - will be removed in a future release:
 

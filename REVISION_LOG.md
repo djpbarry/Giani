@@ -1634,3 +1634,24 @@ Fixes the first of the three bugs tracked on 2026-11-12 (3.14.2).
   help link on `TrackingPanel`.
 - Version bumped `3.14.6` → `3.14.7` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-26 — `GIANI -h` prints usage (3.14.8)
+
+- A lone `-h` was never parsed: the flag loop stops at `args.length - 1`
+  because it reads each value from `args[i + 1]`, so the run fell through to
+  "No valid properties file specified" and exited `1`.
+- `runHeadless` now checks for `-h` or `--help` anywhere in the arguments before
+  the loop, logs a flag summary (`GIANI.USAGE`) and returns `EXIT_SUCCESS`
+  without validating or running anything. Help takes priority over other
+  arguments (the usual convention). The old in-loop `-h` case, which only
+  logged a docs link and carried on, is removed.
+- `docs/cluster/index.rst`: `-h` is back in the parameter list (it had been
+  removed until fixed), with a note that the Windows FIJI launcher may not
+  show the text, as for progress messages.
+- **Tests** (`GianiExitCodeTest`, +4): lone `-h` and `--help` exit `0`; `-h`
+  with an otherwise-failing invocation still exits `0`; `USAGE` mentions every
+  flag. The lone-`-h` test fails against the old code (it returned `1`).
+- `./mvnw clean test` → **74/74, 0 skipped**. Not run through the real Fiji
+  launcher.
+- Version bumped `3.14.7` → `3.14.8` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

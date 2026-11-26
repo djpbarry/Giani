@@ -52,6 +52,19 @@ public class GIANI implements PlugIn {
      */
     static final int EXIT_FAILURE = 1;
 
+    /** Printed for {@code -h} / {@code --help}; keep in step with {@code docs/cluster/index.rst}. */
+    static final String USAGE = String.join("\n",
+            "Usage: GIANI -p <properties file> (-f <input file> | -l <job list> -n <job number>) [options]",
+            "  -p <file>   properties.xml holding the analysis parameters (required)",
+            "  -f <file>   image file to analyse",
+            "  -s <n>      series to analyse, numbered from 0 (default 0)",
+            "  -o <dir>    output directory (default: next to the input file)",
+            "  -l <file>   job list CSV (deprecated; use with -n)",
+            "  -n <n>      job number to run from the job list (deprecated)",
+            "  -h, --help  show this help and exit",
+            "Exit status: 0 on success, 1 on any failure.",
+            "Full documentation: https://giani-docs.readthedocs.io/en/development/cluster/index.html");
+
     /**
      * Launches the interactive wizard. Invoked from the Fiji Plugins menu via
      * {@code plugins.config}.
@@ -91,6 +104,13 @@ public class GIANI implements PlugIn {
      */
     static int runHeadless(String[] args) {
         System.setProperty("java.awt.headless", "true");
+        // Checked before the flag loop, which reads each flag's value from
+        // args[i + 1] and so never reaches a trailing (or lone) -h. Help wins
+        // over any other arguments: nothing is run.
+        if (isHelpRequested(args)) {
+            IJ.log(USAGE);
+            return EXIT_SUCCESS;
+        }
         File file = null;
         File list = null;
         File props = null;
@@ -106,8 +126,6 @@ public class GIANI implements PlugIn {
                     case "-p" -> props = new File(args[i + 1]);
                     case "-n" -> jobNumber = Integer.parseInt(args[i + 1]);
                     case "-s" -> series = Integer.parseInt(args[i + 1]);
-                    case "-h" -> IJ.log("For instructions on how to run GIANI from a command line or shell, " +
-                            "see here: https://giani-docs.readthedocs.io/");
                     default -> {
                     }
                 }
@@ -131,6 +149,15 @@ public class GIANI implements PlugIn {
         }
         return GIANI.init(props, list, file, jobNumber, series, output)
                 ? EXIT_SUCCESS : EXIT_FAILURE;
+    }
+
+    static boolean isHelpRequested(String[] args) {
+        for (String arg : args) {
+            if ("-h".equals(arg) || "--help".equals(arg)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
