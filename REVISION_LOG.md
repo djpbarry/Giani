@@ -1719,8 +1719,12 @@ Fixes the first of the three bugs tracked on 2026-11-12 (3.14.2).
   is created. My first version of that test expected the wrong label (it took
   the wrong constructor argument as the track ID); corrected to match the
   existing `buildRemap` test.
-- `./mvnw clean test` → **78/78, 0 skipped**. Integration tests not run yet
-  (they exercise this writer but assert nothing about mask folders).
+- `./mvnw clean test` → **78/78, 0 skipped**. Then
+  `-Pintegration -Dgiani.requireFixtures=true` → **80/80, 0 skipped**
+  (`PipelineExecutorIntegrationTest` 268 s, `…TimelapseIntegrationTest` 38 s,
+  which runs this writer; neither asserts on mask folders). The first attempt
+  never ran: unquoted in PowerShell, `-Dgiani.requireFixtures=true` was split at
+  the dot (noted in `AGENTS.md`).
 - Docs: `docs/start/tracking.rst` now says track masks cover nucleus, cell and
   cytoplasm, not spots; `AGENTS.md` notes the same.
 - Version bumped `3.14.9` → `3.14.10` (`fix`), kept in sync across `pom.xml`,
