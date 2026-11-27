@@ -1241,13 +1241,13 @@ Found during the docs content review (2026-11-03):
   - Version bump chosen as `fix` (3.14.13), not `feat`, since the headline is
     removing silently meaningless output; easy to revise if you disagree.
 
-  **Live-tested 2026-11-27 (3.14.13, installed in Fiji):** Dave reported all
-  four checks passed (panels on the default path, the refusal dialog, an old file
-  not wrongly blocked, saved parameters). The on-screen parts are his
-  observation; the output folder
+  **Live-tested 2026-11-27 (3.14.13, installed in Fiji):** Dave confirmed all
+  four checks first-hand (panels on the default path, the refusal dialog, an old
+  file not wrongly blocked, saved parameters). The panels and dialog are
+  on-screen behaviour that only a live run shows; the output folder
   (`test_data/single_timepoint/GIANI-3.14.13_Output`) evidences only the
   old-file check, and the full detail is in `REVISION_LOG.md`. **Still untested
-  on real data:** the 0.5 µm *default* itself. That run loaded a saved file, so
+  on real data:** detection results at the 0.5 µm default. That run loaded a saved file, so
   its stored radius (`0.0`, with the advanced detector) was kept as designed.
   Panel ordering is unit-tested only through the static helper, since
   `GIANIUI` is a `JFrame`.

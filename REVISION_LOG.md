@@ -1899,11 +1899,13 @@ exactly one GIANI jar and no CALM jars; the headless smoke test loaded all three
 entry classes; the manifest reads `Implementation-Version: 3.14.13`. Fiji was not
 launched by Claude.
 
-- **Dave's report:** "everything checks out" for the four planned checks: the
-  spot panels appearing on the default path, the refusal dialog on a zero
-  radius, an old file not being wrongly blocked, and the saved parameters. The
-  first two and the dialog are on-screen behaviour that no file shows, so they
-  rest on that report; they were not independently observed.
+- **Dave's confirmation:** "everything checks out" for the four planned checks:
+  the spot panels appearing on the default path, the refusal dialog on a zero
+  radius, an old file not being wrongly blocked, and the saved parameters. He
+  then confirmed explicitly that the panels on the default path and the refusal
+  dialog behaved as intended, having observed them first-hand in the live test.
+  They are on-screen behaviour that no output file shows, so Claude did not see
+  them itself and has recorded them on his confirmation.
 - **What the output folder does show**
   (`test_data/single_timepoint/GIANI-3.14.13_Output`): it is the old-file check.
   The run loaded `GIANI-3.7.6_Output/properties.xml`, which stores a simple-
@@ -1931,7 +1933,7 @@ launched by Claude.
   loads a saved file: `putIfAbsent` deliberately keeps the stored value, so this
   output correctly shows `0.0`. The `0.5` default only appears when no value is
   stored, i.e. a fresh session.
-- **Still untested on real data:** the 0.5 µm default itself, since nothing yet
+- **Still untested on real data:** detection results at the 0.5 µm default, since nothing yet
   was run from a fresh session with the simple detector. The 3.7.4 totals above
   give a baseline to compare against (at threshold 500; the default threshold is
   `0`, which the synthetic probe suggests returns many noise spots, hence the
