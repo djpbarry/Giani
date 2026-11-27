@@ -2079,7 +2079,117 @@ Fixes the second finding from the previous entry, with the approach Dave chose
   once at startup. That writes the panel's already-normalised state to `props`
   (`Track Lineage` becomes `false` at startup instead of at the first collect; the
   toggle was already deselected at construction). Not seen in the wizard.
-- **Unaudited:** whether other panels' `update()` methods discard uncollected
-  edits. Only the Tracking panel was checked. Not re-run in Fiji.
+- **Other panels:** audited later the same day (next entry). Not re-run in Fiji.
 - Version bumped `3.14.16` → `3.14.17` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-27 — Audit: which other panels lose uncollected edits on re-entry
+
+Dave asked for the audit after the Tracking panel fix. It was read-only: no code
+and no tests changed, and the findings are recorded here for his decision.
+
+- **Method.** `GIANIUI.updateLayer` is the only caller of `update()`, and six
+  panel classes implement it (`TrackingPanel` was already fixed). I read each
+  `update()`, then probed each panel with a throwaway class in the scratchpad: load
+  the 3-channel fixture (`test_data/single_timepoint`, read-only), build the panel
+  as the wizard does, simulate a user edit, make the re-entry `update()` call, and
+  read the control back. The probe ran headless against `target/classes` with
+  Fiji's `jars/` as the classpath; it was not run in the wizard.
+- **Result.** Three controls lose an uncollected edit: the channel combo on
+  `FilteringPanel` (nuclear and cell instances) and on the nuclear
+  `MaximaFinderPanel` (`2` → `0` in each), and `MeasurementPanel`'s channel list
+  (`[1, 2]` → none) in isolation. Every other control probed kept its edit: the
+  text fields on those panels, the per-channel spot panel (its combo is hidden),
+  `TopHatFilterPanel`, and `SegmentationPanel` (threshold combo, weighting field and
+  the volume/membrane toggles). The full table is in the plan.
+- **Why it matters.** The nuclear and cell segmentation channels are chosen on
+  the Filtering panels. The control visibly reverts, so it is noticeable, but a
+  user who does not re-check carries on with the stale channel. It needs Next then
+  Previous with no Preview in between; going forward only is safe because Run
+  collects every panel.
+- **`MeasurementPanel` is probably protected in the wizard**, because mouse clicks
+  on its list and its *Localise Spots* toggle are forwarded to `GIANIUI`, which
+  collects the whole frame. That is from reading the code, not a probe, and it
+  leaves keyboard-only changes uncovered.
+- **The remedy was tested, not assumed.** On both combo panels, `panel.setProperties(
+  props, panel)` before `update()` kept the edit. `setVariables()` must not be used
+  for these panels: it also calls `setupProcess()`, which builds a preview
+  pipeline, and eager collects of unpopulated panels caused the 2026-11-01
+  startup crash. Three options are laid out in the plan; the simplest is one call
+  in `updateLayer` for the panel being left.
+- **A smaller, separate finding.** `TopHatFilterPanel.update()` calls
+  `setComponentsEnabled()`, which enables every child. Probe: with top-hat switched
+  off the radius field is disabled; after re-entry it is enabled again. The value
+  is untouched and the filter still does not run, so it is cosmetic. I noticed it
+  while reading, then confirmed it.
+- **Not covered:** `SegmentationPanel`'s `setComponentsEnabled()` side effects were
+  not probed, and `SelectInputPanel` and `LocalisationPanel` are not `Updateable`,
+  so they were out of scope.
+- Docs-only; no code change. `AGENTS.md` gains a gotcha recording the audit and
+  warning against `setVariables()` as a collect. Version bumped `3.14.17` →
+  `3.14.18` (`docs`), kept in sync across `pom.xml`, `CITATION.cff`,
+  `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-27 — Collect the panel being left on every navigation; top-hat fields stay disabled (3.14.19)
+
+Implements the audit's option A, as Dave chose, and fixes the `TopHatFilterPanel`
+display bug the audit also found.
+
+**Collect on leave (all `Updateable` panels).**
+- **Fix.** The body of `GIANIUI.updateLayer` is extracted into a static
+  `GIANIUI.navigate(all, toShow, props)`. It first calls
+  `panel.setProperties(props, panel)` on every panel that is *visible* and
+  *`Updateable`*, then hides every panel, then shows `toShow` and calls its
+  `update()`. So the channel combos on `FilteringPanel` (nuclear and cell) and the
+  nuclear `MaximaFinderPanel`, and `MeasurementPanel`'s list, keep an uncollected
+  edit across Next then Previous.
+- **Why `setProperties`, not `setVariables()`:** `setVariables()` also calls
+  `setupProcess()`, which builds a preview pipeline, and eager collects of
+  unpopulated panels caused the 2026-11-01 startup crash.
+- **Why visible-only and `Updateable`-only:** `updateLayer` hides every panel on
+  every navigation, and a hidden panel's controls may be stale, so writing them
+  back could undo a change; and only `Updateable` panels re-read `props`, so the
+  rest are collected at Run exactly as before.
+- **Why a static method:** `GIANIUI` is a `JFrame` and cannot be built headless;
+  extracting the sequence is what lets it be tested at all. The extraction was a
+  behaviour-preserving first step, done before the tests.
+- **`TrackingPanel` keeps its own `setVisible` collect** (3.14.17). It has unbound
+  controls that `setProperties` does not write, so the two collects coexist; the
+  second is idempotent.
+- **Tests first, seen to fail.** `GIANIUINavigationTest` (8): four structural tests
+  on stub panels that pin the *order* (collect, then hide, then update the next
+  panel), and four on real panels using the 3-channel fixture (Filtering, nuclear
+  Maxima Finder, a parameters load, and Measurement). On the unfixed code the real
+  Filtering and Maxima Finder tests failed with `expected: <2> but was: <0>` and the
+  two ordering tests with a missing `collect`.
+- **Mutation checks.** Dropping the visible-only check failed the hidden-panel test
+  (`collect A, collect B` where neither should be collected); dropping the
+  `Updateable`-only check failed the non-updateable test (`collect P`); and
+  disabling the collect entirely failed five tests including the Measurement one
+  (`[1, 2]` → `[]`), which I added after the fix and so checked this way. All were
+  reverted; `grep MUTATION src/` is empty.
+- **One test has no mutant that fails it:** the parameters-load test passes before
+  and after, because `PropertyExtractor`'s own READ refreshes the controls
+  regardless of `update()`. It is a sanity guard that collecting on leave does not
+  resurrect a stale edit over a load, not a regression detector.
+
+**`TopHatFilterPanel` enabled state.**
+- **Fix.** `update()` now re-applies the toggle's enabled state after
+  `setComponentsEnabled()` (which enables every child), through a new
+  `applyToggleEnabledState()` that the toggle's own handler also uses. The
+  condition is `isEnabled() && toggle.isSelected()`, so a panel disabled by
+  StarDist stays disabled whatever the toggle says.
+- **Tests.** `TopHatFilterPanelEnabledStateTest` (4). Before the fix, re-entry with
+  top-hat off failed (`expected: <false> but was: <true>`). Removing the
+  `isEnabled() &&` made the StarDist test fail, so that guard is checked.
+
+**Results.** `./mvnw clean test` → **125/125, 0 skipped** (113 + 12). The
+fixture-backed tests ran rather than skipping.
+- **Not seen in the wizard.** The navigation wiring (that `updateLayer` really calls
+  `navigate`) is a one-line delegation not covered by a test of its own; only
+  `navigate` itself is.
+- **Not covered:** `SegmentationPanel`'s `setComponentsEnabled()` side effects were
+  never probed, and `SelectInputPanel` and `LocalisationPanel` are not `Updateable`,
+  so they are not collected on leave (they are collected at Run as before).
+- Version bumped `3.14.18` → `3.14.19` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

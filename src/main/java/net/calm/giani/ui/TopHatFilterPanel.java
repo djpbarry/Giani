@@ -252,11 +252,24 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
     }
 
     private void topHatToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        filterRadiusXYLabel.setEnabled(topHatToggleButton.isSelected());
-        filterRadiusXYTextField.setEnabled(topHatToggleButton.isSelected());
-        downSizeFactorTextField.setEnabled(topHatToggleButton.isSelected());
-        downsizeFactorLabel.setEnabled(topHatToggleButton.isSelected());
-        unitsLabel1.setEnabled(topHatToggleButton.isSelected());
+        applyToggleEnabledState();
+    }
+
+    /**
+     * Enables the radius and downsizing controls only when top-hat filtering is on
+     * <em>and</em> the panel itself is enabled. Called from the toggle's handler and
+     * again from {@link #update()}: {@code setComponentsEnabled()} there enables
+     * every child, which used to leave these controls enabled on re-entry even with
+     * the filter switched off. The panel's own state is part of the condition so a
+     * panel disabled by StarDist stays disabled whatever the toggle says.
+     */
+    private void applyToggleEnabledState() {
+        boolean enabled = isEnabled() && topHatToggleButton.isSelected();
+        filterRadiusXYLabel.setEnabled(enabled);
+        filterRadiusXYTextField.setEnabled(enabled);
+        downSizeFactorTextField.setEnabled(enabled);
+        downsizeFactorLabel.setEnabled(enabled);
+        unitsLabel1.setEnabled(enabled);
     }
 
     public void setupProcess() {
@@ -271,6 +284,7 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
             this.setEnabled(false);
         } else this.setEnabled(true);
         setComponentsEnabled();
+        applyToggleEnabledState();
     }
 
     private javax.swing.JTextField downSizeFactorTextField;

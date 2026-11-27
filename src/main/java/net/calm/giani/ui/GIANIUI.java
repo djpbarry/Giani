@@ -470,18 +470,48 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
 
     boolean updateLayer() {
         List<LayerPanel> visible = visiblePanels();
-        for (LayerPanel panel : componentList) {
+        LayerPanel current = layerIndex >= 0 && layerIndex < visible.size() ? visible.get(layerIndex) : null;
+        navigate(componentList, current, props);
+        checkLayerIndex();
+        return true;
+    }
+
+    /**
+     * Collects the panel being left, hides every panel, then shows {@code toShow}
+     * and calls its {@code update()}. Static, and taking the panels as arguments,
+     * so the sequence can be tested without building the (headless-unfriendly)
+     * frame.
+     *
+     * <p>The collect comes first because {@code update()} on the panel shown
+     * re-reads {@code props} into some controls (the channel combos and the
+     * measurement list), and navigation otherwise never collects the panel being
+     * left, so Next then Previous silently discarded an uncollected edit. Only
+     * <em>visible</em> panels are collected, since a hidden panel's controls may
+     * be stale; and only {@link Updateable} ones, since only those re-read
+     * {@code props} (the rest are collected at Run, as before). It uses
+     * {@code setProperties}, which writes the bound controls, and not
+     * {@code setVariables()}, which also calls {@code setupProcess()} and so
+     * builds a preview pipeline.
+     *
+     * @param all    every wizard panel
+     * @param toShow the panel to show, or {@code null} to show none
+     * @param props  the shared parameters
+     */
+    static void navigate(List<? extends LayerPanel> all, LayerPanel toShow, Properties props) {
+        for (LayerPanel panel : all) {
+            if (panel.isVisible() && panel instanceof Updateable) {
+                panel.setProperties(props, panel);
+            }
+        }
+        for (LayerPanel panel : all) {
             panel.setVisible(false);
         }
-        if (layerIndex >= 0 && layerIndex < visible.size()) {
-            LayerPanel current = visible.get(layerIndex);
-            current.setVisible(true);
-            if (current instanceof Updateable updateable) {
+        if (toShow != null) {
+            toShow.setVisible(true);
+            if (toShow instanceof Updateable updateable) {
                 updateable.update();
             }
         }
-        checkLayerIndex();
-        return true;
     }
 
     void checkLayerIndex() {

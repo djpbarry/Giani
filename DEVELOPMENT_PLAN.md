@@ -1285,8 +1285,60 @@ Found during the docs content review (2026-11-03):
   counts, because `updateLayer` hides every panel on every navigation and an
   already-hidden panel must not write stale controls over `props`. This also
   covers the Advanced Options toggle. Covered by `TrackingPanelNavigationTest`
-  (3). **Unaudited:** whether other panels' `update()` methods have the same
-  problem; only this panel was checked.
+  (3). The other panels were audited the same day; see the next item.
+- ~~**Uncollected channel selections on the Filtering, nuclear Maxima Finder and
+  Measurement panels are discarded on re-entry (found 2026-11-27 by auditing
+  every `update()`).**~~ ✔ **Fixed 2026-11-27 (3.14.19), option A.** Original
+  report: same mechanism as the Tracking panel:
+  `GIANIUI.updateLayer` calls `update()` on the panel it shows, these panels
+  rebuild a combo or list model and re-select from `props`, and nothing collects
+  the panel when it is left. Probed against the built classes and the 3-channel
+  fixture (simulate an edit, then the re-entry `update()`):
+
+  | panel | control | after re-entry |
+  |---|---|---|
+  | `FilteringPanel` (nuclear and cell) | channel combo | **lost** (`2` → `0`) |
+  | `MaximaFinderPanel` (nuclear) | channel combo | **lost** (`2` → `0`) |
+  | `MeasurementPanel` | channel list | **lost** in isolation (`[1, 2]` → none) |
+  | `FilteringPanel`, `MaximaFinderPanel` | radius / threshold text fields | kept |
+  | per-channel spot `MaximaFinderPanel` | radius field (channel combo is hidden) | kept |
+  | `TopHatFilterPanel` | enable toggle, radius | kept |
+  | `SegmentationPanel` | threshold combo, weighting, volume/membrane toggles | kept |
+
+  The channel combos matter most: the nuclear and cell segmentation channels are
+  chosen there. The control visibly reverts, so it is noticeable, but a user who
+  does not re-check goes on to run with the stale channel. It bites only after
+  Next then Previous with no Preview in between; going forward only is safe,
+  because Run collects every panel. `MeasurementPanel` is probably protected in
+  the wizard because mouse clicks on its list and toggle are forwarded to
+  `GIANIUI`, which collects the whole frame (by code reading; not verified
+  live), leaving keyboard-only changes uncovered.
+  **Tested remedy:** a plain `panel.setProperties(props, panel)` (a WRITE of the
+  bound controls) before `update()` preserved the combo edit on both panels.
+  `setVariables()` is **not** a suitable collect for these panels: it also calls
+  `setupProcess()`, which builds a preview pipeline, and eager collects of
+  unpopulated panels caused the 2026-11-01 startup crash. Options were (A)
+  collect in `GIANIUI.updateLayer`, (B) a `setVisible` override per panel, (C)
+  accept it.
+  **Fix (Dave chose A):** the navigation sequence is now the static
+  `GIANIUI.navigate`, which first calls `panel.setProperties(props, panel)` on
+  every *visible, `Updateable`* panel and only then hides everything and updates
+  the panel shown. Visible-only because a hidden panel's controls may be stale;
+  `Updateable`-only because only those re-read `props`. `TrackingPanel` keeps its
+  own `setVisible` collect (it has unbound controls that `setProperties` does not
+  write). Covered by `GIANIUINavigationTest` (8): the order of events on stub
+  panels, and the real Filtering, nuclear Maxima Finder and Measurement panels on
+  the fixture. **Not seen in the wizard.**
+- ~~**`TopHatFilterPanel` re-enables its fields on re-entry even when top-hat is
+  switched off (found 2026-11-27; cosmetic).**~~ ✔ **Fixed 2026-11-27
+  (3.14.19):** `update()` now re-applies the toggle's enabled state after
+  `setComponentsEnabled()`, and only when the panel itself is enabled, so a panel
+  disabled by StarDist stays disabled. `TopHatFilterPanelEnabledStateTest` (4).
+  Original report: `update()` calls
+  `setComponentsEnabled()`, which enables every child, overriding the toggle's
+  own disabling. Probe: toggle off → radius field disabled; after `update()` →
+  enabled. The stored value is unaffected and the filter still does not run, so
+  only the display is misleading.
 - **Macro extension activation unverified.** `plugins.config` registers
   `GIANIMacroExecutor` under `Extensions`, but the class implements only
   `MacroExtension` (not `PlugIn`) and never calls
