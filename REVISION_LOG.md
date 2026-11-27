@@ -1890,3 +1890,54 @@ hidden `0.0` radius and produced meaningless spot data.
   meaningless output rather than a feature, so say if you would rather call it
   `feat`), kept in sync across `pom.xml`, `CITATION.cff`, `docs/conf.py`, and
   `AGENTS.md`.
+
+## 2026-11-27 — 3.14.13 installed and live-tested in Fiji; the output read against its source file
+
+Installed with `bin\install-to-fiji.cmd` (with Dave's go-ahead): `giani-3.14.13.jar`
+replaced 3.14.0 in `plugins/`, `IAClassLibrary-v2.5.0.jar` unchanged in `jars/`,
+exactly one GIANI jar and no CALM jars; the headless smoke test loaded all three
+entry classes; the manifest reads `Implementation-Version: 3.14.13`. Fiji was not
+launched by Claude.
+
+- **Dave's report:** "everything checks out" for the four planned checks: the
+  spot panels appearing on the default path, the refusal dialog on a zero
+  radius, an old file not being wrongly blocked, and the saved parameters. The
+  first two and the dialog are on-screen behaviour that no file shows, so they
+  rest on that report; they were not independently observed.
+- **What the output folder does show**
+  (`test_data/single_timepoint/GIANI-3.14.13_Output`): it is the old-file check.
+  The run loaded `GIANI-3.7.6_Output/properties.xml`, which stores a simple-
+  detector radius of `0.0` on all three channels but has the **advanced
+  (Hessian) detector on** for each, so the refusal correctly did not fire and
+  the run completed. This is the real-data case for "other detection methods
+  are never blocked by their unused blob radius".
+- **Same outcome as the file it came from.** Out of 87 parameters, exactly three
+  differ between the 3.7.6 and 3.14.13 files, and they are the three bare
+  per-channel prefix keys (`Detect Spots in Channel `, `Quality of Simple Spot
+  Detections in Channel `, `Radius for Simple Spot Detection in Channel `) that
+  3.14.9 drops on load, so this confirms that healing on a real file. The
+  3.7.6 run also found **no spots** (its output has no spot folders and a
+  `spot_summary_data.csv` with only a `Cell_Index` column), and so did this one
+  (69 main-CSV rows = 23 cells × 3 object types, against 22,893 for the 3.7.4
+  run). So the empty spot output reproduces the original run and is not a
+  regression.
+- **Why no spots:** the loaded Hessian settings are minimum radius 0.5 and
+  quality 1000. The 3.7.4 baseline on the same image used the *simple* detector
+  at radius 0.5 and threshold 500 and found 2,891 / 14,298 / 5,635 spots in
+  channels 0 / 1 / 2, so the threshold of 1000 on the advanced detector is the
+  likely reason. Inferred from the parameters; the detector was not run here.
+- **A correction to my own test plan.** Check 4 said any completed run's
+  `properties.xml` would show the radius as `0.5`. That is wrong for a run that
+  loads a saved file: `putIfAbsent` deliberately keeps the stored value, so this
+  output correctly shows `0.0`. The `0.5` default only appears when no value is
+  stored, i.e. a fresh session.
+- **Still untested on real data:** the 0.5 µm default itself, since nothing yet
+  was run from a fresh session with the simple detector. The 3.7.4 totals above
+  give a baseline to compare against (at threshold 500; the default threshold is
+  `0`, which the synthetic probe suggests returns many noise spots, hence the
+  Preview).
+- **Observation, not acted on:** a run in which spot detection finds nothing in
+  every channel completes silently with exit `0`, as this one did. Whether that
+  deserves a warning is a separate question; it is not in the plan.
+- Docs-only; no code change. Version bumped `3.14.13` → `3.14.14` (`docs`), kept in
+  sync across `pom.xml`, `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
