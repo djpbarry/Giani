@@ -2042,3 +2042,44 @@ Fixes the regression recorded in the previous entry (introduced in 3.14.0).
   value when the panel is built, or it writes `""` on the first collect.
 - Version bumped `3.14.15` → `3.14.16` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-27 — Tracking panel edits no longer lost on re-entry (3.14.17)
+
+Fixes the second finding from the previous entry, with the approach Dave chose
+(collect on leave).
+
+- **Bug.** `GIANIUI.updateLayer` hides every panel and then calls `update()` on the
+  one it shows; `TrackingPanel.update()` rebuilds its unbound controls from
+  `props`; nothing collected the panel when it was left. So Next then Previous
+  silently reset the timepoint mode, linking mode and distance to what `props`
+  held. Edits survived only if a Preview or Run collected first, and then the
+  value actually used was the stale one.
+- **Fix.** `TrackingPanel.setVisible` collects the panel's state when it goes from
+  visible to hidden, so `props` is authoritative before `update()` re-reads it.
+  Only that transition collects: `updateLayer` hides *every* panel on *every*
+  navigation, and a panel that is already hidden must not write stale controls
+  over `props`. The Advanced Options toggle hides the panel through the same
+  path, so it is covered too. No change to `GIANIUI`.
+- **Why an override rather than a call in `updateLayer`:** it keeps the behaviour
+  in the panel, where it can be tested without a `JFrame`, and it needs no
+  special-casing of one panel in the frame.
+- **Tests first, then the fix.** `TrackingPanelNavigationTest` (3). Before the
+  fix the main test failed with `expected: <All timepoints> but was: <First
+  timepoint only>` and the two guards passed. After: `./mvnw clean test` →
+  **113/113, 0 skipped** (110 + 3).
+- **The guards were then checked by mutation**, because they passed before the fix
+  and so proved nothing on their own. With the "only when leaving" check removed,
+  the already-hidden test failed (`expected: <true> but was: <false>`). With
+  `update()` made a no-op (the alternative fix, which would let a stale edit
+  clobber a *Load Parameters*), the load test failed (`expected: <false> but was:
+  <true>`). Both mutants were reverted; `grep MUTATION src/` is empty and the main
+  diff against HEAD is only the override.
+- **One side effect, by reasoning only:** the GUI constructor's `addPanel` hides
+  the freshly built panel, which is still visible at that point, so it collects
+  once at startup. That writes the panel's already-normalised state to `props`
+  (`Track Lineage` becomes `false` at startup instead of at the first collect; the
+  toggle was already deselected at construction). Not seen in the wizard.
+- **Unaudited:** whether other panels' `update()` methods discard uncollected
+  edits. Only the Tracking panel was checked. Not re-run in Fiji.
+- Version bumped `3.14.16` → `3.14.17` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

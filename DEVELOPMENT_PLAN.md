@@ -1267,9 +1267,10 @@ Found during the docs content review (2026-11-03):
   `readFromProps()`, which would have extended the navigation problem in the next
   item to this field too. `TrackingPanelStateTest` (5) builds the panel and
   checks what a collect writes.
-- **Uncollected edits to the Tracking panel's timepoint and linking controls are
+- ~~**Uncollected edits to the Tracking panel's timepoint and linking controls are
   discarded when the panel is re-entered (found 2026-11-27; from the 3.14.0
-  design, not yet fixed).** `GIANIUI.updateLayer` calls `update()` on the panel
+  design).**~~ ✔ **Fixed 2026-11-27 (3.14.17).** Original report:
+  `GIANIUI.updateLayer` calls `update()` on the panel
   being navigated to, and `TrackingPanel.update()` calls `readFromProps()`, which
   rebuilds the unbound controls from `props`. Nothing collects the panel's state
   when you leave it, so Next then Previous resets them. Probe against the built
@@ -1277,9 +1278,15 @@ Found during the docs content review (2026-11-03):
   the mode reads *Automatic* and the distance is empty. Edits survive if
   something collects in between (a Preview on any panel, or Run), so it bites
   only a user who goes back to the Tracking panel without previewing first, and
-  then the value actually used is the stale one. Not reachable headless. Options:
-  collect the panel's state when it is hidden in `updateLayer`, or stop
-  `update()` re-reading `props` except after a load. A design decision for Dave.
+  then the value actually used is the stale one. Not reachable headless.
+  **Fix (Dave chose collect-on-leave):** `TrackingPanel.setVisible` collects the
+  panel's state when it goes from visible to hidden, so `props` is authoritative
+  again before `update()` re-reads it. Only the visible-to-hidden transition
+  counts, because `updateLayer` hides every panel on every navigation and an
+  already-hidden panel must not write stale controls over `props`. This also
+  covers the Advanced Options toggle. Covered by `TrackingPanelNavigationTest`
+  (3). **Unaudited:** whether other panels' `update()` methods have the same
+  problem; only this panel was checked.
 - **Macro extension activation unverified.** `plugins.config` registers
   `GIANIMacroExecutor` under `Extensions`, but the class implements only
   `MacroExtension` (not `PlugIn`) and never calls

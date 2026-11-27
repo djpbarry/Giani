@@ -245,6 +245,30 @@ public class TrackingPanel extends LayerPanel implements Updateable {
         readFromProps();
     }
 
+    /**
+     * Collects this panel's state when it goes from visible to hidden.
+     *
+     * <p>Wizard navigation hides every panel and then calls {@link #update()} on
+     * the one it shows, and {@code update()} rebuilds the unbound controls from
+     * {@code props}. Nothing else collected the panel when it was left, so Next
+     * then Previous silently discarded edits (the linking mode snapped back to
+     * Automatic and the distance was cleared). Collecting on the way out makes
+     * {@code props} authoritative again before {@code update()} re-reads it.
+     *
+     * <p>Only the transition from visible counts: {@code updateLayer} hides
+     * <em>every</em> panel on every navigation, and a panel that is already
+     * hidden must not write its (possibly stale) controls over {@code props}.
+     * This also covers the Advanced Options toggle, which hides the panel through
+     * the same path.
+     */
+    @Override
+    public void setVisible(boolean visible) {
+        if (isVisible() && !visible) {
+            setVariables();
+        }
+        super.setVisible(visible);
+    }
+
     @Override
     public void setupProcess() {
         // no pipeline process to configure
