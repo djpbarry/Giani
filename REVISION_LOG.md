@@ -1782,3 +1782,45 @@ Fixes the first of the three bugs tracked on 2026-11-12 (3.14.2).
   spot panels whenever *Localise Spots* is ticked; default radius 0.5 µm; refuse
   to run with a LoG spot radius ≤ 0 (GUI dialog / headless exit `1`). Deferred
   for implementation; plan only, so no version bump.
+
+## 2026-11-27 — Rebuilt the missing `PipelineExecutorCsvOutputTest` (3.14.12)
+
+Found while reviewing the 3.14.x commits: the 3.14.11 entry says it added
+`PipelineExecutorCsvOutputTest` (5 tests) and records `clean test` at **83/83**,
+but that class was never committed and did not exist on disk, in any ref, or in
+a stash. The repo had **78** tests (78 + 5 = 83), reproduced by a fresh
+`clean test`. So the failure path 3.14.11 exists to add, `saveCsvOutputs`
+returning false when a CSV cannot be saved, had no unit test; only the success
+path was covered, by the integration tests' new assertions. The same slip as
+`GianiExitCodeTest` being left out of its commit, except that this time the file
+was gone entirely.
+
+- **Rebuilt from the 3.14.11 entry's description of the five cases:** both CSVs
+  saved → `true`; results path blocked → `false` with the tracks CSV still
+  written; tracks path blocked → `false` with the results CSV still written; no
+  tracks → tracks CSV not required; and the empty-table behaviour, under the plan's
+  name for it, `runThatMeasuredNothingWritesNoCsvAndStillSucceeds`. These are
+  re-creations from a description, not the lost file, so the originals' exact
+  assertions are unknown.
+- **A CSV is made unwritable by putting a directory at its path**, so the real
+  writers throw their real `IOException`; no mocks and no platform-specific file
+  permissions.
+- **The empty-table test pins today's library behaviour, not a decision:**
+  IAClassLibrary's `DataWriter.saveResultsTable` returns without writing when
+  there are no rows (`DataWriter.java:141`, checked in the v2.5.0 sources), so a
+  run that measured nothing writes no CSV and is reported as saved. The plan's
+  open question on this is unchanged; the test should change with it.
+- **Checked against a mutation, not just run.** With the two
+  `saved = false;` lines in `saveCsvOutputs` temporarily disabled, exactly the
+  two failure-path tests failed (`expected: <false> but was: <true>`) and the
+  other three passed; the lines were then restored and `git diff -- src/main`
+  confirmed empty.
+- **Correcting the record:** the 3.14.11 entry's `83/83` was not reproducible
+  at that commit, and its follow-up `85/85` for `-Pintegration` (83 plus the two
+  integration tests) was too, since the integration suite adds 2 to whatever the
+  unit count is. At 3.14.11 the unit suite was 78. The two real-data integration
+  runs themselves (257 s and 38 s) are not in question and were not re-run now.
+- `./mvnw clean test` → **83/83, 0 skipped** (78 + the 5 rebuilt tests). The
+  integration suite was not run.
+- Version bumped `3.14.11` → `3.14.12` (`test`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
