@@ -1246,11 +1246,25 @@ Found during the docs content review (2026-11-03):
   file not wrongly blocked, saved parameters). The panels and dialog are
   on-screen behaviour that only a live run shows; the output folder
   (`test_data/single_timepoint/GIANI-3.14.13_Output`) evidences only the
-  old-file check, and the full detail is in `REVISION_LOG.md`. **Still untested
-  on real data:** detection results at the 0.5 µm default. That run loaded a saved file, so
-  its stored radius (`0.0`, with the advanced detector) was kept as designed.
-  Panel ordering is unit-tested only through the static helper, since
-  `GIANIUI` is a `JFrame`.
+  old-file check, and the full detail is in `REVISION_LOG.md`. That run loaded a
+  saved file, so its stored radius (`0.0`, with the advanced detector) was kept
+  as designed. **The 0.5 µm default was then checked on real data** from a fresh
+  session (same day, `GIANI-3.14.13_Output_(1)`): channel 0 reproduced the 3.7.4
+  baseline at identical settings (2,893 spots vs 2,891); channels 1 and 2 were
+  run at a different threshold from the baseline and are not comparable. Panel
+  ordering is unit-tested only through the static helper, since `GIANIUI` is a
+  `JFrame`.
+- **`Max Missing Timepoints` is stored blank on a fresh session (regression
+  from 3.14.0, found 2026-11-27).** `TrackingPanel` never sets `maxMissingField`'s
+  text, so the first collect of panel state writes `""` over the default `2`; the
+  executor then logs `Max frame gap not a parsable integer - using default.` and
+  falls back, so results are unaffected, but every saved `properties.xml` carries
+  a blank value and the Advanced Tracking panel shows an empty field. Loading a
+  parameters file first (READ before WRITE) masks it, which is why the 3.14.0
+  live test missed it. Reproduced in isolation; detail in `REVISION_LOG.md`. To
+  do: initialise the field from `props` in `readFromProps()` (the other two
+  unbound fields already are), and add a test that builds the panel, collects its
+  state, and checks the stored value. Awaiting Dave's go-ahead.
 - **Macro extension activation unverified.** `plugins.config` registers
   `GIANIMacroExecutor` under `Extensions`, but the class implements only
   `MacroExtension` (not `PlugIn`) and never calls

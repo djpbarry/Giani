@@ -1923,23 +1923,85 @@ launched by Claude.
   (69 main-CSV rows = 23 cells × 3 object types, against 22,893 for the 3.7.4
   run). So the empty spot output reproduces the original run and is not a
   regression.
-- **Why no spots:** the loaded Hessian settings are minimum radius 0.5 and
-  quality 1000. The 3.7.4 baseline on the same image used the *simple* detector
-  at radius 0.5 and threshold 500 and found 2,891 / 14,298 / 5,635 spots in
-  channels 0 / 1 / 2, so the threshold of 1000 on the advanced detector is the
-  likely reason. Inferred from the parameters; the detector was not run here.
+- **Why no spots (not established):** the loaded Hessian settings are minimum
+  radius 0.5 and quality 1000. The 3.7.4 baseline on the same image used the
+  *simple* detector at radius 0.5 and found 2,891 / 14,298 / 5,635 spots in
+  channels 0 / 1 / 2. (Corrected 2026-11-27: this entry first said that baseline
+  used threshold 500 throughout. Its thresholds were 500 for channel 0 and 1000
+  for channels 1 and 2.) Because the simple detector found spots at 1000, a
+  quality of 1000 is not obviously too strict, and quality scales may not be
+  comparable between detectors, so the cause of the empty Hessian output is
+  unknown. The detector was not run here.
 - **A correction to my own test plan.** Check 4 said any completed run's
   `properties.xml` would show the radius as `0.5`. That is wrong for a run that
   loads a saved file: `putIfAbsent` deliberately keeps the stored value, so this
   output correctly shows `0.0`. The `0.5` default only appears when no value is
   stored, i.e. a fresh session.
-- **Still untested on real data:** detection results at the 0.5 µm default, since nothing yet
-  was run from a fresh session with the simple detector. The 3.7.4 totals above
-  give a baseline to compare against (at threshold 500; the default threshold is
-  `0`, which the synthetic probe suggests returns many noise spots, hence the
-  Preview).
+- **Was untested on real data at this point:** detection results at the 0.5 µm
+  default, since nothing yet had been run from a fresh session with the simple
+  detector. (Done later the same day; see the next entry.) The default threshold
+  is `0`, which the synthetic probe suggests returns many noise spots, hence the
+  Preview.
 - **Observation, not acted on:** a run in which spot detection finds nothing in
   every channel completes silently with exit `0`, as this one did. Whether that
   deserves a warning is a separate question; it is not in the plan.
 - Docs-only; no code change. Version bumped `3.14.13` → `3.14.14` (`docs`), kept in
+  sync across `pom.xml`, `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-27 — Fresh-session run on real data: the 0.5 default checked, and a 3.14.0 regression found
+
+Dave ran 3.14.13 from a fresh session (no parameters file loaded) on
+`test_data/single_timepoint`, with the simple spot detector, and supplied the log
+and `GIANI-3.14.13_Output_(1)`. This closes the gap left by the previous entry.
+
+**The 0.5 µm default works on real data.**
+- The log reports blobs "5.2 pixels in diameter", i.e. the 0.5 µm radius, and the
+  output's `properties.xml` stores `Radius for Simple Spot Detection in Channel N
+  = 0.5` for all three channels. The Preview and the full run both found the same
+  2,965 blobs in channel 0.
+- **Channel 0 is a controlled comparison with the 3.7.4 baseline.** Same
+  detector, same radius (0.5), same threshold (500), same image: 2,893 spots
+  against 2,891. The 2-spot difference is plausibly the slightly different
+  nuclear segmentation (the baseline had top-hat filtering on; this run had it
+  off; nuclear volume differs by 1.3%); that attribution is inferred.
+- **Channels 1 and 2 are not comparable, and I got this wrong.** They gave
+  20,754 and 10,179 spots against 14,298 and 5,635, but the baseline's thresholds
+  for those channels were 1000, not the 500 used here. A lower threshold giving
+  more spots is the expected direction. I had said the baseline used 500 for all
+  channels, because my earlier settings diff filtered out every line containing
+  "Spot" and so could not show a per-channel difference; the previous entry has
+  been corrected.
+- **Cell masks are unchanged**, which rules out segmentation as the cause of the
+  gap: total cell volume is 206,649 vs 206,626 (0.01%). The spot rows in the main
+  CSV equal the spot-summary totals exactly in both runs (22,824 and 33,826).
+- Raw blobs found were 2,965 / 25,144 / 10,602, of which 2,893 / 20,754 / 10,179
+  were assigned to cells (97.6% / 82.5% / 96.0%).
+
+**Regression found: `Max Missing Timepoints` is stored blank (introduced in
+3.14.0, by Claude).** The log opens with `Max frame gap not a parsable integer -
+using default.`, and both 3.14.13 outputs store the parameter as an empty value
+where the 3.14.0 test stored `2`.
+- **Cause:** the 3.14.0 `TrackingPanel` rewrite replaced `addLabelField(…, value)`
+  with `addRow(…)`, which does not set the field's text, and `readFromProps()`
+  initialises the timepoint and linking fields but not `maxMissingField`. So the
+  field starts empty, and the first collect of panel state (which
+  `addAdditionalBlobDetectionPanels` does before anything reads the parameters
+  back) writes `""` over the default `2`.
+- **Reproduced in isolation** with a throwaway probe against the built classes:
+  the default in `props` is `2`; after a WRITE on a freshly built panel it is
+  `''`; after a READ then a WRITE (what *Load Parameters* does) it is `2`. That is
+  also why the 3.14.0 live test, which loaded a file first, stored `2` and hid it.
+  Why the earlier 3.14.13 run, which also loaded a file, stored a blank is not
+  something the files let me reconstruct; the probe shows the field starts empty.
+- **Effect today:** the executor falls back to its default, so the tracker used
+  the same value as before and results are unaffected. The visible consequences
+  are the log line, a blank value in every saved `properties.xml`, and an empty
+  field on the Tracking panel under Advanced Options.
+- **Why the tests missed it:** `TrackingPanelMappingTest` covers the static value
+  mapping only, and nothing builds the panel and checks what a collect writes, the
+  gap `MaximaFinderPanelStarDistTest` closed for another panel.
+- **Not fixed here.** The fix is one line plus a round-trip test; recorded under
+  "Known issues" in `DEVELOPMENT_PLAN.md` pending Dave's go-ahead.
+
+- Docs-only; no code change. Version bumped `3.14.14` → `3.14.15` (`docs`), kept in
   sync across `pom.xml`, `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
