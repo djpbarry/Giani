@@ -129,7 +129,13 @@ public class TrackingPanel extends LayerPanel implements Updateable {
 
         // The only control bound to its key in the usual way: a plain integer
         // with no sentinel, so the stored value is also the sensible display.
+        // Its text must be set here: PropertyExtractor only *reads* it after a
+        // load, so without an initial value the first collect of a fresh session
+        // writes "" over the stored value (the 3.14.0 regression, fixed 3.14.16).
+        // Set once at construction rather than in readFromProps(), so navigating
+        // back to the panel cannot overwrite an edit that has not been collected.
         maxMissingLabel.setLabelFor(maxMissingField);
+        maxMissingField.setText(props.getProperty(GianiDefaultParams.TRACK_MAX_FRAME_GAP));
         addRow(5, maxMissingLabel, maxMissingField, null);
 
         timepointsModeCombo.addActionListener(e -> syncEnabledState());

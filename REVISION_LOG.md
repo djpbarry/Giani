@@ -2005,3 +2005,40 @@ where the 3.14.0 test stored `2`.
 
 - Docs-only; no code change. Version bumped `3.14.14` → `3.14.15` (`docs`), kept in
   sync across `pom.xml`, `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-27 — `Max Missing Timepoints` no longer stored blank (3.14.16)
+
+Fixes the regression recorded in the previous entry (introduced in 3.14.0).
+
+- **Fix.** `TrackingPanel.initComponents()` now sets `maxMissingField`'s text from
+  `props`, as the pre-3.14.0 `addLabelField(…, value)` did. Without it
+  `PropertyExtractor` only ever read the field (after a load), so the first collect
+  of a fresh session wrote `""` over the stored value.
+- **Set once at construction, not in `readFromProps()`, on purpose.** `update()`
+  calls `readFromProps()` whenever the panel is navigated to, so putting it there
+  would have made this field lose uncollected edits too (see below).
+- **Test written first and seen to fail.** `TrackingPanelStateTest` (5) builds the
+  panel, places it in a parent container and collects it with `PropertyExtractor`,
+  the way the wizard does. Against the unfixed code all 5 failed with `expected:
+  <X> but was: <>`. That included a saved `5` and `3`, so the field lost any value
+  it was built from, not only the default. With the fix: `./mvnw clean test` →
+  **110/110, 0 skipped** (105 + 5). Red then green is the check that the tests
+  detect the bug; no separate mutation run was needed.
+- **Not re-run in Fiji.** The fix is covered by the unit tests and by the earlier
+  isolated probe's scenario; it has not been seen in the wizard.
+- **Found while fixing, not fixed: edits to the Tracking panel's other controls
+  are discarded on re-entry.** `update()` rebuilds the unbound controls from
+  `props`, and nothing collects the panel when you leave it. A probe against the
+  built classes (select *Specify below*, type `7.5`, call `update()`) gave
+  mode *Automatic* and an empty distance, while `maxMissing` kept its edit, which
+  confirms the choice above. Edits survive if a Preview or Run collects first, so
+  it bites only someone who goes Next then Previous without previewing. Recorded
+  under "Known issues" with two options; it is a design decision, so left for
+  Dave.
+- **Probe housekeeping.** The first attempt failed because my `clean test` had
+  removed the dependency jars from `target/`; the probe was run against Fiji's
+  `jars/` folder instead (read-only, same IAClassLibrary v2.5.0).
+- **`AGENTS.md`** gains the corollary: a text field must be given its initial
+  value when the panel is built, or it writes `""` on the first collect.
+- Version bumped `3.14.15` → `3.14.16` (`fix`), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

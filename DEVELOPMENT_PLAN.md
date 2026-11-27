@@ -1254,17 +1254,32 @@ Found during the docs content review (2026-11-03):
   run at a different threshold from the baseline and are not comparable. Panel
   ordering is unit-tested only through the static helper, since `GIANIUI` is a
   `JFrame`.
-- **`Max Missing Timepoints` is stored blank on a fresh session (regression
-  from 3.14.0, found 2026-11-27).** `TrackingPanel` never sets `maxMissingField`'s
+- ~~**`Max Missing Timepoints` is stored blank on a fresh session (regression
+  from 3.14.0, found 2026-11-27).**~~ ✔ **Fixed 2026-11-27 (3.14.16).**
+  Original report: `TrackingPanel` never sets `maxMissingField`'s
   text, so the first collect of panel state writes `""` over the default `2`; the
   executor then logs `Max frame gap not a parsable integer - using default.` and
   falls back, so results are unaffected, but every saved `properties.xml` carries
   a blank value and the Advanced Tracking panel shows an empty field. Loading a
   parameters file first (READ before WRITE) masks it, which is why the 3.14.0
-  live test missed it. Reproduced in isolation; detail in `REVISION_LOG.md`. To
-  do: initialise the field from `props` in `readFromProps()` (the other two
-  unbound fields already are), and add a test that builds the panel, collects its
-  state, and checks the stored value. Awaiting Dave's go-ahead.
+  live test missed it. Reproduced in isolation; detail in `REVISION_LOG.md`.
+  **Fix:** the field's text is set once at construction, not in
+  `readFromProps()`, which would have extended the navigation problem in the next
+  item to this field too. `TrackingPanelStateTest` (5) builds the panel and
+  checks what a collect writes.
+- **Uncollected edits to the Tracking panel's timepoint and linking controls are
+  discarded when the panel is re-entered (found 2026-11-27; from the 3.14.0
+  design, not yet fixed).** `GIANIUI.updateLayer` calls `update()` on the panel
+  being navigated to, and `TrackingPanel.update()` calls `readFromProps()`, which
+  rebuilds the unbound controls from `props`. Nothing collects the panel's state
+  when you leave it, so Next then Previous resets them. Probe against the built
+  classes: after selecting *Specify below*, typing `7.5` and calling `update()`,
+  the mode reads *Automatic* and the distance is empty. Edits survive if
+  something collects in between (a Preview on any panel, or Run), so it bites
+  only a user who goes back to the Tracking panel without previewing first, and
+  then the value actually used is the stale one. Not reachable headless. Options:
+  collect the panel's state when it is hidden in `updateLayer`, or stop
+  `update()` re-reading `props` except after a load. A design decision for Dave.
 - **Macro extension activation unverified.** `plugins.config` registers
   `GIANIMacroExecutor` under `Extensions`, but the class implements only
   `MacroExtension` (not `PlugIn`) and never calls
