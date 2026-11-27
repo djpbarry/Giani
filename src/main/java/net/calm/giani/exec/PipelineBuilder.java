@@ -29,6 +29,7 @@ import net.calm.iaclasslibrary.Process.ROI.MultiThreadedROIConstructor;
 import net.calm.iaclasslibrary.Process.Segmentation.MultiThreadedWatershed;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -429,11 +430,22 @@ public class PipelineBuilder {
         return propLabels;
     }
 
+    /**
+     * Default radius, in calibrated units (µm), for the simple (LoG) spot
+     * detector. It must be positive: with a radius of 0, TrackMate's
+     * {@code LogDetector} returns <em>every voxel</em> as a spot whatever the
+     * threshold (probed 2026-11-26: 65,536 "spots" on a 64×64×16 stack). Applied
+     * with {@code putIfAbsent}, so a saved parameter file keeps its own value and
+     * an old analysis stays reproducible; {@link #spotRadiusProblems} catches the
+     * files that stored {@code 0.0} explicitly.
+     */
+    public static final String DEFAULT_SPOT_RADIUS = "0.5";
+
     public static void setDefaultFociParams(Properties props, int i) {
         String[] propLabels = getFociPropLabels(i);
         props.putIfAbsent(propLabels[MultiThreadedMaximaFinder.CHANNEL_SELECT], "0");
         props.putIfAbsent(propLabels[MultiThreadedMaximaFinder.BLOB_DETECT], "true");
-        props.putIfAbsent(propLabels[MultiThreadedMaximaFinder.BLOB_SIZE], "0.0");
+        props.putIfAbsent(propLabels[MultiThreadedMaximaFinder.BLOB_SIZE], DEFAULT_SPOT_RADIUS);
         props.putIfAbsent(propLabels[MultiThreadedMaximaFinder.BLOB_THRESH], "0.0");
         props.putIfAbsent(propLabels[MultiThreadedMaximaFinder.HESSIAN_DETECT], "false");
         props.putIfAbsent(propLabels[MultiThreadedMaximaFinder.HESSIAN_START_SCALE], "0.0");
@@ -455,6 +467,81 @@ public class PipelineBuilder {
         props.putIfAbsent(propLabels[MultiThreadedMaximaFinder.METHOD], props.getProperty(GianiDefaultParams.NUC_DETECT_MODE));
         props.putIfAbsent(propLabels[MultiThreadedMaximaFinder.THRESH_METHOD], "Default");
         props.putIfAbsent(propLabels[MultiThreadedMaximaFinder.THRESH_DETECT], "false");
+    }
+
+    /**
+     * Whether the library will run the simple (LoG, "blob") detector on a
+     * channel, which is the only detector that uses the spot radius.
+     *
+     * <p>This mirrors {@code MultiThreadedMaximaFinder.run} in IAClassLibrary
+     * v2.5.0, which tries grey-level thresholding, then Hessian, then StarDist,
+     * then ilastik, and falls back to the LoG detector when none of those flags is
+     * set. The {@code METHOD} string and the {@code BLOB_DETECT} flag play no part
+     * in that choice. Revisit this when the library pin changes.
+     */
+    static boolean usesSimpleSpotDetector(Properties props, int channel) {
+        String[] labels = getFociPropLabels(channel);
+        return !Boolean.parseBoolean(props.getProperty(labels[MultiThreadedMaximaFinder.THRESH_DETECT]))
+                && !Boolean.parseBoolean(props.getProperty(labels[MultiThreadedMaximaFinder.HESSIAN_DETECT]))
+                && !Boolean.parseBoolean(props.getProperty(labels[MultiThreadedMaximaFinder.STARDIST_DETECT]))
+                && !Boolean.parseBoolean(props.getProperty(labels[MultiThreadedMaximaFinder.ILASTIK_DETECT]));
+    }
+
+    /**
+     * Finds channels whose spot detection cannot work: spots are being localised,
+     * the channel is selected, the simple (LoG) detector is the one in use, and
+     * its radius is not a positive number. TrackMate's LoG detector treats a
+     * radius of 0 as "every voxel is a spot", so such a run would silently produce
+     * meaningless spot data. Channels using any other detection method are never
+     * blocked by their (unused) blob radius.
+     *
+     * <p>Shared by the wizard (a dialog before running) and the headless entry
+     * points (a logged error and a non-zero exit), so both give the same advice.
+     * A radius that is absent, blank, not a number or not finite counts as invalid.
+     *
+     * @param props the parameters about to be used for a run
+     * @return one human-readable message per offending channel, in channel order;
+     * empty when nothing needs fixing
+     */
+    public static List<String> spotRadiusProblems(Properties props) {
+        List<String> problems = new ArrayList<>();
+        if (!Boolean.parseBoolean(props.getProperty(GianiDefaultParams.LOCALISE_SPOTS))) {
+            return problems;
+        }
+        int channels;
+        try {
+            channels = Integer.parseInt(props.getProperty(GianiDefaultParams.CHAN_FOR_MEASURE));
+        } catch (NumberFormatException e) {
+            return problems;
+        }
+        String units = props.getProperty(GianiDefaultParams.UNITS, "");
+        for (int i = 0; i < GianiDefaultParams.MAX_CHANNELS; i++) {
+            if ((channels & (1 << i)) == 0 || !usesSimpleSpotDetector(props, i)) {
+                continue;
+            }
+            String key = getFociPropLabels(i)[MultiThreadedMaximaFinder.BLOB_SIZE];
+            String radius = props.getProperty(key);
+            if (!isPositiveNumber(radius)) {
+                String shown = radius == null || radius.isBlank() ? "not set" : String.format("\"%s\"", radius.trim());
+                problems.add(String.format("Spot detection in channel %d uses the simple detector, but \"%s\" is %s. "
+                                + "Set it to a value greater than 0 (roughly the radius of a spot%s), "
+                                + "or choose another detection method for that channel.",
+                        i, key, shown, units.isBlank() ? "" : ", in " + units));
+            }
+        }
+        return problems;
+    }
+
+    private static boolean isPositiveNumber(String text) {
+        if (text == null) {
+            return false;
+        }
+        try {
+            double value = Double.parseDouble(text.trim());
+            return Double.isFinite(value) && value > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     public static MultiThreadedMaximaFinder getDefaultFociMaximaFinder(Properties props, int i) {

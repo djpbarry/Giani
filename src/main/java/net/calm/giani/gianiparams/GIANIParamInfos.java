@@ -106,7 +106,8 @@ public class GIANIParamInfos extends Properties {
                     "well for regularly-shaped spots.");
             this.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAXIMA, i), "Advanced detection " +
                     "is better for more irregularly-shaped spots, but may take longer.");
-            this.setProperty(String.format("%s%d", GianiDefaultParams.BLOB_CHAN_RAD_LABEL, i), "Approximate radius of spots in microns.");
+            this.setProperty(String.format("%s%d", GianiDefaultParams.BLOB_CHAN_RAD_LABEL, i), "Approximate radius of spots in microns. " +
+                    "Must be greater than 0 (it starts at 0.5): adjust it to match your spots and check the result with Preview.");
             this.setProperty(String.format("%s%d", GianiDefaultParams.BLOB_CHAN_NOISE_TOL_LABEL, i), "Sensitivity of blob detector " +
                     "- increase this value if artefacts are detected.");
             //this.setProperty(String.format("%s%d", GianiDefaultParams.FOCI_MAXIMA_DETECT_HESSIAN_MAX_SIZE, i), "Approximate " +

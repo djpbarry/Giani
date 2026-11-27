@@ -420,8 +420,9 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     }
 
     /**
-     * Validates the input selection before a run, surfacing a dialog for any
-     * problem rather than silently failing (or logging) downstream.
+     * Validates the input selection and the spot settings before a run,
+     * surfacing a dialog for any problem rather than silently failing (or
+     * logging) downstream.
      */
     private boolean validateInput() {
         String inputPath = props.getProperty(GianiDefaultParams.INPUT_DIR_LABEL);
@@ -440,6 +441,11 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 GenUtils.error(String.format("No valid image files found in:%n%s", input.getAbsolutePath()));
                 return false;
             }
+        }
+        List<String> spotProblems = PipelineBuilder.spotRadiusProblems(props);
+        if (!spotProblems.isEmpty()) {
+            GenUtils.error(String.join(String.format("%n%n"), spotProblems));
+            return false;
         }
         return true;
     }
@@ -541,6 +547,7 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
     protected boolean addAdditionalBlobDetectionPanels() {
         setVariables();
         if (maximaFinderPanels != null) {
+            corePanels.removeAll(maximaFinderPanels);
             for (MaximaFinderPanel mfp : maximaFinderPanels) {
                 componentList.remove(mfp);
                 getContentPane().remove(mfp);
@@ -571,6 +578,11 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
                 addPanel(mFP);
             }
         }
+        // Show the spot panels (and their Preview) on the default path too. The
+        // simple detector's radius has no safe universal value, and a radius of
+        // 0 makes every voxel a "spot", so the user must be able to see what is
+        // being detected rather than have it run on hidden settings.
+        insertAfter(corePanels, measurementPanel, maximaFinderPanels);
         String[] localisationPropLabels = new String[MultiThreadedColocalise.N_PROP_LABELS];
         localisationPropLabels[MultiThreadedColocalise.SERIES_LABEL] = GianiDefaultParams.SERIES_SELECT_LABEL;
         localisationPropLabels[MultiThreadedColocalise.CHANNELS_LABEL] = GianiDefaultParams.CHAN_FOR_MEASURE;
@@ -580,6 +592,16 @@ public class GIANIUI extends javax.swing.JFrame implements GUIMethods {
         addPanel(localisationPanel);
         updateUI();
         return true;
+    }
+
+    /**
+     * Inserts {@code toInsert}, in order, immediately after {@code anchor}, or at
+     * the end if {@code anchor} is not in the list. Used to slot the per-channel
+     * spot panels in after the measurement panel.
+     */
+    static void insertAfter(List<LayerPanel> panels, LayerPanel anchor, List<? extends LayerPanel> toInsert) {
+        int anchorIndex = panels.indexOf(anchor);
+        panels.addAll(anchorIndex < 0 ? panels.size() : anchorIndex + 1, toInsert);
     }
 
     void updateUI() {

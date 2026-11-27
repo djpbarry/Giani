@@ -29,7 +29,7 @@ Replace ``<Path to FIJI>`` with the full path to your FIJI installation. Note th
 Exit status
 -----------
 
-GIANI exits with status ``0`` when the analysis completed and its results were saved, and ``1`` on any failure, so a cluster scheduler or workflow manager can detect and retry a failed job. A run fails if the arguments are invalid, the properties file or job list cannot be read, the analysis stops with an error, or the results CSV (or ``GIANI_tracks.csv``, when lineage tracking produced tracks) cannot be saved, for example because the disk is full. Other outputs that cannot be saved, such as masks, are reported in the log but do not fail the run.
+GIANI exits with status ``0`` when the analysis completed and its results were saved, and ``1`` on any failure, so a cluster scheduler or workflow manager can detect and retry a failed job. A run fails if the arguments are invalid, the properties file or job list cannot be read, spot localisation is switched on for a channel that uses the simple detector with a radius of 0 or less (see :doc:`../measure/localising_spots`), the analysis stops with an error, or the results CSV (or ``GIANI_tracks.csv``, when lineage tracking produced tracks) cannot be saved, for example because the disk is full. Other outputs that cannot be saved, such as masks, are reported in the log but do not fail the run.
 
 Parameters
 ==========

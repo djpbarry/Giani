@@ -1824,3 +1824,69 @@ was gone entirely.
   integration suite was not run.
 - Version bumped `3.14.11` → `3.14.12` (`test`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-27 — Spot detection: visible panels, a positive default radius, and refusing a zero radius (3.14.13)
+
+Implements the three decisions Dave recorded on 2026-11-26 (see "Known issues" in
+`DEVELOPMENT_PLAN.md`). Background: with a radius of 0, TrackMate's `LogDetector`
+returns every voxel as a spot, so *Localise Spots* on the default path ran with a
+hidden `0.0` radius and produced meaningless spot data.
+
+- **Panels on the default path.** `GIANIUI.addAdditionalBlobDetectionPanels` now
+  also slots the per-channel spot panels (with Preview) into `corePanels`, right
+  after the measurement panel, via a small static `GIANIUI.insertAfter` so the
+  ordering is testable without a `JFrame`. They are removed again when the
+  channels change or *Localise Spots* is unticked. The colocalisation panel was
+  not part of the decision and stays advanced-only.
+- **Default radius 0.5 µm** (`PipelineBuilder.DEFAULT_SPOT_RADIUS`), applied with
+  `putIfAbsent`, so a saved file keeps its own value and old analyses stay
+  reproducible. The threshold default is unchanged. The tooltip now says the
+  radius must be greater than 0.
+- **Refusal.** `PipelineBuilder.spotRadiusProblems` is shared by the wizard's
+  `validateInput()` (a dialog) and by `GIANI.run` (logs `ERROR:` and returns
+  false, so the CLI exits `1`; the macro API gets the check too). It names the
+  channel and the on-screen label, which is also the `properties.xml` key.
+- **The detector is decided by four flags, not the method string.** I read
+  `MultiThreadedMaximaFinder.run` in the v2.5.0 sources: threshold, then Hessian,
+  then StarDist, then ilastik, and the LoG detector only if none is set. The
+  `METHOD` string and `BLOB_DETECT` play no part. The plan said "for each detector
+  method", and keying the check on the method string would have been wrong, so
+  `usesSimpleSpotDetector` mirrors the flags. It must be revisited when the
+  IAClassLibrary pin changes.
+- **Interpretation to confirm:** a missing, blank, non-numeric or non-finite
+  radius is also refused, not only one ≤ 0. The decision said "≤ 0"; a
+  hand-written file lacking the key would otherwise fail later with the
+  library's "Missing value" error, which is a worse message for the same
+  outcome. Easy to narrow if you disagree.
+- **Finding:** `setDefaultFociParams` has exactly one production caller, the
+  GUI. A headless run never applies per-channel defaults, so the new default
+  reaches users through the wizard and through GUI-saved files, and a
+  hand-written properties file without per-channel keys already failed loudly.
+- **Test-design hazard caught.** The `GIANI.run` refusal test would, if the
+  refusal ever regressed, carry on and scan the default input directory, which
+  is the user's home folder. Both directories are now empty temp folders, so a
+  regression fails harmlessly.
+- **Tests (22 new).** `SpotRadiusValidationTest` (14): default and its
+  reproducibility, each bad radius form, a case for each of the four other
+  detectors (none blocked by a zero blob radius), unselected channels and
+  non-localised runs, message content. `GianiSpotRefusalTest` (2): `run()` and
+  the CLI refuse and say why, the latter proving the exit status comes from the
+  refusal by capturing the log. `GIANIUIPanelOrderTest` (6): the list handling.
+  **Checked by mutation, not just run:** with four deliberate breakages
+  (`>` to `>=`, Hessian dropped from the detector rule, insert-before-anchor,
+  refusal disabled) each was caught by the tests aimed at it and by nothing
+  unexpected; all were reverted and `grep MUTATION src/` is empty.
+- **Docs.** `measure/localising_spots.rst` no longer says the panels are hidden
+  or that defaults are used; it gains a "Spot radius" section. The exit-status
+  paragraph in `cluster/index.rst` and the exit-code note and a new gotcha in
+  `AGENTS.md` are updated.
+- `./mvnw clean test` → **105/105, 0 skipped** (83 + 22). The integration suite
+  was not run.
+- **Not verified:** the on-screen flow (panels appearing on the default path, the
+  dialog) has not been seen in Fiji, and nothing was run on real spot data, so
+  how 0.5 µm behaves on real images is untested. Panel ordering is covered only
+  through the static helper.
+- Version bumped `3.14.12` → `3.14.13` (`fix`; I judged this a fix for silently
+  meaningless output rather than a feature, so say if you would rather call it
+  `feat`), kept in sync across `pom.xml`, `CITATION.cff`, `docs/conf.py`, and
+  `AGENTS.md`.

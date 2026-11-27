@@ -27,6 +27,7 @@ import net.calm.iaclasslibrary.UtilClasses.GenUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.*;
+import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -223,10 +224,22 @@ public class GIANI implements PlugIn {
      *
      * @param props contains parameter name-value pairs for all parameters necessary to run GIANI
      * @return {@code true} if the pipeline completed without an uncaught error
-     * and saved its results CSV (and tracks CSV, if tracking produced tracks)
+     * and saved its results CSV (and tracks CSV, if tracking produced tracks);
+     * {@code false} if it failed, or if the spot settings were refused up front
+     * (see {@link PipelineBuilder#spotRadiusProblems})
      */
     public boolean run(Properties props) {
         DebugTools.setRootLevel("WARN");
+        // Refuse a run that cannot give meaningful spot data (a simple-detector
+        // radius of 0 makes every voxel a "spot") rather than quietly producing
+        // it. Checked first, so nothing is built or written for an invalid run.
+        List<String> spotProblems = PipelineBuilder.spotRadiusProblems(props);
+        if (!spotProblems.isEmpty()) {
+            for (String problem : spotProblems) {
+                IJ.log("ERROR: " + problem);
+            }
+            return false;
+        }
         Objects3DPopulation cells = new Objects3DPopulation();
         ProcessPipeline pipeline = (new PipelineBuilder()).buildFullPipeline(props, cells);
         PipelineExecutor exec = new PipelineExecutor(pipeline, props, cells);

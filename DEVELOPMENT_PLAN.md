@@ -1177,7 +1177,9 @@ Found during the docs content review (2026-11-03):
   for `-h`/`--help` anywhere before the loop, logs `GIANI.USAGE` (a flag
   summary) and exits `0` without running anything. Four tests in
   `GianiExitCodeTest`; `-h` is back in `docs/cluster/index.rst`.
-- **Spot-detection panels are hidden unless Advanced Options is on.**
+- ~~**Spot-detection panels are hidden unless Advanced Options is on.**~~
+  ✔ **Fixed 2026-11-27 (3.14.13)**; implementation notes follow the decisions
+  below. Original report:
   `addAdditionalBlobDetectionPanels` adds the per-channel spot panels only to
   `componentList`, not `corePanels`, so on the default path *Localise Spots*
   silently uses default detection settings (blob radius/threshold `0.0`).
@@ -1199,7 +1201,7 @@ Found during the docs content review (2026-11-03):
   data (and is likely slow and memory-hungry on real stacks; not run on real
   data). The threshold has no universal default, since it depends on image
   intensity, so the user must see a preview.
-  **Decided (Dave, 2026-11-26), not yet implemented:**
+  **Decided (Dave, 2026-11-26); ✔ implemented 2026-11-27 (3.14.13):**
   1. Show the per-channel spot panels (with Preview) on the default path
      whenever *Localise Spots* is ticked, not only with Advanced Options on
      (add them to `corePanels` after the measurement panel). UI only.
@@ -1216,6 +1218,34 @@ Found during the docs content review (2026-11-03):
   the tooltip, and add tests: default radius, validation for each detector
   method (Hessian/StarDist/ilastik/thresholding must not be blocked by a 0
   blob radius), and panel visibility.
+
+  **Implemented as:** (1) `GIANIUI.addAdditionalBlobDetectionPanels` slots the
+  per-channel spot panels into `corePanels` after the measurement panel, through
+  the static `GIANIUI.insertAfter`; the colocalisation panel stays
+  advanced-only. (2) `PipelineBuilder.DEFAULT_SPOT_RADIUS = "0.5"`, used by
+  `setDefaultFociParams` with `putIfAbsent`. (3) `PipelineBuilder.spotRadiusProblems`,
+  shared by `GIANIUI.validateInput()` (dialog) and `GIANI.run` (logged `ERROR:`,
+  exit `1`; this also covers the macro API). Choices made while implementing:
+  - **The detector is decided by the four `*_DETECT` flags, not the method
+    string.** Read from `MultiThreadedMaximaFinder.run` in IAClassLibrary
+    v2.5.0: threshold, then Hessian, then StarDist, then ilastik, else LoG. The
+    `METHOD` string and `BLOB_DETECT` play no part, so keying the check on the
+    string would have been wrong. `usesSimpleSpotDetector` mirrors this and must
+    be revisited when the pin changes.
+  - **A missing, blank, non-numeric or non-finite radius also counts as
+    invalid**, not only one that is ≤ 0. A hand-written file lacking the key
+    would otherwise fail later with the library's "Missing value" error.
+  - **The headless check is in `GIANI.run`, not `GIANI.init`**, so the macro
+    API and tests get it too; the cost is that an empty output folder has
+    already been created when it fails.
+  - Version bump chosen as `fix` (3.14.13), not `feat`, since the headline is
+    removing silently meaningless output; easy to revise if you disagree.
+
+  **Not verified live:** the on-screen flow (the spot panels appearing on the
+  default path, and the dialog) needs a Fiji check, and the panel ordering is
+  unit-tested only through the static helper, since `GIANIUI` is a `JFrame`.
+  Nor has it been run on real data: the 0.5 µm default is a starting point, and
+  how it behaves on real spots is untested.
 - **Macro extension activation unverified.** `plugins.config` registers
   `GIANIMacroExecutor` under `Extensions`, but the class implements only
   `MacroExtension` (not `PlugIn`) and never calls
