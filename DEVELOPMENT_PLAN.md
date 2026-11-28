@@ -1477,7 +1477,12 @@ outward-facing, so Dave makes or approves each one.
   (`docs/overview/installation.rst`), so a user searching the update-site list
   for "GIANI" won't find it, and the CALM suite is retired. Decide whether to
   register a `GIANI` update site, or at least rename or re-describe the existing
-  one.
+  one. **Also clean out what the CALM site still ships:** on 2026-11-28 a
+  CALM-era `plugins/iaclasslibrary-1.0.37.jar` (dated 2026-11-18) had reappeared
+  in a Fiji it had been removed from, most likely via the updater from the CALM
+  site. Users who enable CALM to get GIANI 3.x would get that jar alongside
+  `IAClassLibrary-v2.5.0`, the `net.calm.iaclasslibrary` clash `AGENTS.md` warns
+  about. Unverified: check the CALM site's file list before relying on this.
 - **imagej.net plugin page** (`imagej.net/plugins/...`): the place assistants
   and users look first for Fiji plugins. Create or refresh it, linking to the
   docs, the paper and the update site.

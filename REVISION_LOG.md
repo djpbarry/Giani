@@ -2238,3 +2238,41 @@ fixture-backed tests ran rather than skipping.
 - Version bumped `3.14.19` → `3.15.0` (`feat`: user-visible wording, following
   the precedent of the 3.13.0 tooltip change), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-28 — `install-to-fiji.cmd`: finds the wrapper in tool shells; clears stale jars from both folders (3.15.1)
+
+Found while installing 3.15.0 for a live GUI test.
+
+- **The script failed from Claude's shell** with
+  `'mvnw.cmd' is not recognized` (the script's own `-q` build only reported
+  "build failed"). Cause: that shell sets `NoDefaultCurrentDirectoryInExePath=1`,
+  which stops `cmd` running programs from the current directory, and the script
+  called the wrapper as a bare `call mvnw.cmd` after `pushd`-ing to the repo
+  root. It would have worked from Dave's own terminal. Fix: `call
+  "%CD%\mvnw.cmd"`. Verified by running the script with the variable still set:
+  exit `0`.
+- **It left stale jars behind.** It deleted only `giani-*` from `plugins/` and
+  `IAClassLibrary-*` from `jars/`, so the `plugins/IAClassLibrary-v2.5.0.jar`
+  from the 2026-11-03 hand install survived next to the new `jars/` copy (Dave
+  removed it by hand). It now deletes every `giani-*`, `calm-*` and
+  `iaclasslibrary-*` jar (any case) from **both** folders first, reporting each
+  one, matching the manual procedure in `AGENTS.md`.
+  - My first version of that loop silently removed nothing: a wildcard item in a
+    `cmd` `FOR` set (`for %%p in (giani-*.jar ...)`) is expanded against the
+    current directory, where nothing matched, so the loop body never ran. The
+    prefixes are now listed without wildcards and the pattern is built in the
+    inner loop (`"%%~d\%%p-*.jar"`). Second run removed
+    `giani-3.15.0.jar` and `iaclasslibrary-1.0.37.jar` from `plugins/` and
+    `IAClassLibrary-v2.5.0.jar` from `jars/`, then installed fresh copies.
+- **A CALM-era jar had come back.** That run removed
+  `plugins/iaclasslibrary-1.0.37.jar`, dated 2026-11-18, from the Fiji where it
+  had been removed on 2026-11-03; most likely Fiji's updater reinstalled it from
+  the CALM update site. Recorded in `AGENTS.md` (check before a live test) and
+  under Phase J3 in `DEVELOPMENT_PLAN.md` (users enabling CALM may get it next to
+  `IAClassLibrary-v2.5.0`); the CALM site's file list has not been checked.
+- Fiji now holds exactly `plugins/giani-3.15.0.jar` and
+  `jars/IAClassLibrary-v2.5.0.jar`. The live GUI test of 3.15.0 has not been run
+  yet.
+- No Java change; the unit tests were not re-run. Version bumped `3.15.0` →
+  `3.15.1` (`fix`), kept in sync across `pom.xml`, `CITATION.cff`,
+  `docs/conf.py`, and `AGENTS.md`.

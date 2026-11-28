@@ -29,7 +29,7 @@ lineage-tracking).
 GIANI (General Image Analysis of Nuclei-containing Images) is a [FIJI/ImageJ](https://imagej.net/software/fiji/) plugin for batch analysis of 3D (and 4D) microscopy images: it reads proprietary image formats, segments nuclei and cells, measures morphology/fluorescence intensity, and optionally tracks lineages across time.
 
 - **Language/toolchain:** Java 21, Maven, Swing (hand-maintained; originally NetBeans-designed), built as an ImageJ/Fiji plugin.
-- **Group/artifact:** `net.calm:giani`, version `3.15.0`.
+- **Group/artifact:** `net.calm:giani`, version `3.15.1`.
 - **Parent POM:** `org.scijava:pom-scijava:45.1.0` (SciJava build conventions).
 - **Core library dependency:** `com.github.djpbarry:IAClassLibrary:v2.5.0` (JitPack) provides the actual image-processing primitives (`MultiThreaded*` process classes, `BioFormatsImg`, `ProcessPipeline`, `PropertyWriter`, etc.). GIANI is mostly glue that wires these primitives into a pipeline and exposes UI/CLI/macro entry points.
 - **Transitive dependency:** `mcib3d-core` (via `IAClassLibrary`) provides `mcib3d.geom.Objects3DPopulation`/`Object3D`, the segmentation-result container threaded through the pipeline.
@@ -100,9 +100,21 @@ bin\run-fiji.cmd             rem launch Fiji for interactive testing
 bin\smoke-test-fiji.cmd      rem headless check that the GIANI classes load on Fiji's classpath
 ```
 
-`install-to-fiji.cmd` puts `giani-<version>.jar` into `plugins/` and `IAClassLibrary-v<version>.jar`
-into `jars/`, deleting the previous copies first. Other runtime dependencies (TrackMate, mcib3d,
-ImageJ, commons-*) come from Fiji's own `jars/`/`plugins/`, not from `target/`.
+`install-to-fiji.cmd` first deletes every `giani-*.jar`, `calm-*.jar` and `iaclasslibrary-*.jar`
+(any case) from **both** `plugins/` and `jars/`, reporting each one, then puts `giani-<version>.jar`
+into `plugins/` and `IAClassLibrary-v<version>.jar` into `jars/`. (Before 3.15.1 it only cleared
+`giani-*` from `plugins/` and `IAClassLibrary-*` from `jars/`, so a hand-installed library in
+`plugins/` or a CALM-era jar survived alongside the new one.) Other runtime dependencies (TrackMate,
+mcib3d, ImageJ, commons-*) come from Fiji's own `jars/`/`plugins/`, not from `target/`.
+
+**Fiji's updater can put a stale CALM-era library back.** On 2026-11-28 `plugins/iaclasslibrary-1.0.37.jar`
+(dated 2026-11-18) was found in this machine's Fiji, though it had been removed on 2026-11-03; the
+likely source is the CALM update site, which still ships it. Re-running `install-to-fiji.cmd` removes
+it, but check `plugins/` and `jars/` before a live test if Fiji has been updated since the last install.
+
+When running the `bin\` scripts from a tool shell, note that some set
+`NoDefaultCurrentDirectoryInExePath=1`, which stops `cmd` finding programs in the current directory;
+the scripts therefore call the wrapper by full path (`"%CD%\mvnw.cmd"`).
 
 If installing by hand instead, remove any previous `giani-*.jar`, `calm-*.jar` and
 `iaclasslibrary-*.jar` / `IAClassLibrary-*.jar` from **both** `plugins/` and `jars/` first — stale

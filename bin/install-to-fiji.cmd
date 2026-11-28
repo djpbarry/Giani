@@ -37,7 +37,9 @@ if not exist "%JARS%" (
 rem Build the plugin (skip tests). `clean` first so stale versioned jars from
 rem previous builds aren't copied. Run from the repo root.
 pushd "%~dp0.."
-call mvnw.cmd -q -DskipTests clean package
+rem Call the wrapper by full path: a bare `mvnw.cmd` is not found when
+rem NoDefaultCurrentDirectoryInExePath is set (as in some tool shells).
+call "%CD%\mvnw.cmd" -q -DskipTests clean package
 if errorlevel 1 (
     popd
     echo [install-to-fiji] ERROR: build failed.
@@ -45,8 +47,20 @@ if errorlevel 1 (
 )
 popd
 
-rem Remove any previously installed GIANI plugin jar (avoid duplicate classes).
-del /q "%PLUGINS%\giani-*.jar" 2>nul
+rem Remove any previously installed GIANI, CALM or IAClassLibrary jars from
+rem BOTH plugins/ and jars/ (avoid duplicate or clashing net.calm classes).
+rem Manual installs have put IAClassLibrary in plugins/, and CALM-era installs
+rem left calm-*.jar / iaclasslibrary-*.jar. Matching is case-insensitive.
+rem The prefixes are listed without wildcards on purpose: a wildcard item in a
+rem FOR set is expanded against the *current* directory, so it would never match.
+for %%d in ("%PLUGINS%" "%JARS%") do (
+    for %%p in (giani calm iaclasslibrary) do (
+        for %%f in ("%%~d\%%p-*.jar") do (
+            del /q "%%f"
+            echo [install-to-fiji] Removed old %%~nxf from %%~nxd
+        )
+    )
+)
 
 rem Copy the freshly built plugin jar (skip -sources / -javadoc / -tests).
 set "INSTALLED="
@@ -64,8 +78,7 @@ if not defined INSTALLED (
     exit /b 1
 )
 
-rem Install the IAClassLibrary dependency into jars/ (replace any old version).
-del /q "%JARS%\IAClassLibrary-*.jar" 2>nul
+rem Install the IAClassLibrary dependency into jars/ (old copies removed above).
 for %%f in ("%~dp0..\target\IAClassLibrary-*.jar") do (
     copy /y "%%f" "%JARS%\" >nul
     echo [install-to-fiji] Installed library %%~nxf
