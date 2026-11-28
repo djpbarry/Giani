@@ -269,7 +269,7 @@ public class SegmentationPanel extends LayerPanel implements Updateable {
     public void update() {
         volumeToggleButtonActionPerformed(null);
         if (Boolean.parseBoolean(props.getProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST))
-                && this.title.matches(GianiDefaultParams.NUC_SEG_TITLE)) {
+                && this.title.equals(GianiDefaultParams.NUC_SEG_TITLE)) {
             this.setEnabled(false);
         } else this.setEnabled(true);
         setComponentsEnabled();

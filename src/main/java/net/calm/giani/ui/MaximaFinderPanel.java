@@ -470,7 +470,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         stardistPanel.add(starDistModelTextField, gridBagConstraints);
 
-        starDistDirButton.setText("Specify Location");
+        starDistDirButton.setText("Browse…");
         starDistDirButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 starDistDirButtonActionPerformed(evt);
@@ -485,7 +485,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         stardistPanel.add(starDistDirButton, gridBagConstraints);
 
-        starDistModelButton.setText("Specify Location");
+        starDistModelButton.setText("Browse…");
         starDistModelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 starDistModelButtonActionPerformed(evt);
@@ -595,7 +595,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         ilastikPanel.add(ilastikChannelTextField, gridBagConstraints);
 
-        ilastikFileButton.setText("Specify Location");
+        ilastikFileButton.setText("Browse…");
         ilastikFileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ilastikFileButtonActionPerformed(evt);
@@ -629,7 +629,7 @@ public class MaximaFinderPanel extends LayerPanel implements Updateable {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         ilastikPanel.add(ilastikDirTextField, gridBagConstraints);
 
-        ilastikDirButton.setText("Specify Location");
+        ilastikDirButton.setText("Browse…");
         ilastikDirButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ilastikDirButtonActionPerformed(evt);

@@ -1067,7 +1067,14 @@ Two implementation findings worth keeping:
 the stored default would silently disable tracking for headless/HPC users who
 set only `PROCESS_ALL_TIMEPOINTS`.
 
-**Step 3 — Panel titles and small text fixes (display-only, low risk).**
+**Step 3 — Panel titles and small text fixes (display-only, low risk). ✔ Done
+(2026-11-28, 3.15.0)**, as tabled below, except the ilastik capitalisation, which
+turned out to be key renames and moved to Step 4. The three StarDist checks that
+compared `this.title` against these constants used `String.matches` (a regex), so
+the parenthesised "Remove Background (Nuclear Channel)" would have silently
+stopped StarDist disabling the top-hat panel; they now use `equals`, and
+`TopHatFilterPanelEnabledStateTest` was shown to fail with `matches` plus the new
+title.
 
 | Current title | Proposed |
 |---|---|
@@ -1098,6 +1105,7 @@ double as a key) before renaming it.
 | Localise Spots | Detect Spots |
 | Nuclear / Cell Volume Marker + Membrane Marker (two mutually exclusive toggles) | One dropdown, **Separate Touching Nuclei/Cells By**: *Distance Only* / *Distance + Intensity Edges*; disable *Distance Weighting* for *Distance Only* |
 | Detection Method options: Simple Nuclear Centroid Detector / Advanced Nuclear Centroid Detector / Grey Level Thresholding | Simple (fixed size) / Advanced (variable size) / Intensity Threshold |
+| ilastik labels with inconsistent capitalisation: Location of ilastik installation; Select channel to use in ilastik output; Probability threshold for ilastik output; Filter radius to smooth ilastik output (and their per-channel `… for Channel N` forms) | Title Case, matching the other labels (moved from Step 3 on 2026-11-28: these labels are `MaximaFinderPanel` property keys, so this is a rename) |
 
 The detection-method options are the riskiest: the option strings double as
 boolean keys (`NUC_MAXIMA_DETECT_BLOBS` etc., reconciled by
@@ -1525,8 +1533,8 @@ to MIA. M8 (Phase J, added 2026-11-26) is release and discoverability work
 with no new features.
 
 Within M7: I1 is done bar the motion-model / `Track Spots` tunings; I2 is done
-bar "preview fidelity" (never given a concrete definition); I3 is planned and
-unblocked, sequenced Step 2 (tracking panel redesign) → Step 3 (panel titles,
-display-only) → Step 4 (parameter renames — decide scope before release, since
-it touches every saved `properties.xml`). The deferred items under "Known
+bar "preview fidelity" (never given a concrete definition); in I3, Step 2
+(tracking panel redesign, 3.14.0) and Step 3 (panel titles, 3.15.0) are done,
+leaving Step 4 (parameter renames — decide scope before release, since it
+touches every saved `properties.xml`). The deferred items under "Known
 issues" below are not part of any milestone and are prioritised separately.

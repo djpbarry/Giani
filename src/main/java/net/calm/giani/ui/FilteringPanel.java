@@ -244,7 +244,7 @@ public class FilteringPanel extends LayerPanel implements Updateable {
         channelSelectComboBox.setSelectedItem(props.get(propLabels[MultiThreadedGaussianFilter.CHANNEL_LABEL]));
         unitsLabel1.setText(props.getProperty(GianiDefaultParams.UNITS));
         if (Boolean.parseBoolean(props.getProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST))
-                && this.title.matches(GianiDefaultParams.NUC_GAUSS_FILTER_TITLE)) {
+                && this.title.equals(GianiDefaultParams.NUC_GAUSS_FILTER_TITLE)) {
             this.setEnabled(false);
         } else this.setEnabled(true);
         setComponentsEnabled();

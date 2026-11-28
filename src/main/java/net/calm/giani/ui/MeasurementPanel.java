@@ -81,7 +81,7 @@ public class MeasurementPanel extends LayerPanel implements Updateable {
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.GridBagLayout());
 
-        measurePreviewButton.setText("Measure Preview");
+        measurePreviewButton.setText("Preview Measurements");
         measurePreviewButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 measurePreviewButtonActionPerformed(evt);

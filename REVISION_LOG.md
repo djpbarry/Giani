@@ -2193,3 +2193,48 @@ fixture-backed tests ran rather than skipping.
   so they are not collected on leave (they are collected at Run as before).
 - Version bumped `3.14.18` → `3.14.19` (`fix`), kept in sync across `pom.xml`,
   `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.
+
+## 2026-11-28 — I3 Step 3: shorter panel titles and clearer button text (3.15.0)
+
+- **Panel titles** (`GianiDefaultParams.*_TITLE`; display-only, never stored in
+  `properties.xml`, which was checked):
+
+  | Was | Now |
+  |---|---|
+  | Blob Detection to Approximate Locations of Nuclear Centroids | Find Nuclei |
+  | Gaussian Filtering to Suppress Noise in Nuclear Channel Prior to Segmentation | Smooth Nuclear Channel |
+  | Top Hat Filtering to Homogenise Background in Nuclear Channel Prior to Segmentation | Remove Background (Nuclear Channel) |
+  | Segmentation of Nuclei Using Centroids as Seeds | Segment Nuclei |
+  | Gaussian Filtering to Suppress Noise in Cell Channel Prior to Segmentation | Smooth Cell Channel |
+  | Segmentation of Cells Using Nuclei as Seeds | Segment Cells |
+  | Blob Detection to Approximate Locations of Spots in Channel N | Find Spots in Channel N |
+
+- **Buttons:** the four StarDist/ilastik "Specify Location" buttons now read
+  "Browse…", and "Measure Preview" reads "Preview Measurements". All five are
+  plain `JButton`s, which `PropertyExtractor` does not harvest, so no stored
+  keys change. `docs/measure/specifying_channels.rst` updated to match.
+- **Latent bug avoided.** `FilteringPanel`, `SegmentationPanel` and
+  `TopHatFilterPanel` decide whether StarDist disables them with
+  `this.title.matches(<title constant>)`, which treats the title as a regular
+  expression. The old titles contained no regex metacharacters, so it worked by
+  accident; "Remove Background (Nuclear Channel)" would have become a regex
+  group and never matched, silently leaving the top-hat panel enabled under
+  StarDist. All three now use `equals`. Checked by experiment: with `matches`
+  restored and the new title, `TopHatFilterPanelEnabledStateTest`'s StarDist case
+  fails (`expected: <false> but was: <true>`); with `equals` it passes.
+- **Moved to Step 4, not done:** the planned "consistent capitalisation of the
+  ilastik labels". Those labels are `MaximaFinderPanel` property keys
+  (`setText(propLabels[ILASTIK_*])`), so changing their case is a parameter rename
+  needing `DeprecatedProps` entries, not a display fix. The plan had filed it under
+  the display-only step by mistake.
+- The leftover `DeprecatedProps` entry mapping the even older spot title
+  ("Blob Detection to Approximate Locations of Foci in Channel ") now points at
+  "Find Spots in Channel ". Titles are not keys, so it is inert; left in place.
+- Not checked in the wizard: the new titles' fit in the panel layout (all are
+  shorter, so no truncation is expected). The user-doc screenshots still show
+  v2.0-era titles (already a TODO).
+- `./mvnw clean test` → **125/125, 0 skipped**. No new test: the existing StarDist
+  case covers the comparison change, as shown above.
+- Version bumped `3.14.19` → `3.15.0` (`feat`: user-visible wording, following
+  the precedent of the 3.13.0 tooltip change), kept in sync across `pom.xml`,
+  `CITATION.cff`, `docs/conf.py`, and `AGENTS.md`.

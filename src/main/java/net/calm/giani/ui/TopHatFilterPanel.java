@@ -280,7 +280,7 @@ public class TopHatFilterPanel extends LayerPanel implements Updateable {
     public void update() {
         unitsLabel1.setText(props.getProperty(GianiDefaultParams.UNITS));
         if (Boolean.parseBoolean(props.getProperty(GianiDefaultParams.NUC_MAXIMA_DETECT_STARDIST))
-                && this.title.matches(GianiDefaultParams.NUC_TOP_HAT_TITLE)) {
+                && this.title.equals(GianiDefaultParams.NUC_TOP_HAT_TITLE)) {
             this.setEnabled(false);
         } else this.setEnabled(true);
         setComponentsEnabled();

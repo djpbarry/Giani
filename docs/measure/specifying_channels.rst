@@ -21,7 +21,7 @@ The following morphological and positional measurements are also output for each
 
 Each row also records the ``Series`` and ``Time`` (timepoint) it came from, and a ``Cell_Index`` shared by the nucleus, cell and cytoplasm of the same cell.
 
-Clicking *Preview* will display a results table containing all of the above measurements for each region of each cell in each of the channels selected.
+Clicking *Preview Measurements* will display a results table containing all of the above measurements for each region of each cell in each of the channels selected.
 
 .. figure:: ../images/GIANI_Measurement_Preview.PNG
    :alt: GIANI Measurement Preview
